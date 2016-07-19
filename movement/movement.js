@@ -143,8 +143,8 @@ function createScene() {
 
     // Set the position of the camera
     camera.position.x = 0;
-    camera.position.z = 0;
-    camera.position.y = 0;
+    camera.position.z = 30;
+    camera.position.y = 20;
 
     controls = new THREE.PointerLockControls( camera );
                 scene.add( controls.getObject() );
@@ -212,15 +212,15 @@ function createScene() {
     document.addEventListener( 'keydown', onKeyDown, false );
     document.addEventListener( 'keyup', onKeyUp, false );
 
-    raycasterY = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, 10 );
+    raycasterY = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, 15 );
 
-    raycasterXpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3( 1,0 ,0 ), 0, 10 );
+    raycasterXpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3( 1,0 ,0 ), 0, 15 );
 
-    raycasterZpos = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), 0, 10 );
+    raycasterZpos = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), 0, 15 );
 
-    raycasterXneg = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( -1, 0, 0 ), 0, 10 );
+    raycasterXneg = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( -1, 0, 0 ), 0, 15 );
 
-    raycasterZneg = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ), 0, 10 );
+    raycasterZneg = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ), 0, 15   );
 
 
 
@@ -264,10 +264,10 @@ function loop(){
     requestAnimationFrame(loop);
 
                     raycasterY.ray.origin.copy( controls.getObject().position );
-                    raycasterXpos.set( controls.getObject().position, controls.getObject().getWorldDirection().applyAxisAngle( new THREE.Vector3(0,1,0), (Math.PI)/2));
-                    raycasterXneg.set( controls.getObject().position, controls.getObject().getWorldDirection().applyAxisAngle( new THREE.Vector3(0,1,0), -(Math.PI)/2)  );
-                    raycasterZpos.set( controls.getObject().position, controls.getObject().getWorldDirection() );
-                    raycasterZneg.set( controls.getObject().position, controls.getObject().getWorldDirection().negate() );
+                    raycasterXpos.set( controls.getObject().position, controls.getObject().getWorldDirection().applyAxisAngle( new THREE.Vector3(0,1,0), (Math.PI)/2).normalize());
+                    raycasterXneg.set( controls.getObject().position, controls.getObject().getWorldDirection().applyAxisAngle( new THREE.Vector3(0,1,0), -(Math.PI)/2).normalize()  );
+                    raycasterZpos.set( controls.getObject().position, controls.getObject().getWorldDirection().normalize() );
+                    raycasterZneg.set( controls.getObject().position, controls.getObject().getWorldDirection().negate().normalize() );
 
 
                     var intersectionsY = raycasterY.intersectObjects( terrain );
@@ -391,26 +391,38 @@ function createLights() {
 
 
 function createRoom() {
-
+    var cubeGeom = new THREE.BoxGeometry(30,30,30);
     var geomFloor = new THREE.BoxGeometry(200,10,200);
     var geomSide = new THREE.BoxGeometry(10,200,200);
     var geomBack = new THREE.BoxGeometry(200,200,10);
-    var material = new THREE.MeshBasicMaterial({color:Colors.red,shading:THREE.FlatShading})
-    var floor = new THREE.Mesh(geomFloor, material);
+    var materialRed = new THREE.MeshLambertMaterial({color:Colors.red,shading:THREE.FlatShading})
+    var materialBlue = new THREE.MeshLambertMaterial({color:Colors.blue,shading:THREE.FlatShading})
 
-    var leftWall = new THREE.Mesh(geomSide, material);
+    var floor = new THREE.Mesh(geomFloor, materialRed);
+    var leftWall = new THREE.Mesh(geomSide, materialRed);
+    var rightWall = new THREE.Mesh(geomSide, materialRed);
+    var backWall = new THREE.Mesh(geomBack, materialRed);
 
-    var rightWall = new THREE.Mesh(geomSide, material);
-    var backWall = new THREE.Mesh(geomBack, material);
+    var cube = new THREE.Mesh(cubeGeom,materialBlue);
+
+    cube.position.x = 0;
+    cube.position.y = 15;
+
     leftWall.position.x -= 100;
+    leftWall.position.y +=100;
     rightWall.position.x +=100;
+    rightWall.position.y +=100;
     backWall.position.z -=100;
-    floor.position.y -=100;
+    backWall.position.y +=100;
+    //floor.position.y -=100;
     terrain.push(rightWall);
     terrain.push(leftWall);
     terrain.push(backWall);
     terrain.push(floor);
+    terrain.push(cube);
+    cube.castShadow = true;
 
+    scene.add(cube);
     scene.add(floor);
     scene.add(leftWall);
     scene.add(rightWall);
