@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>basic building round filled with fire</title>
+    <link rel="stylesheet" href="css/custom.css">
+    <script src="js/three.min.js"></script>
+</head>
+
+<body>
+    <script>
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    var ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+    scene.add(ambientLight);
+
+    var light = new THREE.PointLight(0xffffff, 1, 100);
+    light.position.set(0, 3, 0);
+    light.power = 2;
+    scene.add(light);
+
+    camera.position.x = 0;
+    camera.position.y = -6;
+    camera.position.z = 1.5;
+    camera.lookAt(new THREE.Vector3(0, 5, 0));
+
+    // Load JSON-Objects
+    var loader = new THREE.ObjectLoader();
+    loader.load("plane.json", function(obj) {
+        scene.add(obj);
+    });
+
+    // Textureloader
+    var texture = new THREE.TextureLoader().load("textures/stonefloor.jpg");
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(10, 10);
+    var material_floor = new THREE.MeshLambertMaterial({
+        map: texture
+    });
+
+    texture = new THREE.TextureLoader().load("textures/wall.jpg");
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(1, 1);
+    var wall = new THREE.MeshStandardMaterial({
+        map: texture
+    });
+
+
+    var groundGeometry = new THREE.PlaneGeometry(10, 10);
+    var plane = new THREE.Mesh(groundGeometry, material_floor);
+    scene.add(plane);
+
+    var right = new THREE.PlaneGeometry(10, 5);
+    right.rotateZ(1.57);
+    right.rotateY(-1.57);
+    right.translate(6, 3, 0.5);
+    var plane2 = new THREE.Mesh(right, wall);
+    scene.add(plane2)
+
+    var left = new THREE.PlaneGeometry(10, 5);
+    left.rotateZ(1.57);
+    left.rotateY(1.57);
+    left.translate(-6, 3, 0.5);
+    var plane3 = new THREE.Mesh(left, wall);
+    scene.add(plane3)
+
+    var topGeometry = new THREE.PlaneGeometry(10, 10);
+    topGeometry.rotateX(1.57 * 2);
+    topGeometry.translate(0, 0, 2.5);
+    var plane4 = new THREE.Mesh(topGeometry, wall);
+    scene.add(plane4);
+
+    var back = new THREE.PlaneGeometry(10, 5);
+    back.rotateX(1.57);
+    back.translate(0, 5, 0.5);
+    var plane5 = new THREE.Mesh(back, wall);
+    scene.add(plane5)
+
+    function render() {
+        requestAnimationFrame(render);
+        renderer.render(scene, camera);
+    }
+    render();
+    </script>
+</body>
+
+</html>
