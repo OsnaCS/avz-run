@@ -144,7 +144,7 @@ function createScene() {
     // Set the position of the camera
     camera.position.x = 0;
     camera.position.z = 30;
-    camera.position.y = 20;
+    camera.position.y = 45;
 
     controls = new THREE.PointerLockControls( camera );
                 scene.add( controls.getObject() );
@@ -177,6 +177,11 @@ function createScene() {
                             canJump = false;
                             break;
 
+                        case 16: // shift out
+
+                            controls.getObject().position.y -= 30;
+                            break;
+
                     }
 
                 };
@@ -205,6 +210,10 @@ function createScene() {
                             moveRight = false;
                             break;
 
+                        case 16: // shift out
+                            controls.getObject().position.y  += 30;
+                            break;
+
                     }
 
                 };
@@ -212,7 +221,7 @@ function createScene() {
     document.addEventListener( 'keydown', onKeyDown, false );
     document.addEventListener( 'keyup', onKeyUp, false );
 
-    raycasterY = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, 15 );
+    raycasterY = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, 2 );
 
     raycasterXpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3( 1,0 ,0 ), 0, 15 );
 
@@ -220,7 +229,7 @@ function createScene() {
 
     raycasterXneg = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( -1, 0, 0 ), 0, 15 );
 
-    raycasterZneg = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ), 0, 15   );
+    raycasterZneg = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ), 0, 15 );
 
 
 
@@ -293,7 +302,7 @@ function loop(){
                     if ( moveRight ) velocity.x += 400.0 * delta;
 
                     if (intersectionsY.length > 0) {
-
+                        console.log("collision")
                         velocity.y = Math.max( 0, velocity.y );
 
                         canJump = true;
@@ -323,10 +332,10 @@ function loop(){
                     controls.getObject().translateY( velocity.y * delta );
                     controls.getObject().translateZ( velocity.z * delta );
 
-                    if ( controls.getObject().position.y < 10 ) {
+                    if ( controls.getObject().position.y < 0 ) {
 
                         velocity.y = 0;
-                        controls.getObject().position.y = 10;
+                        controls.getObject().position.y = 0;
 
                         canJump = true;
 
