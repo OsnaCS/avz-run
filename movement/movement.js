@@ -212,7 +212,18 @@ function createScene() {
     document.addEventListener( 'keydown', onKeyDown, false );
     document.addEventListener( 'keyup', onKeyUp, false );
 
-    raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
+    raycasterY = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, 10 );
+
+    raycasterXpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3( 1,0 ,0 ), 0, 10 );
+
+    raycasterZpos = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), 0, 10 );
+
+    raycasterXneg = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( -1, 0, 0 ), 0, 10 );
+
+    raycasterZneg = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, -1 ), 0, 10 );
+
+
+
 
     // Create the renderer
     renderer = new THREE.WebGLRenderer({
@@ -252,12 +263,20 @@ function loop(){
 
     requestAnimationFrame(loop);
 
-                    raycaster.ray.origin.copy( controls.getObject().position );
-                    raycaster.ray.origin.y -= 1;
+                    raycasterY.ray.origin.copy( controls.getObject().position );
+                    raycasterXpos.set( controls.getObject().position, controls.getObject().getWorldDirection().applyAxisAngle( new THREE.Vector3(0,1,0), (Math.PI)/2));
+                    raycasterXneg.set( controls.getObject().position, controls.getObject().getWorldDirection().applyAxisAngle( new THREE.Vector3(0,1,0), -(Math.PI)/2)  );
+                    raycasterZpos.set( controls.getObject().position, controls.getObject().getWorldDirection() );
+                    raycasterZneg.set( controls.getObject().position, controls.getObject().getWorldDirection().negate() );
 
-                    var intersections = raycaster.intersectObjects( terrain );
 
-                    var isOnObject = intersections.length > 0;
+                    var intersectionsY = raycasterY.intersectObjects( terrain );
+
+                    var intersectionsXpos = raycasterXpos.intersectObjects(terrain);
+
+                    var intersectionsZpos = raycasterZpos.intersectObjects(terrain);;
+                    var intersectionsXneg = raycasterXneg.intersectObjects(terrain);;
+                    var intersectionsZneg = raycasterZneg.intersectObjects(terrain);;
 
                     var time = performance.now();
                     var delta = ( time - prevTime ) / 1000;
@@ -273,11 +292,32 @@ function loop(){
                     if ( moveLeft ) velocity.x -= 400.0 * delta;
                     if ( moveRight ) velocity.x += 400.0 * delta;
 
-                   if ( isOnObject === true ) {
-                       velocity.y = Math.max( 0, velocity.y );
+                    if (intersectionsY.length > 0) {
 
-                       canJump = true;
-                   }
+                        velocity.y = Math.max( 0, velocity.y );
+
+                        canJump = true;
+                    }
+
+                    if(intersectionsZpos.length > 0) {
+                        //alert('OBJECT IN BACK');
+                        velocity.z = Math.min(0, velocity.z);
+                    }
+
+                    if(intersectionsZneg.length > 0) {
+                         // alert('OBJECT FRONT');
+                        velocity.z = Math.max(0, velocity.z);
+                    }
+
+                    if(intersectionsXpos.length > 0) {
+                         // alert('OBJECT RIGHT');
+                        velocity.x = Math.min(0, velocity.x);
+                    }
+
+                    if(intersectionsXneg.length > 0) {
+                        // alert('OBJECT LEFT');
+                        velocity.x = Math.max(0, velocity.x);
+                    }
 
                     controls.getObject().translateX( velocity.x * delta );
                     controls.getObject().translateY( velocity.y * delta );
@@ -325,7 +365,7 @@ function createLights() {
     shadowLight = new THREE.DirectionalLight(0xffffff, .9);
 
     // Set the direction of the light
-    shadowLight.position.set(150, 350, 350);
+    shadowLight.position.set(50, 50, 50);
 
     // Allow shadow casting
     shadowLight.castShadow = true;
@@ -352,9 +392,9 @@ function createLights() {
 
 function createRoom() {
 
-    var geomFloor = new THREE.BoxGeometry(200,1,200);
-    var geomSide = new THREE.BoxGeometry(1,200,200);
-    var geomBack = new THREE.BoxGeometry(200,200,1);
+    var geomFloor = new THREE.BoxGeometry(200,10,200);
+    var geomSide = new THREE.BoxGeometry(10,200,200);
+    var geomBack = new THREE.BoxGeometry(200,200,10);
     var material = new THREE.MeshBasicMaterial({color:Colors.red,shading:THREE.FlatShading})
     var floor = new THREE.Mesh(geomFloor, material);
 
