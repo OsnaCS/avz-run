@@ -12,6 +12,8 @@ var scene,
 camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
 renderer, container, controls, clock, raycaster;
 
+var myfog = 0;
+
 
 function init(event) {
 
@@ -289,8 +291,8 @@ function loop(){
                     var intersectionsXneg = raycasterXneg.intersectObjects(terrain);;
                     var intersectionsZneg = raycasterZneg.intersectObjects(terrain);;
 
-                    var myfog += 0.000001;
-                    scene.fog = new THREE.FogExp2( 0x424242, 0.0004 + myfog );
+                    myfog += 0.00001;
+                    scene.fog = new THREE.FogExp2( 0x424242, 0.00004 + myfog );
 
                     var time = performance.now();
                     var delta = ( time - prevTime ) / 1000;
