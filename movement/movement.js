@@ -125,7 +125,7 @@ function createScene() {
     // Add a fog effect to the scene; same color as the
     // background color used in the style sheet
     //scene.fog = new THREE.Fog( 0x151515, 0.5, 100 );
-    scene.fog = new THREE.FogExp2(0x424242, 0.02 );
+    //scene.fog = new THREE.FogExp2(0x424242, 0.02 );
 
 
     // Create the camera
@@ -272,6 +272,8 @@ function loop(){
 
     requestAnimationFrame(loop);
 
+
+
                     raycasterY.ray.origin.copy( controls.getObject().position );
                     raycasterXpos.set( controls.getObject().position, controls.getObject().getWorldDirection().applyAxisAngle( new THREE.Vector3(0,1,0), (Math.PI)/2).normalize());
                     raycasterXneg.set( controls.getObject().position, controls.getObject().getWorldDirection().applyAxisAngle( new THREE.Vector3(0,1,0), -(Math.PI)/2).normalize()  );
@@ -286,6 +288,9 @@ function loop(){
                     var intersectionsZpos = raycasterZpos.intersectObjects(terrain);;
                     var intersectionsXneg = raycasterXneg.intersectObjects(terrain);;
                     var intersectionsZneg = raycasterZneg.intersectObjects(terrain);;
+
+                    var myfog += 0.000001;
+                    scene.fog = new THREE.FogExp2( 0x424242, 0.0004 + myfog );
 
                     var time = performance.now();
                     var delta = ( time - prevTime ) / 1000;
