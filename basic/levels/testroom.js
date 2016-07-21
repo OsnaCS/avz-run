@@ -36,45 +36,47 @@ var plane, geometry;
 
 // bottom
 geometry = new THREE.PlaneGeometry(3, 20);
+geometry.rotateX(1.57);
 plane = new THREE.Mesh(geometry, stoneMaterial);
 plane.doubleSided = true;
 scene.add(plane);
 
 // top
 geometry = new THREE.PlaneGeometry(3, 20);
-geometry.translate(0, 0, 2.5);
+geometry.rotateX(1.57);
+geometry.translate(0,2.5,0);
 plane = new THREE.Mesh(geometry, wallMaterial);
 plane.doubleSided = true;
 scene.add(plane);
 
 // right
 geometry = new THREE.PlaneGeometry(2.5, 20);
-geometry.rotateY(1.57);
-geometry.translate(1.48, 0 , 1.25);
+geometry.rotateX(1.57);
+geometry.rotateZ(1.57);
+geometry.translate(-1.5,1.25,0);
 plane = new THREE.Mesh(geometry, wallMaterial);
 plane.doubleSided = true;
 scene.add(plane);
 
 // left
 geometry = new THREE.PlaneGeometry(2.5, 20);
-geometry.rotateY(1.57);
-geometry.translate(-1.48, 0 , 1.25);
+geometry.rotateX(1.57);
+geometry.rotateZ(1.57);
+geometry.translate(1.5,1.25,0);
 plane = new THREE.Mesh(geometry, wallMaterial);
 plane.doubleSided = true;
 scene.add(plane);
 
 // back
 geometry = new THREE.PlaneGeometry(3, 2.5);
-geometry.rotateX(1.57);
-geometry.translate(0, 10 , 1.25);
+geometry.translate(0, 1.25, 10);
 plane = new THREE.Mesh(geometry, wallMaterial);
 plane.doubleSided = true;
 scene.add(plane);
 
-// front
+// // front
 geometry = new THREE.PlaneGeometry(3, 2.5);
-geometry.rotateX(1.57);
-geometry.translate(0, -10 , 1.25);
+geometry.translate(0, 1.25, -10);
 plane = new THREE.Mesh(geometry, wallMaterialTransparent);
 plane.doubleSided = true;
 scene.add(plane);
