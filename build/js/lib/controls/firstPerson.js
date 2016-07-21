@@ -160,6 +160,7 @@ function initControls() {
 
                 break;
 
+
             case 67: // c to crouch
 
                 if (!ducked && !running) {
@@ -256,7 +257,103 @@ function initControls() {
 
 
 function controlLoop(controls) {
-        // position of player's head
+
+        setRays();
+
+        // determines stepwidth
+        var time = performance.now();
+        var delta = (time - prevTime) / 1000;
+
+        velocity.x -= velocity.x * 10.0 * delta;
+        velocity.z -= velocity.z * 10.0 * delta;
+
+        // gravity
+        velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+
+        if (moveForward) velocity.z -= MOVEMENT_SPEED * speed_factor * delta;
+        if (moveBackward) velocity.z += MOVEMENT_SPEED * speed_factor * delta;
+        if (moveLeft) velocity.x -= MOVEMENT_SPEED * speed_factor * delta;
+        if (moveRight) velocity.x += MOVEMENT_SPEED  * speed_factor * delta;
+
+
+        // determine intersections of rays with objects that were added to terrain
+        var intersectionsY = raycasterY.intersectObjects(terrain);
+        var intersectionsXpos = raycasterXpos.intersectObjects(terrain);
+        var intersectionsZpos = raycasterZpos.intersectObjects(terrain);
+        var intersectionsXneg = raycasterXneg.intersectObjects(terrain);
+        var intersectionsZneg = raycasterZneg.intersectObjects(terrain);
+
+
+        // forbid player to move farther if there are obstacles in the respective directions
+        if (intersectionsY.length > 0) {
+            velocity.y = Math.max(0, velocity.y);
+        }
+
+        if(intersectionsZpos.length > 0) {
+            velocity.z = Math.min(0, velocity.z);
+        }
+
+        if(intersectionsZneg.length > 0) {
+            velocity.z = Math.max(0, velocity.z);
+        }
+
+        if(intersectionsXpos.length > 0) {
+            velocity.x = Math.min(0, velocity.x);
+        }
+
+        if(intersectionsXneg.length > 0) {
+            velocity.x = Math.max(0, velocity.x);
+        }
+        controls.getObject().translateX(velocity.x * delta);
+        controls.getObject().translateY(velocity.y * delta);
+        controls.getObject().translateZ(velocity.z * delta);
+
+
+
+        // stop gravity at ground level as collision detection sometimes fails for floor
+        if (controls.getObject().position.y < PLAYERHEIGHT) {
+            velocity.y = 0;
+            controls.getObject().position.y = PLAYERHEIGHT;
+        }
+
+        // checks if we can stand up (may be forbidden when crouching beneath an object)
+        handleStandup();
+
+        if(velocity.y == 0) {
+            canJump = true;
+        }
+
+        prevTime = time;
+
+
+}
+
+
+
+function handleStandup() {
+        if(standupRequest) {
+            var intersectionsYpos = raycasterYpos.intersectObjects(terrain);
+
+            // stands up as soon as there are no more objects above
+            if(intersectionsYpos.length == 0) {
+
+                PLAYERHEIGHT += 20;
+                controls.getObject().position.y += 20;
+                ducked = false;
+                speed_factor = 1;
+                raycasterXpos.far = 32;
+                raycasterXneg.far = 32;
+                raycasterZpos.far = 32;
+                raycasterZneg.far = 32;
+                standupRequest = false;
+            }
+
+        }
+
+}
+
+function setRays() {
+            // position of player's head
         playerPos =  new THREE.Vector3();
         playerPos.copy(controls.getObject().position);
 
@@ -300,85 +397,5 @@ function controlLoop(controls) {
 
 
         }
-
-        // determine intersections of rays with objects that were added to terrain
-        var intersectionsY = raycasterY.intersectObjects(terrain);
-        var intersectionsYpos = raycasterYpos.intersectObjects(terrain);
-        var intersectionsXpos = raycasterXpos.intersectObjects(terrain);
-        var intersectionsZpos = raycasterZpos.intersectObjects(terrain);
-        var intersectionsXneg = raycasterXneg.intersectObjects(terrain);
-        var intersectionsZneg = raycasterZneg.intersectObjects(terrain);
-
-        // determines stepwidth
-        var time = performance.now();
-        var delta = (time - prevTime) / 1000;
-
-        velocity.x -= velocity.x * 10.0 * delta;
-        velocity.z -= velocity.z * 10.0 * delta;
-
-        // gravity
-        velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
-
-        if (moveForward) velocity.z -= MOVEMENT_SPEED * speed_factor * delta;
-        if (moveBackward) velocity.z += MOVEMENT_SPEED * speed_factor * delta;
-        if (moveLeft) velocity.x -= MOVEMENT_SPEED * speed_factor * delta;
-        if (moveRight) velocity.x += MOVEMENT_SPEED  * speed_factor * delta;
-
-        // forbid player to move farther if there are obstacles in the respective directions
-        if (intersectionsY.length > 0) {
-            velocity.y = Math.max(0, velocity.y);
-        }
-
-        if(intersectionsZpos.length > 0) {
-            velocity.z = Math.min(0, velocity.z);
-        }
-
-        if(intersectionsZneg.length > 0) {
-            velocity.z = Math.max(0, velocity.z);
-        }
-
-        if(intersectionsXpos.length > 0) {
-            velocity.x = Math.min(0, velocity.x);
-        }
-
-        if(intersectionsXneg.length > 0) {
-            velocity.x = Math.max(0, velocity.x);
-        }
-
-        controls.getObject().translateX(velocity.x * delta);
-        controls.getObject().translateY(velocity.y * delta);
-        controls.getObject().translateZ(velocity.z * delta);
-
-        // stop gravity at ground level as collision detection sometimes fails for floor
-        if (controls.getObject().position.y < PLAYERHEIGHT) {
-            velocity.y = 0;
-            controls.getObject().position.y = PLAYERHEIGHT;
-        }
-
-        // checks if we can stand up (may be forbidden when crouching beneath an object)
-        if(standupRequest) {
-
-            // stands up as soon as there are no more objects above
-            if(intersectionsYpos.length == 0) {
-
-                PLAYERHEIGHT += 20;
-                controls.getObject().position.y += 20;
-                ducked = false;
-                speed_factor = 1;
-                raycasterXpos.far = 32;
-                raycasterXneg.far = 32;
-                raycasterZpos.far = 32;
-                raycasterZneg.far = 32;
-                standupRequest = false;
-            }
-
-        }
-
-        if(velocity.y == 0) {
-            canJump = true;
-        }
-
-        prevTime = time;
-
 
 }
