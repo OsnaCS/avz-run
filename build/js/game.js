@@ -24,6 +24,8 @@ var scene,
 camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
 renderer, container, controls;
 
+var myfog = 0;
+
 function init(event) {
 
     // set up the scene, the camera and the renderer
@@ -56,10 +58,6 @@ function createScene() {
 
     // Create the scene
     scene = new THREE.Scene();
-
-    // Add a fog effect to the scene; same color as the
-    // background color used in the style sheet
-    scene.fog = new THREE.Fog(0xf7d9aa, 100, 950);
 
 
     // Create the camera
@@ -111,6 +109,10 @@ function createScene() {
 function loop(){
 
     requestAnimationFrame(loop);
+
+    //creates increasing fog
+    myfog += 0.00001;
+    scene.fog = new THREE.FogExp2( 0x424242, 0.00002 + myfog );
 
     // YOU NEED TO CALL THIS (srycaps)
     controlLoop(controls);
