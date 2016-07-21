@@ -1,4 +1,6 @@
+
 function addSmoke(x, y, z) {
+    var textureLoader = new THREE.TextureLoader();
     var smoke,
         NUM_OF_PARTICLE = 32,
         vertexShader,
@@ -42,10 +44,7 @@ function addSmoke(x, y, z) {
         '}',
     ].join('\n');
 
-    // Shader BackUp
-    // vertexShader = document.getElementById('smoke-vertexshader').textContent;
-    // fragmentShader = document.getElementById('smoke-fragmentshader').textContent;
-    texture = textureLoader.load('./images/smoke.png');
+    texture = textureLoader.load('./levels/materials/textures/smoke.png');
     uniforms = {
         time: {
             type: 'f',
@@ -65,7 +64,7 @@ function addSmoke(x, y, z) {
         },
         projection: {
             type: 'f',
-            value: Math.abs(height / (2 * Math.tan(THREE.Math.degToRad(camera.fov))))
+            value: Math.abs(HEIGHT / (2 * Math.tan(THREE.Math.degToRad(camera.fov))))
         }
     };
     material = new THREE.ShaderMaterial({
@@ -88,7 +87,7 @@ function addSmoke(x, y, z) {
     geometry.addAttribute('position', new THREE.BufferAttribute(position, 3));
     geometry.addAttribute('shift', new THREE.BufferAttribute(shift, 1));
 
-    geometry.translate(x, y, z);
+    geometry.translate(x, 0, z);
 
 
     smoke = new THREE.Points(geometry, material);

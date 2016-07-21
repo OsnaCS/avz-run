@@ -24,6 +24,9 @@ var scene,
 camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
 renderer, container, controls;
 
+//variable used for increasing fog
+var myfog = 0;
+
 function init(event) {
 
     // set up the scene, the camera and the renderer
@@ -35,6 +38,8 @@ function init(event) {
     // add the objects and lights - replace those functions as you please
     createRoom();
     createLights();
+
+    createFire();
 
     // start a loop that will update the objects' positions
     // and render the scene on each frame
@@ -56,10 +61,6 @@ function createScene() {
 
     // Create the scene
     scene = new THREE.Scene();
-
-    // Add a fog effect to the scene; same color as the
-    // background color used in the style sheet
-    scene.fog = new THREE.Fog(0xf7d9aa, 100, 950);
 
 
     // Create the camera
@@ -111,6 +112,9 @@ function createScene() {
 function loop(){
 
     requestAnimationFrame(loop);
+
+    myfog += 0.00001;
+    scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
 
     // YOU NEED TO CALL THIS (srycaps)
     controlLoop(controls);
@@ -226,4 +230,16 @@ function createRoom() {
     scene.add(backWall);
 
 
+}
+
+function createFire(){
+    VolumetricFire.texturePath = './levels/materials/textures/';
+    addSmallFire(0, 1, 0);
+    addSmallFire(1, 20, 1);
+    addSmallFire(3, 20, 1);
+    addSmallFire(5, 20, 1);
+    addSmallFire(7, 20, 1);
+    addSmallFire(9, 20, 1);
+
+    animateFire();
 }

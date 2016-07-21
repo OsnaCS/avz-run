@@ -574,10 +574,6 @@
 
   };
 
-  VolumetricFire.texturePath = './textures/';
-
-  ///
-
   var PriorityQueue = function () {
 
     this.contents = [];
