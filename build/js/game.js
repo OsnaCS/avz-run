@@ -239,12 +239,7 @@ function createRoom() {
 
 function createFire() {
     VolumetricFire.texturePath = './levels/materials/textures/';
-    addSmallFire(0, 1, 0);
-    addSmallFire(1, 20, 1);
-    addSmallFire(3, 20, 1);
-    addSmallFire(5, 20, 1);
-    addSmallFire(7, 20, 1);
-    addSmallFire(9, 20, 1);
 
+    addFire(80,30,1,30,30,30,10);
     animateFire();
 }
