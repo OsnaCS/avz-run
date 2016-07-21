@@ -21,8 +21,8 @@
 window.addEventListener('load', init, false);
 
 var scene,
-camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
-renderer, container, controls;
+    camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
+    renderer, container, controls;
 
 //variable used for increasing fog
 var myfog = 0;
@@ -46,6 +46,11 @@ function init(event) {
     loop();
 }
 
+
+// Stats
+var stats = new Stats();
+stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+document.body.appendChild(stats.dom);
 
 
 function createScene() {
@@ -73,11 +78,11 @@ function createScene() {
         aspectRatio,
         nearPlane,
         farPlane
-       );
+    );
 
     // Set the position of the camera, PLAYERHEIGHT is defined in firstPerson.js
-    var camPos = new THREE.Vector3(0,PLAYERHEIGHT,0);
-    controls = new THREE.PointerLockControls(camera,camPos);
+    var camPos = new THREE.Vector3(0, PLAYERHEIGHT, 0);
+    controls = new THREE.PointerLockControls(camera, camPos);
     scene.add(controls.getObject());
 
     // Create the renderer
@@ -109,8 +114,8 @@ function createScene() {
 
 
 
-function loop(){
-
+function loop() {
+    stats.begin();
     requestAnimationFrame(loop);
 
     myfog += 0.00001;
@@ -120,7 +125,7 @@ function loop(){
     controlLoop(controls);
 
     renderer.render(scene, camera);
-
+    stats.end();
 };
 
 
@@ -146,7 +151,7 @@ function createLights() {
     // A hemisphere light is a gradient colored light;
     // the first parameter is the sky color, the second parameter is the ground color,
     // the third parameter is the intensity of the light
-    hemisphereLight = new THREE.HemisphereLight(0xaaaaaa,0x000000, .9)
+    hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, .9)
 
     // A directional light shines from a specific direction.
     // It acts like the sun, that means that all the rays produced are parallel.
@@ -180,28 +185,28 @@ function createLights() {
 function createRoom() {
 
     var Colors = {
-        red:0xf25346,
-        white:0xd8d0d1,
-        brown:0x59332e,
-        pink:0xF5986E,
-        brownDark:0x23190f,
-        blue:0x68c3c0,
+        red: 0xf25346,
+        white: 0xd8d0d1,
+        brown: 0x59332e,
+        pink: 0xF5986E,
+        brownDark: 0x23190f,
+        blue: 0x68c3c0,
     };
 
-    var cubeGeom = new THREE.BoxGeometry(30,30,30);
+    var cubeGeom = new THREE.BoxGeometry(30, 30, 30);
     var sphereGeom = new THREE.SphereGeometry();
-    var geomFloor = new THREE.BoxGeometry(200,10,200);
-    var geomSide = new THREE.BoxGeometry(10,200,200);
-    var geomBack = new THREE.BoxGeometry(200,200,10);
-    var materialRed = new THREE.MeshLambertMaterial({color:Colors.red,shading:THREE.FlatShading})
-    var materialBlue = new THREE.MeshLambertMaterial({color:Colors.blue,shading:THREE.FlatShading})
+    var geomFloor = new THREE.BoxGeometry(200, 10, 200);
+    var geomSide = new THREE.BoxGeometry(10, 200, 200);
+    var geomBack = new THREE.BoxGeometry(200, 200, 10);
+    var materialRed = new THREE.MeshLambertMaterial({ color: Colors.red, shading: THREE.FlatShading })
+    var materialBlue = new THREE.MeshLambertMaterial({ color: Colors.blue, shading: THREE.FlatShading })
 
     var floor = new THREE.Mesh(geomFloor, materialRed);
     var leftWall = new THREE.Mesh(geomSide, materialRed);
     var rightWall = new THREE.Mesh(geomSide, materialRed);
     var backWall = new THREE.Mesh(geomBack, materialRed);
 
-    var cube = new THREE.Mesh(cubeGeom,materialBlue);
+    var cube = new THREE.Mesh(cubeGeom, materialBlue);
 
     cube.position.x = 80;
     cube.position.y = 15;
@@ -209,11 +214,11 @@ function createRoom() {
 
 
     leftWall.position.x -= 100;
-    leftWall.position.y +=100;
-    rightWall.position.x +=100;
-    rightWall.position.y +=100;
-    backWall.position.z -=100;
-    backWall.position.y +=100;
+    leftWall.position.y += 100;
+    rightWall.position.x += 100;
+    rightWall.position.y += 100;
+    backWall.position.z -= 100;
+    backWall.position.y += 100;
     //floor.position.y -=100;
     terrain.push(rightWall);
     terrain.push(leftWall);
@@ -232,7 +237,7 @@ function createRoom() {
 
 }
 
-function createFire(){
+function createFire() {
     VolumetricFire.texturePath = './levels/materials/textures/';
     addSmallFire(0, 1, 0);
     addSmallFire(1, 20, 1);
