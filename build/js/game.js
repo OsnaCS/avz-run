@@ -22,8 +22,11 @@ window.addEventListener('load', init, false);
 
 
 var scene,
-camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
-renderer, container, controls;
+    camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
+    renderer, container, controls;
+
+//variable used for increasing fog
+var myfog = 0;
 
 function init(event) {
 
@@ -37,11 +40,18 @@ function init(event) {
     createRoom();
     createLights();
 
+    createFire();
+
     // start a loop that will update the objects' positions
     // and render the scene on each frame
     loop();
 }
 
+
+// Stats
+var stats = new Stats();
+stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+document.body.appendChild(stats.dom);
 
 
 function createScene() {
@@ -58,10 +68,6 @@ function createScene() {
     // Create the scene
     scene = new THREE.Scene();
 
-    // Add a fog effect to the scene; same color as the
-    // background color used in the style sheet
-    scene.fog = new THREE.Fog(0xf7d9aa, 100, 950);
-
 
     // Create the camera
     aspectRatio = WIDTH / HEIGHT;
@@ -73,11 +79,11 @@ function createScene() {
         aspectRatio,
         nearPlane,
         farPlane
-       );
+    );
 
     // Set the position of the camera, PLAYERHEIGHT is defined in firstPerson.js
-    var camPos = new THREE.Vector3(0,PLAYERHEIGHT,0);
-    controls = new THREE.PointerLockControls(camera,camPos);
+    var camPos = new THREE.Vector3(0, PLAYERHEIGHT, 0);
+    controls = new THREE.PointerLockControls(camera, camPos);
     scene.add(controls.getObject());
 
     // Create the renderer
@@ -109,16 +115,19 @@ function createScene() {
 
 
 
-function loop(){
-
+function loop() {
+    stats.begin();
     requestAnimationFrame(loop);
+
+    myfog += 0.00001;
+    scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
 
     // YOU NEED TO CALL THIS (srycaps)
     controlLoop(controls);
     interactionLoop();
 
     renderer.render(scene, camera);
-
+    stats.end();
 };
 
 
@@ -144,7 +153,7 @@ function createLights() {
     // A hemisphere light is a gradient colored light;
     // the first parameter is the sky color, the second parameter is the ground color,
     // the third parameter is the intensity of the light
-    hemisphereLight = new THREE.HemisphereLight(0xaaaaaa,0x000000, .9)
+    hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, .9)
 
     // A directional light shines from a specific direction.
     // It acts like the sun, that means that all the rays produced are parallel.
@@ -178,30 +187,32 @@ function createLights() {
 function createRoom() {
 
     var Colors = {
-        red:0xf25346,
-        white:0xd8d0d1,
-        brown:0x59332e,
-        pink:0xF5986E,
-        brownDark:0x23190f,
-        blue:0x68c3c0,
+        red: 0xf25346,
+        white: 0xd8d0d1,
+        brown: 0x59332e,
+        pink: 0xF5986E,
+        brownDark: 0x23190f,
+        blue: 0x68c3c0,
     };
 
-    var cubeGeom = new THREE.BoxGeometry(30,30,30);
+    var cubeGeom = new THREE.BoxGeometry(30, 30, 30);
     var sphereGeom = new THREE.SphereGeometry();
-    var geomFloor = new THREE.BoxGeometry(200,10,200);
-    var geomSide = new THREE.BoxGeometry(10,200,200);
-    var geomBack = new THREE.BoxGeometry(200,200,10);
-    var materialRed = new THREE.MeshLambertMaterial({color:Colors.red,shading:THREE.FlatShading})
-    var materialBlue = new THREE.MeshLambertMaterial({color:Colors.blue,shading:THREE.FlatShading})
+    var geomFloor = new THREE.BoxGeometry(200, 10, 200);
+    var geomSide = new THREE.BoxGeometry(10, 200, 200);
+    var geomBack = new THREE.BoxGeometry(200, 200, 10);
+    var materialRed = new THREE.MeshLambertMaterial({ color: Colors.red, shading: THREE.FlatShading })
+    var materialBlue = new THREE.MeshLambertMaterial({ color: Colors.blue, shading: THREE.FlatShading })
 
     var floor = new THREE.Mesh(geomFloor, materialRed);
     var leftWall = new THREE.Mesh(geomSide, materialRed);
     var rightWall = new THREE.Mesh(geomSide, materialRed);
     var backWall = new THREE.Mesh(geomBack, materialRed);
 
+
     var cubeMesh = new THREE.Mesh(cubeGeom,materialBlue);
 
     var cube = new gameObject(cubeMesh, cubeInteraction, true);
+
 
     cube.mesh.position.x = 80;
     cube.mesh.position.y = 15;
@@ -209,11 +220,11 @@ function createRoom() {
 
 
     leftWall.position.x -= 100;
-    leftWall.position.y +=100;
-    rightWall.position.x +=100;
-    rightWall.position.y +=100;
-    backWall.position.z -=100;
-    backWall.position.y +=100;
+    leftWall.position.y += 100;
+    rightWall.position.x += 100;
+    rightWall.position.y += 100;
+    backWall.position.z -= 100;
+    backWall.position.y += 100;
     //floor.position.y -=100;
     terrain.push(rightWall);
     terrain.push(leftWall);
@@ -232,7 +243,20 @@ function createRoom() {
 
 
 }
+
 function cubeInteraction() {
     //cube.mesh.material = new
     console.log("click");
+}
+
+function createFire() {
+    VolumetricFire.texturePath = './levels/materials/textures/';
+    addSmallFire(0, 1, 0);
+    addSmallFire(1, 20, 1);
+    addSmallFire(3, 20, 1);
+    addSmallFire(5, 20, 1);
+    addSmallFire(7, 20, 1);
+    addSmallFire(9, 20, 1);
+
+    animateFire();
 }

@@ -48,11 +48,13 @@ var running = false;
 var standupRequest = false;
 var speed_factor=1;
 
-var PLAYERHEIGHT = 30;
+var PLAYERHEIGHT = 110;
 var DUCK_SPEED = 0.6; // speed at which player is crouching
+var DUCK_DIFFERENCE = 2*(PLAYERHEIGHT/3);
 var RUN_SPEED = 2;
 var INVERT_XZ = new THREE.Vector3(-1,1,-1);
-var MOVEMENT_SPEED = 600;
+var MOVEMENT_SPEED = 1600;
+var JUMP_SPEED = 600;
 
 
 var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
@@ -146,7 +148,7 @@ function initControls() {
                 break;
 
             case 32: // space
-                if (canJump === true &&!ducked) velocity.y += 300;
+                if (canJump === true &&!ducked) velocity.y += JUMP_SPEED;
                 canJump = false;
                 break;
 
@@ -165,7 +167,7 @@ function initControls() {
 
                 if (!ducked && !running) {
                     ducked = true;
-                    PLAYERHEIGHT -= 20;
+                    PLAYERHEIGHT -= DUCK_DIFFERENCE;
                     speed_factor = DUCK_SPEED;
 
                     // change far plane of collision rays (as they
@@ -268,7 +270,7 @@ function controlLoop(controls) {
         velocity.z -= velocity.z * 10.0 * delta;
 
         // gravity
-        velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+        velocity.y -= 9.8 * 170.0 * delta; // 100.0 = mass
 
         if (moveForward) velocity.z -= MOVEMENT_SPEED * speed_factor * delta;
         if (moveBackward) velocity.z += MOVEMENT_SPEED * speed_factor * delta;
@@ -337,7 +339,7 @@ function handleStandup() {
             // stands up as soon as there are no more objects above
             if(intersectionsYpos.length == 0) {
 
-                PLAYERHEIGHT += 20;
+                PLAYERHEIGHT += DUCK_DIFFERENCE;
                 controls.getObject().position.y += 20;
                 ducked = false;
                 speed_factor = 1;
