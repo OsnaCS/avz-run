@@ -186,77 +186,38 @@ function createLights() {
 
 function createRoom() {
 
-    var Colors = {
-        red: 0xf25346,
-        white: 0xd8d0d1,
-        brown: 0x59332e,
-        pink: 0xF5986E,
-        brownDark: 0x23190f,
-        blue: 0x68c3c0,
-    };
-
-    var cubeGeom = new THREE.BoxGeometry(30, 30, 30);
-    var sphereGeom = new THREE.SphereGeometry();
-    var geomFloor = new THREE.BoxGeometry(200, 10, 200);
-    var geomSide = new THREE.BoxGeometry(10, 200, 200);
-    var geomBack = new THREE.BoxGeometry(200, 200, 10);
-    var materialRed = new THREE.MeshLambertMaterial({ color: Colors.red, shading: THREE.FlatShading })
-    var materialBlue = new THREE.MeshLambertMaterial({ color: Colors.blue, shading: THREE.FlatShading })
-
-    var floor = new THREE.Mesh(geomFloor, materialRed);
-    var leftWall = new THREE.Mesh(geomSide, materialRed);
-    var rightWall = new THREE.Mesh(geomSide, materialRed);
-    var backWall = new THREE.Mesh(geomBack, materialRed);
+    var jloader2 = new THREE.JSONLoader();
+    jloader2.load('test_level.json', function(geo, mat){
+        var materials = new THREE.MeshFaceMaterial( mat );
+        var mesh = new THREE.Mesh(geo, materials);
+        terrain.push(mesh);
+        mesh.position.y=0;
+        mesh.position.x=5;
+        mesh.scale.set(20,20,20);
+        loadJson(mesh );
+    });
 
 
-    var cubeMesh = new THREE.Mesh(cubeGeom,materialBlue);
-
-    var cube = new gameObject(cubeMesh, cubeInteraction, true);
-
-
-    cube.mesh.position.x = 80;
-    cube.mesh.position.y = 15;
-
-
-
-    leftWall.position.x -= 100;
-    leftWall.position.y += 100;
-    rightWall.position.x += 100;
-    rightWall.position.y += 100;
-    backWall.position.z -= 100;
-    backWall.position.y += 100;
-    //floor.position.y -=100;
-    terrain.push(rightWall);
-    terrain.push(leftWall);
-    terrain.push(backWall);
-    terrain.push(floor);
-    terrain.push(cube);
-    cube.mesh.castShadow = true;
-
-
-
-    scene.add(cube.mesh);
-    scene.add(floor);
-    scene.add(leftWall);
-    scene.add(rightWall);
-    scene.add(backWall);
-
+     function loadJson(mesh){
+         scene.add( mesh );
+     }
 
 }
-
-function cubeInteraction() {
-    //cube.mesh.material = new
-    console.log("click");
-}
-
 function createFire() {
     VolumetricFire.texturePath = './levels/materials/textures/';
-    addSmallFire(0, 1, 0);
-    addSmallFire(1, 20, 1);
-    addSmallFire(3, 20, 1);
-    addSmallFire(5, 20, 1);
-    addSmallFire(7, 20, 1);
-    addSmallFire(9, 20, 1);
+    addSmallFire(0, 0, 0);
+    addSmallFire(0, 10, 0);
+    addSmallFire(0, 20, 0);
+    addSmallFire(0, 30, 0);
+    addSmallFire(0, 40, 0);
+    addSmallFire(0, 50, 0);
+    addSmallFire(0, -10, 0);
+    addSmallFire(0, -20, 0);
+    addSmallFire(0, -30, 0);
+    addSmallFire(0, -40, 0);
+    addSmallFire(0, -50, 0);
+        addFire(0, 1, 5, 100, 150, 100, 50);
+
 
     animateFire();
 }
