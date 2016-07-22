@@ -24,7 +24,7 @@ window.addEventListener('load', init, false);
 var scene,
     camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
     renderer, container, controls;
-
+var pathItem = '../avz_model/materials/objects/';
 //variable used for increasing fog
 var myfog = 0;
 
@@ -194,30 +194,48 @@ function createRoom() {
         mesh.position.y=0;
         mesh.position.x=5;
         mesh.scale.set(20,20,20);
-        loadJson(mesh );
+        scene.add( mesh );
     });
 
-
-     function loadJson(mesh){
-         scene.add( mesh );
-     }
+var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json'];
+     addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true);
+     addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true);
+     addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true);
+     addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true);
 
 }
 function createFire() {
     VolumetricFire.texturePath = './levels/materials/textures/';
-    addSmallFire(0, 0, 0);
-    addSmallFire(0, 10, 0);
-    addSmallFire(0, 20, 0);
-    addSmallFire(0, 30, 0);
-    addSmallFire(0, 40, 0);
-    addSmallFire(0, 50, 0);
-    addSmallFire(0, -10, 0);
-    addSmallFire(0, -20, 0);
-    addSmallFire(0, -30, 0);
-    addSmallFire(0, -40, 0);
-    addSmallFire(0, -50, 0);
+
         addFire(0, 1, 5, 100, 150, 100, 50);
 
 
     animateFire();
+}
+
+
+// Add Object with given Path to given coordinates
+function addItem(file, xPos, yPos, zPos, scale, interact){
+        var jloader2 = new THREE.JSONLoader();
+    jloader2.load(file, function(geo, mat){
+        var materials = new THREE.MeshFaceMaterial( mat );
+        var mesh = new THREE.Mesh(geo, materials);
+
+        mesh.position.y=yPos;
+        mesh.position.x=xPos;
+        mesh.position.z = zPos;
+        mesh.scale.set(20*scale,20*scale,20*scale);
+        if(interact){
+            var intItem = new gameObject(mesh, 0, interact);
+            terrain.push(intItem);
+        }
+        else{
+            terrain.push(mesh);
+        }
+
+        scene.add( mesh );
+
+    });
+
+
 }
