@@ -20,13 +20,9 @@
 
 window.addEventListener('load', init, false);
 
-
 var scene,
-    camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
-    renderer, container, controls;
-
-//variable used for increasing fog
-var myfog = 0;
+camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
+renderer, container, controls;
 
 function init(event) {
 
@@ -40,18 +36,11 @@ function init(event) {
     createRoom();
     createLights();
 
-    createFire();
-
     // start a loop that will update the objects' positions
     // and render the scene on each frame
     loop();
 }
 
-
-// Stats
-var stats = new Stats();
-stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-document.body.appendChild(stats.dom);
 
 
 function createScene() {
@@ -68,6 +57,10 @@ function createScene() {
     // Create the scene
     scene = new THREE.Scene();
 
+    // Add a fog effect to the scene; same color as the
+    // background color used in the style sheet
+    scene.fog = new THREE.Fog(0xf7d9aa, 100, 950);
+
 
     // Create the camera
     aspectRatio = WIDTH / HEIGHT;
@@ -79,11 +72,11 @@ function createScene() {
         aspectRatio,
         nearPlane,
         farPlane
-    );
+       );
 
     // Set the position of the camera, PLAYERHEIGHT is defined in firstPerson.js
-    var camPos = new THREE.Vector3(0, PLAYERHEIGHT, 0);
-    controls = new THREE.PointerLockControls(camera, camPos);
+    var camPos = new THREE.Vector3(0,PLAYERHEIGHT+1000,0);
+    controls = new THREE.PointerLockControls(camera,camPos);
     scene.add(controls.getObject());
 
     // Create the renderer
@@ -115,19 +108,15 @@ function createScene() {
 
 
 
-function loop() {
-    stats.begin();
-    requestAnimationFrame(loop);
+function loop(){
 
-    myfog += 0.00001;
-    scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
+    requestAnimationFrame(loop);
 
     // YOU NEED TO CALL THIS (srycaps)
     controlLoop(controls);
-    interactionLoop();
 
     renderer.render(scene, camera);
-    stats.end();
+
 };
 
 
@@ -150,55 +139,43 @@ var hemisphereLight, shadowLight;
 
 function createLights() {
 
-    // A hemisphere light is a gradient colored light;
-    // the first parameter is the sky color, the second parameter is the ground color,
-    // the third parameter is the intensity of the light
-    hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, .9)
+		var pointLight1 = new THREE.PointLight(0x999999);
+		pointLight1.position.set(0.0,0.0,0.0);
+		pointLight1.castShadow = true;
+		scene.add(pointLight1);
 
-    // A directional light shines from a specific direction.
-    // It acts like the sun, that means that all the rays produced are parallel.
-    shadowLight = new THREE.DirectionalLight(0xffffff, .9);
+		var pointLight2 = new THREE.PointLight(0x999999);
+		pointLight2.position.set(40,10,10);
+		pointLight2.castShadow = true;
+		scene.add(pointLight2);
 
-    // Set the direction of the light
-    shadowLight.position.set(50, 50, 50);
+		var spotLight = new THREE.SpotLight(0xFFFFFF);
+		spotLight.position.set(0.0,5.0,8.0);
+		spotLight.castShadow = true;
+		scene.add(spotLight);
 
-    // Allow shadow casting
-    shadowLight.castShadow = true;
-
-    // define the visible area of the projected shadow
-    shadowLight.shadow.camera.left = -400;
-    shadowLight.shadow.camera.right = 400;
-    shadowLight.shadow.camera.top = 400;
-    shadowLight.shadow.camera.bottom = -400;
-    shadowLight.shadow.camera.near = 1;
-    shadowLight.shadow.camera.far = 1000;
-
-    // define the resolution of the shadow; the higher the better,
-    // but also the more expensive and less performant
-    shadowLight.shadow.mapSize.width = 2048;
-    shadowLight.shadow.mapSize.height = 2048;
-
-    // to activate the lights, just add them to the scene
-    scene.add(hemisphereLight);
-    scene.add(shadowLight);
+		var ambientL = new THREE.AmbientLight(0xFFFFFF,0.5);
+		scene.add(ambientL);
 }
 
 
 function createRoom() {
-    var jloader2 = new THREE.JSONLoader();
-    jloader2.load('test_level.json', function(geo, mat){
-        var materials = new THREE.MeshFaceMaterial( mat );
-        var mesh = new THREE.Mesh(geo, materials);
-        terrain.push(mesh);
-        mesh.position.y=0;
-        mesh.position.x=5;
-        mesh.scale.set(20,20,20);
-        loadJson(mesh );
-    });
 
-     function loadJson(mesh){
-         scene.add( mesh );
-     }
+	var jloader2 = new THREE.JSONLoader();
+	jloader2.load('test_level.json', function(geo, mat){
+		var materials = new THREE.MeshFaceMaterial( mat );
+		var mesh = new THREE.Mesh(geo, materials);
+		terrain.push(mesh);
+		mesh.position.y=0;
+		mesh.position.x=5;
+		mesh.scale.set(20,20,20);
+		loadJson(mesh );
+	});
+
+
+	 function loadJson(mesh){
+		 scene.add( mesh );
+	 }
 
 }
 function createFire() {
@@ -217,12 +194,5 @@ function createFire() {
         addFire(0, 1, 5, 100, 150, 100, 50);
 
 
-    animateFire();
-}
-
-function createFire() {
-    VolumetricFire.texturePath = './levels/materials/textures/';
-
-    addFire(80,30,1,30,30,30,10);
     animateFire();
 }
