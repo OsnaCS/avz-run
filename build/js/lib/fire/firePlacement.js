@@ -62,6 +62,12 @@ function addFire(x, y, z, width, height, depth, spacing) {
     scene.add(fmesh);
     fmesh.position.set(x, y + fireHeight / 2, z);
 
+    var geometry = new THREE.BoxGeometry( fireWidth, fireHeight, fireDepth);
+    var material = new THREE.MeshBasicMaterial( {color: 0x00ff00,opacity: 1} );
+    var cube = new THREE.Mesh( geometry, material );
+    cube.position.set(x,y,z);
+    terrain.push( cube );
+
     var smoke = addSmoke(x, y, z);
 
     // Push smoke und light in Array
