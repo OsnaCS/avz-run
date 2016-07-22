@@ -177,22 +177,37 @@ function createRoom() {
 		 scene.add( mesh );
 	 }
 
+     addItem('Axe.json', 0, 5, 10);
+
 }
 function createFire() {
     VolumetricFire.texturePath = './levels/materials/textures/';
-    addSmallFire(0, 0, 0);
-    addSmallFire(0, 10, 0);
-    addSmallFire(0, 20, 0);
-    addSmallFire(0, 30, 0);
-    addSmallFire(0, 40, 0);
-    addSmallFire(0, 50, 0);
-    addSmallFire(0, -10, 0);
-    addSmallFire(0, -20, 0);
-    addSmallFire(0, -30, 0);
-    addSmallFire(0, -40, 0);
-    addSmallFire(0, -50, 0);
+
         addFire(0, 1, 5, 100, 150, 100, 50);
 
 
     animateFire();
+}
+
+// Add Object with given Path to given coordinates
+function addItem(file, xPos, yPos, zPos){
+        var jloader2 = new THREE.JSONLoader();
+    jloader2.load(file, function(geo, mat){
+        var materials = new THREE.MeshFaceMaterial( mat );
+        var mesh = new THREE.Mesh(geo, materials);
+        terrain.push(mesh);
+        mesh.position.y=yPos;
+        mesh.position.x=xPos;
+        mesh.position.z = zPos;
+        mesh.scale.set(20,20,20);
+        scene.add( mesh );
+        //loadJson(mesh );
+    });
+
+
+     function loadJson(mesh){
+         scene.add( mesh );
+     }
+
+
 }

@@ -25,8 +25,11 @@ var scene,
     camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
     renderer, container, controls;
 
-//variables used for increasing fog
-var myfog = 0;
+
+
+var pathItem = '../avz_model/materials/objects/';
+//variable used for increasing fog
+var myfog=0;
 var fogTime=5;
 var fogIncrement= 0.015/(fogTime*1000/10) ;
 var fogInterval;
@@ -198,7 +201,6 @@ function createLights() {
 
 
 function createRoom() {
-
     var jloader2 = new THREE.JSONLoader();
     jloader2.load('test_level.json', function(geo, mat){
         var materials = new THREE.MeshFaceMaterial( mat );
@@ -207,44 +209,67 @@ function createRoom() {
         mesh.position.y=0;
         mesh.position.x=5;
         mesh.scale.set(20,20,20);
-        loadJson(mesh );
+        scene.add( mesh );
     });
 
 
 
+var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json'];
+     addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true);
+     addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true);
+     addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true);
+     addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true);
 
-    function loadJson(mesh){
-         scene.add( mesh );
-     }
+
 
 }
+
+
+// Add Object with given Path to given coordinates
+function addItem(file, xPos, yPos, zPos, scale, interact){
+        var jloader2 = new THREE.JSONLoader();
+    jloader2.load(file, function(geo, mat){
+        var materials = new THREE.MeshFaceMaterial( mat );
+        var mesh = new THREE.Mesh(geo, materials);
+
+        mesh.position.y=yPos;
+        mesh.position.x=xPos;
+        mesh.position.z = zPos;
+        mesh.scale.set(20*scale,20*scale,20*scale);
+        if(interact){
+            var intItem = new gameObject(mesh, 0, interact);
+            terrain.push(intItem);
+        }
+        else{
+            terrain.push(mesh);
+        }
+
+        scene.add( mesh );
+
+    });
+}
+
+
+
 function createFire() {
     VolumetricFire.texturePath = './levels/materials/textures/';
-    // addSmallFire(0, 0, 0);
-    // addSmallFire(0, 10, 0);
-    // addSmallFire(0, 20, 0);
-    // addSmallFire(0, 30, 0);
-    // addSmallFire(0, 40, 0);
-    // addSmallFire(0, 50, 0);
-    // addSmallFire(0, -10, 0);
-    // addSmallFire(0, -20, 0);
-    // addSmallFire(0, -30, 0);
-    // addSmallFire(0, -40, 0);
-    // addSmallFire(0, -50, 0);
-    addFire(0, 1, 0, 10, 5, 10, 40);
-    fireGeom = new THREE.BoxGeometry(10,5,10);
-    var mat = new THREE.MeshLambertMaterial({color: 0xFFFFFF,opacity:1.0} )
+
+    addFire(80,30,1,30,30,30,10);
+    fireGeom = new THREE.BoxGeometry(30,30,30);
+    var mat = new THREE.MeshLambertMaterial({color: 0xFFFFFF,opacity:0} )
     var box = new GameObject(new THREE.Mesh(fireGeom,mat),null,TYPE_FIRE);
 
-    box.mesh.position.x=10;
+    box.mesh.position.x=80;
 
-    box.mesh.position.y=1;
+    box.mesh.position.y=30;
 
-    box.mesh.position.z=5;
+    box.mesh.position.z=1;
 
-    //scene.add(box.mesh);
+    scene.add(box.mesh);
     terrain.push(box);
 
 
+
     animateFire();
+
 }
