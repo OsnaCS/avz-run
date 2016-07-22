@@ -168,7 +168,7 @@ function createRoom() {
 		terrain.push(mesh);	
 		mesh.position.y=0;
 		mesh.position.x=5;
-		mesh.scale.set(70,70,70);
+		mesh.scale.set(20,20,20);
 		loadJson(mesh );
 	});
 
