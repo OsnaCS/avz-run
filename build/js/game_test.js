@@ -75,7 +75,7 @@ function createScene() {
        );
 
     // Set the position of the camera, PLAYERHEIGHT is defined in firstPerson.js
-    var camPos = new THREE.Vector3(0,PLAYERHEIGHT,0);
+    var camPos = new THREE.Vector3(0,PLAYERHEIGHT+1000,0);
     controls = new THREE.PointerLockControls(camera,camPos);
     scene.add(controls.getObject());
 
@@ -177,4 +177,22 @@ function createRoom() {
 		 scene.add( mesh );
 	 }
 
+}
+function createFire() {
+    VolumetricFire.texturePath = './levels/materials/textures/';
+    addSmallFire(0, 0, 0);
+    addSmallFire(0, 10, 0);
+    addSmallFire(0, 20, 0);
+    addSmallFire(0, 30, 0);
+    addSmallFire(0, 40, 0);
+    addSmallFire(0, 50, 0);
+    addSmallFire(0, -10, 0);
+    addSmallFire(0, -20, 0);
+    addSmallFire(0, -30, 0);
+    addSmallFire(0, -40, 0);
+    addSmallFire(0, -50, 0);
+        addFire(0, 1, 5, 100, 150, 100, 50);
+
+
+    animateFire();
 }

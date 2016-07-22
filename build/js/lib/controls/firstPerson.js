@@ -48,13 +48,15 @@ var running = false;
 var standupRequest = false;
 var speed_factor=1;
 
-var PLAYERHEIGHT = 110;
+
+var PLAYERHEIGHT = 25;
 var DUCK_SPEED = 0.6; // speed at which player is crouching
 var DUCK_DIFFERENCE = 2*(PLAYERHEIGHT/3);
 var RUN_SPEED = 2;
 var INVERT_XZ = new THREE.Vector3(-1,1,-1);
-var MOVEMENT_SPEED = 1600;
-var JUMP_SPEED = 600;
+var MOVEMENT_SPEED = 600;
+var JUMP_SPEED = 500;
+
 
 
 var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
@@ -235,7 +237,9 @@ function initControls() {
     document.addEventListener('keyup', onKeyUp, false);
 
     // create rays for collision detection in each direction(direction values will be changed later)
-    raycasterY = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 10); // beneath
+
+    raycasterY = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 15); // beneath
+
 
     raycasterYpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 20); // above
 
@@ -257,10 +261,12 @@ function initControls() {
 }
 
 
-var firstTime;
+var firstTime=true;
 function controlLoop(controls) {
 
+
         setRays();
+
 
         // determines stepwidth
         var time = performance.now();
@@ -316,7 +322,7 @@ function controlLoop(controls) {
         // stop gravity at ground level as collision detection sometimes fails for floor
         if (controls.getObject().position.y < PLAYERHEIGHT&&firstTime) {
             velocity.y = 0;
-            controls.getObject().position.y = PLAYERHEIGHT;
+            controls.getObject().position.y = PLAYERHEIGHT+5;
         }
 
         // checks if we can stand up (may be forbidden when crouching beneath an object)
