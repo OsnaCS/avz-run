@@ -20,6 +20,7 @@
 
 window.addEventListener('load', init, false);
 
+
 var scene,
     camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
     renderer, container, controls;
@@ -123,6 +124,7 @@ function loop() {
 
     // YOU NEED TO CALL THIS (srycaps)
     controlLoop(controls);
+    interactionLoop();
 
     renderer.render(scene, camera);
     stats.end();
@@ -206,10 +208,14 @@ function createRoom() {
     var rightWall = new THREE.Mesh(geomSide, materialRed);
     var backWall = new THREE.Mesh(geomBack, materialRed);
 
-    var cube = new THREE.Mesh(cubeGeom, materialBlue);
 
-    cube.position.x = 80;
-    cube.position.y = 15;
+    var cubeMesh = new THREE.Mesh(cubeGeom,materialBlue);
+
+    var cube = new gameObject(cubeMesh, cubeInteraction, true);
+
+
+    cube.mesh.position.x = 80;
+    cube.mesh.position.y = 15;
 
 
 
@@ -225,16 +231,22 @@ function createRoom() {
     terrain.push(backWall);
     terrain.push(floor);
     terrain.push(cube);
-    cube.castShadow = true;
+    cube.mesh.castShadow = true;
 
 
-    scene.add(cube);
+
+    scene.add(cube.mesh);
     scene.add(floor);
     scene.add(leftWall);
     scene.add(rightWall);
     scene.add(backWall);
 
 
+}
+
+function cubeInteraction() {
+    //cube.mesh.material = new
+    console.log("click");
 }
 
 function createFire() {
