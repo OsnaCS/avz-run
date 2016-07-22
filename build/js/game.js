@@ -25,8 +25,13 @@ var scene,
     camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
     renderer, container, controls;
 
-//variable used for increasing fog
+//variables used for increasing fog
 var myfog = 0;
+var fogTime=5;
+var fogIncrement= 0.015/(fogTime*1000/10) ;
+var fogInterval;
+
+
 
 function init(event) {
 
@@ -68,6 +73,13 @@ function createScene() {
     // Create the scene
     scene = new THREE.Scene();
 
+    scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
+
+    fogInterval = setInterval(function () {
+            myfog += fogIncrement;
+            console.log(myfog);
+
+    }, 10);
 
     // Create the camera
     aspectRatio = WIDTH / HEIGHT;
@@ -119,8 +131,9 @@ function loop() {
     stats.begin();
     requestAnimationFrame(loop);
 
-    myfog += 0.00001;
-    scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
+
+
+    scene.fog.density= myfog;
 
     // YOU NEED TO CALL THIS (srycaps)
     controlLoop(controls);
@@ -198,25 +211,39 @@ function createRoom() {
     });
 
 
-     function loadJson(mesh){
+
+
+    function loadJson(mesh){
          scene.add( mesh );
      }
 
 }
 function createFire() {
     VolumetricFire.texturePath = './levels/materials/textures/';
-    addSmallFire(0, 0, 0);
-    addSmallFire(0, 10, 0);
-    addSmallFire(0, 20, 0);
-    addSmallFire(0, 30, 0);
-    addSmallFire(0, 40, 0);
-    addSmallFire(0, 50, 0);
-    addSmallFire(0, -10, 0);
-    addSmallFire(0, -20, 0);
-    addSmallFire(0, -30, 0);
-    addSmallFire(0, -40, 0);
-    addSmallFire(0, -50, 0);
-        addFire(0, 1, 5, 100, 150, 100, 50);
+    // addSmallFire(0, 0, 0);
+    // addSmallFire(0, 10, 0);
+    // addSmallFire(0, 20, 0);
+    // addSmallFire(0, 30, 0);
+    // addSmallFire(0, 40, 0);
+    // addSmallFire(0, 50, 0);
+    // addSmallFire(0, -10, 0);
+    // addSmallFire(0, -20, 0);
+    // addSmallFire(0, -30, 0);
+    // addSmallFire(0, -40, 0);
+    // addSmallFire(0, -50, 0);
+    addFire(0, 1, 0, 10, 5, 10, 40);
+    fireGeom = new THREE.BoxGeometry(10,5,10);
+    var mat = new THREE.MeshLambertMaterial({color: 0xFFFFFF,opacity:1.0} )
+    var box = new GameObject(new THREE.Mesh(fireGeom,mat),null,TYPE_FIRE);
+
+    box.mesh.position.x=10;
+
+    box.mesh.position.y=1;
+
+    box.mesh.position.z=5;
+
+    //scene.add(box.mesh);
+    terrain.push(box);
 
 
     animateFire();
