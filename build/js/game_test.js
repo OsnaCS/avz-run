@@ -75,7 +75,7 @@ function createScene() {
        );
 
     // Set the position of the camera, PLAYERHEIGHT is defined in firstPerson.js
-    var camPos = new THREE.Vector3(0,PLAYERHEIGHT,0);
+    var camPos = new THREE.Vector3(0,PLAYERHEIGHT+1000,0);
     controls = new THREE.PointerLockControls(camera,camPos);
     scene.add(controls.getObject());
 
@@ -147,13 +147,13 @@ function createLights() {
 		var pointLight2 = new THREE.PointLight(0x999999);
 		pointLight2.position.set(40,10,10);
 		pointLight2.castShadow = true;
-		scene.add(pointLight2);				
-		
+		scene.add(pointLight2);
+
 		var spotLight = new THREE.SpotLight(0xFFFFFF);
 		spotLight.position.set(0.0,5.0,8.0);
 		spotLight.castShadow = true;
 		scene.add(spotLight);
-		
+
 		var ambientL = new THREE.AmbientLight(0xFFFFFF,0.5);
 		scene.add(ambientL);
 }
@@ -165,7 +165,7 @@ function createRoom() {
 	jloader2.load('test_level.json', function(geo, mat){
 		var materials = new THREE.MeshFaceMaterial( mat );
 		var mesh = new THREE.Mesh(geo, materials);
-		terrain.push(mesh);	
+		terrain.push(mesh);
 		mesh.position.y=0;
 		mesh.position.x=5;
 		mesh.scale.set(20,20,20);
@@ -174,7 +174,25 @@ function createRoom() {
 
 
 	 function loadJson(mesh){
-		 scene.add( mesh );    
-	 }	
+		 scene.add( mesh );
+	 }
 
+}
+function createFire() {
+    VolumetricFire.texturePath = './levels/materials/textures/';
+    addSmallFire(0, 0, 0);
+    addSmallFire(0, 10, 0);
+    addSmallFire(0, 20, 0);
+    addSmallFire(0, 30, 0);
+    addSmallFire(0, 40, 0);
+    addSmallFire(0, 50, 0);
+    addSmallFire(0, -10, 0);
+    addSmallFire(0, -20, 0);
+    addSmallFire(0, -30, 0);
+    addSmallFire(0, -40, 0);
+    addSmallFire(0, -50, 0);
+        addFire(0, 1, 5, 100, 150, 100, 50);
+
+
+    animateFire();
 }

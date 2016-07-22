@@ -20,6 +20,7 @@
 
 window.addEventListener('load', init, false);
 
+
 var scene,
     camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
     renderer, container, controls;
@@ -123,6 +124,7 @@ function loop() {
 
     // YOU NEED TO CALL THIS (srycaps)
     controlLoop(controls);
+    interactionLoop();
 
     renderer.render(scene, camera);
     stats.end();
@@ -226,10 +228,14 @@ jsonLoader.load('test_level.json', function (geometry, materials) {
     var rightWall = new THREE.Mesh(geomSide, materialRed);
     var backWall = new THREE.Mesh(geomBack, materialRed);
 
-    var cube = new THREE.Mesh(cubeGeom, materialBlue);
 
-    cube.position.x = 80;
-    cube.position.y = 15;
+    var cubeMesh = new THREE.Mesh(cubeGeom,materialBlue);
+
+    var cube = new gameObject(cubeMesh, cubeInteraction, true);
+
+
+    cube.mesh.position.x = 80;
+    cube.mesh.position.y = 15;
 
 
 
@@ -245,10 +251,11 @@ jsonLoader.load('test_level.json', function (geometry, materials) {
     terrain.push(backWall);
     terrain.push(floor);
     terrain.push(cube);
-    cube.castShadow = true;
+    cube.mesh.castShadow = true;
 
 
-    scene.add(cube);
+
+    scene.add(cube.mesh);
     scene.add(floor);
     scene.add(leftWall);
     scene.add(rightWall);
@@ -257,9 +264,14 @@ jsonLoader.load('test_level.json', function (geometry, materials) {
 
 }
 
+function cubeInteraction() {
+    //cube.mesh.material = new
+    console.log("click");
+}
+
 function createFire() {
     VolumetricFire.texturePath = './levels/materials/textures/';
-    addSmallFire(0, 1, 0);
+    addFire(0, 1, 5, 100, 150, 100, 50);
     addSmallFire(1, 20, 1);
     addSmallFire(3, 20, 1);
     addSmallFire(5, 20, 1);
