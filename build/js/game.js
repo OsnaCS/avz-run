@@ -80,7 +80,6 @@ function createScene() {
 
     fogInterval = setInterval(function () {
             myfog += fogIncrement;
-            console.log(myfog);
 
     }, 10);
 
@@ -226,7 +225,7 @@ var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.js
 
 
 // Add Object with given Path to given coordinates
-function addItem(file, xPos, yPos, zPos, scale, interact){
+function addItem(file, xPos, yPos, zPos, scale, interact_type){
         var jloader2 = new THREE.JSONLoader();
     jloader2.load(file, function(geo, mat){
         var materials = new THREE.MeshFaceMaterial( mat );
@@ -236,8 +235,8 @@ function addItem(file, xPos, yPos, zPos, scale, interact){
         mesh.position.x=xPos;
         mesh.position.z = zPos;
         mesh.scale.set(20*scale,20*scale,20*scale);
-        if(interact){
-            var intItem = new gameObject(mesh, 0, interact);
+        if(interact_type){
+            var intItem = new GameObject(mesh, 0, TYPE_INTERACTABLE);
             terrain.push(intItem);
         }
         else{
@@ -256,7 +255,7 @@ function createFire() {
 
     addFire(80,30,1,30,30,30,10);
     fireGeom = new THREE.BoxGeometry(30,30,30);
-    var mat = new THREE.MeshLambertMaterial({color: 0xFFFFFF,opacity:0} )
+    var mat = new THREE.MeshBasicMaterial({transparent:true, opacity:0} )
     var box = new GameObject(new THREE.Mesh(fireGeom,mat),null,TYPE_FIRE);
 
     box.mesh.position.x=80;
