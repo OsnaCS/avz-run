@@ -185,7 +185,6 @@ function createLights() {
 
 
 function createRoom() {
-
     var jloader2 = new THREE.JSONLoader();
     jloader2.load('test_level.json', function(geo, mat){
         var materials = new THREE.MeshFaceMaterial( mat );
@@ -196,7 +195,6 @@ function createRoom() {
         mesh.scale.set(20,20,20);
         loadJson(mesh );
     });
-
 
      function loadJson(mesh){
          scene.add( mesh );
@@ -219,5 +217,12 @@ function createFire() {
         addFire(0, 1, 5, 100, 150, 100, 50);
 
 
+    animateFire();
+}
+
+function createFire() {
+    VolumetricFire.texturePath = './levels/materials/textures/';
+
+    addFire(80,30,1,30,30,30,10);
     animateFire();
 }
