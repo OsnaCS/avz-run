@@ -75,7 +75,7 @@ function createScene() {
        );
 
     // Set the position of the camera, PLAYERHEIGHT is defined in firstPerson.js
-    var camPos = new THREE.Vector3(0,PLAYERHEIGHT,0);
+    var camPos = new THREE.Vector3(0,PLAYERHEIGHT+1000,0);
     controls = new THREE.PointerLockControls(camera,camPos);
     scene.add(controls.getObject());
 
@@ -147,13 +147,13 @@ function createLights() {
 		var pointLight2 = new THREE.PointLight(0x999999);
 		pointLight2.position.set(40,10,10);
 		pointLight2.castShadow = true;
-		scene.add(pointLight2);				
-		
+		scene.add(pointLight2);
+
 		var spotLight = new THREE.SpotLight(0xFFFFFF);
 		spotLight.position.set(0.0,5.0,8.0);
 		spotLight.castShadow = true;
 		scene.add(spotLight);
-		
+
 		var ambientL = new THREE.AmbientLight(0xFFFFFF,0.5);
 		scene.add(ambientL);
 }
@@ -165,16 +165,49 @@ function createRoom() {
 	jloader2.load('test_level.json', function(geo, mat){
 		var materials = new THREE.MeshFaceMaterial( mat );
 		var mesh = new THREE.Mesh(geo, materials);
-		terrain.push(mesh);	
+		terrain.push(mesh);
 		mesh.position.y=0;
 		mesh.position.x=5;
-		mesh.scale.set(70,70,70);
+		mesh.scale.set(20,20,20);
 		loadJson(mesh );
 	});
 
 
 	 function loadJson(mesh){
-		 scene.add( mesh );    
-	 }	
+		 scene.add( mesh );
+	 }
+
+     addItem('Axe.json', 0, 5, 10);
+
+}
+function createFire() {
+    VolumetricFire.texturePath = './levels/materials/textures/';
+
+        addFire(0, 1, 5, 100, 150, 100, 50);
+
+
+    animateFire();
+}
+
+// Add Object with given Path to given coordinates
+function addItem(file, xPos, yPos, zPos){
+        var jloader2 = new THREE.JSONLoader();
+    jloader2.load(file, function(geo, mat){
+        var materials = new THREE.MeshFaceMaterial( mat );
+        var mesh = new THREE.Mesh(geo, materials);
+        terrain.push(mesh);
+        mesh.position.y=yPos;
+        mesh.position.x=xPos;
+        mesh.position.z = zPos;
+        mesh.scale.set(20,20,20);
+        scene.add( mesh );
+        //loadJson(mesh );
+    });
+
+
+     function loadJson(mesh){
+         scene.add( mesh );
+     }
+
 
 }
