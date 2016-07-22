@@ -30,6 +30,8 @@ var myfog = 0;
 
 function init(event) {
 
+    loadXmL('../avz_model/materials/Objects.xml');
+
     // set up the scene, the camera and the renderer
     createScene();
 
@@ -44,6 +46,11 @@ function init(event) {
 
     // start a loop that will update the objects' positions
     // and render the scene on each frame
+    var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json'];
+     addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true);
+     addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true);
+     addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true);
+     addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true);
     loop();
 }
 
@@ -197,11 +204,7 @@ function createRoom() {
     });
 
 
-var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json'];
-     addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true);
-     addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true);
-     addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true);
-     addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true);
+
 
 
 }
@@ -229,6 +232,7 @@ function addItem(file, xPos, yPos, zPos, scale, interact){
         scene.add( mesh );
 
     });
+}
 
 
 
