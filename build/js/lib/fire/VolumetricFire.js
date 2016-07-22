@@ -256,6 +256,9 @@
     this.camera = camera;
 
     this._sliceSpacing = sliceSpacing;
+    this._width = width;
+    this._height = height;
+    this._depth = depth;
 
     var widthHalf  = width  * 0.5;
     var heightHalf = height * 0.5;

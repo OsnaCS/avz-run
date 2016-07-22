@@ -185,7 +185,6 @@ function createLights() {
 
 
 function createRoom() {
-
     var jloader2 = new THREE.JSONLoader();
     jloader2.load('test_level.json', function(geo, mat){
         var materials = new THREE.MeshFaceMaterial( mat );
@@ -197,20 +196,14 @@ function createRoom() {
         scene.add( mesh );
     });
 
+
 var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json'];
      addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true);
      addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true);
      addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true);
      addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true);
 
-}
-function createFire() {
-    VolumetricFire.texturePath = './levels/materials/textures/';
 
-        addFire(0, 1, 5, 100, 150, 100, 50);
-
-
-    animateFire();
 }
 
 
@@ -237,5 +230,12 @@ function addItem(file, xPos, yPos, zPos, scale, interact){
 
     });
 
+
+
+function createFire() {
+    VolumetricFire.texturePath = './levels/materials/textures/';
+
+    addFire(80,30,1,30,30,30,10);
+    animateFire();
 
 }
