@@ -23,7 +23,7 @@ window.addEventListener('load', init, false);
 
 var scene,
     camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
-    renderer, container, controls;
+    renderer, container, controls, instructions, button;
 
 //variable used for increasing fog
 var myfog = 0;
@@ -58,6 +58,8 @@ function createScene() {
 
 
     container = document.getElementById('world');
+    instructions = document.getElementById( 'instructions' );
+    button = document.getElementById('button');
 
     // Get the width and the height of the screen,
     // use them to set up the aspect ratio of the camera
@@ -185,7 +187,6 @@ function createLights() {
 
 
 function createRoom() {
-
     var jloader2 = new THREE.JSONLoader();
     jloader2.load('test_level.json', function(geo, mat){
         var materials = new THREE.MeshFaceMaterial( mat );
@@ -196,7 +197,6 @@ function createRoom() {
         mesh.scale.set(20,20,20);
         loadJson(mesh );
     });
-
 
      function loadJson(mesh){
          scene.add( mesh );
@@ -219,5 +219,12 @@ function createFire() {
         addFire(0, 1, 5, 100, 150, 100, 50);
 
 
+    animateFire();
+}
+
+function createFire() {
+    VolumetricFire.texturePath = './levels/materials/textures/';
+
+    addFire(80,30,1,30,30,30,10);
     animateFire();
 }
