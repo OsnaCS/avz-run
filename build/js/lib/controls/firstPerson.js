@@ -48,11 +48,11 @@ var running = false;
 var standupRequest = false;
 var speed_factor=1;
 
-var PLAYERHEIGHT = 30;
+var PLAYERHEIGHT = 1.8;
 var DUCK_SPEED = 0.6; // speed at which player is crouching
 var RUN_SPEED = 2;
 var INVERT_XZ = new THREE.Vector3(-1,1,-1);
-var MOVEMENT_SPEED = 600;
+var MOVEMENT_SPEED = 80;
 
 
 var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
@@ -232,17 +232,17 @@ function initControls() {
     document.addEventListener('keyup', onKeyUp, false);
 
     // create rays for collision detection in each direction(direction values will be changed later)
-    raycasterY = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 2); // beneath
+    raycasterY = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 1); // beneath
 
-    raycasterYpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 20); // above
+    raycasterYpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 2); // above
 
-    raycasterXpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, 32); // right
+    raycasterXpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, 1); // right
 
-    raycasterZpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, 32); // behind
+    raycasterZpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, 1); // behind
 
-    raycasterXneg = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, 32); // left
+    raycasterXneg = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, 1); // left
 
-    raycasterZneg = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, 32); // front
+    raycasterZneg = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, 1); // front
 
     playerGround = new THREE.Vector3();
 
@@ -267,7 +267,7 @@ function controlLoop(controls) {
         if(!ducked) {
 
             // x and z axis transformed according to player's rotation
-            playerX = controls.getObject().getWorldDirection().applyAxisAngle(new THREE.Vector3(0,1,0), (Math.PI)/2).normalize().multiplyScalar(10);
+            playerX = controls.getObject().getWorldDirection().applyAxisAngle(new THREE.Vector3(0,1,0), (Math.PI)/2).normalize().multiplyScalar(1);
             playerZ = controls.getObject().getWorldDirection().normalize().multiplyScalar(10);
             // mirror the X and Y vectors for opposing directions
             playerXneg =new THREE.Vector3();

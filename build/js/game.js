@@ -184,7 +184,27 @@ function createLights() {
 
 function createRoom() {
 
-    var Colors = {
+var level;
+var jsonLoader = new THREE.JSONLoader();
+jsonLoader.load('test_level.json', function (geometry, materials) {
+        var material = new THREE.MeshFaceMaterial(materials);
+        //material.materials[1] = new THREE.MeshPhongMaterial({color:0xFF00000});
+        level = new THREE.Mesh(geometry, material);
+        level.receiveShadow = true;
+        level.castShadow = false;
+        //door.rotation.y = Math.PI;
+         level.position.set(3, 0, 2);
+         terrain.push(level);
+        scene.add(level);
+
+       // createStage();
+       //  render();
+    }
+);
+
+
+
+ /*   var Colors = {
         red: 0xf25346,
         white: 0xd8d0d1,
         brown: 0x59332e,
@@ -232,7 +252,7 @@ function createRoom() {
     scene.add(floor);
     scene.add(leftWall);
     scene.add(rightWall);
-    scene.add(backWall);
+    scene.add(backWall);*/
 
 
 }
