@@ -14,17 +14,18 @@ function loadXmL(path){
     var xhttp = new XMLHttpRequest();
      xhttp.onreadystatechange = function() {
          if (xhttp.readyState == 4 && xhttp.status == 200) {
-             saveItem(xhttp,whichroom);
+             saveItem(xhttp);
          }
      };
        xhttp.open("GET", path, true);
        xhttp.send();
-       var tmp =xhttp.getElementsByTagName("Objects")[0];
-       pathToObjects=tmp.getAttribute("path");
+       var xmlDoc = xhttp.responseXML;
+       var tmp =xmlDoc.getElementsByTagName("Objects");
+       pathToObjects=tmp[0].getAttribute("path");
  }
 
 function saveItem(xml){
-
+var xmlDoc = xhttp.responseXML;
     var allObjects = xmlDoc.getElementsByTagName("Object");
     for(i=0; i <allObjects.length;i++){
         var itemPath=pathToObjects.concat(allObjects[i].getAttribute("file"));
