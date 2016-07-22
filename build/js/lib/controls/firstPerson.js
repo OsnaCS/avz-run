@@ -235,7 +235,7 @@ function initControls() {
     document.addEventListener('keyup', onKeyUp, false);
 
     // create rays for collision detection in each direction(direction values will be changed later)
-    raycasterY = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 2); // beneath
+    raycasterY = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 10); // beneath
 
     raycasterYpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 20); // above
 
@@ -257,7 +257,7 @@ function initControls() {
 }
 
 
-
+var firstTime;
 function controlLoop(controls) {
 
         setRays();
@@ -289,6 +289,7 @@ function controlLoop(controls) {
         // forbid player to move farther if there are obstacles in the respective directions
         if (intersectionsY.length > 0) {
             velocity.y = Math.max(0, velocity.y);
+            firstTime=false;
         }
 
         if(intersectionsZpos.length > 0) {
@@ -313,7 +314,7 @@ function controlLoop(controls) {
 
 
         // stop gravity at ground level as collision detection sometimes fails for floor
-        if (controls.getObject().position.y < PLAYERHEIGHT) {
+        if (controls.getObject().position.y < PLAYERHEIGHT&&firstTime) {
             velocity.y = 0;
             controls.getObject().position.y = PLAYERHEIGHT;
         }
