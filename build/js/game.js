@@ -22,7 +22,7 @@ window.addEventListener('load', init, false);
 
 var scene,
     camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
-    renderer, container, controls;
+    renderer, container, controls, audioLoader;
 
 //variable used for increasing fog
 var fogIncrement = 0.00001;
@@ -201,25 +201,37 @@ function createRoom() {
 
 function createFire() {
     VolumetricFire.texturePath = './levels/materials/textures/';
-    addSmallFire(0, 0, 0);
-    addSmallFire(0, 10, 0);
-    addSmallFire(0, 20, 0);
-    addSmallFire(0, 30, 0);
-    addSmallFire(0, 40, 0);
-    addSmallFire(0, 50, 0);
-    addSmallFire(0, -10, 0);
-    addSmallFire(0, -20, 0);
-    addSmallFire(0, -30, 0);
-    addSmallFire(0, -40, 0);
-    addSmallFire(0, -50, 0);
-    addFire(0, 1, 5, 100, 150, 100, 50);
-    animateFire();
-}
 
-function createFire() {
-    VolumetricFire.texturePath = './levels/materials/textures/';
-
+    // fire with invisible box and sound
     addFire(80, 1, 1, 50, 50, 50, 10);
+    var fireBox = new THREE.BoxGeometry(50,50,50);
+    var invisibleMat = new THREE.MeshBasicMaterial({transparent: true, opacity: 0.0, depthWrite: false});
+    var fireMesh = new THREE.Mesh(fireBox, invisibleMat);
+    fireMesh.position.set(80,25,1);
+
+    // Init AudioListener
+    var audioListener = new THREE.AudioListener();
+    camera.add(audioListener);
+
+    // Init AudioLoader
+    var audioLoader = new THREE.AudioLoader();
+
+    // create positional audio
+    var fireSound = new THREE.PositionalAudio(audioListener);
+    audioLoader.load('sounds/firecracking.mp3', function (buffer) {
+        fireSound.setBuffer(buffer);
+        fireSound.setRefDistance(50);
+        fireSound.setRolloffFactor(5);
+        fireSound.setLoop(true);
+        fireSound.setVolume(3);
+        fireSound.play();
+    })
+
+    fireMesh.add(fireSound);
+    scene.add(fireMesh);
+
+
+
     // addFire(30, 1, 10, 200, 80, 200, 10);
     animateFire();
 }
