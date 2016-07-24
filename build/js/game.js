@@ -17,7 +17,6 @@
 // call controlLoop(controls) in loop()
 
 
-
 window.addEventListener('load', init, false);
 
 
@@ -26,7 +25,7 @@ var scene,
     renderer, container, controls;
 
 //variable used for increasing fog
-var myfog = 0;
+var fogIncrement = 0.00001;
 
 function init(event) {
 
@@ -111,16 +110,16 @@ function createScene() {
     // Listen to the screen: if the user resizes it
     // we have to update the camera and the renderer size
     window.addEventListener('resize', handleWindowResize, false);
-}
 
+    scene.fog = new THREE.FogExp2(0x424242, 0.005);
+}
 
 
 function loop() {
     stats.begin();
     requestAnimationFrame(loop);
 
-    myfog += 0.00001;
-    scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
+    scene.fog.density += fogIncrement;
 
     // YOU NEED TO CALL THIS (srycaps)
     controlLoop(controls);
@@ -142,8 +141,6 @@ function handleWindowResize() {
 
 
 var hemisphereLight, shadowLight;
-
-
 
 
 // TEST ENVIRONMENT
@@ -186,21 +183,22 @@ function createLights() {
 
 function createRoom() {
     var jloader2 = new THREE.JSONLoader();
-    jloader2.load('test_level.json', function(geo, mat){
-        var materials = new THREE.MeshFaceMaterial( mat );
+    jloader2.load('test_level.json', function (geo, mat) {
+        var materials = new THREE.MeshFaceMaterial(mat);
         var mesh = new THREE.Mesh(geo, materials);
         terrain.push(mesh);
-        mesh.position.y=0;
-        mesh.position.x=5;
-        mesh.scale.set(20,20,20);
-        loadJson(mesh );
+        mesh.position.y = 0;
+        mesh.position.x = 5;
+        mesh.scale.set(20, 20, 20);
+        loadJson(mesh);
     });
 
-     function loadJson(mesh){
-         scene.add( mesh );
-     }
+    function loadJson(mesh) {
+        scene.add(mesh);
+    }
 
 }
+
 function createFire() {
     VolumetricFire.texturePath = './levels/materials/textures/';
     addSmallFire(0, 0, 0);
@@ -214,15 +212,14 @@ function createFire() {
     addSmallFire(0, -30, 0);
     addSmallFire(0, -40, 0);
     addSmallFire(0, -50, 0);
-        addFire(0, 1, 5, 100, 150, 100, 50);
-
-
+    addFire(0, 1, 5, 100, 150, 100, 50);
     animateFire();
 }
 
 function createFire() {
     VolumetricFire.texturePath = './levels/materials/textures/';
 
-    addFire(80,30,1,30,30,30,10);
+    addFire(80, 1, 1, 50, 50, 50, 10);
+    // addFire(30, 1, 10, 200, 80, 200, 10);
     animateFire();
 }
