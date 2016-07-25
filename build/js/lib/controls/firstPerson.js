@@ -18,7 +18,7 @@
 
 
 var clock, playerGround, playerPos, playerX,
-playerXpos, playerXneg, playerZpos, playerZneg;
+    playerXpos, playerXneg, playerZpos, playerZneg;
 
 // directions of rays used for collision detection
 var rayDirectionXpos, rayDirectionXneg, rayDirectionZpos, rayDirectionZneg;
@@ -37,23 +37,19 @@ var prevTime = performance.now();
 
 var velocity = new THREE.Vector3();
 
-var blocker = document.getElementById('world');
-var instructions = document.getElementById('world');
-
-
 var terrain = [];
 
 var ducked = false;
 var running = false;
 var standupRequest = false;
-var speed_factor=1;
+var speed_factor = 1;
 
 
 var PLAYERHEIGHT = 25;
 var DUCK_SPEED = 0.6; // speed at which player is crouching
-var DUCK_DIFFERENCE = 2*(PLAYERHEIGHT/3);
+var DUCK_DIFFERENCE = 2 * (PLAYERHEIGHT / 3);
 var RUN_SPEED = 2;
-var INVERT_XZ = new THREE.Vector3(-1,1,-1);
+var INVERT_XZ = new THREE.Vector3(-1, 1, -1);
 var MOVEMENT_SPEED = 600;
 var JUMP_SPEED = 500;
 
@@ -70,18 +66,16 @@ if (havePointerLock) {
 
     var element = document.getElementById('world');
 
-    var pointerlockchange = function (event) {
+    var pointerlockchange = function(event) {
 
         if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
 
 
-//          controlsEnabled = true;
+            //          controlsEnabled = true;
             controls.enabled = true;
-
-            //blocker.style.display = 'none';
+            blocker.style.display = 'none';
 
         } else {
-
             controls.enabled = false;
 
             blocker.style.display = '-webkit-box';
@@ -89,12 +83,13 @@ if (havePointerLock) {
             blocker.style.display = 'box';
 
             instructions.style.display = '';
+            menu = true;
 
         }
 
     };
 
-    var pointerlockerror = function (event) {
+    var pointerlockerror = function(event) {
 
         instructions.style.display = '';
 
@@ -109,26 +104,43 @@ if (havePointerLock) {
     document.addEventListener('mozpointerlockerror', pointerlockerror, false);
     document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
 
-    instructions.addEventListener('click', function (event) {
+    buttonStart.addEventListener('click', function(event) {
+
+        startInstructions.style.display = 'none';
+
+        // Ask the browser to lock the pointer
         element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+
+        menu = false;
+
         element.requestPointerLock();
 
+    }, false);
+
+    button.addEventListener('click', function(event) {
+
+        startInstructions.style.display = 'none';
+
+        // Ask the browser to lock the pointer
+        element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+
+        menu = false;
+
+        element.requestPointerLock();
 
     }, false);
 
 } else {
 
-    instructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
+    startInstructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
 
 }
-
-
 
 
 //CALL THIS IN YOUR INIT BLOCK
 function initControls() {
 
-    var onKeyDown = function (event) {
+    var onKeyDown = function(event) {
 
         switch (event.keyCode) {
 
@@ -139,7 +151,8 @@ function initControls() {
 
             case 37: // left
             case 65: // a
-                moveLeft = true; break;
+                moveLeft = true;
+                break;
 
             case 40: // down
             case 83: // s
@@ -152,7 +165,7 @@ function initControls() {
                 break;
 
             case 32: // space
-                if (canJump === true &&!ducked) velocity.y += JUMP_SPEED;
+                if (canJump === true && !ducked) velocity.y += JUMP_SPEED;
                 canJump = false;
                 break;
 
@@ -160,8 +173,8 @@ function initControls() {
             case 16: //RUN FOREST! (shift)
 
                 if (!ducked) {
-                    running=true;
-                    speed_factor=RUN_SPEED;
+                    running = true;
+                    speed_factor = RUN_SPEED;
                 }
 
                 break;
@@ -184,6 +197,13 @@ function initControls() {
 
                 break;
 
+            case 80: //pause p
+                // TODO pause in Bild schreiben
+                if (!menu) {
+                    pause = !pause;
+                }
+                break;
+
             case 73: // i to show inventory  (maybe also to toggle later?)
                 player.showInv();
                 break;
@@ -192,9 +212,9 @@ function initControls() {
 
     };
 
-    var onKeyUp = function (event) {
+    var onKeyUp = function(event) {
 
-        switch(event.keyCode) {
+        switch (event.keyCode) {
 
             case 38: // up
             case 87: // w
@@ -228,7 +248,7 @@ function initControls() {
                 // player might be unable to stand up, so this will
                 // be handled later
                 if (ducked) {
-                    standupRequest=true;
+                    standupRequest = true;
                 }
                 break;
 
@@ -265,183 +285,189 @@ function initControls() {
 }
 
 
-var firstTime=true;
+var firstTime = true;
+
 function controlLoop(controls) {
 
 
-        setRays();
+    setRays();
 
 
-        // determines stepwidth
-        var time = performance.now();
-        var delta = (time - prevTime) / 1000;
+    // determines stepwidth
+    var time = performance.now();
+    var delta = (time - prevTime) / 1000;
 
-        velocity.x -= velocity.x * 10.0 * delta;
-        velocity.z -= velocity.z * 10.0 * delta;
+    velocity.x -= velocity.x * 10.0 * delta;
+    velocity.z -= velocity.z * 10.0 * delta;
 
-        // gravity
-        velocity.y -= 9.8 * 170.0 * delta; // 100.0 = mass
+    // gravity
+    velocity.y -= 9.8 * 170.0 * delta; // 100.0 = mass
 
-        if (moveForward) velocity.z -= MOVEMENT_SPEED * speed_factor * delta;
-        if (moveBackward) velocity.z += MOVEMENT_SPEED * speed_factor * delta;
-        if (moveLeft) velocity.x -= MOVEMENT_SPEED * speed_factor * delta;
-        if (moveRight) velocity.x += MOVEMENT_SPEED  * speed_factor * delta;
-
-
-        // determine intersections of rays with objects that were added to terrain
-        var intersectionsY = raycasterY.intersectObjects(terrain);
-        var intersectionsXpos = raycasterXpos.intersectObjects(terrain);
-        var intersectionsZpos = raycasterZpos.intersectObjects(terrain);
-        var intersectionsXneg = raycasterXneg.intersectObjects(terrain);
-        var intersectionsZneg = raycasterZneg.intersectObjects(terrain);
+    if (moveForward) velocity.z -= MOVEMENT_SPEED * speed_factor * delta;
+    if (moveBackward) velocity.z += MOVEMENT_SPEED * speed_factor * delta;
+    if (moveLeft) velocity.x -= MOVEMENT_SPEED * speed_factor * delta;
+    if (moveRight) velocity.x += MOVEMENT_SPEED * speed_factor * delta;
 
 
-        // forbid player to move farther if there are obstacles in the respective directions
-        if (intersectionsY.length > 0) {
-            if(intersectionsY[0].object.type == TYPE_FIRE) {
-                fireAction();
-            }
+    // determine intersections of rays with objects that were added to terrain
+    var intersectionsY = raycasterY.intersectObjects(terrain);
+    var intersectionsXpos = raycasterXpos.intersectObjects(terrain);
+    var intersectionsZpos = raycasterZpos.intersectObjects(terrain);
+    var intersectionsXneg = raycasterXneg.intersectObjects(terrain);
+    var intersectionsZneg = raycasterZneg.intersectObjects(terrain);
+
+
+    // forbid player to move farther if there are obstacles in the respective directions
+    if (intersectionsY.length > 0) {
+        if (intersectionsY[0].object.type == TYPE_FIRE) {
+            fireAction();
+        } else {
             velocity.y = Math.max(0, velocity.y);
-            firstTime=false;
+            firstTime = false;
         }
+    }
 
-        if(intersectionsZpos.length > 0) {
-            if(intersectionsZpos[0].object.type == TYPE_FIRE) {
-                fireAction();
-            }
+    if (intersectionsZpos.length > 0) {
+        if (intersectionsZpos[0].object.type == TYPE_FIRE) {
+            fireAction();
+        } else {
             velocity.z = Math.min(0, velocity.z);
         }
+    }
 
-        if(intersectionsZneg.length > 0) {
-            if(intersectionsZneg[0].object.type == TYPE_FIRE) {
-                fireAction();
-            }
+    if (intersectionsZneg.length > 0) {
+        if (intersectionsZneg[0].object.type == TYPE_FIRE) {
+            fireAction();
+        } else {
             velocity.z = Math.max(0, velocity.z);
         }
+    }
 
-        if(intersectionsXpos.length > 0) {
-            if(intersectionsXpos[0].object.type == TYPE_FIRE) {
-                fireAction();
-            }
+    if (intersectionsXpos.length > 0) {
+        if (intersectionsXpos[0].object.type == TYPE_FIRE) {
+            fireAction();
+        } else {
             velocity.x = Math.min(0, velocity.x);
         }
+    }
 
-        if(intersectionsXneg.length > 0) {
-            if(intersectionsXneg[0].object.type == TYPE_FIRE) {
-                fireAction();
-            }
+    if (intersectionsXneg.length > 0) {
+        if (intersectionsXneg[0].object.type == TYPE_FIRE) {
+            fireAction();
+        } else {
             velocity.x = Math.max(0, velocity.x);
         }
-        controls.getObject().translateX(velocity.x * delta);
-        controls.getObject().translateY(velocity.y * delta);
-        controls.getObject().translateZ(velocity.z * delta);
+    }
+    controls.getObject().translateX(velocity.x * delta);
+    controls.getObject().translateY(velocity.y * delta);
+    controls.getObject().translateZ(velocity.z * delta);
 
 
 
-        // stop gravity at ground level as collision detection sometimes fails for floor
-        if (controls.getObject().position.y < PLAYERHEIGHT&&firstTime) {
-            velocity.y = 0;
-            controls.getObject().position.y = PLAYERHEIGHT+5;
-        }
+    // stop gravity at ground level as collision detection sometimes fails for floor
+    if (controls.getObject().position.y < PLAYERHEIGHT && firstTime) {
+        velocity.y = 0;
+        controls.getObject().position.y = PLAYERHEIGHT + 5;
+    }
 
-        // checks if we can stand up (may be forbidden when crouching beneath an object)
-        handleStandup();
+    // checks if we can stand up (may be forbidden when crouching beneath an object)
+    handleStandup();
 
-        if(velocity.y == 0) {
-            canJump = true;
-        }
+    if (velocity.y == 0) {
+        canJump = true;
+    }
 
-        prevTime = time;
+    prevTime = time;
 
-        if(flashCooldown==0) {
-            scene.remove(flashLight);
-            scene.fog.color.set(0x424242 );
-            clearInterval(flashInterval);
-            flashCooldown=-1;
-        }
+    if (flashCooldown == 0) {
+        scene.remove(flashLight);
+        scene.fog.color.set(0x424242);
+        clearInterval(flashInterval);
+        flashCooldown = -1;
+    }
 
 }
 
 
 
 function handleStandup() {
-        if(standupRequest) {
-            var intersectionsYpos = raycasterYpos.intersectObjects(terrain);
+    if (standupRequest) {
+        var intersectionsYpos = raycasterYpos.intersectObjects(terrain);
 
-            // stands up as soon as there are no more objects above
-            if(intersectionsYpos.length == 0) {
+        // stands up as soon as there are no more objects above
+        if (intersectionsYpos.length == 0) {
 
-                PLAYERHEIGHT += DUCK_DIFFERENCE;
-                controls.getObject().position.y += 20;
-                ducked = false;
-                speed_factor = 1;
-                raycasterXpos.far = 32;
-                raycasterXneg.far = 32;
-                raycasterZpos.far = 32;
-                raycasterZneg.far = 32;
-                standupRequest = false;
-            }
-
+            PLAYERHEIGHT += DUCK_DIFFERENCE;
+            controls.getObject().position.y += 20;
+            ducked = false;
+            speed_factor = 1;
+            raycasterXpos.far = 32;
+            raycasterXneg.far = 32;
+            raycasterZpos.far = 32;
+            raycasterZneg.far = 32;
+            standupRequest = false;
         }
+
+    }
 
 }
 
 function setRays() {
-            // position of player's head
-        playerPos =  new THREE.Vector3();
-        playerPos.copy(controls.getObject().position);
+    // position of player's head
+    playerPos = new THREE.Vector3();
+    playerPos.copy(controls.getObject().position);
 
-        // position of player's feet
-        playerGround.subVectors(playerPos,new THREE.Vector3(0,PLAYERHEIGHT,0));
+    // position of player's feet
+    playerGround.subVectors(playerPos, new THREE.Vector3(0, PLAYERHEIGHT, 0));
 
-        // the collision rays are sloped upwards from player's feet
-        if(!ducked) {
+    // the collision rays are sloped upwards from player's feet
+    if (!ducked) {
 
-            // x and z axis transformed according to player's rotation
-            playerX = controls.getObject().getWorldDirection().applyAxisAngle(new THREE.Vector3(0,1,0), (Math.PI)/2).normalize().multiplyScalar(10);
-            playerZ = controls.getObject().getWorldDirection().normalize().multiplyScalar(10);
-            // mirror the X and Y vectors for opposing directions
-            playerXneg =new THREE.Vector3();
-            playerZneg = new THREE.Vector3();
-            playerXneg.multiplyVectors(playerX,INVERT_XZ);
-            playerZneg.multiplyVectors(playerZ,INVERT_XZ);
+        // x and z axis transformed according to player's rotation
+        playerX = controls.getObject().getWorldDirection().applyAxisAngle(new THREE.Vector3(0, 1, 0), (Math.PI) / 2).normalize().multiplyScalar(10);
+        playerZ = controls.getObject().getWorldDirection().normalize().multiplyScalar(10);
+        // mirror the X and Y vectors for opposing directions
+        playerXneg = new THREE.Vector3();
+        playerZneg = new THREE.Vector3();
+        playerXneg.multiplyVectors(playerX, INVERT_XZ);
+        playerZneg.multiplyVectors(playerZ, INVERT_XZ);
 
-            // we obtain the ray vectors by adding the player's viewdirection-vector to the position.
-            // then we substract the ground point from the resulting vector and we're done
+        // we obtain the ray vectors by adding the player's viewdirection-vector to the position.
+        // then we substract the ground point from the resulting vector and we're done
 
-            rayDirectionXpos.subVectors(new THREE.Vector3().addVectors(playerPos,playerX),playerGround).normalize();
-            rayDirectionXneg.subVectors(new THREE.Vector3().addVectors(playerPos,playerXneg),playerGround).normalize();
-            rayDirectionZpos.subVectors(new THREE.Vector3().addVectors(playerPos,playerZ),playerGround).normalize();
-            rayDirectionZneg.subVectors(new THREE.Vector3().addVectors(playerPos,playerZneg),playerGround).normalize();
+        rayDirectionXpos.subVectors(new THREE.Vector3().addVectors(playerPos, playerX), playerGround).normalize();
+        rayDirectionXneg.subVectors(new THREE.Vector3().addVectors(playerPos, playerXneg), playerGround).normalize();
+        rayDirectionZpos.subVectors(new THREE.Vector3().addVectors(playerPos, playerZ), playerGround).normalize();
+        rayDirectionZneg.subVectors(new THREE.Vector3().addVectors(playerPos, playerZneg), playerGround).normalize();
 
-            raycasterY.ray.origin.copy(playerGround);
-            raycasterXpos.set(playerGround, rayDirectionXpos);
-            raycasterXneg.set(playerGround, rayDirectionXneg);
-            raycasterZpos.set(playerGround, rayDirectionZpos);
-            raycasterZneg.set(playerGround, rayDirectionZneg);
+        raycasterY.ray.origin.copy(playerGround);
+        raycasterXpos.set(playerGround, rayDirectionXpos);
+        raycasterXneg.set(playerGround, rayDirectionXneg);
+        raycasterZpos.set(playerGround, rayDirectionZpos);
+        raycasterZneg.set(playerGround, rayDirectionZneg);
 
-        } else {
+    } else {
 
-            raycasterYpos.ray.origin.copy(controls.getObject().position);
-            raycasterY.ray.origin.copy(playerGround);
-            raycasterXpos.set(controls.getObject().position, controls.getObject().getWorldDirection().applyAxisAngle(new THREE.Vector3(0,1,0), (Math.PI)/2).normalize());
-            raycasterXneg.set(controls.getObject().position, controls.getObject().getWorldDirection().applyAxisAngle(new THREE.Vector3(0,1,0), -(Math.PI)/2).normalize());
-            raycasterZpos.set(controls.getObject().position, controls.getObject().getWorldDirection().normalize());
-            raycasterZneg.set(controls.getObject().position, controls.getObject().getWorldDirection().negate().normalize());
+        raycasterYpos.ray.origin.copy(controls.getObject().position);
+        raycasterY.ray.origin.copy(playerGround);
+        raycasterXpos.set(controls.getObject().position, controls.getObject().getWorldDirection().applyAxisAngle(new THREE.Vector3(0, 1, 0), (Math.PI) / 2).normalize());
+        raycasterXneg.set(controls.getObject().position, controls.getObject().getWorldDirection().applyAxisAngle(new THREE.Vector3(0, 1, 0), -(Math.PI) / 2).normalize());
+        raycasterZpos.set(controls.getObject().position, controls.getObject().getWorldDirection().normalize());
+        raycasterZneg.set(controls.getObject().position, controls.getObject().getWorldDirection().negate().normalize());
 
 
-        }
+    }
 
 }
 
 function fireAction() {
-    if(flashCooldown==-1) {
+    if (flashCooldown == -1) {
         scene.add(flashLight);
         scene.fog.color.set(0xff0000);;
-        flashCooldown=1;
+        flashCooldown = 1;
         player.damage(300);
-        flashInterval = setInterval(function () {
-          flashCooldown--;
+        flashInterval = setInterval(function() {
+            flashCooldown--;
         }, 1000);
     }
 
