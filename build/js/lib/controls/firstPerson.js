@@ -461,7 +461,7 @@ function fireAction() {
         scene.add(flashLight);
         scene.fog.color.set(0xff0000);;
         flashCooldown = 1;
-
+        player.damage(300);
         flashInterval = setInterval(function() {
             flashCooldown--;
         }, 1000);

@@ -1,4 +1,3 @@
-
 function addSmoke(x, y, z) {
     var textureLoader = new THREE.TextureLoader();
     var smoke,
@@ -22,25 +21,31 @@ function addSmoke(x, y, z) {
         'uniform float projection;',
         'varying float progress;',
         'float cubicOut( float t ) {',
-            'float f = t - 1.0;',
-            'return f * f * f + 1.0;',
+        'float f = t - 1.0;',
+        'return f * f * f + 1.0;',
         '}',
         'void main() {',
-            'progress = fract(time * 2. / lifetime + shift);',
-            'float eased = cubicOut(progress);',
-            'vec3 pos = vec3(position.x, position.y + eased, position.z);',
-            'gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.);',
-            'gl_PointSize = (projection * size) / gl_Position.w;',
+        'progress = fract(time * 2. / lifetime + shift);',
+        'float eased = cubicOut(progress);',
+        'vec3 pos = vec3(position.x, position.y + eased, position.z);',
+        'gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.);',
+        'gl_PointSize = (projection * size) / gl_Position.w;',
         '}',
     ].join('\n');
 
     // Fragment Shader
     fragmentShader = [
         'uniform sampler2D texture;',
+        'uniform vec3 fogColor;',
+        'uniform float fogDensity;',
         'varying float progress;',
         'void main() {',
-            'vec3 color = vec3( 1. );',
-            'gl_FragColor = texture2D( texture, gl_PointCoord ) * vec4( color, .3 * ( 1. - progress ) );',
+        'vec3 color = vec3( 1. );',
+
+        // fog support
+        'float depth = (gl_FragCoord.z / gl_FragCoord.w)+10.0;',
+        'depth = depth * fogDensity * 3.0;',
+        'gl_FragColor = texture2D( texture, gl_PointCoord ) * vec4( color, .3 * ( 1. - progress ))/depth;',
         '}',
     ].join('\n');
 
@@ -65,7 +70,9 @@ function addSmoke(x, y, z) {
         projection: {
             type: 'f',
             value: Math.abs(HEIGHT / (2 * Math.tan(THREE.Math.degToRad(camera.fov))))
-        }
+        },
+        fogColor: {type: "c", value: scene.fog.color},
+        fogDensity: {type: "f", value: scene.fog.density},
     };
     material = new THREE.ShaderMaterial({
         vertexShader: vertexShader,
@@ -73,7 +80,8 @@ function addSmoke(x, y, z) {
         uniforms: uniforms,
         blending: THREE.AdditiveBlending,
         transparent: true,
-        depthWrite: false
+        depthWrite: false,
+        fog: true
     });
 
     for (i = 0; i < NUM_OF_PARTICLE; i++) {
