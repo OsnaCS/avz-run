@@ -81,6 +81,10 @@ GameObject = function(mesh, interaction, type) {
 
     }
 
+    /*this.interact = function(interaction) {
+        this.interaction();
+    }*/
+
 }
 
 
@@ -89,4 +93,13 @@ function onMouseClick() {
     if(activeObject!=null) {
         activeObject.interact();
     }
+}
+
+
+function pickUpItem() {
+    player.pickUp(this);
+}
+
+function destroy(){
+    this.delFromScene();
 }
