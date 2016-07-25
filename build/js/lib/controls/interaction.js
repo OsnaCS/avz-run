@@ -1,7 +1,5 @@
 var ACTIVE_DISTANCE =35;
 
-
-
 var interactionRayCaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, ACTIVE_DISTANCE); // front
 
 var outlineMaterial = new THREE.MeshPhongMaterial({color:0xFFFFFF,wireframe:true,wireframeLinewidth:5});
@@ -51,21 +49,31 @@ function interactionLoop() {
 }
 
 
-
-
-
 gameObject = function(mesh, interaction, interactable) {
     this.interactable = interactable;
     this.mesh = mesh;
     this.interact = interaction;
+
     this.raycast = function(raycaster, intersects) {
 
-
-        this.mesh.raycast( raycaster, intersects);
-        if(intersects.length>0&&intersects[0].object==this.mesh) {
-           intersects[0].object=this;
-        }
+    this.mesh.raycast( raycaster, intersects);
+            if(intersects.length>0&&intersects[0].object==this.mesh) {
+               intersects[0].object=this;
+            }
     }
+
+    // removes object from scene (e.g. when picked up)
+    this.delFromScene = function() {
+
+        scene.remove(this.mesh);
+        scene.remove(outlineMesh);
+        outlineMesh = null;
+
+        // prohibit further interaction by removing from terrain
+        for (i = 0; terrain[i] != this && i < terrain.length; i++);
+        if (terrain[i] == this) terrain.splice(i,1);
+    }
+
 }
 
 

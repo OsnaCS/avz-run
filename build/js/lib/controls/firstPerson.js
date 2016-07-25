@@ -182,7 +182,9 @@ function initControls() {
 
                 break;
 
-
+            case 73: // i to show inventory  (maybe also to toggle later?)
+                player.showInv();
+                break;
 
         }
 
