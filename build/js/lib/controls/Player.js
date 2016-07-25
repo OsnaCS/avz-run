@@ -24,10 +24,12 @@ Player = function() {
 
             // add object to array
             inventory[inv_pos] = game_obj;
+            addIcon(game_obj,inv_pos);
             inv_pos++;
 
             // delete object representation from scene
             game_obj.delFromScene();
+
         }
 
         else {
@@ -71,7 +73,7 @@ function setActiveSlot(slot)  {
                     break;
             }
         }
-        activeSlot=slot;
+            activeSlot=slot;
 
         switch (slot) {
             case 0:
@@ -94,4 +96,10 @@ function setActiveSlot(slot)  {
                 break;
         }
     }
+
+}
+
+
+function addIcon(item,slot) {
+  //  $("#slot"+slot).css("background-image","url("+item.name+".png)");
 }
