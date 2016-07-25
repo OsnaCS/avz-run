@@ -39,3 +39,24 @@ body {
     box-shadow: 0px -1px 0px rgba(0, 0, 0, 0.15) inset;
     transition: width 0.1   s ease 0s;
 }
+
+.inventory {
+    padding: 10px;
+    height: 80px;
+    bottom: 20px;
+    width: 260px;
+    left: 50%;
+    margin-left: -120px;
+    overflow: hidden;
+    border-radius: 4px;
+    box-shadow: 0px 2px 4px rgba(1, 0, 0, 1) inset;
+    z-index: 20;
+    position: fixed;
+    display:block;
+}
+
+#slot1,#slot2,#slot3 {
+    height:100%;
+    width: 80px;
+    display: inline-block;
+}
