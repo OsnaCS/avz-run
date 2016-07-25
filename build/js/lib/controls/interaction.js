@@ -9,7 +9,8 @@ var outlineMaterial = new THREE.MeshPhongMaterial({color:0xFFFFFF,wireframe:true
 var activeObject;
 
 var outlineMesh=null;
-
+var TYPE_INTERACTABLE = 0;
+var TYPE_FIRE =1;
 
 
 document.addEventListener( 'click', onMouseClick, false );
@@ -18,7 +19,8 @@ function interactionLoop() {
     interactionRayCaster.set(controls.getObject().position, controls.getDirection());
     interactions = interactionRayCaster.intersectObjects(terrain);
     //&& interactions[0].object.interactable==false
-    if(interactions.length>0 && interactions[0].object.interactable) {
+    if(interactions.length>0 && interactions[0].object.type==TYPE_INTERACTABLE) {
+        console.log("interact");
 
         if(activeObject!=interactions[0].object) {
             scene.remove(outlineMesh);
@@ -54,13 +56,11 @@ function interactionLoop() {
 
 
 
-gameObject = function(mesh, interaction, interactable) {
-    this.interactable = interactable;
+GameObject = function(mesh, interaction, type) {
+    this.type = type;
     this.mesh = mesh;
     this.interact = interaction;
     this.raycast = function(raycaster, intersects) {
-
-
         this.mesh.raycast( raycaster, intersects);
         if(intersects.length>0&&intersects[0].object==this.mesh) {
            intersects[0].object=this;
