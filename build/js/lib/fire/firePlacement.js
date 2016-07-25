@@ -3,6 +3,9 @@ var fire_count = 0;
 
 var pointlight_list = [];
 var smoke_list = [];
+var fire_mesh_list = [];
+var fire_collision_box_list = [];
+
 var smoke_and_light_count = 0;
 
 var fire;
@@ -61,20 +64,34 @@ function addFire(x, y, z, width, height, depth, spacing) {
     var fmesh = fire.mesh.clone();
     scene.add(fmesh);
     fmesh.position.set(x, y + fireHeight / 2, z);
-
+    fire_mesh_list.push(fmesh);
 
     fireGeom = new THREE.BoxGeometry(fireWidth, fireHeight, fireDepth);
-    var mat = new THREE.MeshBasicMaterial({transparent:true, opacity:0} )
-    var box = new GameObject(new THREE.Mesh(fireGeom,mat),player.pickUp,TYPE_FIRE);
+    var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
+    var fireMesh = new THREE.Mesh(fireGeom, mat);
+    var box = new GameObject(fireMesh, delFire, TYPE_FIRE);
 
     box.mesh.position.x = x;
     box.mesh.position.y = y;
     box.mesh.position.z = z;
+/*
+    // create fire sound
+    var fireSound = new THREE.PositionalAudio(audioListener);
+    audioLoader.load('sounds/firecracking.mp3', function(buffer) {
+        fireSound.setBuffer(buffer);
+        fireSound.setRefDistance(50);
+        fireSound.setRolloffFactor(5);
+        fireSound.setLoop(true);
+        fireSound.setVolume(3);
+        fireSound.play();
+    })
 
+    fireMesh.add(fireSound);
+*/
     scene.add(box.mesh);
     terrain.push(box);
 
-
+    fire_collision_box_list.push(box);
 
     var smoke = addSmoke(x, y, z);
 
@@ -107,4 +124,41 @@ function animateFire() {
 
         smoke_list[j].material.uniforms.time.value = clock.getElapsedTime();
     }
+}
+
+function delFire (fireColBox){
+
+    var fire_found = false;
+    var index = 0;
+
+    for(i = 0; i < smoke_and_light_count; i++){
+        if(fire_collision_box_list[i] == fireColBox){
+            fire_found = true;
+            break;
+        }
+        index++;
+    }
+
+    if(fire_found == false){
+        console.log('error in delFire');
+        console.log(index);
+        console.log(smoke_and_light_count);
+    }else{
+      //  fireColBox.delFromScene();
+
+
+        scene.remove(pointlight_list[index]);
+        scene.remove(smoke_list[index]);
+        scene.remove(fire_mesh_list[index]);
+
+        fire_collision_box_list[index,1];
+        pointlight_list.splice(index,1);
+        smoke_list.splice(index,1);
+        fire_mesh_list.splice(index,1);
+
+        smoke_and_light_count--;
+    }
+
+
+
 }
