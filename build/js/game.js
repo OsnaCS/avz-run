@@ -39,6 +39,7 @@ function init(event) {
     createRoom();
     createLights();
 
+    createAudio();
     createFire();
 
     // start a loop that will update the objects' positions
@@ -183,7 +184,7 @@ function createLights() {
 
 function createRoom() {
     var jloader2 = new THREE.JSONLoader();
-    jloader2.load('test_level.json', function (geo, mat) {
+    jloader2.load('test_level.json', function(geo, mat) {
         var materials = new THREE.MeshFaceMaterial(mat);
         var mesh = new THREE.Mesh(geo, materials);
         terrain.push(mesh);
@@ -204,21 +205,14 @@ function createFire() {
 
     // fire with invisible box and sound
     addFire(80, 1, 1, 50, 50, 50, 10);
-    var fireBox = new THREE.BoxGeometry(50,50,50);
-    var invisibleMat = new THREE.MeshBasicMaterial({transparent: true, opacity: 0.0, depthWrite: false});
+    var fireBox = new THREE.BoxGeometry(50, 50, 50);
+    var invisibleMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.0, depthWrite: false });
     var fireMesh = new THREE.Mesh(fireBox, invisibleMat);
-    fireMesh.position.set(80,25,1);
+    fireMesh.position.set(80, 25, 1);
 
-    // Init AudioListener
-    var audioListener = new THREE.AudioListener();
-    camera.add(audioListener);
-
-    // Init AudioLoader
-    var audioLoader = new THREE.AudioLoader();
-
-    // create positional audio
+    // create fire sound
     var fireSound = new THREE.PositionalAudio(audioListener);
-    audioLoader.load('sounds/firecracking.mp3', function (buffer) {
+    audioLoader.load('sounds/firecracking.mp3', function(buffer) {
         fireSound.setBuffer(buffer);
         fireSound.setRefDistance(50);
         fireSound.setRolloffFactor(5);
@@ -229,8 +223,6 @@ function createFire() {
 
     fireMesh.add(fireSound);
     scene.add(fireMesh);
-
-
 
     // addFire(30, 1, 10, 200, 80, 200, 10);
     animateFire();
