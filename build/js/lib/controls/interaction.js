@@ -8,7 +8,8 @@ var activeObject;
 
 var outlineMesh=null;
 var TYPE_INTERACTABLE = 0;
-var TYPE_FIRE =1;
+var TYPE_FIRE = 1;
+var TYPE_EXIT = 2;
 
 
 document.addEventListener( 'click', onMouseClick, false );
@@ -16,7 +17,7 @@ document.addEventListener( 'click', onMouseClick, false );
 function interactionLoop() {
     interactionRayCaster.set(controls.getObject().position, controls.getDirection());
     interactions = interactionRayCaster.intersectObjects(terrain);
-    //&& interactions[0].object.interactable==false
+
     if(interactions.length>0 && interactions[0].object.type==TYPE_INTERACTABLE) {
         console.log("interact");
 
@@ -39,6 +40,9 @@ function interactionLoop() {
 
 
         }
+    }else if (interactions.length>0 && interactions[0].object.type==TYPE_EXIT) {
+        // nextLevel(); TODO: implement somewhere
+
     } else {
         activeObject=null;
         if(outlineMesh!=null) {
@@ -46,8 +50,6 @@ function interactionLoop() {
             outlineMesh=null;
         }
     }
-
-
 }
 
 
@@ -79,6 +81,10 @@ GameObject = function(mesh, interaction, type) {
 
     }
 
+    /*this.interact = function(interaction) {
+        this.interaction();
+    }*/
+
 }
 
 
@@ -87,6 +93,13 @@ function onMouseClick() {
     if(activeObject!=null) {
         activeObject.interact();
     }
+}
 
 
+function pickUpItem() {
+    player.pickUp(this);
+}
+
+function destroy(){
+    this.delFromScene();
 }
