@@ -42,6 +42,9 @@ function init(event) {
     // set up the scene, the camera and the renderer
     createScene();
 
+    // init audio support
+    createAudio();
+
     // YOU NEED TO CALL THIS
     initControls();
 
@@ -49,7 +52,6 @@ function init(event) {
     createRoom();
     createLights();
 
-    createAudio();
     createFire();
 
     // start a loop that will update the objects' positions
@@ -279,9 +281,10 @@ function createFire() {
     box.mesh.position.z = 1;
 
     // create fire sound
-    var firecracking = createSound("firecracking",50,5,true,3);
-    fireMesh.add(firecracking);
-    playSound(firecracking);
+    var firecracking = createSound("firecracking",50,5,true,3,function () {
+        fireMesh.add(firecracking);
+        playSound(firecracking);
+    });
 
     scene.add(box.mesh);
     terrain.push(box);
