@@ -81,11 +81,10 @@ function createScene() {
     scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
 
     fogInterval = setInterval(function () {
-            player.health -= (myfog/MAX_FOG)*(HEALTH_PER_SECOND/100);
+            player.damage(myfog/MAX_FOG)*(HEALTH_PER_SECOND/100);
             if(myfog<MAX_FOG) {
                 myfog += fogIncrement;
             }
-            console.log(player.health);
     }, 10);
 
     // Create the camera

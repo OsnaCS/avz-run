@@ -3,6 +3,8 @@ var inventory; // array that stores references to inventory items
 var inv_pos; // array has constant length -> to save how many spots have been filled
 var MAX_HEALTH= 1000;
 
+// var healthBar = document.getElementsByClassName("progress-bar");
+
 // player object with own inventory
 
 Player = function() {
@@ -66,7 +68,9 @@ Player = function() {
     }
 
     this.damage = function (damage) {
+        var healthPercent = (this.health/MAX_HEALTH)*100;
         this.health -= damage;
+        $(".progress-bar").css("width",''+healthPercent+'%');
     }
 
 
