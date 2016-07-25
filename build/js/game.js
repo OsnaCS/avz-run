@@ -23,7 +23,8 @@ window.addEventListener('load', init, false);
 
 var scene,
     camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
-    renderer, container, controls, startInstructions, buttonStart, instructions, button;
+    renderer, container, controls, startInstructions, buttonStart, instructions,
+    blocker, button;
 
 
 
@@ -68,7 +69,7 @@ document.body.appendChild(stats.dom);
 
 function createScene() {
 
-
+    blocker = document.getElementById('blocker');
     container = document.getElementById('world');
     startInstructions = document.getElementById('startInstructions');
     buttonStart = document.getElementById('buttonStart');
@@ -130,6 +131,8 @@ function createScene() {
     // Add the DOM element of the renderer to the
     // container we created in the HTML
     container.appendChild(renderer.domElement);
+
+    player = new Player();
 
     // Listen to the screen: if the user resizes it
     // we have to update the camera and the renderer size

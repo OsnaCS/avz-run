@@ -63,7 +63,7 @@ var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement
 // maybe insert menu into following method
 
 if (havePointerLock) {
-
+    //alert("hi");
     var element = document.getElementById('world');
 
     var pointerlockchange = function(event) {
@@ -73,10 +73,16 @@ if (havePointerLock) {
 
             //          controlsEnabled = true;
             controls.enabled = true;
+            //alert("hi");
+            blocker.style.display = 'none';
 
         } else {
-
+            //alert("hi");
             controls.enabled = false;
+
+            blocker.style.display = '-webkit-box';
+            blocker.style.display = '-moz-box';
+            blocker.style.display = 'box';
 
             instructions.style.display = '';
             menu = true;
@@ -108,34 +114,8 @@ if (havePointerLock) {
         element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
 
         menu = false;
-        //console.log(menu);
 
-        if (/Firefox/i.test(navigator.userAgent)) {
-
-            var fullscreenchange = function(event) {
-
-                if (document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element) {
-
-                    document.removeEventListener('fullscreenchange', fullscreenchange);
-                    document.removeEventListener('mozfullscreenchange', fullscreenchange);
-
-                    element.requestPointerLock();
-                }
-
-            };
-
-            document.addEventListener('fullscreenchange', fullscreenchange, false);
-            document.addEventListener('mozfullscreenchange', fullscreenchange, false);
-
-            element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
-
-            element.requestFullscreen();
-
-        } else {
-
-            element.requestPointerLock();
-
-        }
+        element.requestPointerLock();
 
     }, false);
 
@@ -147,34 +127,8 @@ if (havePointerLock) {
         element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
 
         menu = false;
-        //console.log(menu);
 
-        if (/Firefox/i.test(navigator.userAgent)) {
-
-            var fullscreenchange = function(event) {
-
-                if (document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element) {
-
-                    document.removeEventListener('fullscreenchange', fullscreenchange);
-                    document.removeEventListener('mozfullscreenchange', fullscreenchange);
-
-                    element.requestPointerLock();
-                }
-
-            };
-
-            document.addEventListener('fullscreenchange', fullscreenchange, false);
-            document.addEventListener('mozfullscreenchange', fullscreenchange, false);
-
-            element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
-
-            element.requestFullscreen();
-
-        } else {
-
-            element.requestPointerLock();
-
-        }
+        element.requestPointerLock();
 
     }, false);
 
@@ -249,7 +203,10 @@ function initControls() {
                 // TODO pause in Bild schreiben
 
                 pause = !pause;
+                break;
 
+            case 73: // i to show inventory  (maybe also to toggle later?)
+                player.showInv();
                 break;
 
         }

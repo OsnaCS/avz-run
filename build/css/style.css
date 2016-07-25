@@ -1,6 +1,9 @@
+html,
 body {
-    overflow: hidden;
+    background-color: #ffffff;
     margin: 0;
+    overflow: hidden;
+    font-family: arial;
 }
 
 #world {
@@ -9,6 +12,15 @@ body {
     height: 100%;
     overflow: hidden;
     background: linear-gradient(#e4e0ba, #f7d9aa);
+    z-index: 10;
+}
+
+#blocker {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 20
 }
 
 #startInstructions {
@@ -29,7 +41,7 @@ body {
     color: #ffffff;
     text-align: center;
     cursor: pointer;
-    opacity: 0.5;
+    z-index: 20;
 }
 
 #instructions {
@@ -50,7 +62,6 @@ body {
     color: #ffffff;
     text-align: center;
     cursor: pointer;
-    opacity: 0.5;
 }
 
 #buttonStart {
