@@ -20,12 +20,21 @@
 
 window.addEventListener('load', init, false);
 
+
 var scene,
     camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
     renderer, container, controls;
 
+
+
+var pathItem = '../avz_model/materials/objects/';
 //variable used for increasing fog
-var myfog = 0;
+var myfog=0;
+var fogTime=5;
+var fogIncrement= 0.015/(fogTime*1000/10) ;
+var fogInterval;
+
+
 
 function init(event) {
 
@@ -67,6 +76,12 @@ function createScene() {
     // Create the scene
     scene = new THREE.Scene();
 
+    scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
+
+    fogInterval = setInterval(function () {
+            myfog += fogIncrement;
+
+    }, 10);
 
     // Create the camera
     aspectRatio = WIDTH / HEIGHT;
@@ -81,7 +96,7 @@ function createScene() {
     );
 
     // Set the position of the camera, PLAYERHEIGHT is defined in firstPerson.js
-    var camPos = new THREE.Vector3(0, PLAYERHEIGHT, 0);
+    var camPos = new THREE.Vector3(0, PLAYERHEIGHT+10  , 0);
     controls = new THREE.PointerLockControls(camera, camPos);
     scene.add(controls.getObject());
 
@@ -118,11 +133,13 @@ function loop() {
     stats.begin();
     requestAnimationFrame(loop);
 
-    myfog += 0.00001;
-    scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
+
+
+    scene.fog.density= myfog;
 
     // YOU NEED TO CALL THIS (srycaps)
     controlLoop(controls);
+    interactionLoop();
 
     renderer.render(scene, camera);
     stats.end();
@@ -183,68 +200,75 @@ function createLights() {
 
 
 function createRoom() {
-
-    var Colors = {
-        red: 0xf25346,
-        white: 0xd8d0d1,
-        brown: 0x59332e,
-        pink: 0xF5986E,
-        brownDark: 0x23190f,
-        blue: 0x68c3c0,
-    };
-
-    var cubeGeom = new THREE.BoxGeometry(30, 30, 30);
-    var sphereGeom = new THREE.SphereGeometry();
-    var geomFloor = new THREE.BoxGeometry(200, 10, 200);
-    var geomSide = new THREE.BoxGeometry(10, 200, 200);
-    var geomBack = new THREE.BoxGeometry(200, 200, 10);
-    var materialRed = new THREE.MeshLambertMaterial({ color: Colors.red, shading: THREE.FlatShading })
-    var materialBlue = new THREE.MeshLambertMaterial({ color: Colors.blue, shading: THREE.FlatShading })
-
-    var floor = new THREE.Mesh(geomFloor, materialRed);
-    var leftWall = new THREE.Mesh(geomSide, materialRed);
-    var rightWall = new THREE.Mesh(geomSide, materialRed);
-    var backWall = new THREE.Mesh(geomBack, materialRed);
-
-    var cube = new THREE.Mesh(cubeGeom, materialBlue);
-
-    cube.position.x = 80;
-    cube.position.y = 15;
+    var jloader2 = new THREE.JSONLoader();
+    jloader2.load('test_level.json', function(geo, mat){
+        var materials = new THREE.MeshFaceMaterial( mat );
+        var mesh = new THREE.Mesh(geo, materials);
+        terrain.push(mesh);
+        mesh.position.y=0;
+        mesh.position.x=5;
+        mesh.scale.set(20,20,20);
+        scene.add( mesh );
+    });
 
 
 
-    leftWall.position.x -= 100;
-    leftWall.position.y += 100;
-    rightWall.position.x += 100;
-    rightWall.position.y += 100;
-    backWall.position.z -= 100;
-    backWall.position.y += 100;
-    //floor.position.y -=100;
-    terrain.push(rightWall);
-    terrain.push(leftWall);
-    terrain.push(backWall);
-    terrain.push(floor);
-    terrain.push(cube);
-    cube.castShadow = true;
+var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json'];
+     addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true);
+     addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true);
+     addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true);
+     addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true);
 
-
-    scene.add(cube);
-    scene.add(floor);
-    scene.add(leftWall);
-    scene.add(rightWall);
-    scene.add(backWall);
 
 
 }
 
+
+// Add Object with given Path to given coordinates
+function addItem(file, xPos, yPos, zPos, scale, interact_type){
+        var jloader2 = new THREE.JSONLoader();
+    jloader2.load(file, function(geo, mat){
+        var materials = new THREE.MeshFaceMaterial( mat );
+        var mesh = new THREE.Mesh(geo, materials);
+
+        mesh.position.y=yPos;
+        mesh.position.x=xPos;
+        mesh.position.z = zPos;
+        mesh.scale.set(20*scale,20*scale,20*scale);
+        if(interact_type){
+            var intItem = new GameObject(mesh, 0, TYPE_INTERACTABLE);
+            terrain.push(intItem);
+        }
+        else{
+            terrain.push(mesh);
+        }
+
+        scene.add( mesh );
+
+    });
+}
+
+
+
 function createFire() {
     VolumetricFire.texturePath = './levels/materials/textures/';
-    addSmallFire(0, 1, 0);
-    addSmallFire(1, 20, 1);
-    addSmallFire(3, 20, 1);
-    addSmallFire(5, 20, 1);
-    addSmallFire(7, 20, 1);
-    addSmallFire(9, 20, 1);
+
+    addFire(80,30,1,30,30,30,10);
+    fireGeom = new THREE.BoxGeometry(30,30,30);
+    var mat = new THREE.MeshBasicMaterial({transparent:true, opacity:0} )
+    var box = new GameObject(new THREE.Mesh(fireGeom,mat),null,TYPE_FIRE);
+
+    box.mesh.position.x=80;
+
+    box.mesh.position.y=30;
+
+    box.mesh.position.z=1;
+
+    scene.add(box.mesh);
+    terrain.push(box);
+
+
 
     animateFire();
+
 }
