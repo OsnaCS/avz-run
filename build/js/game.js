@@ -29,7 +29,7 @@ var scene,
 var pathItem = '../avz_model/materials/objects/';
 //variable used for increasing fog
 var MAX_FOG = 0.015;
-var myfog=0;
+var myfog=0.002;
 var fogTime=20;
 var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;

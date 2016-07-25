@@ -297,40 +297,45 @@ function controlLoop(controls) {
 
 
         // forbid player to move farther if there are obstacles in the respective directions
-        if (intersectionsY.length > 0) {
+        if (intersectionsY.length > 0 ) {
             if(intersectionsY[0].object.type == TYPE_FIRE) {
                 fireAction();
+            } else {
+                velocity.y = Math.max(0, velocity.y);
+                firstTime=false;
             }
-            velocity.y = Math.max(0, velocity.y);
-            firstTime=false;
         }
 
         if(intersectionsZpos.length > 0) {
             if(intersectionsZpos[0].object.type == TYPE_FIRE) {
                 fireAction();
+            } else {
+                velocity.z = Math.min(0, velocity.z);
             }
-            velocity.z = Math.min(0, velocity.z);
         }
 
         if(intersectionsZneg.length > 0) {
             if(intersectionsZneg[0].object.type == TYPE_FIRE) {
                 fireAction();
+            } else {
+                velocity.z = Math.max(0, velocity.z);
             }
-            velocity.z = Math.max(0, velocity.z);
         }
 
         if(intersectionsXpos.length > 0) {
             if(intersectionsXpos[0].object.type == TYPE_FIRE) {
                 fireAction();
+            } else {
+                velocity.x = Math.min(0, velocity.x);
             }
-            velocity.x = Math.min(0, velocity.x);
         }
 
         if(intersectionsXneg.length > 0) {
             if(intersectionsXneg[0].object.type == TYPE_FIRE) {
                 fireAction();
+            } else {
+                velocity.x = Math.max(0, velocity.x);
             }
-            velocity.x = Math.max(0, velocity.x);
         }
         controls.getObject().translateX(velocity.x * delta);
         controls.getObject().translateY(velocity.y * delta);
