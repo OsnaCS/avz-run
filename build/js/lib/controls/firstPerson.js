@@ -77,6 +77,7 @@ if (havePointerLock) {
             controls.enabled = false;
 
             instructions.style.display = '';
+            menu = true;
 
         }
 
@@ -106,6 +107,8 @@ if (havePointerLock) {
 
         // Ask the browser to lock the pointer
         element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+
+        //menu = false;
 
         if (/Firefox/i.test(navigator.userAgent)) {
 

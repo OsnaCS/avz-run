@@ -28,6 +28,7 @@ var scene,
 //variable used for increasing fog
 var myfog = 0;
 
+
 function init(event) {
 
     // set up the scene, the camera and the renderer
@@ -58,7 +59,7 @@ function createScene() {
 
 
     container = document.getElementById('world');
-    instructions = document.getElementById( 'instructions' );
+    instructions = document.getElementById('instructions');
     button = document.getElementById('button');
 
     // Get the width and the height of the screen,
@@ -188,21 +189,22 @@ function createLights() {
 
 function createRoom() {
     var jloader2 = new THREE.JSONLoader();
-    jloader2.load('test_level.json', function(geo, mat){
-        var materials = new THREE.MeshFaceMaterial( mat );
+    jloader2.load('test_level.json', function(geo, mat) {
+        var materials = new THREE.MeshFaceMaterial(mat);
         var mesh = new THREE.Mesh(geo, materials);
         terrain.push(mesh);
-        mesh.position.y=0;
-        mesh.position.x=5;
-        mesh.scale.set(20,20,20);
-        loadJson(mesh );
+        mesh.position.y = 0;
+        mesh.position.x = 5;
+        mesh.scale.set(20, 20, 20);
+        loadJson(mesh);
     });
 
-     function loadJson(mesh){
-         scene.add( mesh );
-     }
+    function loadJson(mesh) {
+        scene.add(mesh);
+    }
 
 }
+
 function createFire() {
     VolumetricFire.texturePath = './levels/materials/textures/';
     addSmallFire(0, 0, 0);
@@ -216,7 +218,7 @@ function createFire() {
     addSmallFire(0, -30, 0);
     addSmallFire(0, -40, 0);
     addSmallFire(0, -50, 0);
-        addFire(0, 1, 5, 100, 150, 100, 50);
+    addFire(0, 1, 5, 100, 150, 100, 50);
 
 
     animateFire();
@@ -225,6 +227,6 @@ function createFire() {
 function createFire() {
     VolumetricFire.texturePath = './levels/materials/textures/';
 
-    addFire(80,30,1,30,30,30,10);
+    addFire(80, 30, 1, 30, 30, 30, 10);
     animateFire();
 }
