@@ -215,29 +215,28 @@ function createRoom() {
         scene.add(mesh);
     });
 
-
-
-    var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json'];
-    addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true);
-    addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true);
-    addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true);
-    addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true);
+var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json'];
+     addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
+     addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true, pickUpItem);
+     addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true, pickUpItem);
+     addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true, pickUpItem);
 }
 
 
 // Add Object with given Path to given coordinates
-function addItem(file, xPos, yPos, zPos, scale, interact_type) {
-    var jloader2 = new THREE.JSONLoader();
-    jloader2.load(file, function(geo, mat) {
-        var materials = new THREE.MeshFaceMaterial(mat);
-        var mesh = new THREE.Mesh(geo, materials);
+
+function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction){
+        var jloader2 = new THREE.JSONLoader();
+        jloader2.load(file, function(geo, mat){
+            var materials = new THREE.MeshFaceMaterial( mat );
+            var mesh = new THREE.Mesh(geo, materials);
 
         mesh.position.y = yPos;
         mesh.position.x = xPos;
         mesh.position.z = zPos;
-        mesh.scale.set(20 * scale, 20 * scale, 20 * scale);
-        if (interact_type) {
-            var intItem = new GameObject(mesh, 0, TYPE_INTERACTABLE);
+        mesh.scale.set(20*scale,20*scale,20*scale);
+        if(interact_type){
+            var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE);
             terrain.push(intItem);
         } else {
             terrain.push(mesh);
