@@ -215,11 +215,13 @@ function createRoom() {
         scene.add(mesh);
     });
 
-var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json'];
+    var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json'];
      addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
      addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true, pickUpItem);
      addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true, pickUpItem);
-     addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true, pickUpItem);
+    addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true, pickUpItem);
+    addItem(pathItem.concat(itemList[4]), 30, 5, -30, 1, false, 0);
+    addItem(pathItem.concat(itemList[5]), 30, 5, -30, 1, true, open);
 }
 
 
