@@ -17,24 +17,21 @@
 // call controlLoop(controls) in loop()
 
 
-
 window.addEventListener('load', init, false);
 
 
 var scene,
     camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
-    renderer, container, controls;
+    renderer, container, controls, audioLoader;
 
 
 
 var pathItem = '../avz_model/materials/objects/';
 //variable used for increasing fog
-var myfog=0;
-var fogTime=5;
-var fogIncrement= 0.015/(fogTime*1000/10) ;
+var myfog = 0;
+var fogTime = 5;
+var fogIncrement = 0.015 / (fogTime * 1000 / 10);
 var fogInterval;
-
-
 
 function init(event) {
 
@@ -48,6 +45,7 @@ function init(event) {
     createRoom();
     createLights();
 
+    createAudio();
     createFire();
 
     // start a loop that will update the objects' positions
@@ -78,8 +76,8 @@ function createScene() {
 
     scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
 
-    fogInterval = setInterval(function () {
-            myfog += fogIncrement;
+    fogInterval = setInterval(function() {
+        myfog += fogIncrement;
 
     }, 10);
 
@@ -96,7 +94,7 @@ function createScene() {
     );
 
     // Set the position of the camera, PLAYERHEIGHT is defined in firstPerson.js
-    var camPos = new THREE.Vector3(0, PLAYERHEIGHT+10  , 0);
+    var camPos = new THREE.Vector3(0, PLAYERHEIGHT + 10, 0);
     controls = new THREE.PointerLockControls(camera, camPos);
     scene.add(controls.getObject());
 
@@ -127,17 +125,16 @@ function createScene() {
     // Listen to the screen: if the user resizes it
     // we have to update the camera and the renderer size
     window.addEventListener('resize', handleWindowResize, false);
-}
 
+    scene.fog = new THREE.FogExp2(0x424242, 0.005);
+}
 
 
 function loop() {
     stats.begin();
     requestAnimationFrame(loop);
 
-
-
-    scene.fog.density= myfog;
+    scene.fog.density = myfog;
 
     // YOU NEED TO CALL THIS (srycaps)
     controlLoop(controls);
@@ -159,8 +156,6 @@ function handleWindowResize() {
 
 
 var hemisphereLight, shadowLight;
-
-
 
 
 // TEST ENVIRONMENT
@@ -203,73 +198,78 @@ function createLights() {
 
 function createRoom() {
     var jloader2 = new THREE.JSONLoader();
-    jloader2.load('test_level.json', function(geo, mat){
-        var materials = new THREE.MeshFaceMaterial( mat );
+    jloader2.load('test_level.json', function(geo, mat) {
+        var materials = new THREE.MeshFaceMaterial(mat);
         var mesh = new THREE.Mesh(geo, materials);
         terrain.push(mesh);
-        mesh.position.y=0;
-        mesh.position.x=5;
-        mesh.scale.set(20,20,20);
-        scene.add( mesh );
+        mesh.position.y = 0;
+        mesh.position.x = 5;
+        mesh.scale.set(20, 20, 20);
+        scene.add(mesh);
     });
 
 
 
-var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json'];
-     addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true);
-     addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true);
-     addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true);
-     addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true);
-
-
-
+    var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json'];
+    addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true);
+    addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true);
+    addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true);
+    addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true);
 }
 
 
 // Add Object with given Path to given coordinates
-function addItem(file, xPos, yPos, zPos, scale, interact_type){
-        var jloader2 = new THREE.JSONLoader();
-    jloader2.load(file, function(geo, mat){
-        var materials = new THREE.MeshFaceMaterial( mat );
+function addItem(file, xPos, yPos, zPos, scale, interact_type) {
+    var jloader2 = new THREE.JSONLoader();
+    jloader2.load(file, function(geo, mat) {
+        var materials = new THREE.MeshFaceMaterial(mat);
         var mesh = new THREE.Mesh(geo, materials);
 
-        mesh.position.y=yPos;
-        mesh.position.x=xPos;
+        mesh.position.y = yPos;
+        mesh.position.x = xPos;
         mesh.position.z = zPos;
-        mesh.scale.set(20*scale,20*scale,20*scale);
-        if(interact_type){
+        mesh.scale.set(20 * scale, 20 * scale, 20 * scale);
+        if (interact_type) {
             var intItem = new GameObject(mesh, 0, TYPE_INTERACTABLE);
             terrain.push(intItem);
-        }
-        else{
+        } else {
             terrain.push(mesh);
         }
 
-        scene.add( mesh );
+        scene.add(mesh);
 
     });
 }
-
 
 
 function createFire() {
     VolumetricFire.texturePath = './levels/materials/textures/';
 
-    addFire(80,30,1,30,30,30,10);
-    fireGeom = new THREE.BoxGeometry(30,30,30);
-    var mat = new THREE.MeshBasicMaterial({transparent:true, opacity:0} )
-    var box = new GameObject(new THREE.Mesh(fireGeom,mat),null,TYPE_FIRE);
+    addFire(80, 0, 1, 30, 30, 30, 10);
+    fireGeom = new THREE.BoxGeometry(30, 30, 30);
+    var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
+    var fireMesh = new THREE.Mesh(fireGeom, mat);
+    var box = new GameObject(fireMesh, null, TYPE_FIRE);
 
-    box.mesh.position.x=80;
+    box.mesh.position.x = 80;
+    box.mesh.position.y = 30;
+    box.mesh.position.z = 1;
 
-    box.mesh.position.y=30;
+    // create fire sound
+    var fireSound = new THREE.PositionalAudio(audioListener);
+    audioLoader.load('sounds/firecracking.mp3', function(buffer) {
+        fireSound.setBuffer(buffer);
+        fireSound.setRefDistance(50);
+        fireSound.setRolloffFactor(5);
+        fireSound.setLoop(true);
+        fireSound.setVolume(3);
+        fireSound.play();
+    })
 
-    box.mesh.position.z=1;
+    fireMesh.add(fireSound);
 
     scene.add(box.mesh);
     terrain.push(box);
-
-
 
     animateFire();
 
