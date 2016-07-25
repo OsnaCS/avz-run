@@ -79,6 +79,10 @@ GameObject = function(mesh, interaction, type) {
 
     }
 
+    /*this.interact = function(interaction) {
+        this.interaction();
+    }*/
+
 }
 
 
@@ -89,4 +93,9 @@ function onMouseClick() {
     }
 
 
+}
+
+
+function pickUpItem() {
+    player.pickUp(this);
 }
