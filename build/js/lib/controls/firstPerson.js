@@ -63,7 +63,7 @@ var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement
 // maybe insert menu into following method
 
 if (havePointerLock) {
-    //alert("hi");
+
     var element = document.getElementById('world');
 
     var pointerlockchange = function(event) {
@@ -73,11 +73,9 @@ if (havePointerLock) {
 
             //          controlsEnabled = true;
             controls.enabled = true;
-            //alert("hi");
             blocker.style.display = 'none';
 
         } else {
-            //alert("hi");
             controls.enabled = false;
 
             blocker.style.display = '-webkit-box';
@@ -327,11 +325,7 @@ function controlLoop(controls) {
             velocity.y = Math.max(0, velocity.y);
             firstTime = false;
         }
-
-        velocity.y = Math.max(0, velocity.y);
-        firstTime = false;
     }
-
 
     if (intersectionsZpos.length > 0) {
         if (intersectionsZpos[0].object.type == TYPE_FIRE) {
@@ -340,69 +334,57 @@ function controlLoop(controls) {
             velocity.z = Math.min(0, velocity.z);
         }
     }
-    velocity.z = Math.min(0, velocity.z);
-}
 
-if (intersectionsZneg.length > 0) {
-    if (intersectionsZneg[0].object.type == TYPE_FIRE) {
-        fireAction();
-    } else {
-        velocity.z = Math.max(0, velocity.z);
-    }
-}
-velocity.z = Math.max(0, velocity.z);
-}
-
-
-if (intersectionsXpos.length > 0) {
-    if (intersectionsXpos[0].object.type == TYPE_FIRE) {
-        fireAction();
-    } else {
-        velocity.x = Math.min(0, velocity.x);
+    if (intersectionsZneg.length > 0) {
+        if (intersectionsZneg[0].object.type == TYPE_FIRE) {
+            fireAction();
+        } else {
+            velocity.z = Math.max(0, velocity.z);
+        }
     }
 
-}
-velocity.x = Math.min(0, velocity.x);
-}
-
-
-if (intersectionsXneg.length > 0) {
-    if (intersectionsXneg[0].object.type == TYPE_FIRE) {
-        fireAction();
-    } else {
-        velocity.x = Math.max(0, velocity.x);
+    if (intersectionsXpos.length > 0) {
+        if (intersectionsXpos[0].object.type == TYPE_FIRE) {
+            fireAction();
+        } else {
+            velocity.x = Math.min(0, velocity.x);
+        }
     }
 
-}
-velocity.x = Math.max(0, velocity.x);
-}
-controls.getObject().translateX(velocity.x * delta);
-controls.getObject().translateY(velocity.y * delta);
-controls.getObject().translateZ(velocity.z * delta);
+    if (intersectionsXneg.length > 0) {
+        if (intersectionsXneg[0].object.type == TYPE_FIRE) {
+            fireAction();
+        } else {
+            velocity.x = Math.max(0, velocity.x);
+        }
+    }
+    controls.getObject().translateX(velocity.x * delta);
+    controls.getObject().translateY(velocity.y * delta);
+    controls.getObject().translateZ(velocity.z * delta);
 
 
 
-// stop gravity at ground level as collision detection sometimes fails for floor
-if (controls.getObject().position.y < PLAYERHEIGHT && firstTime) {
-    velocity.y = 0;
-    controls.getObject().position.y = PLAYERHEIGHT + 5;
-}
+    // stop gravity at ground level as collision detection sometimes fails for floor
+    if (controls.getObject().position.y < PLAYERHEIGHT && firstTime) {
+        velocity.y = 0;
+        controls.getObject().position.y = PLAYERHEIGHT + 5;
+    }
 
-// checks if we can stand up (may be forbidden when crouching beneath an object)
-handleStandup();
+    // checks if we can stand up (may be forbidden when crouching beneath an object)
+    handleStandup();
 
-if (velocity.y == 0) {
-    canJump = true;
-}
+    if (velocity.y == 0) {
+        canJump = true;
+    }
 
-prevTime = time;
+    prevTime = time;
 
-if (flashCooldown == 0) {
-    scene.remove(flashLight);
-    scene.fog.color.set(0x424242);
-    clearInterval(flashInterval);
-    flashCooldown = -1;
-}
+    if (flashCooldown == 0) {
+        scene.remove(flashLight);
+        scene.fog.color.set(0x424242);
+        clearInterval(flashInterval);
+        flashCooldown = -1;
+    }
 
 }
 
@@ -473,8 +455,8 @@ function setRays() {
         raycasterZpos.set(controls.getObject().position, controls.getObject().getWorldDirection().normalize());
         raycasterZneg.set(controls.getObject().position, controls.getObject().getWorldDirection().negate().normalize());
 
-    }
 
+    }
 
 }
 
@@ -488,5 +470,6 @@ function fireAction() {
             flashCooldown--;
         }, 1000);
     }
+
 
 }
