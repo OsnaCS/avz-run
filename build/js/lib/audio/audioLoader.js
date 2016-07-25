@@ -1,4 +1,5 @@
 // Audio Loader
+// Credits: Steffen Schiffel, B.Sc. for callback function optimization (CEO of Schiffel IT-Service GmbH)
 // provides general inilization of audio related stuff
 var audioListener, audioLoader, footsteps;
 
@@ -16,15 +17,18 @@ function createAudio() {
 }
 
 // creates the sound with specific options
-function createSound(filename, distance, rolloff, loop, volume) {
+function createSound(filename, distance, rolloff, loop, volume, complete) {
     var sound = new THREE.PositionalAudio(audioListener);
     audioLoader.load('sounds/' + filename + '.mp3', function(buffer) {
         sound.setBuffer(buffer);
         sound.setRefDistance(distance);
         sound.setRolloffFactor(rolloff);
         sound.setLoop(loop);
-        sound.setVolume(3);
-    })
+        sound.setVolume(volume);
+        if(complete){
+         complete();
+        }
+    });
     return sound;
 }
 
