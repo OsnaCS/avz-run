@@ -26,9 +26,10 @@ body {
     -webkit-box-align: center;
     -moz-box-align: center;
     box-align: center;
-    color: #ff0000;
+    color: #ffffff;
     text-align: center;
     cursor: pointer;
+    opacity: 0.5;
 }
 
 #button {

@@ -28,6 +28,8 @@ var scene,
 //variable used for increasing fog
 var myfog = 0;
 
+var menu = false;
+
 
 function init(event) {
 
@@ -119,18 +121,22 @@ function createScene() {
 
 
 function loop() {
-    stats.begin();
-    requestAnimationFrame(loop);
+    // if (!menu) {
+        stats.begin();
+        requestAnimationFrame(loop);
+        myfog += 0.00001;
+        scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
 
-    myfog += 0.00001;
-    scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
+        // YOU NEED TO CALL THIS (srycaps)
+        controlLoop(controls);
+        interactionLoop();
 
-    // YOU NEED TO CALL THIS (srycaps)
-    controlLoop(controls);
-    interactionLoop();
-
-    renderer.render(scene, camera);
-    stats.end();
+        renderer.render(scene, camera);
+        stats.end();
+    // } else {
+    //     while(menu){}
+    //     requestAnimationFrame(loop);
+    // }
 };
 
 
