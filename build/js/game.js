@@ -137,7 +137,7 @@ function loop() {
 
 
 
-    scene.fog.density= myfog;
+   // scene.fog.density= myfog;
 
     // YOU NEED TO CALL THIS (srycaps)
     controlLoop(controls);
@@ -238,7 +238,7 @@ function addItem(file, xPos, yPos, zPos, scale, interact_type){
         mesh.position.z = zPos;
         mesh.scale.set(20*scale,20*scale,20*scale);
         if(interact_type){
-            var intItem = new GameObject(mesh, 0, TYPE_INTERACTABLE);
+            var intItem = new GameObject(mesh, player.pickUp, TYPE_INTERACTABLE);
             terrain.push(intItem);
         }
         else{
@@ -256,20 +256,6 @@ function createFire() {
     VolumetricFire.texturePath = './levels/materials/textures/';
 
     addFire(80,30,1,30,30,30,10);
-    fireGeom = new THREE.BoxGeometry(30,30,30);
-    var mat = new THREE.MeshBasicMaterial({transparent:true, opacity:0} )
-    var box = new GameObject(new THREE.Mesh(fireGeom,mat),null,TYPE_FIRE);
-
-    box.mesh.position.x=80;
-
-    box.mesh.position.y=30;
-
-    box.mesh.position.z=1;
-
-    scene.add(box.mesh);
-    terrain.push(box);
-
-
 
     animateFire();
 

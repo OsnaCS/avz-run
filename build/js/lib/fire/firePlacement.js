@@ -62,11 +62,19 @@ function addFire(x, y, z, width, height, depth, spacing) {
     scene.add(fmesh);
     fmesh.position.set(x, y + fireHeight / 2, z);
 
-    var geometry = new THREE.BoxGeometry( fireWidth, fireHeight, fireDepth);
-    var material = new THREE.MeshBasicMaterial( {color: 0x00ff00,opacity: 1} );
-    var cube = new THREE.Mesh( geometry, material );
-    cube.position.set(x,y,z);
-    terrain.push( cube );
+
+    fireGeom = new THREE.BoxGeometry(fireWidth, fireHeight, fireDepth);
+    var mat = new THREE.MeshBasicMaterial({transparent:true, opacity:0} )
+    var box = new GameObject(new THREE.Mesh(fireGeom,mat),player.pickUp,TYPE_FIRE);
+
+    box.mesh.position.x = x;
+    box.mesh.position.y = y;
+    box.mesh.position.z = z;
+
+    scene.add(box.mesh);
+    terrain.push(box);
+
+
 
     var smoke = addSmoke(x, y, z);
 
