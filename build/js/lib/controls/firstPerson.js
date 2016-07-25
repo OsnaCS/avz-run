@@ -51,7 +51,7 @@ var DUCK_DIFFERENCE = 2 * (PLAYERHEIGHT / 3);
 var RUN_SPEED = 2;
 var INVERT_XZ = new THREE.Vector3(-1, 1, -1);
 var MOVEMENT_SPEED = 600;
-var JUMP_SPEED = 500;
+var JUMP_SPEED = 450;
 
 var flashCooldown = 0;
 var flashInterval;
@@ -144,6 +144,16 @@ function initControls() {
 
         switch (event.keyCode) {
 
+
+            case 49:
+                setActiveSlot(0);
+                break;
+            case 50:
+                setActiveSlot(1);
+                break;
+            case 51:
+                setActiveSlot(2);
+                break;
             case 38: // up
             case 87: // w
                 moveForward = true;
