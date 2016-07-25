@@ -1,6 +1,6 @@
 // Audio Loader
 // provides general inilization of audio related stuff
-var audioListener, audioLoader;
+var audioListener, audioLoader, footsteps;
 
 // init loader and listener
 function createAudio() {
@@ -11,15 +11,14 @@ function createAudio() {
     // Init AudioLoader
     audioLoader = new THREE.AudioLoader();
 
-    // static footsteps sounds
-    var footsteps = createSound("footsteps",10,1,true,1);
-    camera.add(footsteps);
+    // basic sounds like footsteps
+    createBasicSounds();
 }
 
 // creates the sound with specific options
-function createSound(filename,distance,rolloff,loop,volume) {
+function createSound(filename, distance, rolloff, loop, volume) {
     var sound = new THREE.PositionalAudio(audioListener);
-    audioLoader.load('sounds/'+filename+'.mp3', function(buffer) {
+    audioLoader.load('sounds/' + filename + '.mp3', function(buffer) {
         sound.setBuffer(buffer);
         sound.setRefDistance(distance);
         sound.setRolloffFactor(rolloff);
@@ -29,10 +28,15 @@ function createSound(filename,distance,rolloff,loop,volume) {
     return sound;
 }
 
-function playSound(sound){
+function playSound(sound) {
     sound.play();
 }
 
-function stopSound(sound){
+function stopSound(sound) {
     sound.stop();
+}
+
+function createBasicSounds() {
+    footsteps = createSound("footsteps", 10, 1, true, 1);
+    camera.add(footsteps);
 }
