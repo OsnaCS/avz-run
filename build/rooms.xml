@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rooms>
+	<room name="lectureroom1" filename="lectureroom1.json">
+		<origin x="0" y="0" />
+		<length x="14" y="10" />
+		<doors>
+		   <door type="norm" index="1" position="(12,-0.75)" normal="(1,0)"/>
+		</doors>
+		<spawns>
+		   <spawn index="1" position="(10,4)" object="table" normaltowall="(1,0)"/>
+		   <spawn index="2" position="(10,6)" object="usable" normaltowall="(1,0)" />
+		</spawns>
+	</room>
+	
+	
+	<room name="lectureroom2" filename="lectureroom2.json">
+		<origin x="10" y="10" />
+		<length x="114" y="110" />
+		<doors>
+		   <door type="norm" index="1" position="(12,-0.75)" normal="(1,0)">FUU1</door>
+		   <door type="glas" index="2" position="(12,-0.75)" normal="(1,0)"/>
+		</doors>
+		<spawns>
+		   <spawn index="1" position="(10,4)" object="table" normaltowall="(1,0)"/>
+		</spawns>
+	</room>
+
+	
+</rooms>
