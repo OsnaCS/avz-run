@@ -10,6 +10,10 @@ function createAudio() {
 
     // Init AudioLoader
     audioLoader = new THREE.AudioLoader();
+
+    // static footsteps sounds
+    var footsteps = createSound("footsteps",10,1,true,1);
+    camera.add(footsteps);
 }
 
 // creates the sound with specific options
