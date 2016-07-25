@@ -201,8 +201,9 @@ function initControls() {
 
             case 80: //pause p
                 // TODO pause in Bild schreiben
-
-                pause = !pause;
+                if (!menu) {
+                    pause = !pause;
+                }
                 break;
 
             case 73: // i to show inventory  (maybe also to toggle later?)

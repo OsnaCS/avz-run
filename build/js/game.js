@@ -22,9 +22,11 @@ window.addEventListener('load', init, false);
 
 var scene,
     camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
-    renderer, container, controls, startInstructions, buttonStart, instructions,
-    blocker, button, audioLoader;
+    renderer, container, controls, audioLoader, startInstructions, buttonStart,
+    instructions, blocker, button;
 
+var menu = true;
+var pause = false;
 
 var pathItem = '../avz_model/materials/objects/';
 //variable used for increasing fog
@@ -34,10 +36,6 @@ var fogTime = 20;
 var fogIncrement = MAX_FOG / (fogTime * 1000 / 10);
 var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
-
-var menu = true;
-var pause = false;
-
 
 function init(event) {
 
@@ -75,6 +73,7 @@ function createScene() {
     instructions = document.getElementById('instructions');
     button = document.getElementById('button');
 
+
     // Get the width and the height of the screen,
     // use them to set up the aspect ratio of the camera
     // and the size of the renderer.
@@ -89,6 +88,7 @@ function createScene() {
     fogInterval = setInterval(function() {
         if (!menu && !pause) {
             player.damage(myfog / MAX_FOG) * (HEALTH_PER_SECOND / 100);
+
             if (myfog < MAX_FOG) {
                 myfog += fogIncrement;
             }
@@ -144,157 +144,155 @@ function createScene() {
 }
 
 
-function loop() { << << << < HEAD
+function loop() {
     if (!menu && !pause) {
-        stats.begin();
-        requestAnimationFrame(loop);
-
-
-
-        scene.fog.density = myfog; === === =
         if (player.health <= 0) {
             gameOver();
         } else {
+
             stats.begin();
             requestAnimationFrame(loop);
-            scene.fog.density = myfog; >>> >>> > 34 cc7ed90e9fc29f39bbcaf75e8140d7f196adbf
+            scene.fog.density = myfog;
 
             // YOU NEED TO CALL THIS (srycaps)
             controlLoop(controls);
             interactionLoop();
 
             renderer.render(scene, camera);
-            stats.end(); << << << < HEAD
-        } else {
-            requestAnimationFrame(loop); === === = >>> >>> > 34 cc7ed90e9fc29f39bbcaf75e8140d7f196adbf
+            stats.end();
         }
-    };
-
-
-    function handleWindowResize() {
-        // update height and width of the renderer and the camera
-        HEIGHT = window.innerHeight;
-        WIDTH = window.innerWidth;
-        renderer.setSize(WIDTH, HEIGHT);
-        camera.aspect = WIDTH / HEIGHT;
-        camera.updateProjectionMatrix();
+    } else {
+        requestAnimationFrame(loop);
     }
+};
 
 
-    var hemisphereLight, shadowLight;
+function handleWindowResize() {
+    // update height and width of the renderer and the camera
+    HEIGHT = window.innerHeight;
+    WIDTH = window.innerWidth;
+    renderer.setSize(WIDTH, HEIGHT);
+    camera.aspect = WIDTH / HEIGHT;
+    camera.updateProjectionMatrix();
+}
 
 
-    // TEST ENVIRONMENT
-
-    function createLights() {
-
-        // A hemisphere light is a gradient colored light;
-        // the first parameter is the sky color, the second parameter is the ground color,
-        // the third parameter is the intensity of the light
-        hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, .9)
-
-        // A directional light shines from a specific direction.
-        // It acts like the sun, that means that all the rays produced are parallel.
-        shadowLight = new THREE.DirectionalLight(0xffffff, .9);
-
-        // Set the direction of the light
-        shadowLight.position.set(50, 50, 50);
-
-        // Allow shadow casting
-        shadowLight.castShadow = true;
-
-        // define the visible area of the projected shadow
-        shadowLight.shadow.camera.left = -400;
-        shadowLight.shadow.camera.right = 400;
-        shadowLight.shadow.camera.top = 400;
-        shadowLight.shadow.camera.bottom = -400;
-        shadowLight.shadow.camera.near = 1;
-        shadowLight.shadow.camera.far = 1000;
-
-        // define the resolution of the shadow; the higher the better,
-        // but also the more expensive and less performant
-        shadowLight.shadow.mapSize.width = 2048;
-        shadowLight.shadow.mapSize.height = 2048;
-
-        // to activate the lights, just add them to the scene
-        scene.add(hemisphereLight);
-        scene.add(shadowLight);
-    }
+var hemisphereLight, shadowLight;
 
 
-    function createRoom() {
-        var jloader2 = new THREE.JSONLoader();
-        jloader2.load('test_level.json', function(geo, mat) {
-            var materials = new THREE.MeshFaceMaterial(mat);
-            var mesh = new THREE.Mesh(geo, materials);
+// TEST ENVIRONMENT
+
+function createLights() {
+
+    // A hemisphere light is a gradient colored light;
+    // the first parameter is the sky color, the second parameter is the ground color,
+    // the third parameter is the intensity of the light
+    hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, .9)
+
+    // A directional light shines from a specific direction.
+    // It acts like the sun, that means that all the rays produced are parallel.
+    shadowLight = new THREE.DirectionalLight(0xffffff, .9);
+
+    // Set the direction of the light
+    shadowLight.position.set(50, 50, 50);
+
+    // Allow shadow casting
+    shadowLight.castShadow = true;
+
+    // define the visible area of the projected shadow
+    shadowLight.shadow.camera.left = -400;
+    shadowLight.shadow.camera.right = 400;
+    shadowLight.shadow.camera.top = 400;
+    shadowLight.shadow.camera.bottom = -400;
+    shadowLight.shadow.camera.near = 1;
+    shadowLight.shadow.camera.far = 1000;
+
+    // define the resolution of the shadow; the higher the better,
+    // but also the more expensive and less performant
+    shadowLight.shadow.mapSize.width = 2048;
+    shadowLight.shadow.mapSize.height = 2048;
+
+    // to activate the lights, just add them to the scene
+    scene.add(hemisphereLight);
+    scene.add(shadowLight);
+}
+
+
+function createRoom() {
+    var jloader2 = new THREE.JSONLoader();
+    jloader2.load('test_level.json', function(geo, mat) {
+        var materials = new THREE.MeshFaceMaterial(mat);
+        var mesh = new THREE.Mesh(geo, materials);
+        terrain.push(mesh);
+        mesh.position.y = 0;
+        mesh.position.x = 5;
+        mesh.scale.set(20, 20, 20);
+        scene.add(mesh);
+    });
+
+
+
+    var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json'];
+    addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true);
+    addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true);
+    addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true);
+    addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true);
+}
+
+
+// Add Object with given Path to given coordinates
+function addItem(file, xPos, yPos, zPos, scale, interact_type) {
+    var jloader2 = new THREE.JSONLoader();
+    jloader2.load(file, function(geo, mat) {
+        var materials = new THREE.MeshFaceMaterial(mat);
+        var mesh = new THREE.Mesh(geo, materials);
+
+        mesh.position.y = yPos;
+        mesh.position.x = xPos;
+        mesh.position.z = zPos;
+        mesh.scale.set(20 * scale, 20 * scale, 20 * scale);
+        if (interact_type) {
+            var intItem = new GameObject(mesh, 0, TYPE_INTERACTABLE);
+            terrain.push(intItem);
+        } else {
             terrain.push(mesh);
-            mesh.position.y = 0;
-            mesh.position.x = 5;
-            mesh.scale.set(20, 20, 20);
-            scene.add(mesh);
-        });
+        }
+
+        scene.add(mesh);
+
+    });
+}
 
 
+function createFire() {
+    VolumetricFire.texturePath = './levels/materials/textures/';
 
-        var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json'];
-        addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true);
-        addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true);
-        addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true);
-        addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true);
-    }
+    addFire(80, 0, 1, 30, 30, 30, 10);
+    fireGeom = new THREE.BoxGeometry(30, 30, 30);
+    var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
+    var fireMesh = new THREE.Mesh(fireGeom, mat);
+    var box = new GameObject(fireMesh, null, TYPE_FIRE);
 
+    box.mesh.position.x = 80;
+    box.mesh.position.y = 30;
+    box.mesh.position.z = 1;
 
-    // Add Object with given Path to given coordinates
-    function addItem(file, xPos, yPos, zPos, scale, interact_type) {
-        var jloader2 = new THREE.JSONLoader();
-        jloader2.load(file, function(geo, mat) {
-            var materials = new THREE.MeshFaceMaterial(mat);
-            var mesh = new THREE.Mesh(geo, materials);
+    // create fire sound
+    var fireSound = new THREE.PositionalAudio(audioListener);
+    audioLoader.load('sounds/firecracking.mp3', function(buffer) {
+        fireSound.setBuffer(buffer);
+        fireSound.setRefDistance(50);
+        fireSound.setRolloffFactor(5);
+        fireSound.setLoop(true);
+        fireSound.setVolume(3);
+        fireSound.play();
+    })
 
-            mesh.position.y = yPos;
-            mesh.position.x = xPos;
-            mesh.position.z = zPos;
-            mesh.scale.set(20 * scale, 20 * scale, 20 * scale);
-            if (interact_type) {
-                var intItem = new GameObject(mesh, 0, TYPE_INTERACTABLE);
-                terrain.push(intItem);
-            } else {
-                terrain.push(mesh);
-            }
+    fireMesh.add(fireSound);
 
-            scene.add(mesh);
+    scene.add(box.mesh);
+    terrain.push(box);
 
-        });
-    }
+    animateFire();
 
-
-    function createFire() {
-        VolumetricFire.texturePath = './levels/materials/textures/';
-
-        addFire(80, 0, 1, 30, 30, 30, 10);
-        fireGeom = new THREE.BoxGeometry(30, 30, 30);
-        var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
-        var fireMesh = new THREE.Mesh(fireGeom, mat);
-        var box = new GameObject(fireMesh, null, TYPE_FIRE);
-
-        box.mesh.position.x = 80;
-        box.mesh.position.y = 30;
-        box.mesh.position.z = 1;
-
-        // create fire sound
-        var fireSound = new THREE.PositionalAudio(audioListener);
-        audioLoader.load('sounds/firecracking.mp3', function(buffer) {
-            fireSound.setBuffer(buffer);
-            fireSound.setRefDistance(50);
-            fireSound.setRolloffFactor(5);
-            fireSound.setLoop(true);
-            fireSound.setVolume(3);
-            fireSound.play();
-        })
-
-        fireMesh.add(fireSound);
-        terrain.push(box);
-
-        animateFire();
-
-    }
+}
