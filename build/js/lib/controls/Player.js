@@ -1,9 +1,11 @@
 var INV_SIZE = 3; // maximum number of objects in inventory
 var inventory; // array that stores references to inventory items
 var inv_pos; // array has constant length -> to save how many spots have been filled
-var MAX_HEALTH= 1000;
+
+var MAX_HEALTH= 10000;
 var activeSlot=-1;
 var selectedItem;
+
 // var healthBar = document.getElementsByClassName("progress-bar");
 
 // player object with own inventory
@@ -30,33 +32,33 @@ Player = function() {
             // delete object representation from scene
             game_obj.delFromScene();
 
-        }
-
-        else {
+        } else {
             // object cannot be picked up, no storage room
             console.log('Inventar voll!')
         }
 
     }
 
+
     // śhows player's inventory (placeholder function)
     this.showInv = function() {
 
         console.log('Inventarinhalt:')
 
-        for(i = 0; i < inv_pos; i++) {
+        for (i = 0; i < inv_pos; i++) {
             console.log(inventory[i]);
         }
     }
 
-    this.damage = function (damage) {
-        var healthPercent = (this.health/MAX_HEALTH)*100;
+    this.damage = function(damage) {
+        var healthPercent = (this.health / MAX_HEALTH) * 100;
         this.health -= damage;
-        $(".progress-bar").css("width",''+healthPercent+'%');
+        $(".progress-bar").css("width", '' + healthPercent + '%');
     }
 
 
 }
+
 
 function setActiveSlot(slot)  {
     if(inventory[slot]!=null) {
@@ -102,4 +104,7 @@ function setActiveSlot(slot)  {
 
 function addIcon(item,slot) {
   //  $("#slot"+slot).css("background-image","url("+item.name+".png)");
+
+function gameOver() {
+    $(".gameOverBlocker").css("z-index", 15);
 }

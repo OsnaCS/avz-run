@@ -22,9 +22,11 @@ window.addEventListener('load', init, false);
 
 var scene,
     camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
-    renderer, container, controls, audioLoader;
+    renderer, container, controls, audioLoader, startInstructions, buttonStart,
+    instructions, blocker, button;
 
-
+var menu = true;
+var pause = false;
 
 var pathItem = '../avz_model/materials/objects/';
 //variable used for increasing fog
@@ -64,8 +66,13 @@ document.body.appendChild(stats.dom);
 
 function createScene() {
 
-
+    blocker = document.getElementById('blocker');
     container = document.getElementById('world');
+    startInstructions = document.getElementById('startInstructions');
+    buttonStart = document.getElementById('buttonStart');
+    instructions = document.getElementById('instructions');
+    button = document.getElementById('button');
+
 
     // Get the width and the height of the screen,
     // use them to set up the aspect ratio of the camera
@@ -78,11 +85,14 @@ function createScene() {
 
     scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
 
-    fogInterval = setInterval(function () {
-            player.damage(myfog/MAX_FOG)*(HEALTH_PER_SECOND/100);
-            if(myfog<MAX_FOG) {
+    fogInterval = setInterval(function() {
+        if (!menu && !pause) {
+            player.damage(myfog / MAX_FOG) * (HEALTH_PER_SECOND / 100);
+
+            if (myfog < MAX_FOG) {
                 myfog += fogIncrement;
             }
+        }
     }, 10);
 
     // Create the camera
@@ -135,19 +145,24 @@ function createScene() {
 
 
 function loop() {
-    if(player.health<=0) {
-        gameOver();
+    if (!menu && !pause) {
+        if (player.health <= 0) {
+            gameOver();
+        } else {
+
+            stats.begin();
+            requestAnimationFrame(loop);
+            scene.fog.density = myfog;
+
+            // YOU NEED TO CALL THIS (srycaps)
+            controlLoop(controls);
+            interactionLoop();
+
+            renderer.render(scene, camera);
+            stats.end();
+        }
     } else {
-        stats.begin();
         requestAnimationFrame(loop);
-        scene.fog.density= myfog;
-
-        // YOU NEED TO CALL THIS (srycaps)
-        controlLoop(controls);
-        interactionLoop();
-
-        renderer.render(scene, camera);
-        stats.end();
     }
 };
 
@@ -215,11 +230,13 @@ function createRoom() {
         scene.add(mesh);
     });
 
-var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json'];
+    var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json'];
      addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
      addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true, pickUpItem);
      addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true, pickUpItem);
-     addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true, pickUpItem);
+    addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true, pickUpItem);
+    addItem(pathItem.concat(itemList[4]), 30, 5, -30, 1, false, 0);
+    addItem(pathItem.concat(itemList[5]), 30, 5, -30, 1, true, open);
 }
 
 
@@ -262,17 +279,9 @@ function createFire() {
     box.mesh.position.z = 1;
 
     // create fire sound
-    var fireSound = new THREE.PositionalAudio(audioListener);
-    audioLoader.load('sounds/firecracking.mp3', function(buffer) {
-        fireSound.setBuffer(buffer);
-        fireSound.setRefDistance(50);
-        fireSound.setRolloffFactor(5);
-        fireSound.setLoop(true);
-        fireSound.setVolume(3);
-        fireSound.play();
-    })
-
-    fireMesh.add(fireSound);
+    var firecracking = createSound("firecracking",50,5,true,3);
+    fireMesh.add(firecracking);
+    playSound(firecracking);
 
     scene.add(box.mesh);
     terrain.push(box);
