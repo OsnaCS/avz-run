@@ -104,7 +104,7 @@ function setActiveSlot(slot)  {
 
 function addIcon(item,slot) {
   //  $("#slot"+slot).css("background-image","url("+item.name+".png)");
-
+}
 function gameOver() {
     $(".gameOverBlocker").css("z-index", 15);
 }
