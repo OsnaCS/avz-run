@@ -11,6 +11,7 @@ var activeObject;
 var outlineMesh=null;
 var TYPE_INTERACTABLE = 0;
 var TYPE_FIRE =1;
+var TYPE_EXIT = 2;
 
 
 document.addEventListener( 'click', onMouseClick, false );
@@ -41,6 +42,9 @@ function interactionLoop() {
 
 
         }
+    }else if (interactions.length>0 && interactions[0].object.type==TYPE_EXIT) {
+        // nextLevel(); TODO: implement somewhere
+
     } else {
         activeObject=null;
         if(outlineMesh!=null) {
@@ -48,10 +52,7 @@ function interactionLoop() {
             outlineMesh=null;
         }
     }
-
-
 }
-
 
 
 
@@ -74,6 +75,4 @@ function onMouseClick() {
     if(activeObject!=null) {
         activeObject.interact();
     }
-
-
 }
