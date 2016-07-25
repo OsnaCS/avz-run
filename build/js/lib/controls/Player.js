@@ -1,7 +1,8 @@
 var INV_SIZE = 3; // maximum number of objects in inventory
 var inventory; // array that stores references to inventory items
 var inv_pos; // array has constant length -> to save how many spots have been filled
-var MAX_HEALTH = 1000;
+//var MAX_HEALTH= 1000;
+var MAX_HEALTH= 1000000000000;
 
 // var healthBar = document.getElementsByClassName("progress-bar");
 
