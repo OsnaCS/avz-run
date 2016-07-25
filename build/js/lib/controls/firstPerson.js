@@ -57,7 +57,9 @@ var INVERT_XZ = new THREE.Vector3(-1,1,-1);
 var MOVEMENT_SPEED = 600;
 var JUMP_SPEED = 500;
 
-
+var flashCooldown = 0;
+var flashInterval;
+var flashLight = new THREE.AmbientLight(0xFF0000);
 
 var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
@@ -240,7 +242,7 @@ function initControls() {
 
     // create rays for collision detection in each direction(direction values will be changed later)
 
-    raycasterY = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 15); // beneath
+    raycasterY = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 20); // beneath
 
 
     raycasterYpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 20); // above
@@ -296,23 +298,38 @@ function controlLoop(controls) {
 
         // forbid player to move farther if there are obstacles in the respective directions
         if (intersectionsY.length > 0) {
+            if(intersectionsY[0].object.type == TYPE_FIRE) {
+                fireAction();
+            }
             velocity.y = Math.max(0, velocity.y);
             firstTime=false;
         }
 
         if(intersectionsZpos.length > 0) {
+            if(intersectionsZpos[0].object.type == TYPE_FIRE) {
+                fireAction();
+            }
             velocity.z = Math.min(0, velocity.z);
         }
 
         if(intersectionsZneg.length > 0) {
+            if(intersectionsZneg[0].object.type == TYPE_FIRE) {
+                fireAction();
+            }
             velocity.z = Math.max(0, velocity.z);
         }
 
         if(intersectionsXpos.length > 0) {
+            if(intersectionsXpos[0].object.type == TYPE_FIRE) {
+                fireAction();
+            }
             velocity.x = Math.min(0, velocity.x);
         }
 
         if(intersectionsXneg.length > 0) {
+            if(intersectionsXneg[0].object.type == TYPE_FIRE) {
+                fireAction();
+            }
             velocity.x = Math.max(0, velocity.x);
         }
         controls.getObject().translateX(velocity.x * delta);
@@ -336,6 +353,12 @@ function controlLoop(controls) {
 
         prevTime = time;
 
+        if(flashCooldown==0) {
+            scene.remove(flashLight);
+            scene.fog.color.set(0x424242 );
+            clearInterval(flashInterval);
+            flashCooldown=-1;
+        }
 
 }
 
@@ -408,5 +431,19 @@ function setRays() {
 
 
         }
+
+}
+
+function fireAction() {
+    if(flashCooldown==-1) {
+        scene.add(flashLight);
+        scene.fog.color.set(0xff0000);;
+        flashCooldown=1;
+
+        flashInterval = setInterval(function () {
+          flashCooldown--;
+        }, 1000);
+    }
+
 
 }

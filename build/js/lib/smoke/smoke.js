@@ -52,7 +52,7 @@ function addSmoke(x, y, z) {
         },
         size: {
             type: 'f',
-            value: 3
+            value: fireWidth + fireDepth
         },
         texture: {
             type: 't',
@@ -78,9 +78,9 @@ function addSmoke(x, y, z) {
 
     for (i = 0; i < NUM_OF_PARTICLE; i++) {
 
-        position[i * 3 + 0] = THREE.Math.randFloat(-0.5, 0.5);
-        position[i * 3 + 1] = THREE.Math.randFloat(y, y + 2);
-        position[i * 3 + 3] = THREE.Math.randFloat(-0.5, 0.5);
+        position[i * 3 + 0] = THREE.Math.randFloat(-0.5 * (fireWidth / 1.5), 0.5 * (fireWidth / 1.5));
+        position[i * 3 + 1] = THREE.Math.randFloat(y, y + (2 * fireHeight));
+        position[i * 3 + 3] = THREE.Math.randFloat(-0.5 * (fireDepth / 1.5), 0.5 * (fireDepth / 1.5));
         shift[i] = Math.random() * 1;
 
     }
