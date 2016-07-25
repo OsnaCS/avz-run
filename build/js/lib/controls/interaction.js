@@ -17,7 +17,7 @@ document.addEventListener( 'click', onMouseClick, false );
 function interactionLoop() {
     interactionRayCaster.set(controls.getObject().position, controls.getDirection());
     interactions = interactionRayCaster.intersectObjects(terrain);
-    //&& interactions[0].object.interactable==false
+
     if(interactions.length>0 && interactions[0].object.type==TYPE_INTERACTABLE) {
         console.log("interact");
 

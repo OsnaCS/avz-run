@@ -29,7 +29,7 @@ var scene,
 var pathItem = '../avz_model/materials/objects/';
 //variable used for increasing fog
 var MAX_FOG = 0.015;
-var myfog=0;
+var myfog=0.002;
 var fogTime=20;
 var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
@@ -264,17 +264,9 @@ function createFire() {
     box.mesh.position.z = 1;
 
     // create fire sound
-    var fireSound = new THREE.PositionalAudio(audioListener);
-    audioLoader.load('sounds/firecracking.mp3', function(buffer) {
-        fireSound.setBuffer(buffer);
-        fireSound.setRefDistance(50);
-        fireSound.setRolloffFactor(5);
-        fireSound.setLoop(true);
-        fireSound.setVolume(3);
-        fireSound.play();
-    })
-
-    fireMesh.add(fireSound);
+    var firecracking = createSound("firecracking",50,5,true,3);
+    fireMesh.add(firecracking);
+    playSound(firecracking);
 
     scene.add(box.mesh);
     terrain.push(box);
