@@ -132,6 +132,16 @@ function initControls() {
 
         switch (event.keyCode) {
 
+
+            case 49:
+                setActiveSlot(0);
+                break;
+            case 50:
+                setActiveSlot(1);
+                break;
+            case 51:
+                setActiveSlot(2);
+                break;
             case 38: // up
             case 87: // w
                 moveForward = true;
