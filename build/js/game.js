@@ -24,9 +24,17 @@ window.addEventListener('load', init, false);
 var scene,
     camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
     renderer, container, controls;
+
+
+
 var pathItem = '../avz_model/materials/objects/';
 //variable used for increasing fog
-var myfog = 0;
+var myfog=0;
+var fogTime=5;
+var fogIncrement= 0.015/(fogTime*1000/10) ;
+var fogInterval;
+
+
 
 function init(event) {
 
@@ -68,6 +76,12 @@ function createScene() {
     // Create the scene
     scene = new THREE.Scene();
 
+    scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
+
+    fogInterval = setInterval(function () {
+            myfog += fogIncrement;
+
+    }, 10);
 
     // Create the camera
     aspectRatio = WIDTH / HEIGHT;
@@ -82,7 +96,7 @@ function createScene() {
     );
 
     // Set the position of the camera, PLAYERHEIGHT is defined in firstPerson.js
-    var camPos = new THREE.Vector3(0, PLAYERHEIGHT, 0);
+    var camPos = new THREE.Vector3(0, PLAYERHEIGHT+10  , 0);
     controls = new THREE.PointerLockControls(camera, camPos);
     scene.add(controls.getObject());
 
@@ -119,8 +133,9 @@ function loop() {
     stats.begin();
     requestAnimationFrame(loop);
 
-    myfog += 0.00001;
-    scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
+
+
+    scene.fog.density= myfog;
 
     // YOU NEED TO CALL THIS (srycaps)
     controlLoop(controls);
@@ -197,6 +212,7 @@ function createRoom() {
     });
 
 
+
 var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json'];
      addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true);
      addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true);
@@ -204,11 +220,12 @@ var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.js
      addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true);
 
 
+
 }
 
 
 // Add Object with given Path to given coordinates
-function addItem(file, xPos, yPos, zPos, scale, interact){
+function addItem(file, xPos, yPos, zPos, scale, interact_type){
         var jloader2 = new THREE.JSONLoader();
     jloader2.load(file, function(geo, mat){
         var materials = new THREE.MeshFaceMaterial( mat );
@@ -218,8 +235,8 @@ function addItem(file, xPos, yPos, zPos, scale, interact){
         mesh.position.x=xPos;
         mesh.position.z = zPos;
         mesh.scale.set(20*scale,20*scale,20*scale);
-        if(interact){
-            var intItem = new gameObject(mesh, 0, interact);
+        if(interact_type){
+            var intItem = new GameObject(mesh, 0, TYPE_INTERACTABLE);
             terrain.push(intItem);
         }
         else{
@@ -229,6 +246,7 @@ function addItem(file, xPos, yPos, zPos, scale, interact){
         scene.add( mesh );
 
     });
+}
 
 
 
@@ -236,6 +254,21 @@ function createFire() {
     VolumetricFire.texturePath = './levels/materials/textures/';
 
     addFire(80,30,1,30,30,30,10);
+    fireGeom = new THREE.BoxGeometry(30,30,30);
+    var mat = new THREE.MeshBasicMaterial({transparent:true, opacity:0} )
+    var box = new GameObject(new THREE.Mesh(fireGeom,mat),null,TYPE_FIRE);
+
+    box.mesh.position.x=80;
+
+    box.mesh.position.y=30;
+
+    box.mesh.position.z=1;
+
+    scene.add(box.mesh);
+    terrain.push(box);
+
+
+
     animateFire();
 
 }
