@@ -8,7 +8,7 @@ var activeObject;
 
 var outlineMesh=null;
 var TYPE_INTERACTABLE = 0;
-var TYPE_FIRE =1;
+var TYPE_FIRE = 1;
 var TYPE_EXIT = 2;
 
 

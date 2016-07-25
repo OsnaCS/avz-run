@@ -29,10 +29,12 @@ var scene,
 
 var pathItem = '../avz_model/materials/objects/';
 //variable used for increasing fog
+var MAX_FOG = 0.015;
 var myfog=0;
 var fogTime=20;
-var fogIncrement= 0.015/(fogTime*1000/10) ;
+var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
+var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
 
 
 
@@ -79,8 +81,11 @@ function createScene() {
     scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
 
     fogInterval = setInterval(function () {
-            myfog += fogIncrement;
-
+            player.health -= (myfog/MAX_FOG)*(HEALTH_PER_SECOND/100);
+            if(myfog<MAX_FOG) {
+                myfog += fogIncrement;
+            }
+            console.log(player.health);
     }, 10);
 
     // Create the camera
@@ -132,19 +137,23 @@ function createScene() {
 
 
 function loop() {
-    stats.begin();
-    requestAnimationFrame(loop);
+    if(player.health<=0) {
+        gameOver();
+    } else {
+        stats.begin();
+        requestAnimationFrame(loop);
 
 
 
-    scene.fog.density= myfog;
+        scene.fog.density= myfog;
 
-    // YOU NEED TO CALL THIS (srycaps)
-    controlLoop(controls);
-    interactionLoop();
+        // YOU NEED TO CALL THIS (srycaps)
+        controlLoop(controls);
+        interactionLoop();
 
-    renderer.render(scene, camera);
-    stats.end();
+        renderer.render(scene, camera);
+        stats.end();
+    }
 };
 
 
