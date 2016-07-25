@@ -122,6 +122,8 @@ function createScene() {
     // container we created in the HTML
     container.appendChild(renderer.domElement);
 
+    player = new Player();
+
     // Listen to the screen: if the user resizes it
     // we have to update the camera and the renderer size
     window.addEventListener('resize', handleWindowResize, false);
