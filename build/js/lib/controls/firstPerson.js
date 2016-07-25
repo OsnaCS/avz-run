@@ -202,6 +202,11 @@ function initControls() {
                 if (!menu) {
                     pause = !pause;
                 }
+                if (pause) {
+                    $(".pauseBlocker").css("z-index", 15);
+                } else {
+                    $(".pauseBlocker").css("z-index", 0);
+                }
                 break;
 
             case 73: // i to show inventory  (maybe also to toggle later?)
