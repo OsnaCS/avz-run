@@ -99,3 +99,7 @@ function onMouseClick() {
 function pickUpItem() {
     player.pickUp(this);
 }
+
+function destroy(){
+    this.delFromScene();
+}
