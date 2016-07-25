@@ -31,9 +31,9 @@ var pause = false;
 var pathItem = '../avz_model/materials/objects/';
 //variable used for increasing fog
 var MAX_FOG = 0.015;
-var myfog = 0;
-var fogTime = 20;
-var fogIncrement = MAX_FOG / (fogTime * 1000 / 10);
+var myfog=0.002;
+var fogTime=20;
+var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
 
@@ -230,29 +230,28 @@ function createRoom() {
         scene.add(mesh);
     });
 
-
-
-    var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json'];
-    addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true);
-    addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true);
-    addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true);
-    addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true);
+var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json'];
+     addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
+     addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true, pickUpItem);
+     addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true, pickUpItem);
+     addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true, pickUpItem);
 }
 
 
 // Add Object with given Path to given coordinates
-function addItem(file, xPos, yPos, zPos, scale, interact_type) {
-    var jloader2 = new THREE.JSONLoader();
-    jloader2.load(file, function(geo, mat) {
-        var materials = new THREE.MeshFaceMaterial(mat);
-        var mesh = new THREE.Mesh(geo, materials);
+
+function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction){
+        var jloader2 = new THREE.JSONLoader();
+        jloader2.load(file, function(geo, mat){
+            var materials = new THREE.MeshFaceMaterial( mat );
+            var mesh = new THREE.Mesh(geo, materials);
 
         mesh.position.y = yPos;
         mesh.position.x = xPos;
         mesh.position.z = zPos;
-        mesh.scale.set(20 * scale, 20 * scale, 20 * scale);
-        if (interact_type) {
-            var intItem = new GameObject(mesh, 0, TYPE_INTERACTABLE);
+        mesh.scale.set(20*scale,20*scale,20*scale);
+        if(interact_type){
+            var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE);
             terrain.push(intItem);
         } else {
             terrain.push(mesh);
@@ -278,17 +277,9 @@ function createFire() {
     box.mesh.position.z = 1;
 
     // create fire sound
-    var fireSound = new THREE.PositionalAudio(audioListener);
-    audioLoader.load('sounds/firecracking.mp3', function(buffer) {
-        fireSound.setBuffer(buffer);
-        fireSound.setRefDistance(50);
-        fireSound.setRolloffFactor(5);
-        fireSound.setLoop(true);
-        fireSound.setVolume(3);
-        fireSound.play();
-    })
-
-    fireMesh.add(fireSound);
+    var firecracking = createSound("firecracking",50,5,true,3);
+    fireMesh.add(firecracking);
+    playSound(firecracking);
 
     scene.add(box.mesh);
     terrain.push(box);
