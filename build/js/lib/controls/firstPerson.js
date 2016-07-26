@@ -51,7 +51,7 @@ var DUCK_DIFFERENCE = 2 * (PLAYERHEIGHT / 3);
 var RUN_SPEED = 2;
 var INVERT_XZ = new THREE.Vector3(-1, 1, -1);
 var MOVEMENT_SPEED = 600;
-var JUMP_SPEED = 500;
+var JUMP_SPEED = 450;
 
 var flashCooldown = 0;
 var flashInterval;
@@ -136,7 +136,6 @@ if (havePointerLock) {
 
 }
 
-
 //CALL THIS IN YOUR INIT BLOCK
 function initControls() {
 
@@ -144,24 +143,38 @@ function initControls() {
 
         switch (event.keyCode) {
 
+
+            case 49:
+                setActiveSlot(0);
+                break;
+            case 50:
+                setActiveSlot(1);
+                break;
+            case 51:
+                setActiveSlot(2);
+                break;
             case 38: // up
             case 87: // w
                 moveForward = true;
+                startFootsteps();
                 break;
 
             case 37: // left
             case 65: // a
                 moveLeft = true;
+                startFootsteps();
                 break;
 
             case 40: // down
             case 83: // s
                 moveBackward = true;
+                startFootsteps();
                 break;
 
             case 39: // right
             case 68: // d
                 moveRight = true;
+                startFootsteps();
                 break;
 
             case 32: // space
@@ -202,6 +215,11 @@ function initControls() {
                 if (!menu) {
                     pause = !pause;
                 }
+                if (pause) {
+                    $(".pauseBlocker").css("z-index", 15);
+                } else {
+                    $(".pauseBlocker").css("z-index", 0);
+                }
                 break;
 
             case 73: // i to show inventory  (maybe also to toggle later?)
@@ -219,21 +237,25 @@ function initControls() {
             case 38: // up
             case 87: // w
                 moveForward = false;
+                stopFootsteps();
                 break;
 
             case 37: // left
             case 65: // a
                 moveLeft = false;
+                stopFootsteps();
                 break;
 
             case 40: // down
             case 83: // s
                 moveBackward = false;
+                stopFootsteps();
                 break;
 
             case 39: // right
             case 68: // d
                 moveRight = false;
+                stopFootsteps();
                 break;
 
 

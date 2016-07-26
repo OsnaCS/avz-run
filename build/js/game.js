@@ -42,6 +42,9 @@ function init(event) {
     // set up the scene, the camera and the renderer
     createScene();
 
+    // init audio support
+    createAudio();
+
     // YOU NEED TO CALL THIS
     initControls();
 
@@ -49,7 +52,6 @@ function init(event) {
     createRoom();
     createLights();
 
-    createAudio();
     createFire();
 
     // start a loop that will update the objects' positions
@@ -232,7 +234,7 @@ function createRoom() {
 
     var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json'];
      addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
-     addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true, pickUpItem);
+     addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, false, 0);
      addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true, pickUpItem);
     addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true, pickUpItem);
     addItem(pathItem.concat(itemList[4]), 30, 5, -30, 1, false, 0);
@@ -279,9 +281,10 @@ function createFire() {
     box.mesh.position.z = 1;
 
     // create fire sound
-    var firecracking = createSound("firecracking",50,5,true,3);
-    fireMesh.add(firecracking);
-    playSound(firecracking);
+    var firecracking = createSound("firecracking",50,5,true,3,function () {
+        fireMesh.add(firecracking);
+        playSound(firecracking);
+    });
 
     scene.add(box.mesh);
     terrain.push(box);

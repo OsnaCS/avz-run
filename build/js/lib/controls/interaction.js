@@ -19,7 +19,6 @@ function interactionLoop() {
     interactions = interactionRayCaster.intersectObjects(terrain);
 
     if(interactions.length>0 && interactions[0].object.type==TYPE_INTERACTABLE) {
-        console.log("interact");
 
         if(activeObject!=interactions[0].object) {
             scene.remove(outlineMesh);
@@ -55,10 +54,13 @@ function interactionLoop() {
 
 
 
-GameObject = function(mesh, interaction, type) {
+GameObject = function(mesh, interaction, type, name) {
     this.type = type;
     this.mesh = mesh;
     this.interact = interaction;
+
+    this.name=name;
+
     this.open = false;
 
     this.raycast = function(raycaster, intersects) {
@@ -81,10 +83,6 @@ GameObject = function(mesh, interaction, type) {
         if (terrain[i] == this) terrain.splice(i,1);
 
     }
-
-    /*this.interact = function(interaction) {
-        this.interaction();
-    }*/
 
 }
 
