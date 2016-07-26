@@ -406,7 +406,7 @@ function controlLoop(controls) {
     controls.getObject().translateY(velocity.y * delta);
     controls.getObject().translateZ(velocity.z * delta);
 
-    runningMotion();
+    // runningMotion();
     // player can get exhausted/regenerate energy
     if (running) {
         energy -= delta*30;

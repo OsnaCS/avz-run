@@ -248,6 +248,7 @@ function createRoom() {
     function action() {
         console.log("hi");
     }
+}
 
 
 // Add Object with given Path to given coordinates
