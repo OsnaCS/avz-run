@@ -149,6 +149,7 @@ function createScene() {
 
 
 function loop() {
+
     if (!menu && !pause) {
         if (player.health <= 0) {
             gameOver();
@@ -234,14 +235,21 @@ function createRoom() {
         scene.add(mesh);
     });
 
-    
-     addItem(pathItem.concat(itemList[0]), -50, 10, 10, 2, true, pickUpItem, itemList[0]);
-     addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true, destroy, itemList[1]);
-     addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true, pickUpItem, itemList[2]);
+
+
+    addItem(pathItem.concat(itemList[0]), -50, 10, 10, 2, true, pickUpItem, itemList[0]);
+    addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true, destroy, itemList[1]);
+    addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true, pickUpItem, itemList[2]);
     addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true, pickUpItem, itemList[3]);
     addItem(pathItem.concat(itemList[4]), 30, 5, -30, 1, false, 0, itemList[4]);
     addItem(pathItem.concat(itemList[5]), 30, 5, -30, 1, true, open, itemList[5]);
     addItem(pathItem.concat(itemList[6]), 30, 5, -100, 1, true, pickUpItem, itemList[6]);
+
+    addTrigger(-64,-71,action);
+    function action() {
+        console.log("hi");
+    }
+
 }
 
 
@@ -267,6 +275,20 @@ function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name
         scene.add(mesh);
 
     });
+}
+
+function addTrigger (xPos, zPos, action) {
+    var triggerGeom = new THREE.BoxGeometry(30,30,30);
+    var mat = new THREE.MeshBasicMaterial({ transparent: false, opacity: 1, depthWrite: false, color:0xFFFFFF});
+    var triggerMesh = new THREE.Mesh(triggerGeom,mat);
+    var trigger = new GameObject(triggerMesh,action,TYPE_TRIGGER);
+
+    trigger.mesh.position.x = xPos;
+    trigger.mesh.position.z = zPos;
+    trigger.mesh.position.y = -15;
+    scene.add(trigger.mesh);
+    terrain.push(trigger);
+
 }
 
 

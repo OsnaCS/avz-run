@@ -42,7 +42,7 @@ function stopSound(sound) {
 }
 
 function createBasicSounds() {
-    footsteps = createSound("footsteps", 10, 1, false, 1);
+    footsteps = createSound("footsteps", 10, 1, true, 1);
     camera.add(footsteps);
 }
 
