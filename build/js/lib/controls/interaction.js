@@ -176,7 +176,16 @@ function extinguish() {
     }
 }
 
+// lappen.json muss durch den eigentlichen Namen ersetzt werden, dann ist die Methode nutzbar
+/*
 function coverMouth(){
+    if(this.type == TYPE_INTERACTABLE && selectedItem.name == 'lappen.json'){
+        HEALTH_PER_SECOND = HEALTH_PER_SECOND / 2;
+        console.log('covered mouth');
+        player.delActItem();
+    }else{
+        console.log('nicht anwendbar');
+    }
+*/
 
-    HEALTH_PER_SECOND = HEALTH_PER_SECOND / 2;
 }
