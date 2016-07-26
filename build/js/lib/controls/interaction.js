@@ -55,10 +55,13 @@ function interactionLoop() {
 
 
 
-GameObject = function(mesh, interaction, type) {
+GameObject = function(mesh, interaction, type, name) {
     this.type = type;
     this.mesh = mesh;
     this.interact = interaction;
+
+    this.name=name;
+
     this.open = false;
 
     this.raycast = function(raycaster, intersects) {
@@ -81,10 +84,6 @@ GameObject = function(mesh, interaction, type) {
         if (terrain[i] == this) terrain.splice(i,1);
 
     }
-
-    /*this.interact = function(interaction) {
-        this.interaction();
-    }*/
 
 }
 
