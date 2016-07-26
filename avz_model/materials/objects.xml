@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects path="objects/">
+	<object path="axe.json" interaction="1" scale ="2"/>
+	<object path="beamer_model_textured.json" interaction="0" scale ="2"/>
+	<object path="blackboard.json" interaction="1" scale ="2"/>
+	<object path="blatt1.json" interaction="0" scale ="2"/>
+	<object path="blatt3.json" interaction="1" scale ="2"/>
+	<object path="blattV.json" interaction="0" scale ="2"/>
+	<object path="bucherregal.json" interaction="1" scale ="2"/>
+	<object path="bucherregalfront.json" interaction="0" scale ="2"/>
+	<object path="ceiling_light_big.json" interaction="1" scale ="2"/>
+	<object path="ceiling_light_small.json" interaction="0" scale ="2"/>
+	<object path="chair.json" interaction="1" scale ="2"/>
+	<object path="crushedsheet.json" interaction="0" scale ="2"/>
+	<object path="feuerloescher.json" interaction="1" scale ="2"/>
+	<object path="light_switch.json" interaction="0" scale ="2"/>
+	<object path="ohp.json" interaction="1" scale ="2"/>
+	<object path="Chair.json" interaction="0" scale ="2"/>
+	<object path="plant.json" interaction="1" scale ="2"/>
+	<object path="power_socket.json" interaction="0" scale ="2"/>
+	<object path="robot.json" interaction="1" scale ="2"/>
+	<object path="schreibtisch_and_pc.json" interaction="0" scale ="2"/>
+	<object path="sink.json" interaction="1" scale ="2"/>
+	<object path="tisch.json" interaction="0" scale ="2"/>
+	<object path="toilett_door.json" interaction="1" scale ="2"/>
+	<object path="toilett_open_with_door.json" interaction="0" scale ="2"/>
+	<object path="toilett_open_without_door.json" interaction="1" scale ="2"/>
+	<object path="trashbin.json" interaction="0" scale ="2"/>
+	<object path="tuer.json" interaction="1" scale ="2"/>
+	<object path="wall.json" interaction="0" scale ="2"/>
+</objects>

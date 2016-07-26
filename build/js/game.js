@@ -37,9 +37,11 @@ var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
 
-var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json', 'feuerloescher.json'];
+var itemList = ['axe.json', 'toilett_open_with_door.json', 'plant.json', 'ohp.json', 'toilett_open_without_door.json', 'toilett_door.json', 'feuerloescher.json'];
 
 function init(event) {
+    //loads all Objects before creating
+    loadObjects(complete);
 
     // set up the scene, the camera and the renderer
     createScene();
@@ -52,15 +54,27 @@ function init(event) {
 
     // add the objects and lights - replace those functions as you please
     createRoom();
+
+
+
+
     createLights();
 
     createFire();
 
+
     // start a loop that will update the objects' positions
     // and render the scene on each frame
+    var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json'];
+     addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true);
+     addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true);
+     addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true);
+     addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true);
     loop();
 }
-
+function complete(){
+    createItems();
+}
 
 // Stats
 var stats = new Stats();
@@ -237,6 +251,14 @@ function createRoom() {
 
 
 
+
+}
+
+
+function createItems(){
+
+     // addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
+
     addItem(pathItem.concat(itemList[0]), -50, 10, 10, 2, true, pickUpItem, itemList[0]);
     addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true, destroy, itemList[1]);
     addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true, pickUpItem, itemList[2]);
@@ -250,8 +272,8 @@ function createRoom() {
         console.log("hi");
     }
 
-}
 
+}
 
 // Add Object with given Path to given coordinates
 
@@ -277,11 +299,13 @@ function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name
     });
 }
 
+
 function addTrigger (xPos, zPos, action) {
     var triggerGeom = new THREE.BoxGeometry(30,30,30);
     var mat = new THREE.MeshBasicMaterial({ transparent: false, opacity: 1, depthWrite: false, color:0xFFFFFF});
     var triggerMesh = new THREE.Mesh(triggerGeom,mat);
     var trigger = new GameObject(triggerMesh,action,TYPE_TRIGGER);
+
 
     trigger.mesh.position.x = xPos;
     trigger.mesh.position.z = zPos;

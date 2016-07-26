@@ -1,0 +1,5 @@
+
+<Objects path="../avz_model/materials/">
+    <Object name="Axe" file="objects/Axe.json" scale="2"/>
+    <Object name="Blackboard" file="objects/blackboard.json" scale="2"/>
+</Objects>
