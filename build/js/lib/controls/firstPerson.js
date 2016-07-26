@@ -136,7 +136,6 @@ if (havePointerLock) {
 
 }
 
-
 //CALL THIS IN YOUR INIT BLOCK
 function initControls() {
 
@@ -147,25 +146,25 @@ function initControls() {
             case 38: // up
             case 87: // w
                 moveForward = true;
-                playSound(footsteps);
+                startFootsteps();
                 break;
 
             case 37: // left
             case 65: // a
                 moveLeft = true;
-                playSound(footsteps);
+                startFootsteps();
                 break;
 
             case 40: // down
             case 83: // s
                 moveBackward = true;
-                playSound(footsteps);
+                startFootsteps();
                 break;
 
             case 39: // right
             case 68: // d
                 moveRight = true;
-                playSound(footsteps);
+                startFootsteps();
                 break;
 
             case 32: // space
@@ -223,25 +222,25 @@ function initControls() {
             case 38: // up
             case 87: // w
                 moveForward = false;
-                stopSound(footsteps);
+                stopFootsteps();
                 break;
 
             case 37: // left
             case 65: // a
                 moveLeft = false;
-                stopSound(footsteps);
+                stopFootsteps();
                 break;
 
             case 40: // down
             case 83: // s
                 moveBackward = false;
-                stopSound(footsteps);
+                stopFootsteps();
                 break;
 
             case 39: // right
             case 68: // d
                 moveRight = false;
-                stopSound(footsteps);
+                stopFootsteps();
                 break;
 
 
