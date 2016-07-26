@@ -145,6 +145,7 @@ function delFire (fireColBox){
         console.log(index);
         console.log(smoke_and_light_count);
     }else{
+        fireColBox.fireSound
         fireColBox.delFromScene();
 
 
