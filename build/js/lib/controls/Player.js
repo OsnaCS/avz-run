@@ -1,6 +1,7 @@
 var INV_SIZE = 3; // maximum number of objects in inventory
 var inventory; // array that stores references to inventory items
 var inv_pos; // array has constant length -> to save how many spots have been filled
+var item_count;
 var MAX_HEALTH= 10000;
 var activeSlot=-1;
 var selectedItem;
@@ -14,19 +15,21 @@ Player = function() {
     this.health = MAX_HEALTH;
 
     inventory = new Array(INV_SIZE);
-    inv_pos = 0;
-
+    item_count = 0;
 
     // stores item in inventory
     this.pickUp = function(game_obj) {
 
         // check if inventory has already been filled
-        if (inv_pos < INV_SIZE) {
-
+        if (item_count < INV_SIZE) {
+            for(inv_pos = 0; inv_pos < INV_SIZE && inventory[inv_pos]!=null; inv_pos++){
+                    
+            }
             // add object to array
             inventory[inv_pos] = game_obj;
             addIcon(game_obj,inv_pos);
-            inv_pos++;
+            
+            item_count++;
 
             // delete object representation from scene
             game_obj.delFromScene();
@@ -55,12 +58,21 @@ Player = function() {
         $(".progress-bar").css("width", '' + healthPercent + '%');
     }
 
+    this.delActItem = function(){
+        if(inventory[activeSlot] == selectedItem){
+            inventory[activeSlot] = null;
+            item_count--;
+            
+            setActiveSlot(-1);
+        }
+    }
+
 
 }
 
 
 function setActiveSlot(slot)  {
-    if(inventory[slot]!=null) {
+    if(slot == -1 || inventory[slot]!=null) {
         if(activeSlot>-1) {
             switch (activeSlot) {
                 case 0:
