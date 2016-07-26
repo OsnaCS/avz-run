@@ -38,6 +38,9 @@ var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
 
 function init(event) {
+    //loads all Objects before creating
+    loadObjects(complete);
+
 
     // set up the scene, the camera and the renderer
     createScene();
@@ -50,15 +53,22 @@ function init(event) {
 
     // add the objects and lights - replace those functions as you please
     createRoom();
+
+
+
+
     createLights();
 
     createFire();
+
 
     // start a loop that will update the objects' positions
     // and render the scene on each frame
     loop();
 }
-
+function complete(){
+    createItems();
+}
 
 // Stats
 var stats = new Stats();
@@ -232,15 +242,22 @@ function createRoom() {
         scene.add(mesh);
     });
 
+
+
+}
+
+
+function createItems(){
     var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json'];
-     addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
+     // addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
+    console.log("Start");
+    //addNewItem(0, 0, 5, 10, 0);
      addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, false, 0);
      addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true, pickUpItem);
     addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true, pickUpItem);
     addItem(pathItem.concat(itemList[4]), 30, 5, -30, 1, false, 0);
     addItem(pathItem.concat(itemList[5]), 30, 5, -30, 1, true, open);
 }
-
 
 // Add Object with given Path to given coordinates
 
