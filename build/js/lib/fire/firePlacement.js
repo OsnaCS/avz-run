@@ -69,7 +69,8 @@ function addFire(x, y, z, width, height, depth, spacing) {
     fireGeom = new THREE.BoxGeometry(fireWidth, fireHeight, fireDepth);
     var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
     var fireMesh = new THREE.Mesh(fireGeom, mat);
-    var box = new GameObject(fireMesh, delFire, TYPE_FIRE);
+
+    var box = new GameObject(fireMesh, extinguish, TYPE_FIRE);
 
     box.mesh.position.x = x;
     box.mesh.position.y = y;
@@ -139,7 +140,7 @@ function delFire (fireColBox){
         console.log(index);
         console.log(smoke_and_light_count);
     }else{
-        fireColBox.fireSound
+        //console.log(fireColBox.mesh.sound);
         fireColBox.delFromScene();
 
 
