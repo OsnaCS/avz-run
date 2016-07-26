@@ -79,19 +79,19 @@ function setActiveSlot(slot)  {
         switch (slot) {
             case 0:
                 if(inventory[0]!=null) {
-                    $("#slot1").css("border", "2px solid yellow");
+                    $("#slot1").css("border", "2px groove #ffcc66");
                     selectedItem=inventory[0];
                 }
                 break;
             case 1:
                 if(inventory[1]!=null) {
-                    $("#slot2").css("border", "2px solid yellow");
+                    $("#slot2").css("border", "2px groove #ffcc66");
                     selectedItem=inventory[1];
                 }
                 break;
             case 2:
                 if(inventory[2]!=null) {
-                    $("#slot3").css("border", "2px solid yellow");
+                    $("#slot3").css("border", "2px groove #ffcc66");
                     selectedItem=inventory[2];
                 }
                 break;
