@@ -19,7 +19,6 @@ function interactionLoop() {
     interactions = interactionRayCaster.intersectObjects(terrain);
 
     if(interactions.length>0 && interactions[0].object.type==TYPE_INTERACTABLE) {
-        console.log("interact");
 
         if(activeObject!=interactions[0].object) {
             scene.remove(outlineMesh);
