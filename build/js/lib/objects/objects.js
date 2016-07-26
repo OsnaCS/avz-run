@@ -1,3 +1,4 @@
+
 var ObjArr =[];
 var PathToObj="../avz_model/materials/objects/";
 var ObjectsLoaded =false;
