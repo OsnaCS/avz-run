@@ -67,10 +67,7 @@ function init(event) {
     // start a loop that will update the objects' positions
     // and render the scene on each frame
 
-     addItem(pathItem.concat(newItemList[0]), 0, 5, 10, 2, true);
-     addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true);
-     addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true);
-     addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true);
+
     loop();
 }
 function complete(){
@@ -259,14 +256,17 @@ function createRoom() {
 function createItems(){
 
      // addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
+      addItem(pathItem.concat(newItemList[0]), -50, 10, 10, 10, true, pickUpItem, itemList[0]);
+      addItem(pathItem.concat(newItemList[1]), 20, 5, 10, 1, true, destroy, itemList[1]);
+      addItem(pathItem.concat(newItemList[2]), 0, 5, 20, 3, true, pickUpItem, itemList[2]);
+      addItem(pathItem.concat(newItemList[12]), 0, 5, -10, 3, true, pickUpItem, itemList[3]);
+   // addItem(pathItem.concat(newItemList[4]), 30, 5, -30, 1, false, 0, itemList[4]);
+  //  addItem(pathItem.concat(newItemList[5]), 30, 5, -30, 1, true, openLockedDoor, itemList[5]);
+   // addItem(pathItem.concat(newItemList[6]), 30, 5, -100, 1, true, pickUpItem, itemList[6]);
 
-    addItem(pathItem.concat(itemList[0]), -50, 10, 10, 2, true, pickUpItem, itemList[0]);
-    addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true, destroy, itemList[1]);
-    addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true, pickUpItem, itemList[2]);
-    addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true, pickUpItem, itemList[3]);
-    addItem(pathItem.concat(itemList[4]), 30, 5, -30, 1, false, 0, itemList[4]);
-    addItem(pathItem.concat(itemList[5]), 30, 5, -30, 1, true, openLockedDoor, itemList[5]);
-    addItem(pathItem.concat(itemList[6]), 30, 5, -100, 1, true, pickUpItem, itemList[6]);
+     for(var i =0; i< newItemList.length; i++){
+        console.log(newItemList[i]);
+     }
 
     addTrigger(-64,-71,action);
     function action() {
