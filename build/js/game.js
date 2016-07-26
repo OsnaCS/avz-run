@@ -22,9 +22,11 @@ window.addEventListener('load', init, false);
 
 var scene,
     camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
-    renderer, container, controls, audioLoader;
+    renderer, container, controls, audioLoader, startInstructions, buttonStart,
+    instructions, blocker, button;
 
-
+var menu = true;
+var pause = false;
 
 var pathItem = '../avz_model/materials/objects/';
 //variable used for increasing fog
@@ -35,10 +37,15 @@ var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
 
+var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json', 'feuerloescher.json'];
+
 function init(event) {
 
     // set up the scene, the camera and the renderer
     createScene();
+
+    // init audio support
+    createAudio();
 
     // YOU NEED TO CALL THIS
     initControls();
@@ -47,7 +54,6 @@ function init(event) {
     createRoom();
     createLights();
 
-    createAudio();
     createFire();
 
     // start a loop that will update the objects' positions
@@ -64,8 +70,13 @@ document.body.appendChild(stats.dom);
 
 function createScene() {
 
-
+    blocker = document.getElementById('blocker');
     container = document.getElementById('world');
+    startInstructions = document.getElementById('startInstructions');
+    buttonStart = document.getElementById('buttonStart');
+    instructions = document.getElementById('instructions');
+    button = document.getElementById('button');
+    button2 = document.getElementById('button2');
 
     // Get the width and the height of the screen,
     // use them to set up the aspect ratio of the camera
@@ -78,11 +89,14 @@ function createScene() {
 
     scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
 
-    fogInterval = setInterval(function () {
-            player.damage(myfog/MAX_FOG)*(HEALTH_PER_SECOND/100);
-            if(myfog<MAX_FOG) {
+    fogInterval = setInterval(function() {
+        if (!menu && !pause) {
+            player.damage(myfog / MAX_FOG) * (HEALTH_PER_SECOND / 100);
+
+            if (myfog < MAX_FOG) {
                 myfog += fogIncrement;
             }
+        }
     }, 10);
 
     // Create the camera
@@ -135,19 +149,25 @@ function createScene() {
 
 
 function loop() {
-    if(player.health<=0) {
-        gameOver();
+
+    if (!menu && !pause) {
+        if (player.health <= 0) {
+            gameOver();
+        } else {
+
+            stats.begin();
+            requestAnimationFrame(loop);
+            scene.fog.density = myfog;
+
+            // YOU NEED TO CALL THIS (srycaps)
+            controlLoop(controls);
+            interactionLoop();
+
+            renderer.render(scene, camera);
+            stats.end();
+        }
     } else {
-        stats.begin();
         requestAnimationFrame(loop);
-        scene.fog.density= myfog;
-
-        // YOU NEED TO CALL THIS (srycaps)
-        controlLoop(controls);
-        interactionLoop();
-
-        renderer.render(scene, camera);
-        stats.end();
     }
 };
 
@@ -215,19 +235,27 @@ function createRoom() {
         scene.add(mesh);
     });
 
-    var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json'];
-     addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
-     addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true, pickUpItem);
-     addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true, pickUpItem);
-    addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true, pickUpItem);
-    addItem(pathItem.concat(itemList[4]), 30, 5, -30, 1, false, 0);
-    addItem(pathItem.concat(itemList[5]), 30, 5, -30, 1, true, open);
+
+
+    addItem(pathItem.concat(itemList[0]), -50, 10, 10, 2, true, pickUpItem, itemList[0]);
+    addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true, destroy, itemList[1]);
+    addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true, pickUpItem, itemList[2]);
+    addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true, pickUpItem, itemList[3]);
+    addItem(pathItem.concat(itemList[4]), 30, 5, -30, 1, false, 0, itemList[4]);
+    addItem(pathItem.concat(itemList[5]), 30, 5, -30, 1, true, openLockedDoor, itemList[5]);
+    addItem(pathItem.concat(itemList[6]), 30, 5, -100, 1, true, pickUpItem, itemList[6]);
+
+    addTrigger(-64,-71,action);
+    function action() {
+        console.log("hi");
+    }
+
 }
 
 
 // Add Object with given Path to given coordinates
 
-function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction){
+function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name){
         var jloader2 = new THREE.JSONLoader();
         jloader2.load(file, function(geo, mat){
             var materials = new THREE.MeshFaceMaterial( mat );
@@ -238,7 +266,7 @@ function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction){
         mesh.position.z = zPos;
         mesh.scale.set(20*scale,20*scale,20*scale);
         if(interact_type){
-            var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE);
+            var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, name);
             terrain.push(intItem);
         } else {
             terrain.push(mesh);
@@ -249,27 +277,25 @@ function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction){
     });
 }
 
+function addTrigger (xPos, zPos, action) {
+    var triggerGeom = new THREE.BoxGeometry(30,30,30);
+    var mat = new THREE.MeshBasicMaterial({ transparent: false, opacity: 1, depthWrite: false, color:0xFFFFFF});
+    var triggerMesh = new THREE.Mesh(triggerGeom,mat);
+    var trigger = new GameObject(triggerMesh,action,TYPE_TRIGGER);
+
+    trigger.mesh.position.x = xPos;
+    trigger.mesh.position.z = zPos;
+    trigger.mesh.position.y = -15;
+    scene.add(trigger.mesh);
+    terrain.push(trigger);
+
+}
+
 
 function createFire() {
     VolumetricFire.texturePath = './levels/materials/textures/';
 
     addFire(80, 0, 1, 30, 30, 30, 10);
-    fireGeom = new THREE.BoxGeometry(30, 30, 30);
-    var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
-    var fireMesh = new THREE.Mesh(fireGeom, mat);
-    var box = new GameObject(fireMesh, null, TYPE_FIRE);
-
-    box.mesh.position.x = 80;
-    box.mesh.position.y = 30;
-    box.mesh.position.z = 1;
-
-    // create fire sound
-    var firecracking = createSound("firecracking",50,5,true,3);
-    fireMesh.add(firecracking);
-    playSound(firecracking);
-
-    scene.add(box.mesh);
-    terrain.push(box);
 
     animateFire();
 

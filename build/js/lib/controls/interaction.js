@@ -1,4 +1,4 @@
-var ACTIVE_DISTANCE =35;
+var ACTIVE_DISTANCE =40;
 
 var interactionRayCaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, ACTIVE_DISTANCE); // front
 
@@ -6,10 +6,13 @@ var outlineMaterial = new THREE.MeshPhongMaterial({color:0xFFFFFF,wireframe:true
 
 var activeObject;
 
+var lockOpen = true;
+
 var outlineMesh=null;
 var TYPE_INTERACTABLE = 0;
 var TYPE_FIRE = 1;
 var TYPE_EXIT = 2;
+var TYPE_TRIGGER = 3;
 
 
 document.addEventListener( 'click', onMouseClick, false );
@@ -19,7 +22,6 @@ function interactionLoop() {
     interactions = interactionRayCaster.intersectObjects(terrain);
 
     if(interactions.length>0 && interactions[0].object.type==TYPE_INTERACTABLE) {
-        console.log("interact");
 
         if(activeObject!=interactions[0].object) {
             scene.remove(outlineMesh);
@@ -50,15 +52,47 @@ function interactionLoop() {
             outlineMesh=null;
         }
     }
+
+
+    if(interactions.length>0 && interactions[0].object.type==TYPE_FIRE) {
+        console.log("interact");
+
+        if(activeObject!=interactions[0].object) {
+            scene.remove(outlineMesh);
+            outlineMesh=null;
+            activeObject= interactions[0].object;
+
+
+        } else {
+
+            activeObject= interactions[0].object;
+            if(outlineMesh==null) {
+                outlineMesh = activeObject.mesh.clone();
+                outlineMesh.material = outlineMaterial;
+                outlineMesh.position.copy(activeObject.mesh.position);
+                outlineMesh.is_ob = true;
+                scene.add(outlineMesh);
+            }
+
+
+        }
+    }
+
+
+
+
 }
 
 
 
 
-GameObject = function(mesh, interaction, type) {
+GameObject = function(mesh, interaction, type, name) {
     this.type = type;
     this.mesh = mesh;
     this.interact = interaction;
+
+    this.name=name;
+
     this.open = false;
 
     this.raycast = function(raycaster, intersects) {
@@ -82,10 +116,6 @@ GameObject = function(mesh, interaction, type) {
 
     }
 
-    /*this.interact = function(interaction) {
-        this.interaction();
-    }*/
-
 }
 
 
@@ -102,7 +132,14 @@ function pickUpItem() {
 }
 
 function destroy(){
-    this.delFromScene();
+    if(this.type == TYPE_INTERACTABLE && selectedItem.name == itemList[0]){
+        this.delFromScene();
+        console.log('destroyed');
+        player.delActItem();
+    }
+    else{
+        console.log('nicht anwendbar');
+    }
 }
 
 function open(){
@@ -115,4 +152,30 @@ function open(){
         this.open = !this.open;
     }
 
+}
+
+function openLockedDoor(){
+	if(lockOpen){
+		if(!this.open) {
+	        this.mesh.rotateY(Math.PI/2.0);
+	        this.open = !this.open;
+	    }
+	    else {
+	        this.mesh.rotateY(-Math.PI/2.0);
+	        this.open = !this.open;
+	    }
+    }
+
+}
+
+
+function extinguish() {
+	if(this.type == TYPE_FIRE && selectedItem.name == itemList[6]){
+    	delFire(this);
+    	console.log('extinguished');
+    	player.delActItem();
+    }
+    else{
+        console.log('nicht anwendbar');
+    }
 }
