@@ -4,13 +4,14 @@ body {
 }
 
 #world {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background: linear-gradient(#e4e0ba, #f7d9aa);
-            z-index: 10;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: linear-gradient(#e4e0ba, #f7d9aa);
+    z-index: 10;
 }
+
 
 /*HEALTH GUI */
 
@@ -25,17 +26,14 @@ body {
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1) inset;
     z-index: 20;
     position: relative;
-    display:inline-block;
+    display: inline-block;
 }
 
 .progress-bar {
     float: left;
     width: 0px;
     height: 100%;
-    font-size: 12px;
-    line-height: 20px;
     color: #F00;
-    text-align: center;
     background-color: #F00;
     box-shadow: 0px -1px 0px rgba(0, 0, 0, 0.15) inset;
     transition: width 0.1 s ease 0s;
@@ -50,7 +48,7 @@ body {
     background-color: #F5F5F5;
     border-radius: 4px;
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1) inset;
-    z-index: 20;
+    z-index: 10;
     position: fixed;
     display:inline-block;
 }
@@ -81,7 +79,7 @@ body {
     overflow: hidden;
     border-radius: 4px;
     box-shadow: 0px 2px 4px rgba(1, 0, 0, 1) inset;
-    z-index: 20;
+    z-index: 19;
     position: fixed;
     display:block;
 }
@@ -99,6 +97,8 @@ body {
     display: -webkit-box;
     display: -moz-box;
     display: box;
+    background-image: url(../bilder/avz.jpg);
+    background-size: cover;
     -webkit-box-orient: horizontal;
     -moz-box-orient: horizontal;
     box-orient: horizontal;
@@ -112,6 +112,8 @@ body {
     text-align: center;
     cursor: pointer;
     z-index: 20;
+    position: relative;
+    background-color: white;
 }
 
 #blocker {
@@ -156,9 +158,13 @@ body {
     border-radius: 28px;
     font-family: Courier New;
     color: #ffffff;
-    font-size: 30px;
-    padding: 10px 20px 10px 20px;
+    font-size: 100%;
+    padding: 20px 40px 20px 40px;
     text-decoration: none;
+    z-index: 20;
+    position: absolute;
+    left: 41%;
+    top: 30%;
 }
 
 .buttonStart:hover {
@@ -185,9 +191,12 @@ body {
     border-radius: 28px;
     font-family: Courier New;
     color: #ffffff;
-    font-size: 30px;
-    padding: 10px 20px 10px 20px;
+    font-size: 100%;
+    padding: 20px 40px 20px 40px;
     text-decoration: none;
+    position: absolute;
+    left: 41%;
+    top: 30%;
 }
 
 .button:hover {
@@ -199,6 +208,39 @@ body {
     background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
     text-decoration: none;
 }
+
+#button2 {
+    width: 100px;
+    heigth: 20px;
+    background: #0099ff;
+    background-image: -webkit-linear-gradient(top, #0099ff, #2980b9);
+    background-image: -moz-linear-gradient(top, #0099ff, #2980b9);
+    background-image: -ms-linear-gradient(top, #0099ff, #2980b9);
+    background-image: -o-linear-gradient(top, #0099ff, #2980b9);
+    background-image: linear-gradient(to bottom, #0099ff, #2980b9);
+    -webkit-border-radius: 28;
+    -moz-border-radius: 28;
+    border-radius: 28px;
+    font-family: Courier New;
+    color: #ffffff;
+    font-size: 100%;
+    padding: 20px 40px 20px 40px;
+    text-decoration: none;
+    position: absolute;
+    left: 41%;
+    top: 60%;
+}
+
+.button2:hover {
+    background: #3cb0fd;
+    background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+    text-decoration: none;
+}
+
 
 /* GameOverScreen */
 
@@ -230,6 +272,7 @@ body {
     cursor: pointer;
 }
 
+
 /* Pause */
 
 .pauseBlocker {
@@ -259,4 +302,14 @@ body {
     text-align: center;
     cursor: pointer;
 
+}
+
+/* Fadenkreuz */
+
+.cross {
+    position: absolute;
+    background-color: rgba(1, 1, 1, 0);
+    z-index: 11;
+    left: 50%;
+    top: 50%;
 }
