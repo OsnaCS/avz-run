@@ -37,6 +37,8 @@ var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
 
+var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json'];
+
 function init(event) {
 
     // set up the scene, the camera and the renderer
@@ -233,6 +235,7 @@ function createRoom() {
         scene.add(mesh);
     });
 
+
     var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json'];
      addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
      addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, false, 0);
@@ -245,12 +248,11 @@ function createRoom() {
     function action() {
         console.log("hi");
     }
-}
 
 
 // Add Object with given Path to given coordinates
 
-function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction){
+function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name){
         var jloader2 = new THREE.JSONLoader();
         jloader2.load(file, function(geo, mat){
             var materials = new THREE.MeshFaceMaterial( mat );
@@ -261,7 +263,7 @@ function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction){
         mesh.position.z = zPos;
         mesh.scale.set(20*scale,20*scale,20*scale);
         if(interact_type){
-            var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE);
+            var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, name);
             terrain.push(intItem);
         } else {
             terrain.push(mesh);
@@ -291,7 +293,7 @@ function createFire() {
     VolumetricFire.texturePath = './levels/materials/textures/';
 
     addFire(80, 0, 1, 30, 30, 30, 10);
-    fireGeom = new THREE.BoxGeometry(30, 30, 30);
+    /*fireGeom = new THREE.BoxGeometry(30, 30, 30);
     var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
     var fireMesh = new THREE.Mesh(fireGeom, mat);
     var box = new GameObject(fireMesh, null, TYPE_FIRE);
@@ -307,7 +309,7 @@ function createFire() {
     });
 
     scene.add(box.mesh);
-    terrain.push(box);
+    terrain.push(box);*/
 
     animateFire();
 
