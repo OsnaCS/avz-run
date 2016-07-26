@@ -241,6 +241,7 @@ function createRoom() {
     addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true, pickUpItem, itemList[3]);
     addItem(pathItem.concat(itemList[4]), 30, 5, -30, 1, false, 0, itemList[4]);
     addItem(pathItem.concat(itemList[5]), 30, 5, -30, 1, true, open, itemList[5]);
+    addItem(pathItem.concat('plant.json'), 30, 5, -150, 1, true, coverMouth, 'sink.json');
 }
 
 

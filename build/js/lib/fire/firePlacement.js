@@ -76,6 +76,7 @@ function addFire(x, y, z, width, height, depth, spacing) {
         playSound(firecracking);
     });
 
+
     var box = new GameObject(fireMesh, extinguish, TYPE_FIRE);
 
     box.mesh.position.x = x;
@@ -142,20 +143,18 @@ function delFire (fireColBox){
 
         fireColBox.delFromScene();
 
-
         scene.remove(pointlight_list[index]);
         scene.remove(smoke_list[index]);
         scene.remove(fire_mesh_list[index]);
+
+        fireColBox.mesh.children[0].stop();
 /*
         fire_collision_box_list[index,1];
         pointlight_list.splice(index,1);
         smoke_list.splice(index,1);
         fire_mesh_list.splice(index,1);
-<<<<<<< HEAD
 
-=======
->>>>>>> master
-       smoke_and_light_count--;
+        smoke_and_light_count--;
 */
     }
 

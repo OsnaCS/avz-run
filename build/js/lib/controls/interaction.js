@@ -149,3 +149,8 @@ function open(){
 function extinguish() {
     delFire(this);
 }
+
+function coverMouth(){
+
+    HEALTH_PER_SECOND = HEALTH_PER_SECOND / 2;
+}
