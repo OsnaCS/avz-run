@@ -23,12 +23,12 @@ Player = function() {
         // check if inventory has already been filled
         if (item_count < INV_SIZE) {
             for(inv_pos = 0; inv_pos < INV_SIZE && inventory[inv_pos]!=null; inv_pos++){
-                    
+
             }
             // add object to array
             inventory[inv_pos] = game_obj;
             addIcon(game_obj,inv_pos);
-            
+
             item_count++;
 
             // delete object representation from scene
@@ -62,7 +62,7 @@ Player = function() {
         if(inventory[activeSlot] == selectedItem){
             inventory[activeSlot] = null;
             item_count--;
-            
+
             setActiveSlot(-1);
         }
     }

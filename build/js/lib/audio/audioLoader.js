@@ -49,7 +49,7 @@ function createBasicSounds() {
 
 // special behaviour for footsteps
 function startFootsteps(){
-    if(!footstepsPlaying||canJump){
+    if(!footstepsPlaying){
         footsteps.play();
         footstepsPlaying = true;
     }
