@@ -6,6 +6,8 @@ var outlineMaterial = new THREE.MeshPhongMaterial({color:0xFFFFFF,wireframe:true
 
 var activeObject;
 
+var lockOpen = true;
+
 var outlineMesh=null;
 var TYPE_INTERACTABLE = 0;
 var TYPE_FIRE = 1;
@@ -132,6 +134,7 @@ function destroy(){
     if(this.type == TYPE_INTERACTABLE && selectedItem.name == itemList[0]){
         this.delFromScene();
         console.log('destroyed');
+        player.delActItem();
     }
     else{
         console.log('nicht anwendbar');
@@ -150,10 +153,26 @@ function open(){
 
 }
 
+function openLockedDoor(){
+	if(lockOpen){
+		if(!this.open) {
+	        this.mesh.rotateY(Math.PI/2.0);
+	        this.open = !this.open;
+	    }
+	    else {
+	        this.mesh.rotateY(-Math.PI/2.0);
+	        this.open = !this.open;
+	    }
+    }
+
+}
+
+
 function extinguish() {
 	if(this.type == TYPE_FIRE && selectedItem.name == itemList[6]){
     	delFire(this);
     	console.log('extinguished');
+    	player.delActItem();
     }
     else{
         console.log('nicht anwendbar');
