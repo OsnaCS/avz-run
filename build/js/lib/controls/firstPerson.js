@@ -44,7 +44,8 @@ var running = false;
 var standupRequest = false;
 var regenerate = false;
 var speed_factor = 1;
-// var motion=0;
+var upMotion=1;
+var sideMotion = 1;
 
 var PLAYERHEIGHT = 25;
 var DUCK_SPEED = 0.6; // speed at which player is crouching
@@ -318,7 +319,6 @@ var firstTime = true;
 
 function controlLoop(controls) {
 
-
     setRays();
 
 
@@ -406,7 +406,22 @@ function controlLoop(controls) {
     controls.getObject().translateY(velocity.y * delta);
     controls.getObject().translateZ(velocity.z * delta);
 
-    // runningMotion();
+    //RUNNING MOTION
+
+    if(moveForward || moveBackward || moveRight || moveLeft) {
+        if (running) {
+            if(controls.getObject().position.y>42) upMotion = -1;
+            if(controls.getObject().position.y<31) upMotion = 1;
+            controls.getObject().position.y += upMotion*0.9;
+            // controls.getObject().position.x += Math.sin(sideMotion*delta*0.1);
+
+        } else {
+            if(controls.getObject().position.y>38) upMotion = -1;
+            if(controls.getObject().position.y<33) upMotion = 1;
+            controls.getObject().position.y += upMotion*0.4;
+        }
+    }
+
     // player can get exhausted/regenerate energy
     if (running) {
         energy -= delta*30;
@@ -449,10 +464,7 @@ function controlLoop(controls) {
 
 }
 
-// function runningMotion() {
-//     controls.getObject().position.y +=
 
-// }
 
 
 
