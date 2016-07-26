@@ -76,7 +76,6 @@ var FileLoader = function() {
         // gibt true zurück, wenn alle Files geladen wurden
         return (filesSuccessfullyLoaded == files.length);
     }
-
     // "public" Methoden:
     return {
         isReady: isReady,
@@ -92,4 +91,5 @@ var FileLoader = function() {
             return result;
         }
     }
+
 };

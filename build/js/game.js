@@ -39,11 +39,10 @@ var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much hea
 
 var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json', 'feuerloescher.json'];
 
-var fileLoader = new FileLoader();
+var fileLoader= new FileLoader();// = new FileLoader();
 
 function init(event) {
-
-
+    console.log("init");
 
     // set up the scene, the camera and the renderer
     createScene();

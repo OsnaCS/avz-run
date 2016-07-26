@@ -427,7 +427,7 @@ function controlLoop(controls) {
 
     //RUNNING MOTION
 
-    if(moveForward || moveBackward || moveRight || moveLeft) {
+    if((moveForward || moveBackward || moveRight || moveLeft)&&!ducked) {
         if (running) {
             if(controls.getObject().position.y>39) upMotion = -1;
             if(controls.getObject().position.y<32) upMotion = 1;
