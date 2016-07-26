@@ -49,7 +49,8 @@ function createBasicSounds() {
 
 // special behaviour for footsteps
 function startFootsteps(){
-    if(!footstepsPlaying||canJump){
+    if(!footstepsPlaying){
+        footsteps.playbackRate = 1;
         footsteps.play();
         footstepsPlaying = true;
     }
@@ -60,5 +61,13 @@ function stopFootsteps(){
 
         footsteps.stop();
         footstepsPlaying = false;
+    }
+}
+
+function adjustPlaybackRate(sound, playbackNew, active){
+    if(sound.isPlaying || active) {
+        sound.stop();
+        sound.playbackRate = playbackNew;
+        sound.play();
     }
 }
