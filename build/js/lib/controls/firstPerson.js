@@ -42,8 +42,9 @@ var terrain = [];
 var ducked = false;
 var running = false;
 var standupRequest = false;
+var regenerate = false;
 var speed_factor = 1;
-
+// var motion=0;
 
 var PLAYERHEIGHT = 25;
 var DUCK_SPEED = 0.6; // speed at which player is crouching
@@ -51,7 +52,13 @@ var DUCK_DIFFERENCE = 2 * (PLAYERHEIGHT / 3);
 var RUN_SPEED = 2;
 var INVERT_XZ = new THREE.Vector3(-1, 1, -1);
 var MOVEMENT_SPEED = 600;
+
 var JUMP_SPEED = 425;
+
+var STAMINA = 100;
+
+var energy = STAMINA;
+
 
 var flashCooldown = 0;
 var flashInterval;
@@ -185,7 +192,7 @@ function initControls() {
 
             case 16: //RUN FOREST! (shift)
 
-                if (!ducked) {
+                if (!ducked && !regenerate) {
                     running = true;
                     speed_factor = RUN_SPEED;
                 }
@@ -399,6 +406,23 @@ function controlLoop(controls) {
     controls.getObject().translateY(velocity.y * delta);
     controls.getObject().translateZ(velocity.z * delta);
 
+    runningMotion();
+    // player can get exhausted/regenerate energy
+    if (running) {
+        energy -= delta*30;
+        if (energy <= 0) {
+            regenerate = true;
+            speed_factor = 1;
+            running = false;
+        }
+    } else {
+        energy += delta*10;
+        if (energy >= STAMINA) {
+            energy = STAMINA;
+            regenerate = false;
+        }
+    }
+    $(".energy-bar").css("width", '' + energy + '%');
 
 
     // stop gravity at ground level as collision detection sometimes fails for floor
@@ -424,6 +448,11 @@ function controlLoop(controls) {
     }
 
 }
+
+// function runningMotion() {
+//     controls.getObject().position.y +=
+
+// }
 
 
 
