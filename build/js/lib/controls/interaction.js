@@ -1,4 +1,4 @@
-var ACTIVE_DISTANCE =35;
+var ACTIVE_DISTANCE =40;
 
 var interactionRayCaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, ACTIVE_DISTANCE); // front
 
@@ -10,6 +10,7 @@ var outlineMesh=null;
 var TYPE_INTERACTABLE = 0;
 var TYPE_FIRE = 1;
 var TYPE_EXIT = 2;
+var TYPE_TRIGGER = 3;
 
 
 document.addEventListener( 'click', onMouseClick, false );
