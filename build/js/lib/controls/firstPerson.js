@@ -193,9 +193,13 @@ function initControls() {
                 break;
 
             case 32: // space
-                if (canJump === true && !ducked) velocity.y += JUMP_SPEED;
-                canJump = false;
+                if (canJump === true && !ducked) {
+                    velocity.y += JUMP_SPEED;
+                    canJump = false;
+                    stopFootsteps();
+                }
                 break;
+
 
 
             case 16: //RUN FOREST! (shift)
@@ -420,15 +424,17 @@ function controlLoop(controls) {
 
     if(moveForward || moveBackward || moveRight || moveLeft) {
         if (running) {
-            if(controls.getObject().position.y>42) upMotion = -1;
-            if(controls.getObject().position.y<31) upMotion = 1;
+            if(controls.getObject().position.y>39) upMotion = -1;
+            if(controls.getObject().position.y<32) upMotion = 1;
             controls.getObject().position.y += upMotion*0.9;
-            // controls.getObject().position.x += Math.sin(sideMotion*delta*0.1);
+            sideMotion+= 0.1;
+            sideMotion= sideMotion%(2*Math.PI);
+            controls.getObject().position.x += 0.4*Math.sin(sideMotion);
 
         } else {
             if(controls.getObject().position.y>38) upMotion = -1;
             if(controls.getObject().position.y<33) upMotion = 1;
-            controls.getObject().position.y += upMotion*0.4;
+            controls.getObject().position.y += upMotion*0.35;
         }
     }
 
@@ -461,6 +467,9 @@ function controlLoop(controls) {
 
     if (velocity.y == 0) {
         canJump = true;
+        if(moveForward || moveBackward || moveRight || moveLeft){
+            startFootsteps();
+        }
     }
 
     prevTime = time;
