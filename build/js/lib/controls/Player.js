@@ -1,8 +1,9 @@
 var INV_SIZE = 3; // maximum number of objects in inventory
 var inventory; // array that stores references to inventory items
 var inv_pos; // array has constant length -> to save how many spots have been filled
-//var MAX_HEALTH= 1000;
-var MAX_HEALTH= 10000000000;
+var MAX_HEALTH= 10000;
+var activeSlot=-1;
+var selectedItem;
 
 // var healthBar = document.getElementsByClassName("progress-bar");
 
@@ -24,10 +25,12 @@ Player = function() {
 
             // add object to array
             inventory[inv_pos] = game_obj;
+            addIcon(game_obj,inv_pos);
             inv_pos++;
 
             // delete object representation from scene
             game_obj.delFromScene();
+
         } else {
             // object cannot be picked up, no storage room
             console.log('Inventar voll!')
@@ -35,26 +38,6 @@ Player = function() {
 
     }
 
-    // look for an object needed for an interaction and use it if found
-    this.use = function(game_obj) {
-
-        // search inventory until object is found or everything was searched
-        for (i = 0; inventory[i] != game_obj && i <= inv_pos; i++);
-
-        // successfull interaction if object was found, delete from inventory
-        // (may be altered for specific objects that can be used multiple times?)
-        if (inventory[i] == game_obj) {
-            inventory.splice(i, 1);
-            inv_pos--;
-            return true;
-        }
-
-        // no successful interaction
-        else {
-            return false;
-        }
-
-    }
 
     // śhows player's inventory (placeholder function)
     this.showInv = function() {
@@ -75,6 +58,52 @@ Player = function() {
 
 }
 
+
+function setActiveSlot(slot)  {
+    if(inventory[slot]!=null) {
+        if(activeSlot>-1) {
+            switch (activeSlot) {
+                case 0:
+                    $("#slot1").css("border", "0px solid yellow");
+                    break;
+                case 1:
+                    $("#slot2").css("border", "0px solid yellow");
+                    break;
+                case 2:
+                    $("#slot3").css("border", "0px solid yellow");
+                    break;
+            }
+        }
+            activeSlot=slot;
+
+        switch (slot) {
+            case 0:
+                if(inventory[0]!=null) {
+                    $("#slot1").css("border", "2px solid yellow");
+                    selectedItem=inventory[0];
+                }
+                break;
+            case 1:
+                if(inventory[1]!=null) {
+                    $("#slot2").css("border", "2px solid yellow");
+                    selectedItem=inventory[1];
+                }
+                break;
+            case 2:
+                if(inventory[2]!=null) {
+                    $("#slot3").css("border", "2px solid yellow");
+                    selectedItem=inventory[2];
+                }
+                break;
+        }
+    }
+
+}
+
+
+function addIcon(item,slot) {
+  //  $("#slot"+slot).css("background-image","url("+item.name+".png)");
+}
 function gameOver() {
     $(".gameOverBlocker").css("z-index", 15);
 }
