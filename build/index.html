@@ -14,24 +14,37 @@
         <div id="instructions">
             <div id="button">
                 <br />Weiter!</div>
+            <div id="button2">
+                <br />Neustarten!</div>
         </div>
+    </div>
     </div>
     <div class="gameOverBlocker">
         <div class="gameOver">
-            <br><FONT SIZE="50">GameOver!</FONT></br>
+            <br>
+            <FONT SIZE="50">GameOver!</FONT>
+            </br>
         </div>
+    </div>
+
+    </div>
+    <div class="cross">
+        <FONT SIZE="5" color="#ffffff">+</FONT>
+    </div>
     </div>
     </div>
     <div class="pauseBlocker">
         <div class="pause">
-            <br><FONT SIZE="50">Pause!</FONT></br>
+            <br>
+            <FONT SIZE="50">Pause!</FONT>
+            </br>
         </div>
     </div>
     </div>
     <div id="world"></div>
 
     <div class="progress">
-        <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+        <div class="progress-bar" style="width:100%">
         </div>
     </div>
 
@@ -48,18 +61,22 @@
 
 
 
-    <div id="keyPad">
-        <button type="button" class="pinbutton" onclick="keyPad(this.value)" value="1">1</button>
-        <button type="button" class="pinbutton" onclick="keyPad(this.value)" value="2">2</button>
-        <button type="button" class="pinbutton" onclick="keyPad(this.value)" value="3">3</button><br>
-        <button type="button" class="pinbutton" onclick="keyPad(this.value)" value="4">4</button>
-        <button type="button" class="pinbutton" onclick="keyPad(this.value)" value="5">5</button>
-        <button type="button" class="pinbutton" onclick="keyPad(this.value)" value="6">6</button><br>
-        <button type="button" class="pinbutton" onclick="keyPad(this.value)" value="7">7</button>
-        <button type="button" class="pinbutton" onclick="keyPad(this.value)" value="8">8</button>
-        <button type="button" class="pinbutton" onclick="keyPad(this.value)" value="9">9</button><br>
-        <button type="button" class="pinbutton" onclick="keyPad(this.value)" value="0">0</button>
-        <button type="button" class="pinbutton" onclick="keyPad(this.value)" value="10">X</button>
+    <div id="pinPad">
+        <div id="pinDisplay">PIN EINGEBEN</div><br>
+        <div id="buttonGrid">
+        <button type="button" class="pinButton" onclick="pinPad(this.value)" value="1"></button>
+        <button type="button" class="pinButton" onclick="pinPad(this.value)" value="2"></button>
+        <button type="button" class="pinButton" onclick="pinPad(this.value)" value="3"></button><br>
+        <button type="button" class="pinButton" onclick="pinPad(this.value)" value="4"></button>
+        <button type="button" class="pinButton" onclick="pinPad(this.value)" value="5"></button>
+        <button type="button" class="pinButton" onclick="pinPad(this.value)" value="6"></button><br>
+        <button type="button" class="pinButton" onclick="pinPad(this.value)" value="7"></button>
+        <button type="button" class="pinButton" onclick="pinPad(this.value)" value="8"></button>
+        <button type="button" class="pinButton" onclick="pinPad(this.value)" value="9"></button><br>
+        <button type="button" class="pinButton" onclick="pinPad(this.value)" value="10"></button>
+        <button type="button" class="pinButton" onclick="pinPad(this.value)" value="0"></button>
+        <button type="button" class="pinButton" onclick="pinPad(this.value)" value="11"></button>
+        </div>
     </div>
 
 

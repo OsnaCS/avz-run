@@ -1,4 +1,4 @@
-var ACTIVE_DISTANCE =35;
+var ACTIVE_DISTANCE =40;
 
 var interactionRayCaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, ACTIVE_DISTANCE); // front
 
@@ -7,14 +7,22 @@ var outlineMaterial = new THREE.MeshPhongMaterial({color:0xFFFFFF,wireframe:true
 var activeObject;
 
 var outlineMesh=null;
+
+// pin pad variables.... may not be stored here?
+var pin = new Array(4);
+var pin_pos = 0;
+
+
 var TYPE_INTERACTABLE = 0;
 var TYPE_FIRE = 1;
 var TYPE_EXIT = 2;
-
+var TYPE_TRIGGER = 3;
 
 document.addEventListener( 'click', onMouseClick, false );
 
 function interactionLoop() {
+
+
     interactionRayCaster.set(controls.getObject().position, controls.getDirection());
     interactions = interactionRayCaster.intersectObjects(terrain);
 
@@ -49,8 +57,33 @@ function interactionLoop() {
             outlineMesh=null;
         }
     }
-}
 
+
+    if(interactions.length>0 && interactions[0].object.type==TYPE_FIRE) {
+        console.log("interact");
+
+        if(activeObject!=interactions[0].object) {
+            scene.remove(outlineMesh);
+            outlineMesh=null;
+            activeObject= interactions[0].object;
+
+
+        } else {
+
+            activeObject= interactions[0].object;
+            if(outlineMesh==null) {
+                outlineMesh = activeObject.mesh.clone();
+                outlineMesh.material = outlineMaterial;
+                outlineMesh.position.copy(activeObject.mesh.position);
+                outlineMesh.is_ob = true;
+                scene.add(outlineMesh);
+            }
+
+
+        }
+    }
+
+}
 
 
 
@@ -97,10 +130,17 @@ function onMouseClick() {
 
 function pickUpItem() {
     player.pickUp(this);
+
 }
 
 function destroy(){
-    this.delFromScene();
+    if(this.type == TYPE_INTERACTABLE && selectedItem.name == itemList[0]){
+        this.delFromScene();
+        console.log('destroyed');
+    }
+    else{
+        console.log('nicht anwendbar');
+    }
 }
 
 function open(){
@@ -112,5 +152,82 @@ function open(){
         this.mesh.rotateY(-Math.PI/2.0);
         this.open = !this.open;
     }
+
+}
+
+function extinguish() {
+	if(this.type == TYPE_FIRE && selectedItem.name == itemList[6]){
+    	delFire(this);
+    	console.log('extinguished');
+    }
+    else{
+        console.log('nicht anwendbar');
+    }
+}
+
+function enterPin() {
+    console.log("öffnen");
+
+    menu = true;
+    activeObject = null;
+    outlineMesh = null;
+
+    $("#pinPad").css("z-index", 20);
+
+    document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
+    console.log(document.exitPointerLock);
+
+    document.exitPointerLock();
+}
+
+function exitPinPad() {
+    /* $("#pinPad").css("opacity","0");*/
+    /*$("#blocker").css("z-index",20);*/
+    console.log('exit');
+     $("#pinPad").css("z-index", 0);
+
+    // Ask the browser to lock the pointer
+    menu = false;
+
+//    element = document.getElementById('world')
+ //   element.requestPointerLock = element.requestPointerLock;
+
+    element.requestPointerLock();
+}
+
+
+function pinPad(pinvalue) {
+
+        switch (pinvalue) {
+
+            case '10':
+
+                pin[0] = null;
+                pin[1] = null;
+                pin[2] = null;
+                pin[3] = null;
+                pin_pos = 0;
+                document.getElementById("pinDisplay").innerHTML = "PIN EINGEBEN";
+                break;
+
+            case '11':
+
+                exitPinPad();
+                break;
+
+            default:
+
+                if (pin_pos<4) {
+                    pin[pin_pos] = pinvalue;
+                    pin_pos++;
+                    document.getElementById("pinDisplay").innerHTML = pin.join("");
+                }
+                break;
+        }
+
+
+
+
+
 
 }
