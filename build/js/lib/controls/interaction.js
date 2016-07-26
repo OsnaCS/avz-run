@@ -18,7 +18,6 @@ function interactionLoop() {
     interactionRayCaster.set(controls.getObject().position, controls.getDirection());
     interactions = interactionRayCaster.intersectObjects(terrain);
     if(interactions.length>0 && interactions[0].object.type==TYPE_INTERACTABLE) {
-        console.log("interact");
 
         if(activeObject!=interactions[0].object) {
             scene.remove(outlineMesh);
@@ -50,7 +49,7 @@ function interactionLoop() {
         }
     }
 
-    if(interactions.length>0 && (interactions[0].object.type==TYPE_FIRE)) {
+    if(interactions.length>0 && interactions[0].object.type==TYPE_FIRE) {
         console.log("interact");
 
         if(activeObject!=interactions[0].object) {
@@ -73,6 +72,9 @@ function interactionLoop() {
 
         }
     }
+
+
+
 
 }
 
@@ -123,7 +125,13 @@ function pickUpItem() {
 }
 
 function destroy(){
-    this.delFromScene();
+    if(this.type == TYPE_INTERACTABLE && selectedItem.name == itemList[0]){
+        this.delFromScene();
+        console.log('destroyed');
+    }
+    else{
+        console.log('nicht anwendbar');
+    }
 }
 
 function open(){
@@ -138,6 +146,6 @@ function open(){
 
 }
 
-function extinguish(){
-        delFire(this);
+function extinguish() {
+    delFire(this);
 }
