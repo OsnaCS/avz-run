@@ -89,6 +89,7 @@ if (havePointerLock) {
             instructions.style.display = '';
             menu = true;
 
+
         }
 
     };
@@ -215,14 +216,17 @@ function initControls() {
                 break;
 
             case 80: //pause p
-                // TODO pause in Bild schreiben
-                if (!menu) {
-                    pause = !pause;
-                }
-                if (pause) {
-                    $(".pauseBlocker").css("z-index", 15);
-                } else {
-                    $(".pauseBlocker").css("z-index", 0);
+                if (!moveForward && !moveLeft && !moveRight && !moveBackward) {
+                    if (!menu) {
+                        pause = !pause;
+                    }
+                    if (pause) {
+                        controls.enabled = false;
+                        $(".pauseBlocker").css("z-index", 15);
+                    } else {
+                        controls.enabled = true;
+                        $(".pauseBlocker").css("z-index", 0);
+                    }
                 }
                 break;
 
@@ -314,7 +318,6 @@ function initControls() {
 var firstTime = true;
 
 function controlLoop(controls) {
-
 
     setRays();
 

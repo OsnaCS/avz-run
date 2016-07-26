@@ -76,7 +76,7 @@ function createScene() {
     buttonStart = document.getElementById('buttonStart');
     instructions = document.getElementById('instructions');
     button = document.getElementById('button');
-
+    button2 = document.getElementById('button2');
 
     // Get the width and the height of the screen,
     // use them to set up the aspect ratio of the camera
