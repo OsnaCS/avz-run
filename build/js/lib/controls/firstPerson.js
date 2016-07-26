@@ -42,8 +42,10 @@ var terrain = [];
 var ducked = false;
 var running = false;
 var standupRequest = false;
+var regenerate = false;
 var speed_factor = 1;
-
+var upMotion=1;
+var sideMotion = 1;
 
 var PLAYERHEIGHT = 25;
 var DUCK_SPEED = 0.6; // speed at which player is crouching
@@ -51,7 +53,13 @@ var DUCK_DIFFERENCE = 2 * (PLAYERHEIGHT / 3);
 var RUN_SPEED = 2;
 var INVERT_XZ = new THREE.Vector3(-1, 1, -1);
 var MOVEMENT_SPEED = 600;
-var JUMP_SPEED = 450;
+
+var JUMP_SPEED = 425;
+
+var STAMINA = 100;
+
+var energy = STAMINA;
+
 
 var flashCooldown = 0;
 var flashInterval;
@@ -84,6 +92,7 @@ if (havePointerLock) {
 
             instructions.style.display = '';
             menu = true;
+
 
         }
 
@@ -127,6 +136,12 @@ if (havePointerLock) {
         menu = false;
 
         element.requestPointerLock();
+
+    }, false);
+
+    button2.addEventListener('click', function(event) {
+
+        location.reload();
 
     }, false);
 
@@ -185,7 +200,7 @@ function initControls() {
 
             case 16: //RUN FOREST! (shift)
 
-                if (!ducked) {
+                if (!ducked && !regenerate) {
                     running = true;
                     speed_factor = RUN_SPEED;
                 }
@@ -211,14 +226,17 @@ function initControls() {
                 break;
 
             case 80: //pause p
-                // TODO pause in Bild schreiben
-                if (!menu) {
-                    pause = !pause;
-                }
-                if (pause) {
-                    $(".pauseBlocker").css("z-index", 15);
-                } else {
-                    $(".pauseBlocker").css("z-index", 0);
+                if (!moveForward && !moveLeft && !moveRight && !moveBackward) {
+                    if (!menu) {
+                        pause = !pause;
+                    }
+                    if (pause) {
+                        controls.enabled = false;
+                        $(".pauseBlocker").css("z-index", 15);
+                    } else {
+                        controls.enabled = true;
+                        $(".pauseBlocker").css("z-index", 0);
+                    }
                 }
                 break;
 
@@ -311,7 +329,6 @@ var firstTime = true;
 
 function controlLoop(controls) {
 
-
     setRays();
 
 
@@ -343,15 +360,21 @@ function controlLoop(controls) {
     if (intersectionsY.length > 0) {
         if (intersectionsY[0].object.type == TYPE_FIRE) {
             fireAction();
-        } else {
-            velocity.y = Math.max(0, velocity.y);
-            firstTime = false;
+        } else if (intersectionsY[0].object.type == TYPE_TRIGGER) {
+            intersectionsY[0].object.interact();
+            intersectionsY[0].object.type = -1;
         }
+        velocity.y = Math.max(0, velocity.y);
+        firstTime = false;
+
     }
 
     if (intersectionsZpos.length > 0) {
         if (intersectionsZpos[0].object.type == TYPE_FIRE) {
             fireAction();
+        } else if (intersectionsZpos[0].object.type == TYPE_TRIGGER) {
+            intersectionsZpos[0].object.interact();
+            intersectionsZpos[0].object.type = -1;
         } else {
             velocity.z = Math.min(0, velocity.z);
         }
@@ -360,6 +383,9 @@ function controlLoop(controls) {
     if (intersectionsZneg.length > 0) {
         if (intersectionsZneg[0].object.type == TYPE_FIRE) {
             fireAction();
+        } else if (intersectionsZneg[0].object.type == TYPE_TRIGGER) {
+            intersectionsZneg[0].object.interact();
+            intersectionsZneg[0].object.type = -1;
         } else {
             velocity.z = Math.max(0, velocity.z);
         }
@@ -368,6 +394,9 @@ function controlLoop(controls) {
     if (intersectionsXpos.length > 0) {
         if (intersectionsXpos[0].object.type == TYPE_FIRE) {
             fireAction();
+        } else if (intersectionsXpos[0].object.type == TYPE_TRIGGER) {
+            intersectionsXpos[0].object.interact();
+            intersectionsXpos[0].object.type = -1;
         } else {
             velocity.x = Math.min(0, velocity.x);
         }
@@ -376,6 +405,9 @@ function controlLoop(controls) {
     if (intersectionsXneg.length > 0) {
         if (intersectionsXneg[0].object.type == TYPE_FIRE) {
             fireAction();
+        } else if (intersectionsXneg[0].object.type == TYPE_TRIGGER) {
+            intersectionsXneg[0].object.interact();
+            intersectionsXneg[0].object.type=-1;
         } else {
             velocity.x = Math.max(0, velocity.x);
         }
@@ -384,6 +416,38 @@ function controlLoop(controls) {
     controls.getObject().translateY(velocity.y * delta);
     controls.getObject().translateZ(velocity.z * delta);
 
+    //RUNNING MOTION
+
+    if(moveForward || moveBackward || moveRight || moveLeft) {
+        if (running) {
+            if(controls.getObject().position.y>42) upMotion = -1;
+            if(controls.getObject().position.y<31) upMotion = 1;
+            controls.getObject().position.y += upMotion*0.9;
+            // controls.getObject().position.x += Math.sin(sideMotion*delta*0.1);
+
+        } else {
+            if(controls.getObject().position.y>38) upMotion = -1;
+            if(controls.getObject().position.y<33) upMotion = 1;
+            controls.getObject().position.y += upMotion*0.4;
+        }
+    }
+
+    // player can get exhausted/regenerate energy
+    if (running) {
+        energy -= delta*30;
+        if (energy <= 0) {
+            regenerate = true;
+            speed_factor = 1;
+            running = false;
+        }
+    } else {
+        energy += delta*10;
+        if (energy >= STAMINA) {
+            energy = STAMINA;
+            regenerate = false;
+        }
+    }
+    $(".energy-bar").css("width", '' + energy + '%');
 
 
     // stop gravity at ground level as collision detection sometimes fails for floor
@@ -409,6 +473,8 @@ function controlLoop(controls) {
     }
 
 }
+
+
 
 
 
@@ -492,6 +558,4 @@ function fireAction() {
             flashCooldown--;
         }, 1000);
     }
-
-
 }
