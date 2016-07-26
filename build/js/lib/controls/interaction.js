@@ -19,7 +19,6 @@ function interactionLoop() {
     interactions = interactionRayCaster.intersectObjects(terrain);
 
     if(interactions.length>0 && interactions[0].object.type==TYPE_INTERACTABLE) {
-        console.log("interact");
 
         if(activeObject!=interactions[0].object) {
             scene.remove(outlineMesh);
@@ -50,6 +49,35 @@ function interactionLoop() {
             outlineMesh=null;
         }
     }
+
+
+    if(interactions.length>0 && interactions[0].object.type==TYPE_FIRE) {
+        console.log("interact");
+
+        if(activeObject!=interactions[0].object) {
+            scene.remove(outlineMesh);
+            outlineMesh=null;
+            activeObject= interactions[0].object;
+
+
+        } else {
+
+            activeObject= interactions[0].object;
+            if(outlineMesh==null) {
+                outlineMesh = activeObject.mesh.clone();
+                outlineMesh.material = outlineMaterial;
+                outlineMesh.position.copy(activeObject.mesh.position);
+                outlineMesh.is_ob = true;
+                scene.add(outlineMesh);
+            }
+
+
+        }
+    }
+
+
+
+
 }
 
 
@@ -101,7 +129,13 @@ function pickUpItem() {
 }
 
 function destroy(){
-    this.delFromScene();
+    if(this.type == TYPE_INTERACTABLE && selectedItem.name == itemList[0]){
+        this.delFromScene();
+        console.log('destroyed');
+    }
+    else{
+        console.log('nicht anwendbar');
+    }
 }
 
 function open(){
@@ -114,4 +148,8 @@ function open(){
         this.open = !this.open;
     }
 
+}
+
+function extinguish() {
+    delFire(this);
 }
