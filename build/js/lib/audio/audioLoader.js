@@ -42,21 +42,22 @@ function stopSound(sound) {
 }
 
 function createBasicSounds() {
-    footsteps = createSound("footsteps", 10, 1, false, 1);
+    footsteps = createSound("footsteps", 10, 1, true, 1);
     camera.add(footsteps);
 }
 
 
 // special behaviour for footsteps
 function startFootsteps(){
-    if(!footstepsPlaying){
+    if(!footstepsPlaying||canJump){
         footsteps.play();
         footstepsPlaying = true;
     }
 }
 
 function stopFootsteps(){
-    if(footstepsPlaying && !moveForward && !moveBackward && !moveRight && !moveLeft){
+    if(!canJump||(footstepsPlaying && !moveForward && !moveBackward && !moveRight && !moveLeft)){
+
         footsteps.stop();
         footstepsPlaying = false;
     }
