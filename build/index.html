@@ -6,14 +6,44 @@
 </head>
 
 <body>
-
-
-    <div id="world"></div>
-    <div class="progress">
-      <div class="progress-bar" role="progressbar" aria-valuenow="100"
-      aria-valuemin="0" aria-valuemax="100" style="width:100%">
-      </div>
+    <div id="startInstructions">
+        <div id="buttonStart">
+            <br />Start!</div>
     </div>
+    <div id="blocker">
+        <div id="instructions">
+            <div id="button">
+                <br />Weiter!</div>
+        </div>
+    </div>
+    <div class="gameOverBlocker">
+        <div class="gameOver">
+            <br><FONT SIZE="50">GameOver!</FONT></br>
+        </div>
+    </div>
+    </div>
+    <div class="pauseBlocker">
+        <div class="pause">
+            <br><FONT SIZE="50">Pause!</FONT></br>
+        </div>
+    </div>
+    </div>
+    <div id="world"></div>
+
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+        </div>
+    </div>
+
+
+    <div class="inventory">
+        <div id="slot1">1</div>
+        <div id="slot2">2</div>
+        <div id="slot3">3</div>
+    </div>
+
+
+
     <script src="js/three.min.js"></script>
     <script src="js/lib/controls/firstPerson.js"></script>
     <script src="js/lib/controls/interaction.js"></script>

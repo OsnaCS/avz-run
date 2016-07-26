@@ -76,15 +76,10 @@ function addFire(x, y, z, width, height, depth, spacing) {
     box.mesh.position.z = z;
 
     // create fire sound
-    var fireSound = new THREE.PositionalAudio(audioListener);
-    audioLoader.load('sounds/firecracking.mp3', function(buffer) {
-        fireSound.setBuffer(buffer);
-        fireSound.setRefDistance(50);
-        fireSound.setRolloffFactor(5);
-        fireSound.setLoop(true);
-        fireSound.setVolume(3);
-        fireSound.play();
-    })
+    var firecracking = createSound("firecracking",50,5,true,3,function () {
+        fireMesh.add(firecracking);
+        playSound(firecracking);
+    });
 
     fireMesh.add(fireSound);
 
