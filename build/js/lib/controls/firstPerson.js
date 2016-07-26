@@ -139,6 +139,12 @@ if (havePointerLock) {
 
     }, false);
 
+    button2.addEventListener('click', function(event) {
+
+        location.reload();
+
+    }, false);
+
 } else {
 
     startInstructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
