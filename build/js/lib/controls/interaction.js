@@ -17,7 +17,7 @@ document.addEventListener( 'click', onMouseClick, false );
 function interactionLoop() {
     interactionRayCaster.set(controls.getObject().position, controls.getDirection());
     interactions = interactionRayCaster.intersectObjects(terrain);
-    //&& interactions[0].object.interactable==false
+
     if(interactions.length>0 && interactions[0].object.type==TYPE_INTERACTABLE) {
         console.log("interact");
 
@@ -59,6 +59,7 @@ GameObject = function(mesh, interaction, type) {
     this.type = type;
     this.mesh = mesh;
     this.interact = interaction;
+    this.open = false;
 
     this.raycast = function(raycaster, intersects) {
 
@@ -81,6 +82,10 @@ GameObject = function(mesh, interaction, type) {
 
     }
 
+    /*this.interact = function(interaction) {
+        this.interaction();
+    }*/
+
 }
 
 
@@ -89,4 +94,25 @@ function onMouseClick() {
     if(activeObject!=null) {
         activeObject.interact();
     }
+}
+
+
+function pickUpItem() {
+    player.pickUp(this);
+}
+
+function destroy(){
+    this.delFromScene();
+}
+
+function open(){
+    if(!this.open) {
+        this.mesh.rotateY(Math.PI/2.0);
+        this.open = !this.open;
+    }
+    else {
+        this.mesh.rotateY(-Math.PI/2.0);
+        this.open = !this.open;
+    }
+
 }
