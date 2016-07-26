@@ -232,13 +232,14 @@ function createRoom() {
         scene.add(mesh);
     });
 
-    var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json'];
-     addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
-     addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, false, 0);
-     addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true, pickUpItem);
+    var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json', 'tuer.json'];
+    addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
+    addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, false, 0);
+    addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true, pickUpItem);
     addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true, pickUpItem);
     addItem(pathItem.concat(itemList[4]), 30, 5, -30, 1, false, 0);
     addItem(pathItem.concat(itemList[5]), 30, 5, -30, 1, true, open);
+    addItem(pathItem.concat(itemList[6]), 100, 5, -100, 1, true, damage_door);
 }
 
 
@@ -250,20 +251,20 @@ function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction){
             var materials = new THREE.MeshFaceMaterial( mat );
             var mesh = new THREE.Mesh(geo, materials);
 
-        mesh.position.y = yPos;
-        mesh.position.x = xPos;
-        mesh.position.z = zPos;
-        mesh.scale.set(20*scale,20*scale,20*scale);
-        if(interact_type){
-            var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE);
-            terrain.push(intItem);
-        } else {
-            terrain.push(mesh);
-        }
+            mesh.position.y = yPos;
+            mesh.position.x = xPos;
+            mesh.position.z = zPos;
+            mesh.scale.set(20*scale,20*scale,20*scale);
+            if(interact_type){
+                var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE);
+                terrain.push(intItem);
+            } else {
+                terrain.push(mesh);
+            }
 
-        scene.add(mesh);
+            scene.add(mesh);
 
-    });
+        });
 }
 
 
