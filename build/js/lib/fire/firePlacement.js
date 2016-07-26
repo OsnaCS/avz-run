@@ -81,7 +81,6 @@ function addFire(x, y, z, width, height, depth, spacing) {
         playSound(firecracking);
     });
 
-    fireMesh.add(fireSound);
 
     scene.add(box.mesh);
     terrain.push(box);
