@@ -162,6 +162,9 @@ function damage_door() {
         damaged_y = this.mesh.position.y;
         damaged_z = this.mesh.position.z;
         var damaged_door = ['tuer_halbkaputt.json'];
+        var crashing = createSound("crashing_door",50,5,false,3,function () {
+            crashing.play();
+        });
         addItem(pathItem.concat(damaged_door[0]), damaged_x, damaged_y, damaged_z, 1, true, destroy_door);
         this.delFromScene();
     }else{
@@ -177,6 +180,9 @@ function destroy_door() {
         damaged_y = this.mesh.position.y;
         damaged_z = this.mesh.position.z;
         var destroyed_door = ['tuer_kaputt.json'];
+        var crashing = createSound("crashing_door",50,5,false,3,function () {
+            crashing.play();
+        });
         addItem(pathItem.concat(destroyed_door[0]), damaged_x, damaged_y, damaged_z, 1, false, 0);
         this.delFromScene();
 
