@@ -157,7 +157,6 @@ function open() {
 function damage_door() {
     //placeholder; it should be checked if axe is active item
     if(true){
-        // TODO: crashing sound
         damaged_x = this.mesh.position.x;
         damaged_y = this.mesh.position.y;
         damaged_z = this.mesh.position.z;
@@ -175,7 +174,7 @@ function damage_door() {
 function destroy_door() {
     //placeholder; it should be checked if axe is active item
     if(true){
-        // TODO: crashing sound, delete axe from inventory, maybe message for player ("Die Tür ist kaputt, die Axt jetzt leider auch.")
+        // TODO: delete axe from inventory, maybe message for player ("Die Tür ist kaputt, die Axt jetzt leider auch.")
         damaged_x = this.mesh.position.x;
         damaged_y = this.mesh.position.y;
         damaged_z = this.mesh.position.z;
