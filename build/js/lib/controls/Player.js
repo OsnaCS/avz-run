@@ -79,7 +79,7 @@ function setActiveSlot(slot)  {
         switch (slot) {
             case 0:
                 if(inventory[0]!=null) {
-                    $("#slot1").css("border", "2px ridge #ffcc66");
+                    $("#slot1").css("border", "2px groove #ffcc66");
                     selectedItem=inventory[0];
                 }
                 break;
