@@ -152,5 +152,11 @@ function open(){
 }
 
 function extinguish() {
-    delFire(this);
+	if(this.type == TYPE_FIRE && selectedItem.name == itemList[6]){
+    	delFire(this);
+    	console.log('extinguished');
+    }
+    else{
+        console.log('nicht anwendbar');
+    }
 }

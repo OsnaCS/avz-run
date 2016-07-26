@@ -37,7 +37,7 @@ var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
 
-var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json'];
+var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json', 'feuerloescher.json'];
 
 function init(event) {
 
@@ -76,7 +76,7 @@ function createScene() {
     buttonStart = document.getElementById('buttonStart');
     instructions = document.getElementById('instructions');
     button = document.getElementById('button');
-
+    button2 = document.getElementById('button2');
 
     // Get the width and the height of the screen,
     // use them to set up the aspect ratio of the camera
@@ -236,18 +236,20 @@ function createRoom() {
     });
 
 
-    var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json'];
-     addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
-     addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, false, 0);
-     addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true, pickUpItem);
-    addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true, pickUpItem);
-    addItem(pathItem.concat(itemList[4]), 30, 5, -30, 1, false, 0);
-    addItem(pathItem.concat(itemList[5]), 30, 5, -30, 1, true, open);
+
+     addItem(pathItem.concat(itemList[0]), -50, 10, 10, 2, true, pickUpItem, itemList[0]);
+     addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true, destroy, itemList[1]);
+     addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true, pickUpItem, itemList[2]);
+    addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true, pickUpItem, itemList[3]);
+    addItem(pathItem.concat(itemList[4]), 30, 5, -30, 1, false, 0, itemList[4]);
+    addItem(pathItem.concat(itemList[5]), 30, 5, -30, 1, true, open, itemList[5]);
+    addItem(pathItem.concat(itemList[6]), 30, 5, -100, 1, true, pickUpItem, itemList[6]);
 
     addTrigger(-64,-71,action);
     function action() {
         console.log("hi");
     }
+
 }
 
 
