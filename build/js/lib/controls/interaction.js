@@ -1,4 +1,4 @@
-var ACTIVE_DISTANCE =35;
+var ACTIVE_DISTANCE =40;
 
 var interactionRayCaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, ACTIVE_DISTANCE); // front
 
@@ -6,10 +6,13 @@ var outlineMaterial = new THREE.MeshPhongMaterial({color:0xFFFFFF,wireframe:true
 
 var activeObject;
 
+var lockOpen = true;
+
 var outlineMesh=null;
 var TYPE_INTERACTABLE = 0;
 var TYPE_FIRE = 1;
 var TYPE_EXIT = 2;
+var TYPE_TRIGGER = 3;
 
 
 document.addEventListener( 'click', onMouseClick, false );
@@ -49,6 +52,35 @@ function interactionLoop() {
             outlineMesh=null;
         }
     }
+
+
+    if(interactions.length>0 && interactions[0].object.type==TYPE_FIRE) {
+        console.log("interact");
+
+        if(activeObject!=interactions[0].object) {
+            scene.remove(outlineMesh);
+            outlineMesh=null;
+            activeObject= interactions[0].object;
+
+
+        } else {
+
+            activeObject= interactions[0].object;
+            if(outlineMesh==null) {
+                outlineMesh = activeObject.mesh.clone();
+                outlineMesh.material = outlineMaterial;
+                outlineMesh.position.copy(activeObject.mesh.position);
+                outlineMesh.is_ob = true;
+                scene.add(outlineMesh);
+            }
+
+
+        }
+    }
+
+
+
+
 }
 
 
@@ -99,11 +131,18 @@ function pickUpItem() {
     player.pickUp(this);
 }
 
-function destroy(){
-    this.delFromScene();
+function destroy() {
+    if(this.type == TYPE_INTERACTABLE && selectedItem.name == itemList[0]){
+        this.delFromScene();
+        console.log('destroyed');
+        player.delActItem();
+    }
+    else{
+        console.log('nicht anwendbar');
+    }
 }
 
-function open(){
+function open() {
     if(!this.open) {
         this.mesh.rotateY(Math.PI/2.0);
         this.open = !this.open;
@@ -115,7 +154,7 @@ function open(){
 
 }
 
-function damage_door(){
+function damage_door() {
     //placeholder; it should be checked if axe is active item
     if(true){
         // TODO: crashing sound
@@ -130,7 +169,7 @@ function damage_door(){
     }
 }
 
-function destroy_door(){
+function destroy_door() {
     //placeholder; it should be checked if axe is active item
     if(true){
         // TODO: crashing sound, delete axe from inventory, maybe message for player ("Die Tür ist kaputt, die Axt jetzt leider auch.")
@@ -143,5 +182,32 @@ function destroy_door(){
 
     }else{
         //Message for player? ("Das Loch ist noch nicht groß genug... wie könnte ich es wohl vergrößern?")
+    }
+
+}
+
+function openLockedDoor() {
+	if(lockOpen){
+		if(!this.open) {
+	        this.mesh.rotateY(Math.PI/2.0);
+	        this.open = !this.open;
+	    }
+	    else {
+	        this.mesh.rotateY(-Math.PI/2.0);
+	        this.open = !this.open;
+	    }
+    }
+
+}
+
+
+function extinguish() {
+	if(this.type == TYPE_FIRE && selectedItem.name == itemList[6]){
+    	delFire(this);
+    	console.log('extinguished');
+    	player.delActItem();
+    }
+    else{
+        console.log('nicht anwendbar');
     }
 }
