@@ -329,6 +329,7 @@ body {
     margin-left: 40%;
     margin-right: auto;
     margin-top: 10%;
+    display: inline-block;
     width: 340px;
     height: 425px;
 

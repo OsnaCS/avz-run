@@ -66,7 +66,7 @@ var flashInterval;
 var flashLight = new THREE.AmbientLight(0xFF0000);
 
 var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
-
+$(".GUI").hide();
 
 // maybe insert menu into following method
 
@@ -92,6 +92,7 @@ if (havePointerLock) {
 
             instructions.style.display = '';
             menu = true;
+            $(".GUI").hide();
 
 
         }
@@ -121,6 +122,7 @@ if (havePointerLock) {
         element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
 
         menu = false;
+        $(".GUI").show();
 
         element.requestPointerLock();
 
@@ -134,6 +136,7 @@ if (havePointerLock) {
         element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
 
         menu = false;
+        $(".GUI").show();
 
         element.requestPointerLock();
 
@@ -193,9 +196,13 @@ function initControls() {
                 break;
 
             case 32: // space
-                if (canJump === true && !ducked) velocity.y += JUMP_SPEED;
-                canJump = false;
+                if (canJump === true && !ducked) {
+                    velocity.y += JUMP_SPEED;
+                    canJump = false;
+                    stopFootsteps();
+                }
                 break;
+
 
 
             case 16: //RUN FOREST! (shift)
@@ -233,9 +240,11 @@ function initControls() {
                     if (pause) {
                         controls.enabled = false;
                         $(".pauseBlocker").css("z-index", 15);
+                        $(".GUI").hide();
                     } else {
                         controls.enabled = true;
                         $(".pauseBlocker").css("z-index", 0);
+                        $(".GUI").show();
                     }
                 }
                 break;
@@ -420,15 +429,17 @@ function controlLoop(controls) {
 
     if(moveForward || moveBackward || moveRight || moveLeft) {
         if (running) {
-            if(controls.getObject().position.y>42) upMotion = -1;
-            if(controls.getObject().position.y<31) upMotion = 1;
+            if(controls.getObject().position.y>39) upMotion = -1;
+            if(controls.getObject().position.y<32) upMotion = 1;
             controls.getObject().position.y += upMotion*0.9;
-            // controls.getObject().position.x += Math.sin(sideMotion*delta*0.1);
+            sideMotion+= 0.1;
+            sideMotion= sideMotion%(2*Math.PI);
+            controls.getObject().position.x += 0.4*Math.sin(sideMotion);
 
         } else {
             if(controls.getObject().position.y>38) upMotion = -1;
             if(controls.getObject().position.y<33) upMotion = 1;
-            controls.getObject().position.y += upMotion*0.4;
+            controls.getObject().position.y += upMotion*0.35;
         }
     }
 
@@ -461,6 +472,9 @@ function controlLoop(controls) {
 
     if (velocity.y == 0) {
         canJump = true;
+        if(moveForward || moveBackward || moveRight || moveLeft){
+            startFootsteps();
+        }
     }
 
     prevTime = time;

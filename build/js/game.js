@@ -242,7 +242,7 @@ function createRoom() {
     addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true, pickUpItem, itemList[2]);
     addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true, pickUpItem, itemList[3]);
     addItem(pathItem.concat(itemList[4]), 30, 5, -30, 1, false, 0, itemList[4]);
-    addItem(pathItem.concat(itemList[5]), 30, 5, -30, 1, true, open, itemList[5]);
+    addItem(pathItem.concat(itemList[5]), 30, 5, -30, 1, true, openLockedDoor, itemList[5]);
     addItem(pathItem.concat(itemList[6]), 30, 5, -100, 1, true, pickUpItem, itemList[6]);
 
     addTrigger(-64,-71,action);
@@ -296,23 +296,6 @@ function createFire() {
     VolumetricFire.texturePath = './levels/materials/textures/';
 
     addFire(80, 0, 1, 30, 30, 30, 10);
-    /*fireGeom = new THREE.BoxGeometry(30, 30, 30);
-    var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
-    var fireMesh = new THREE.Mesh(fireGeom, mat);
-    var box = new GameObject(fireMesh, null, TYPE_FIRE);
-
-    box.mesh.position.x = 80;
-    box.mesh.position.y = 30;
-    box.mesh.position.z = 1;
-
-    // create fire sound
-    var firecracking = createSound("firecracking",50,5,true,3,function () {
-        fireMesh.add(firecracking);
-        playSound(firecracking);
-    });
-
-    scene.add(box.mesh);
-    terrain.push(box);*/
 
     animateFire();
 

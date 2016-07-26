@@ -6,13 +6,15 @@ var outlineMaterial = new THREE.MeshPhongMaterial({color:0xFFFFFF,wireframe:true
 
 var activeObject;
 
+var lockOpen = false;
+
 var outlineMesh=null;
 
 // pin pad variables.... may not be stored here?
 var pin = new Array(4);
 var pin_pos = 0;
 
-
+var CORRECT_PIN = ['0','4','2','0'];
 var TYPE_INTERACTABLE = 0;
 var TYPE_FIRE = 1;
 var TYPE_EXIT = 2;
@@ -137,6 +139,7 @@ function destroy(){
     if(this.type == TYPE_INTERACTABLE && selectedItem.name == itemList[0]){
         this.delFromScene();
         console.log('destroyed');
+        player.delActItem();
     }
     else{
         console.log('nicht anwendbar');
@@ -155,10 +158,26 @@ function open(){
 
 }
 
+function openLockedDoor(){
+	if(lockOpen){
+		if(!this.open) {
+	        this.mesh.rotateY(Math.PI/2.0);
+	        this.open = !this.open;
+	    }
+	    else {
+	        this.mesh.rotateY(-Math.PI/2.0);
+	        this.open = !this.open;
+	    }
+    }
+
+}
+
+
 function extinguish() {
 	if(this.type == TYPE_FIRE && selectedItem.name == itemList[6]){
     	delFire(this);
     	console.log('extinguished');
+    	player.delActItem();
     }
     else{
         console.log('nicht anwendbar');
@@ -171,6 +190,7 @@ function enterPin() {
     menu = true;
     activeObject = null;
     outlineMesh = null;
+    scene.remove(outlineMesh);
 
     $("#pinPad").css("z-index", 20);
 
@@ -188,11 +208,21 @@ function exitPinPad() {
 
     // Ask the browser to lock the pointer
     menu = false;
+    activeObject = null;
+    outlineMesh = null;
+    scene.remove(outlineMesh);
+
 
 //    element = document.getElementById('world')
  //   element.requestPointerLock = element.requestPointerLock;
 
     element.requestPointerLock();
+
+    if (CORRECT_PIN[0] == pin[0] && CORRECT_PIN[1] == pin[1] && CORRECT_PIN[2] == pin[2] && CORRECT_PIN[3] == pin[3]) lockOpen = true;
+    else lockOpen = false;
+    if (lockOpen) console.log('YEP');
+    else console.log('NOPE');
+
 }
 
 

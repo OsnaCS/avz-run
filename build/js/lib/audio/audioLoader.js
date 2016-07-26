@@ -49,14 +49,15 @@ function createBasicSounds() {
 
 // special behaviour for footsteps
 function startFootsteps(){
-    if(!footstepsPlaying){
+    if(!footstepsPlaying||canJump){
         footsteps.play();
         footstepsPlaying = true;
     }
 }
 
 function stopFootsteps(){
-    if(footstepsPlaying && !moveForward && !moveBackward && !moveRight && !moveLeft){
+    if(!canJump||(footstepsPlaying && !moveForward && !moveBackward && !moveRight && !moveLeft)){
+
         footsteps.stop();
         footstepsPlaying = false;
     }
