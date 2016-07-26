@@ -2,6 +2,7 @@
 // Credits: Steffen Schiffel, B.Sc. for callback function optimization (CEO of Schiffel IT-Service GmbH)
 // provides general inilization of audio related stuff
 var audioListener, audioLoader, footsteps;
+var footstepsPlaying = false;
 
 // init loader and listener
 function createAudio() {
@@ -41,6 +42,22 @@ function stopSound(sound) {
 }
 
 function createBasicSounds() {
-    footsteps = createSound("footsteps", 10, 1, true, 1);
+    footsteps = createSound("footsteps", 10, 1, false, 1);
     camera.add(footsteps);
+}
+
+
+// special behaviour for footsteps
+function startFootsteps(){
+    if(!footstepsPlaying){
+        footsteps.play();
+        footstepsPlaying = true;
+    }
+}
+
+function stopFootsteps(){
+    if(footstepsPlaying && !moveForward && !moveBackward && !moveRight && !moveLeft){
+        footsteps.stop();
+        footstepsPlaying = false;
+    }
 }
