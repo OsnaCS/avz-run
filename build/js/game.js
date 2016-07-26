@@ -43,9 +43,6 @@ function init(event) {
     //loads all Objects before creating
     loadObjects(complete);
 
-
-    loadXmL('../avz_model/materials/Objects.xml');
-
     // set up the scene, the camera and the renderer
     createScene();
 
@@ -253,10 +250,6 @@ function createRoom() {
     });
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> cef35db6972a9d28c8e0a1311523d99574895daa
 
 
 }
@@ -305,15 +298,14 @@ function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name
 
     });
 }
-<<<<<<< HEAD
+
 
 function addTrigger (xPos, zPos, action) {
     var triggerGeom = new THREE.BoxGeometry(30,30,30);
     var mat = new THREE.MeshBasicMaterial({ transparent: false, opacity: 1, depthWrite: false, color:0xFFFFFF});
     var triggerMesh = new THREE.Mesh(triggerGeom,mat);
     var trigger = new GameObject(triggerMesh,action,TYPE_TRIGGER);
-=======
->>>>>>> cef35db6972a9d28c8e0a1311523d99574895daa
+
 
     trigger.mesh.position.x = xPos;
     trigger.mesh.position.z = zPos;
