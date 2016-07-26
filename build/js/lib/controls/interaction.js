@@ -186,6 +186,5 @@ function coverMouth(){
     }else{
         console.log('nicht anwendbar');
     }
-*/
-
 }
+*/
