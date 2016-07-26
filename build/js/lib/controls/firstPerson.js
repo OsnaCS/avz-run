@@ -66,7 +66,7 @@ var flashInterval;
 var flashLight = new THREE.AmbientLight(0xFF0000);
 
 var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
-
+$(".GUI").hide();
 
 // maybe insert menu into following method
 
@@ -92,6 +92,7 @@ if (havePointerLock) {
 
             instructions.style.display = '';
             menu = true;
+            $(".GUI").hide();
 
 
         }
@@ -121,6 +122,7 @@ if (havePointerLock) {
         element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
 
         menu = false;
+        $(".GUI").show();
 
         element.requestPointerLock();
 
@@ -134,6 +136,7 @@ if (havePointerLock) {
         element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
 
         menu = false;
+        $(".GUI").show();
 
         element.requestPointerLock();
 
@@ -237,9 +240,11 @@ function initControls() {
                     if (pause) {
                         controls.enabled = false;
                         $(".pauseBlocker").css("z-index", 15);
+                        $(".GUI").hide();
                     } else {
                         controls.enabled = true;
                         $(".pauseBlocker").css("z-index", 0);
+                        $(".GUI").show();
                     }
                 }
                 break;

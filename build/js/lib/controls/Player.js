@@ -118,4 +118,5 @@ function addIcon(item,slot) {
 }
 function gameOver() {
     $(".gameOverBlocker").css("z-index", 15);
+    $(".GUI").hide();
 }
