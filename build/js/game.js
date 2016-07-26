@@ -38,10 +38,11 @@ var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
 
 var itemList = ['axe.json', 'toilett_open_with_door.json', 'plant.json', 'ohp.json', 'toilett_open_without_door.json', 'toilett_door.json', 'feuerloescher.json'];
+var newItemList =[];
 
 function init(event) {
     //loads all Objects before creating
-    loadObjects(complete);
+    loadObjects(complete, newItemList);
 
     // set up the scene, the camera and the renderer
     createScene();
@@ -65,8 +66,8 @@ function init(event) {
 
     // start a loop that will update the objects' positions
     // and render the scene on each frame
-    var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json'];
-     addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true);
+
+     addItem(pathItem.concat(newItemList[0]), 0, 5, 10, 2, true);
      addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true);
      addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true);
      addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true);
