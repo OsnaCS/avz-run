@@ -74,7 +74,7 @@ function addFire(x, y, z, width, height, depth, spacing) {
     box.mesh.position.x = x;
     box.mesh.position.y = y;
     box.mesh.position.z = z;
-/*
+
     // create fire sound
     var fireSound = new THREE.PositionalAudio(audioListener);
     audioLoader.load('sounds/firecracking.mp3', function(buffer) {
@@ -87,7 +87,7 @@ function addFire(x, y, z, width, height, depth, spacing) {
     })
 
     fireMesh.add(fireSound);
-*/
+
     scene.add(box.mesh);
     terrain.push(box);
 
@@ -134,9 +134,10 @@ function delFire (fireColBox){
     for(i = 0; i < smoke_and_light_count; i++){
         if(fire_collision_box_list[i] == fireColBox){
             fire_found = true;
+            index = i;
             break;
         }
-        index++;
+        //index++;
     }
 
     if(fire_found == false){
@@ -144,19 +145,20 @@ function delFire (fireColBox){
         console.log(index);
         console.log(smoke_and_light_count);
     }else{
-      //  fireColBox.delFromScene();
+        fireColBox.delFromScene();
 
 
         scene.remove(pointlight_list[index]);
         scene.remove(smoke_list[index]);
         scene.remove(fire_mesh_list[index]);
-
+/*
         fire_collision_box_list[index,1];
         pointlight_list.splice(index,1);
         smoke_list.splice(index,1);
         fire_mesh_list.splice(index,1);
 
-        smoke_and_light_count--;
+       smoke_and_light_count--;
+*/
     }
 
 

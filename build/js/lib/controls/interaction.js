@@ -18,7 +18,7 @@ function interactionLoop() {
     interactionRayCaster.set(controls.getObject().position, controls.getDirection());
     interactions = interactionRayCaster.intersectObjects(terrain);
     //&& interactions[0].object.interactable==false
-    if(interactions.length>0 && interactions[0].object.type==TYPE_INTERACTABLE) {
+    if(interactions.length>0 && (interactions[0].object.type==TYPE_INTERACTABLE)) {
         console.log("interact");
 
         if(activeObject!=interactions[0].object) {
@@ -50,8 +50,32 @@ function interactionLoop() {
             outlineMesh=null;
         }
     }
-}
 
+    if(interactions.length>0 && (interactions[0].object.type==TYPE_FIRE)) {
+        console.log("interact");
+
+        if(activeObject!=interactions[0].object) {
+            scene.remove(outlineMesh);
+            outlineMesh=null;
+            activeObject= interactions[0].object;
+
+
+        } else {
+
+            activeObject= interactions[0].object;
+            if(outlineMesh==null) {
+                outlineMesh = activeObject.mesh.clone();
+                outlineMesh.material = outlineMaterial;
+                outlineMesh.position.copy(activeObject.mesh.position);
+                outlineMesh.is_ob = true;
+                scene.add(outlineMesh);
+            }
+
+
+        }
+    }
+
+}
 
 
 
@@ -81,7 +105,9 @@ GameObject = function(mesh, interaction, type) {
 
     }
 
-    this.interact = function(){interaction(this);}
+    if(type == TYPE_FIRE){
+        this.interact = function(){interaction(this);}
+    }
 
 }
 

@@ -237,7 +237,7 @@ function addItem(file, xPos, yPos, zPos, scale, interact_type) {
         mesh.position.z = zPos;
         mesh.scale.set(20 * scale, 20 * scale, 20 * scale);
         if (interact_type) {
-            var intItem = new GameObject(mesh, 0, TYPE_INTERACTABLE);
+            var intItem = new GameObject(mesh, player.pickUp, TYPE_INTERACTABLE);
             terrain.push(intItem);
         } else {
             terrain.push(mesh);
@@ -253,30 +253,6 @@ function createFire() {
     VolumetricFire.texturePath = './levels/materials/textures/';
 
     addFire(80, 0, 1, 30, 30, 30, 10);
-    fireGeom = new THREE.BoxGeometry(30, 30, 30);
-    var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
-    var fireMesh = new THREE.Mesh(fireGeom, mat);
-    var box = new GameObject(fireMesh, null, TYPE_FIRE);
-
-    box.mesh.position.x = 80;
-    box.mesh.position.y = 30;
-    box.mesh.position.z = 1;
-
-    // create fire sound
-    var fireSound = new THREE.PositionalAudio(audioListener);
-    audioLoader.load('sounds/firecracking.mp3', function(buffer) {
-        fireSound.setBuffer(buffer);
-        fireSound.setRefDistance(50);
-        fireSound.setRolloffFactor(5);
-        fireSound.setLoop(true);
-        fireSound.setVolume(3);
-        fireSound.play();
-    })
-
-    fireMesh.add(fireSound);
-
-    scene.add(box.mesh);
-    terrain.push(box);
 
     animateFire();
 
