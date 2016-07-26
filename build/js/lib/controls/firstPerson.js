@@ -208,7 +208,7 @@ function initControls() {
             case 16: //RUN FOREST! (shift)
 
                 if (!ducked && !regenerate) {
-                    adjustPlaybackRate(footsteps,1.5);
+                    adjustPlaybackRate(footsteps,1.5,true);
                     running = true;
                     speed_factor = RUN_SPEED;
                 }
