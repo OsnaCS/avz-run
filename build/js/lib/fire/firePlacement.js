@@ -70,19 +70,19 @@ function addFire(x, y, z, width, height, depth, spacing) {
     var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
     var fireMesh = new THREE.Mesh(fireGeom, mat);
 
-      // create fire sound
-    var firecracking = createSound("firecracking",50,5,true,3,function () {
+    // create fire sound
+    var firecracking = createSound("firecracking", 50, 5, true, 3, function() {
         fireMesh.add(firecracking);
         playSound(firecracking);
     });
-    
+
     var box = new GameObject(fireMesh, extinguish, TYPE_FIRE);
 
     box.mesh.position.x = x;
     box.mesh.position.y = y;
     box.mesh.position.z = z;
 
-  
+
 
     scene.add(box.mesh);
     terrain.push(box);
@@ -122,13 +122,13 @@ function animateFire() {
     }
 }
 
-function delFire (fireColBox){
+function delFire(fireColBox) {
 
     var fire_found = false;
     var index = 0;
 
-    for(i = 0; i < smoke_and_light_count; i++){
-        if(fire_collision_box_list[i] == fireColBox){
+    for (i = 0; i < smoke_and_light_count; i++) {
+        if (fire_collision_box_list[i] == fireColBox) {
             fire_found = true;
             index = i;
             break;
@@ -136,25 +136,26 @@ function delFire (fireColBox){
         //index++;
     }
 
-    if(fire_found == false){
+    if (fire_found == false) {
         console.log('error in delFire');
         console.log(index);
         console.log(smoke_and_light_count);
-    }else{
-        
+    } else {
+
         fireColBox.delFromScene();
 
+        fireColBox.mesh.children[0].stop(); // stop sound
 
         scene.remove(pointlight_list[index]);
         scene.remove(smoke_list[index]);
         scene.remove(fire_mesh_list[index]);
-/*
-        fire_collision_box_list[index,1];
-        pointlight_list.splice(index,1);
-        smoke_list.splice(index,1);
-        fire_mesh_list.splice(index,1);
-       smoke_and_light_count--;
-*/
+        /*
+                fire_collision_box_list[index,1];
+                pointlight_list.splice(index,1);
+                smoke_list.splice(index,1);
+                fire_mesh_list.splice(index,1);
+               smoke_and_light_count--;
+        */
     }
 
 
