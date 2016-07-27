@@ -24,7 +24,6 @@ document.addEventListener( 'click', onMouseClick, false );
 
 function interactionLoop() {
 
-
     interactionRayCaster.set(controls.getObject().position, controls.getDirection());
     interactions = interactionRayCaster.intersectObjects(terrain);
 
@@ -184,72 +183,84 @@ function extinguish() {
     }
 }
 
+// open pin pad image and its HTML
 function enterPin() {
     console.log("öffnen");
 
-    menu = true;
+    menu = true; // to pause interaction loop
     activeObject = null;
     outlineMesh = null;
     scene.remove(outlineMesh);
 
+    // show pin pad and make default pause screen invisible
     $("#pinPad").css("z-index", 20);
+    $("#blocker").css("z-index", 0);
 
+    // exit pointerLock so player can use cursor
     document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
     console.log(document.exitPointerLock);
 
     document.exitPointerLock();
 }
 
+// return to game from pin pad
 function exitPinPad() {
-    /* $("#pinPad").css("opacity","0");*/
-    /*$("#blocker").css("z-index",20);*/
+
     console.log('exit');
      $("#pinPad").css("z-index", 0);
+     $("#blocker").css("z-index", 20);
 
-    // Ask the browser to lock the pointer
+
     menu = false;
     activeObject = null;
     outlineMesh = null;
     scene.remove(outlineMesh);
 
-
 //    element = document.getElementById('world')
  //   element.requestPointerLock = element.requestPointerLock;
 
+    //ask browser to lock the pointer again
     element.requestPointerLock();
 
+    // determine if entered code was correct
     if (CORRECT_PIN[0] == pin[0] && CORRECT_PIN[1] == pin[1] && CORRECT_PIN[2] == pin[2] && CORRECT_PIN[3] == pin[3]) lockOpen = true;
     else lockOpen = false;
-    if (lockOpen) console.log('YEP');
+
+    if (lockOpen) console.log('YEP'); // REPLACE WITH RESPECTIVE SOUNDS
     else console.log('NOPE');
 
 }
 
-
+// handles input from HTML buttons that are invisible on the pin pad image
 function pinPad(pinvalue) {
 
         switch (pinvalue) {
 
-            case '10':
+            case '10': // 'X' button was pressed to delete previously entered numbers
 
+                // reset array, array position and display
                 pin[0] = null;
                 pin[1] = null;
                 pin[2] = null;
                 pin[3] = null;
                 pin_pos = 0;
+
                 document.getElementById("pinDisplay").innerHTML = "PIN EINGEBEN";
                 break;
 
-            case '11':
+            case '11': // accept code
 
                 exitPinPad();
                 break;
 
             default:
 
-                if (pin_pos<4) {
-                    pin[pin_pos] = pinvalue;
+
+                if (pin_pos<4) { // unless 4 digits have already been entered
+                    pin[pin_pos] = pinvalue; // set current digit to entered number
                     pin_pos++;
+
+                    // set display
                     document.getElementById("pinDisplay").innerHTML = pin.join("");
                 }
                 break;

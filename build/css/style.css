@@ -337,7 +337,7 @@ body {
 }
 
 #pinDisplay {
-    /*background-color: rgba(0,0,0,5);*/
+
     padding-top: 20px;
     padding-left: 45px;
     font-family: 'VT323', monospace;
@@ -358,8 +358,7 @@ body {
     margin-bottom: 10px;
     margin-right: 12px;
 
-
-    background-color: Transparent;
+    background-color: transparent;
     background-repeat:no-repeat;
     border: none;
     overflow: hidden;
@@ -367,6 +366,8 @@ body {
 
 }
 
+/* is supposed to remove small dotted border from active buttons, but useless right now :/ */
+/* (minor issue though, you can hardly see it) */
 .pinButton:active,.pinButton:focus {
     outline: none !important;
     border: none;

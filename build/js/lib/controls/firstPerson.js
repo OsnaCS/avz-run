@@ -57,7 +57,6 @@ var MOVEMENT_SPEED = 600;
 var JUMP_SPEED = 425;
 
 var STAMINA = 100;
-
 var energy = STAMINA;
 
 
@@ -78,17 +77,17 @@ if (havePointerLock) {
 
         if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
 
-
-            //          controlsEnabled = true;
             controls.enabled = true;
             blocker.style.display = 'none';
+            $(".GUI").show();
 
         } else {
+
             controls.enabled = false;
 
-            // blocker.style.display = '-webkit-box';
-            // blocker.style.display = '-moz-box';
-            // blocker.style.display = 'box';
+            blocker.style.display = '-webkit-box';
+            blocker.style.display = '-moz-box';
+            blocker.style.display = 'box';
 
             instructions.style.display = '';
             menu = true;
