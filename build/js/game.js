@@ -40,7 +40,7 @@ function complete(){
     fileLoader= new FileLoader();// = new FileLoader();
     // Wait untill ready
     // starts init
-    window.setTimeout(init, 1500);
+    window.setTimeout(init, 150);
 
 }
 
@@ -267,8 +267,8 @@ function createItems(){
     addItem((newItemList[0]), -50, 10, 10, 10, 90, true, pickUpItem);
     addItem((newItemList[0]), -50, 10, 10, 10, 0, true, pickUpItem);
     addItem((newItemList[0]), -50, 10, 10, 10, 180, true, pickUpItem);
-    addItem((newItemList[0]), -50, 10, 10, 10, 270, true, pickUpItem);
-    addItem((newItemList[26]), 0, 40, -10, 3, 0, true, pickUpItem);
+    addItem((newItemList[40]), 50, 0, 10, 2, 270, false, pickUpItem);
+    addItem((newItemList[48]), 0, 0, -700, 1, 0, false, null);
 
 }
 addTrigger(-64,-71,action);

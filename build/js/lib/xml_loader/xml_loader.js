@@ -9,7 +9,7 @@ function makeArrayFromXML(complete, arr, pathToXML) {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (xhttp.readyState == 4 && xhttp.status == 200) {
-                initObj(xhttp, complete, arr, pathToXML);
+                loadXML(xhttp, complete, arr, pathToXML);
             }
         };
 
@@ -21,7 +21,8 @@ function makeArrayFromXML(complete, arr, pathToXML) {
 }
 
 // Parse Objects-Pathes into Array
-function initObj(xml, complete, arr, pathToXML) {
+function loadXML(xml, complete, arr, pathToXML) {
+
 
     var xmlDoc = xml.responseXML;
     var pathToFiles = xmlDoc.getElementsByTagName("objects")[0].getAttribute("pathObjects");

@@ -52,6 +52,7 @@ var FileLoader = function() {
         // abhängig vom Dateityp: korrekten Loader auswählen
         switch (type) {
             case "json":
+
                 loadJson(file, name);
                 break;
             case "png": // no break!
@@ -63,6 +64,8 @@ var FileLoader = function() {
                 console.log("Error: unknown file format: "+file);
         }
     }
+
+
 
 
     //initialize Audio-files
