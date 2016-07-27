@@ -26,7 +26,6 @@ function interactionLoop() {
 
     interactionRayCaster.set(controls.getObject().position, controls.getDirection());
     interactions = interactionRayCaster.intersectObjects(terrain);
-
     if(interactions.length>0 && interactions[0].object.type==TYPE_INTERACTABLE) {
 
         if(activeObject!=interactions[0].object) {
@@ -58,7 +57,6 @@ function interactionLoop() {
             outlineMesh=null;
         }
     }
-
 
     if(interactions.length>0 && interactions[0].object.type==TYPE_FIRE) {
         console.log("interact");
@@ -97,6 +95,8 @@ GameObject = function(mesh, interaction, type, name) {
 
     this.open = false;
 
+    this.activeTransponder = false;
+
     this.raycast = function(raycaster, intersects) {
 
         this.mesh.raycast( raycaster, intersects);
@@ -117,7 +117,6 @@ GameObject = function(mesh, interaction, type, name) {
         if (terrain[i] == this) terrain.splice(i,1);
 
     }
-
 }
 
 
@@ -134,7 +133,7 @@ function pickUpItem() {
 
 }
 
-function destroy(){
+function destroy() {
     if(this.type == TYPE_INTERACTABLE && selectedItem.name == itemList[0]){
         this.delFromScene();
         console.log('destroyed');
@@ -145,7 +144,7 @@ function destroy(){
     }
 }
 
-function open(){
+function open() {
     if(!this.open) {
         this.mesh.rotateY(Math.PI/2.0);
         this.open = !this.open;
@@ -157,7 +156,44 @@ function open(){
 
 }
 
-function openLockedDoor(){
+function damage_door() {
+    //placeholder; it should be checked if axe is active item
+    if(true){
+        damaged_x = this.mesh.position.x;
+        damaged_y = this.mesh.position.y;
+        damaged_z = this.mesh.position.z;
+        var damaged_door = ['tuer_halbkaputt.json'];
+        var crashing = createSound("crashing_door",50,5,false,3,function () {
+            crashing.play();
+        });
+        addItem(pathItem.concat(damaged_door[0]), damaged_x, damaged_y, damaged_z, 1, true, destroy_door);
+        this.delFromScene();
+    }else{
+        //Message for player? ("Wie könnte ich diese Tür wohl öffnen?")
+    }
+}
+
+function destroy_door() {
+    //placeholder; it should be checked if axe is active item
+    if(true){
+        // TODO: delete axe from inventory, maybe message for player ("Die Tür ist kaputt, die Axt jetzt leider auch.")
+        damaged_x = this.mesh.position.x;
+        damaged_y = this.mesh.position.y;
+        damaged_z = this.mesh.position.z;
+        var destroyed_door = ['tuer_kaputt.json'];
+        var crashing = createSound("crashing_door",50,5,false,3,function () {
+            crashing.play();
+        });
+        addItem(pathItem.concat(destroyed_door[0]), damaged_x, damaged_y, damaged_z, 1, false, 0);
+        this.delFromScene();
+
+    }else{
+        //Message for player? ("Das Loch ist noch nicht groß genug... wie könnte ich es wohl vergrößern?")
+    }
+
+}
+
+function openLockedDoor() {
 	if(lockOpen){
 		if(!this.open) {
 	        this.mesh.rotateY(Math.PI/2.0);
@@ -183,14 +219,18 @@ function extinguish() {
     }
 }
 
+
 // open pin pad image and its HTML
 function enterPin() {
-    console.log("öffnen");
 
-    menu = true; // to pause interaction loop
-    activeObject = null;
+
     outlineMesh = null;
     scene.remove(outlineMesh);
+    activeObject = null;
+
+    menu = true; // to pause interaction loop
+
+    console.log('yay');
 
     // show pin pad and make default pause screen invisible
     $("#pinPad").css("z-index", 20);
@@ -206,21 +246,13 @@ function enterPin() {
 // return to game from pin pad
 function exitPinPad() {
 
-    console.log('exit');
-     $("#pinPad").css("z-index", 0);
-     $("#blocker").css("z-index", 20);
-
+    $("#blocker").css("z-index", 20);
+    $("#pinPad").css("z-index", 0);
 
     menu = false;
-    activeObject = null;
     outlineMesh = null;
     scene.remove(outlineMesh);
-
-//    element = document.getElementById('world')
- //   element.requestPointerLock = element.requestPointerLock;
-
-    //ask browser to lock the pointer again
-    element.requestPointerLock();
+    activeObject = null;
 
     // determine if entered code was correct
     if (CORRECT_PIN[0] == pin[0] && CORRECT_PIN[1] == pin[1] && CORRECT_PIN[2] == pin[2] && CORRECT_PIN[3] == pin[3]) lockOpen = true;
@@ -229,10 +261,19 @@ function exitPinPad() {
     if (lockOpen) console.log('YEP'); // REPLACE WITH RESPECTIVE SOUNDS
     else console.log('NOPE');
 
+    prevTime = performance.now();
+
+    //ask browser to lock the pointer again
+    element.requestPointerLock();
+
+
 }
 
 // handles input from HTML buttons that are invisible on the pin pad image
 function pinPad(pinvalue) {
+
+        // reset button focus
+        document.activeElement.blur();
 
         switch (pinvalue) {
 
@@ -255,7 +296,6 @@ function pinPad(pinvalue) {
 
             default:
 
-
                 if (pin_pos<4) { // unless 4 digits have already been entered
                     pin[pin_pos] = pinvalue; // set current digit to entered number
                     pin_pos++;
@@ -264,11 +304,52 @@ function pinPad(pinvalue) {
                     document.getElementById("pinDisplay").innerHTML = pin.join("");
                 }
                 break;
+}
+
+
+
+// lappen.json muss durch den eigentlichen Namen ersetzt werden, dann ist die Methode nutzbar
+function coverMouth(){
+    if(this.type == TYPE_INTERACTABLE && selectedItem.name == 'lappen.json'){
+        HEALTH_PER_SECOND = HEALTH_PER_SECOND / 2;
+        console.log('covered mouth');
+        player.delActItem();
+    }else{
+        console.log('nicht anwendbar');
+    }
+}
+
+
+function activateTransponder(){
+    if(this.type == TYPE_INTERACTABLE && selectedItem.name == 'transponder.json'){
+        selectedItem.activeTransponder = true;
+        console.log('transponder activated');
+    }else{
+        console.log('nicht anwendbar');
+    }
+}
+
+
+function openTransponderDoor(){
+
+    if(selectedItem.activeTransponder){
+
+        if(!this.open) {
+
+            this.mesh.rotateY(Math.PI/2.0);
+            this.open = !this.open;
         }
 
+        else {
+            this.mesh.rotateY(-Math.PI/2.0);
+            this.open = !this.open;
+        }
 
-
-
-
-
+        // transponder can only be used once
+        selectedItem.activeTransponder = false;
+        player.delActItem();
+    } else{
+        console.log('nicht anwendbar');
+    }
+}
 }

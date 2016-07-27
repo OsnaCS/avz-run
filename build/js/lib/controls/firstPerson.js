@@ -44,7 +44,7 @@ var running = false;
 var standupRequest = false;
 var regenerate = false;
 var speed_factor = 1;
-var upMotion=1;
+var upMotion = 1;
 var sideMotion = 1;
 
 var PLAYERHEIGHT = 25;
@@ -58,7 +58,6 @@ var JUMP_SPEED = 425;
 
 var STAMINA = 100;
 var energy = STAMINA;
-
 
 var flashCooldown = 0;
 var flashInterval;
@@ -95,6 +94,7 @@ if (havePointerLock) {
 
 
         }
+
 
     };
 
@@ -136,6 +136,7 @@ if (havePointerLock) {
 
         menu = false;
         $(".GUI").show();
+        prevTime = performance.now();
 
         element.requestPointerLock();
 
@@ -207,6 +208,7 @@ function initControls() {
             case 16: //RUN FOREST! (shift)
 
                 if (!ducked && !regenerate) {
+                    adjustPlaybackRate(footsteps,1.5,true);
                     running = true;
                     speed_factor = RUN_SPEED;
                 }
@@ -232,7 +234,7 @@ function initControls() {
                 break;
 
             case 80: //pause p
-                if (!moveForward && !moveLeft && !moveRight && !moveBackward) {
+                if (!moveForward && !moveLeft && !moveRight && !moveBackward && !ducked && !jump) {
                     if (!menu) {
                         pause = !pause;
                     }
@@ -286,7 +288,7 @@ function initControls() {
 
 
             case 16: // shift
-
+                adjustPlaybackRate(footsteps,1, true);
                 speed_factor = 1;
                 running = false;
                 break;
@@ -341,8 +343,8 @@ function controlLoop(controls) {
 
 
     // determines stepwidth
-    var time = performance.now();
-    var delta = (time - prevTime) / 1000;
+    time = performance.now();
+    delta = (time - prevTime) / 1000;
 
     velocity.x -= velocity.x * 10.0 * delta;
     velocity.z -= velocity.z * 10.0 * delta;
@@ -370,7 +372,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (intersectionsY[0].object.type == TYPE_TRIGGER) {
             intersectionsY[0].object.interact();
-            intersectionsY[0].object.type = -1;
+            removeTrigger(intersectionsY[0].object);
         }
         velocity.y = Math.max(0, velocity.y);
         firstTime = false;
@@ -382,7 +384,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (intersectionsZpos[0].object.type == TYPE_TRIGGER) {
             intersectionsZpos[0].object.interact();
-            intersectionsZpos[0].object.type = -1;
+            removeTrigger(intersectionsZpos[0].object);
         } else {
             velocity.z = Math.min(0, velocity.z);
         }
@@ -393,7 +395,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (intersectionsZneg[0].object.type == TYPE_TRIGGER) {
             intersectionsZneg[0].object.interact();
-            intersectionsZneg[0].object.type = -1;
+            removeTrigger(intersectionsZneg[0].object);
         } else {
             velocity.z = Math.max(0, velocity.z);
         }
@@ -404,7 +406,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (intersectionsXpos[0].object.type == TYPE_TRIGGER) {
             intersectionsXpos[0].object.interact();
-            intersectionsXpos[0].object.type = -1;
+            removeTrigger(intersectionsXpos[0].object);
         } else {
             velocity.x = Math.min(0, velocity.x);
         }
@@ -415,7 +417,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (intersectionsXneg[0].object.type == TYPE_TRIGGER) {
             intersectionsXneg[0].object.interact();
-            intersectionsXneg[0].object.type=-1;
+            removeTrigger(intersectionsXneg[0].object);
         } else {
             velocity.x = Math.max(0, velocity.x);
         }
@@ -426,39 +428,41 @@ function controlLoop(controls) {
 
     //RUNNING MOTION
 
-    if(moveForward || moveBackward || moveRight || moveLeft) {
+    if((moveForward || moveBackward || moveRight || moveLeft)&&!ducked) {
         if (running) {
-            if(controls.getObject().position.y>39) upMotion = -1;
-            if(controls.getObject().position.y<32) upMotion = 1;
-            controls.getObject().position.y += upMotion*0.9;
-            sideMotion+= 0.1;
-            sideMotion= sideMotion%(2*Math.PI);
-            controls.getObject().position.x += 0.4*Math.sin(sideMotion);
+            if (controls.getObject().position.y > 39) upMotion = -1;
+            if (controls.getObject().position.y < 32) upMotion = 1;
+            controls.getObject().position.y += upMotion * 0.9;
+            sideMotion += 0.1;
+            sideMotion = sideMotion % (2 * Math.PI);
+            controls.getObject().position.x += 0.4 * Math.sin(sideMotion);
 
         } else {
-            if(controls.getObject().position.y>38) upMotion = -1;
-            if(controls.getObject().position.y<33) upMotion = 1;
-            controls.getObject().position.y += upMotion*0.35;
+            if (controls.getObject().position.y > 38) upMotion = -1;
+            if (controls.getObject().position.y < 33) upMotion = 1;
+            controls.getObject().position.y += upMotion * 0.35;
         }
     }
 
     // player can get exhausted/regenerate energy
-    if (running) {
-        energy -= delta*30;
-        if (energy <= 0) {
-            regenerate = true;
-            speed_factor = 1;
-            running = false;
-        }
-    } else {
-        energy += delta*10;
-        if (energy >= STAMINA) {
-            energy = STAMINA;
-            regenerate = false;
-        }
-    }
-    $(".energy-bar").css("width", '' + energy + '%');
+    if (!menu) {
 
+        if (running) {
+            energy -= delta * 30;
+            if (energy <= 0) {
+                regenerate = true;
+                speed_factor = 1;
+                running = false;
+            }
+        } else {
+            energy += delta * 10;
+            if (energy >= STAMINA) {
+                energy = STAMINA;
+                regenerate = false;
+            }
+        }
+        $(".energy-bar").css("width", '' + energy + '%');
+    }
 
     // stop gravity at ground level as collision detection sometimes fails for floor
     if (controls.getObject().position.y < PLAYERHEIGHT && firstTime) {
@@ -471,7 +475,7 @@ function controlLoop(controls) {
 
     if (velocity.y == 0) {
         canJump = true;
-        if(moveForward || moveBackward || moveRight || moveLeft){
+        if (moveForward || moveBackward || moveRight || moveLeft) {
             startFootsteps();
         }
     }

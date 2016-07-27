@@ -37,9 +37,12 @@ var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
 
-var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json', 'feuerloescher.json'];
+var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json', 'feuerloescher.json', 'tuer.json'];
+
+var fileLoader= new FileLoader();// = new FileLoader();
 
 function init(event) {
+    console.log("init");
 
     // set up the scene, the camera and the renderer
     createScene();
@@ -224,26 +227,22 @@ function createLights() {
 
 
 function createRoom() {
-    var jloader2 = new THREE.JSONLoader();
-    jloader2.load('test_level.json', function(geo, mat) {
-        var materials = new THREE.MeshFaceMaterial(mat);
-        var mesh = new THREE.Mesh(geo, materials);
-        terrain.push(mesh);
-        mesh.position.y = 0;
-        mesh.position.x = 5;
-        mesh.scale.set(20, 20, 20);
-        scene.add(mesh);
-    });
 
 
+    var mesh = fileLoader.get("test_level");
+    terrain.push(mesh);
+    mesh.position.y = 0;
+    mesh.position.x = 5;
+    mesh.scale.set(20, 20, 20);
+    scene.add(mesh);
 
-    addItem(pathItem.concat(itemList[0]), -50, 10, 10, 2, true, enterPin, itemList[0]);
-    addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true, destroy, itemList[1]);
-    addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true, pickUpItem, itemList[2]);
-    addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true, pickUpItem, itemList[3]);
-    addItem(pathItem.concat(itemList[4]), 30, 5, -30, 1, false, 0, itemList[4]);
-    addItem(pathItem.concat(itemList[5]), 30, 5, -30, 1, true, openLockedDoor, itemList[5]);
-    addItem(pathItem.concat(itemList[6]), 30, 5, -100, 1, true, pickUpItem, itemList[6]);
+    addItem(itemList[0], -50, 10, 10, 2, true, enterPin, itemList[0]);
+    addItem(itemList[1], 20, 5, 10, 1, true, destroy, itemList[1]);
+    addItem(itemList[2], 0, 5, 20, 3, true, pickUpItem, itemList[2]);
+    addItem(itemList[3], 0, 5, -10, 3, true, pickUpItem, itemList[3]);
+    addItem(itemList[4], 30, 5, -30, 1, false, 0, itemList[4]);
+    addItem(itemList[5], 30, 5, -30, 1, true, openLockedDoor, itemList[5]);
+    addItem(itemList[6], 30, 5, -100, 1, true, pickUpItem, itemList[6]);
 
     addTrigger(-64,-71,action);
     function action() {
@@ -256,39 +255,45 @@ function createRoom() {
 // Add Object with given Path to given coordinates
 
 function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name){
-        var jloader2 = new THREE.JSONLoader();
-        jloader2.load(file, function(geo, mat){
-            var materials = new THREE.MeshFaceMaterial( mat );
-            var mesh = new THREE.Mesh(geo, materials);
 
-        mesh.position.y = yPos;
-        mesh.position.x = xPos;
-        mesh.position.z = zPos;
-        mesh.scale.set(20*scale,20*scale,20*scale);
-        if(interact_type){
-            var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, name);
-            terrain.push(intItem);
-        } else {
-            terrain.push(mesh);
-        }
+        var mesh = fileLoader.get(file.split(".")[0]);
 
-        scene.add(mesh);
+            mesh.position.y = yPos;
+            mesh.position.x = xPos;
+            mesh.position.z = zPos;
+            mesh.scale.set(20*scale,20*scale,20*scale);
+            if(interact_type){
+                var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, name);
+                terrain.push(intItem);
+            } else {
+                terrain.push(mesh);
+            }
 
-    });
+            scene.add(mesh);
 }
 
 function addTrigger (xPos, zPos, action) {
     var triggerGeom = new THREE.BoxGeometry(30,30,30);
-    var mat = new THREE.MeshBasicMaterial({ transparent: false, opacity: 1, depthWrite: false, color:0xFFFFFF});
+    var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, color:0xFFFFFF});
     var triggerMesh = new THREE.Mesh(triggerGeom,mat);
     var trigger = new GameObject(triggerMesh,action,TYPE_TRIGGER);
 
     trigger.mesh.position.x = xPos;
     trigger.mesh.position.z = zPos;
-    trigger.mesh.position.y = -15;
+    trigger.mesh.position.y = 0;
     scene.add(trigger.mesh);
     terrain.push(trigger);
 
+}
+
+function removeTrigger(trigger) {
+    scene.remove(trigger.mesh);
+    for (var i =0;i < terrain.length;i++) {
+        if(terrain[i]==trigger) {
+            terrain.splice(i,1);
+        }
+
+    }
 }
 
 
