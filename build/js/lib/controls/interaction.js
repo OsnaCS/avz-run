@@ -129,7 +129,7 @@ function pickUpItem() {
     player.pickUp(this);
 }
 
-function destroy(){
+function destroy() {
     if(this.type == TYPE_INTERACTABLE && selectedItem.name == itemList[0]){
         this.delFromScene();
         console.log('destroyed');
@@ -140,7 +140,7 @@ function destroy(){
     }
 }
 
-function open(){
+function open() {
     if(!this.open) {
         this.mesh.rotateY(Math.PI/2.0);
         this.open = !this.open;
@@ -152,7 +152,44 @@ function open(){
 
 }
 
-function openLockedDoor(){
+function damage_door() {
+    //placeholder; it should be checked if axe is active item
+    if(true){
+        damaged_x = this.mesh.position.x;
+        damaged_y = this.mesh.position.y;
+        damaged_z = this.mesh.position.z;
+        var damaged_door = ['tuer_halbkaputt.json'];
+        var crashing = createSound("crashing_door",50,5,false,3,function () {
+            crashing.play();
+        });
+        addItem(pathItem.concat(damaged_door[0]), damaged_x, damaged_y, damaged_z, 1, true, destroy_door);
+        this.delFromScene();
+    }else{
+        //Message for player? ("Wie könnte ich diese Tür wohl öffnen?")
+    }
+}
+
+function destroy_door() {
+    //placeholder; it should be checked if axe is active item
+    if(true){
+        // TODO: delete axe from inventory, maybe message for player ("Die Tür ist kaputt, die Axt jetzt leider auch.")
+        damaged_x = this.mesh.position.x;
+        damaged_y = this.mesh.position.y;
+        damaged_z = this.mesh.position.z;
+        var destroyed_door = ['tuer_kaputt.json'];
+        var crashing = createSound("crashing_door",50,5,false,3,function () {
+            crashing.play();
+        });
+        addItem(pathItem.concat(destroyed_door[0]), damaged_x, damaged_y, damaged_z, 1, false, 0);
+        this.delFromScene();
+
+    }else{
+        //Message for player? ("Das Loch ist noch nicht groß genug... wie könnte ich es wohl vergrößern?")
+    }
+
+}
+
+function openLockedDoor() {
 	if(lockOpen){
 		if(!this.open) {
 	        this.mesh.rotateY(Math.PI/2.0);
