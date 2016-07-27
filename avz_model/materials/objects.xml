@@ -25,8 +25,8 @@
 	<object path="tisch.json" interaction="0" scale ="2"/>
 	<object path="transponder.json" interaction="1" scale ="2"/>
 	<object path="tuer_halbkaputt.json" interaction="0" scale ="2"/>
-	<object path="zuer_kaputt.json" interaction="1" scale ="2"/>
-	<object path="uer_klo.json" interaction="0" scale ="2"/>
+	<object path="tuer_kaputt.json" interaction="1" scale ="2"/>
+	<object path="tuer_klo.json" interaction="0" scale ="2"/>
 	<object path="wand_kaputt.json" interaction="1" scale ="2"/>
 	<object path="waschbecken.json" interaction="0" scale ="2"/>
 </objects>

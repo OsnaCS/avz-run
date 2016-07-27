@@ -127,12 +127,13 @@ function onMouseClick() {
 
 function pickUpItem() {
     player.pickUp(this);
+    pickUpSound();
 }
 
 
 function destroy(){
     if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[0]){
-
+        damageDoorSound();
         this.delFromScene();
         console.log('destroyed');
         player.delActItem();
@@ -143,6 +144,7 @@ function destroy(){
 }
 
 function open() {
+    doorSound();
     if(!this.open) {
         this.mesh.rotateY(Math.PI/2.0);
         this.open = !this.open;
@@ -161,10 +163,10 @@ function damage_door() {
         damaged_y = this.mesh.position.y;
         damaged_z = this.mesh.position.z;
         var damaged_door = ['tuer_halbkaputt.json'];
-        var crashing = createSound("crashing_door",50,5,false,3,function () {
-            crashing.play();
-        });
-        addItem(pathItem.concat(damaged_door[0]), damaged_x, damaged_y, damaged_z, 1, true, destroy_door);
+
+        damageDoorSound();
+
+        addItem((damaged_door[0]), damaged_x, damaged_y, damaged_z, 1, true, destroy_door);
         this.delFromScene();
     }else{
         //Message for player? ("Wie könnte ich diese Tür wohl öffnen?")
@@ -179,10 +181,10 @@ function destroy_door() {
         damaged_y = this.mesh.position.y;
         damaged_z = this.mesh.position.z;
         var destroyed_door = ['tuer_kaputt.json'];
-        var crashing = createSound("crashing_door",50,5,false,3,function () {
-            crashing.play();
-        });
-        addItem(pathItem.concat(destroyed_door[0]), damaged_x, damaged_y, damaged_z, 1, false, 0);
+
+        damageDoorSound();
+
+        addItem((destroyed_door[0]), damaged_x, damaged_y, damaged_z, 1, false, 0);
         this.delFromScene();
 
     }else{
@@ -193,6 +195,7 @@ function destroy_door() {
 
 function openLockedDoor() {
 	if(lockOpen){
+        doorSound();
 		if(!this.open) {
 	        this.mesh.rotateY(Math.PI/2.0);
 	        this.open = !this.open;
@@ -208,6 +211,7 @@ function openLockedDoor() {
 
 function extinguish() {
 	if(this.type == TYPE_FIRE && selectedItem.name == newItemList[12]){
+        extinguisherSound();
     	delFire(this);
     	console.log('extinguished');
     	player.delActItem();
@@ -220,6 +224,7 @@ function extinguish() {
 // lappen.json muss durch den eigentlichen Namen ersetzt werden, dann ist die Methode nutzbar
 function coverMouth(){
     if(this.type == TYPE_INTERACTABLE && selectedItem.name == 'lappen.json'){
+        startHeavyBreathing();
         HEALTH_PER_SECOND = HEALTH_PER_SECOND / 2;
         console.log('covered mouth');
         player.delActItem();
@@ -231,6 +236,7 @@ function coverMouth(){
 
 function activateTransponder(){
     if(this.type == TYPE_INTERACTABLE && selectedItem.name == 'transponder.json'){
+        successSound();
         selectedItem.activeTransponder = true;
         console.log('transponder activated');
     }else{
@@ -241,6 +247,7 @@ function activateTransponder(){
 
 function openTransponderDoor(){
     if(selectedItem.activeTransponder){
+        doorSound();
         if(!this.open) {
             this.mesh.rotateY(Math.PI/2.0);
             this.open = !this.open;
