@@ -82,8 +82,6 @@ function addFire(x, y, z, width, height, depth, spacing) {
     box.mesh.position.y = y;
     box.mesh.position.z = z;
 
-
-
     scene.add(box.mesh);
     terrain.push(box);
 
@@ -145,17 +143,22 @@ function delFire(fireColBox) {
         fireColBox.delFromScene();
 
         fireColBox.mesh.children[0].stop(); // stop sound
+    }else{
+
+        fireColBox.delFromScene();
 
         scene.remove(pointlight_list[index]);
         scene.remove(smoke_list[index]);
         scene.remove(fire_mesh_list[index]);
-        /*
-                fire_collision_box_list[index,1];
-                pointlight_list.splice(index,1);
-                smoke_list.splice(index,1);
-                fire_mesh_list.splice(index,1);
-               smoke_and_light_count--;
-        */
+        fireColBox.mesh.children[0].stop();
+/*
+        fire_collision_box_list[index,1];
+        pointlight_list.splice(index,1);
+        smoke_list.splice(index,1);
+        fire_mesh_list.splice(index,1);
+
+        smoke_and_light_count--;
+*/
     }
 
 
