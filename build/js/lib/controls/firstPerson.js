@@ -86,15 +86,11 @@ if (havePointerLock) {
         } else {
             controls.enabled = false;
 
-            blocker.style.display = '-webkit-box';
-            blocker.style.display = '-moz-box';
-            blocker.style.display = 'box';
+            blocker.style.display = 'block';
 
-            instructions.style.display = '';
+            // instructions.style.display = '';
             menu = true;
-            $(".GUI").hide();
-
-
+            $('.gui').hide();
         }
 
     };
@@ -240,7 +236,7 @@ function initControls() {
                     }
                     if (pause) {
                         controls.enabled = false;
-                        $(".pauseBlocker").css("z-index", 15);
+                        $(".pauseBlocker").css("display", "initial");
                         $(".GUI").hide();
                     } else {
                         controls.enabled = true;
