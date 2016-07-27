@@ -15,9 +15,21 @@
 
 // call initControls() in init()
 // call controlLoop(controls) in loop()
+var newItemList =[];
+var fileLoader =null;
+function loadFiles(){
+    makeArrayFromXML(complete, newItemList, "../avz_model/materials/objects.xml");
+
+}
+
+function complete(){
+    fileLoader= new FileLoader();// = new FileLoader();
+    window.setTimeout(init, 1500);
+
+}
 
 
-window.addEventListener('load', init, false);
+window.addEventListener('load', loadFiles, false);
 
 
 var scene,
@@ -28,7 +40,6 @@ var scene,
 var menu = true;
 var pause = false;
 
-var pathItem = '../avz_model/materials/objects/';
 //variable used for increasing fog
 var MAX_FOG = 0.015;
 var myfog=0.002;
@@ -36,14 +47,16 @@ var fogTime=20;
 var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
-
-var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json', 'feuerloescher.json', 'tuer.json'];
-
-var fileLoader= new FileLoader();// = new FileLoader();
-
+var itemList = ['axt.json', 'klo_und_tuer.json', 'OHP.json', 'klo.json', 'pflanze.json', 'tuer_klo.json', 'feuerloescher.json', '/tueren/tuer.json'];
 
 function init(event) {
+
+    //loads all Objects before creating
+
+
+
     console.log("init");
+
 
     // set up the scene, the camera and the renderer
     createScene();
@@ -56,14 +69,23 @@ function init(event) {
 
     // add the objects and lights - replace those functions as you please
     createRoom();
+
+
+    createItems();
+
     createLights();
 
     createFire();
 
+
     // start a loop that will update the objects' positions
     // and render the scene on each frame
+
+
     loop();
 }
+
+
 
 
 // Stats
@@ -228,53 +250,80 @@ function createLights() {
 
 
 function createRoom() {
-    var mesh = fileLoader.get("test_level");
+
+   var mesh = fileLoader.get("test_level");
     terrain.push(mesh);
     mesh.position.y = 0;
     mesh.position.x = 5;
     mesh.scale.set(20, 20, 20);
     scene.add(mesh);
 
-    addItem(itemList[0], -50, 10, 10, 2, true, pickUpItem, itemList[0]);
-    addItem(itemList[1], 20, 5, 10, 1, true, destroy, itemList[1]);
-    addItem(itemList[2], 0, 5, 20, 3, true, pickUpItem, itemList[2]);
-    addItem(itemList[3], 0, 5, -10, 3, true, pickUpItem, itemList[3]);
-    addItem(itemList[4], 30, 5, -30, 1, false, 0, itemList[4]);
-    addItem(itemList[5], 30, 5, -30, 1, true, openLockedDoor, itemList[5]);
-    addItem(itemList[6], 30, 5, -100, 1, true, pickUpItem, itemList[6]);
+
+
+
+
+
+}
+
+
+function createItems(){
+
+     // addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
+      addItem((newItemList[0]), -50, 10, 10, 10, true, pickUpItem, newItemList[0]);
+      addItem((newItemList[1]), 20, 5, 10, 1, true, destroy, newItemList[1]);
+      addItem((newItemList[2]), 0, 5, 20, 3, true, pickUpItem, newItemList[2]);
+      addItem((newItemList[12]), 0, 5, -10, 3, true, pickUpItem, newItemList[12]);
+   // addItem(pathItem.concat(newItemList[4]), 30, 5, -30, 1, false, 0, itemList[4]);
+  //  addItem(pathItem.concat(newItemList[5]), 30, 5, -30, 1, true, openLockedDoor, itemList[5]);
+   // addItem(pathItem.concat(newItemList[6]), 30, 5, -100, 1, true, pickUpItem, itemList[6]);
+
+     for(var i =0; i< newItemList.length; i++){
+        console.log(newItemList[i]);
+     }
+
+
+
     addTrigger(-64,-71,action);
     function action() {
         console.log("hi");
     }
 
-}
 
+}
 
 // Add Object with given Path to given coordinates
 
 function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name){
 
-        var mesh = fileLoader.get(file.split(".")[0]);
+        var tmpName =  file.split("/");
+        var tmpName = tmpName[tmpName.length-1];
+        console.log(tmpName);
+        var mesh = fileLoader.get(tmpName.split(".")[0]);
+        mesh.position.y = yPos;
+        mesh.position.x = xPos;
+        mesh.position.z = zPos;
+        mesh.scale.set(20*scale,20*scale,20*scale);
+        if(interact_type){
+            var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, name);
+            terrain.push(intItem);
+        } else {
+            terrain.push(mesh);
+        }
 
-            mesh.position.y = yPos;
-            mesh.position.x = xPos;
-            mesh.position.z = zPos;
-            mesh.scale.set(20*scale,20*scale,20*scale);
-            if(interact_type){
-                var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, name);
-                terrain.push(intItem);
-            } else {
-                terrain.push(mesh);
-            }
+        scene.add(mesh);
+
+
 
             scene.add(mesh);
 }
+
 
 function addTrigger (xPos, zPos, action) {
     var triggerGeom = new THREE.BoxGeometry(30,30,30);
     var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, color:0xFFFFFF});
     var triggerMesh = new THREE.Mesh(triggerGeom,mat);
     var trigger = new GameObject(triggerMesh,action,TYPE_TRIGGER);
+
 
     trigger.mesh.position.x = xPos;
     trigger.mesh.position.z = zPos;
