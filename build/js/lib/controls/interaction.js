@@ -158,7 +158,7 @@ function open() {
 
 function damage_door() {
     //check if axe is active item
-    if(this.type == TYPE_INTERACTABLE && selectedItem.name == itemList[0]){
+    if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[0]){
         damaged_x = this.mesh.position.x;
         damaged_y = this.mesh.position.y;
         damaged_z = this.mesh.position.z;
@@ -175,7 +175,7 @@ function damage_door() {
 
 function destroy_door() {
     //check if axe is active item
-    if(this.type == TYPE_INTERACTABLE && selectedItem.name == itemList[0]){
+    if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[0]){
         // TODO:maybe message for player ("Die Tür ist kaputt, die Axt jetzt leider auch.")
         damaged_x = this.mesh.position.x;
         damaged_y = this.mesh.position.y;
