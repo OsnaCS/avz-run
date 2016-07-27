@@ -59,7 +59,6 @@ var fogTime=20;
 var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
-var itemList = ['axt.json', 'klo_und_tuer.json', 'OHP.json', 'klo.json', 'pflanze.json', 'tuer_klo.json', 'feuerloescher.json', '/tueren/tuer.json'];
 
 // creates everything and start the loop
 function init(event) {
@@ -262,12 +261,6 @@ function createRoom() {
     mesh.position.x = 5;
     mesh.scale.set(20, 20, 20);
     scene.add(mesh);
-
-
-
-
-
-
 }
 
 
@@ -277,7 +270,7 @@ function createItems(){
     addItem((newItemList[0]), -50, 10, 10, 10, 0, true, pickUpItem);
     addItem((newItemList[0]), -50, 10, 10, 10, 180, true, pickUpItem);
     addItem((newItemList[0]), -50, 10, 10, 10, 270, true, pickUpItem);
-    addItem((newItemList[12]), 0, 5, -10, 3, 0, true, pickUpItem);
+    addItem((newItemList[26]), 0, 40, -10, 3, 0, true, pickUpItem);
 
 }
 addTrigger(-64,-71,action);

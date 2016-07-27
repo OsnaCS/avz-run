@@ -41,9 +41,9 @@
 	<object path="plakat/Infotag.json" interaction="0" scale ="2"/>
 	<object path="plakat/Messe.json" interaction="0" scale ="2"/>
 	<object path="pult/Pult_Endversion.json" interaction="0" scale ="2"/>
-	<object path="rubble/rubble.json" interaction="0" scale ="2"/>
-	<object path="rubble2/rubble2.json" interaction="0" scale ="2"/>
-	<object path="sponge/sponge.json" interaction="0" scale ="2"/>
+	<object path="schutt/schutt.json" interaction="0" scale ="2"/>
+	<object path="schutt2/schutt2.json" interaction="0" scale ="2"/>
+	<object path="schwamm/schwamm.json" interaction="0" scale ="2"/>
 	<object path="plakat/Brandschutzplakat.json" interaction="0" scale ="2"/>
 	<object path="tueren/tuer_halbkaputt.json" interaction="0" scale ="2"/>
 	<object path="tueren/tuer_kaputt.json" interaction="1" scale ="2"/>
