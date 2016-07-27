@@ -62,8 +62,9 @@ Player = function() {
         if(inventory[activeSlot] == selectedItem){
             inventory[activeSlot] = null;
             item_count--;
-
+            removeIcon(activeSlot);
             setActiveSlot(-1);
+
         }
     }
 
@@ -114,8 +115,17 @@ function setActiveSlot(slot)  {
 
 
 function addIcon(item,slot) {
-  //  $("#slot"+slot).css("background-image","url("+item.name+".png)");
+    var tName = item.name.split("/");
+    tName = tName[tName.length-1];
+    tName = tName.split(".")[0];
+    console.log(tName);
+    $("#slot"+(slot+1)).append("<img id='"+tName+"' src='bilder/Inventar/"+tName+".png'/>" );
 }
+
+function removeIcon(slot) {
+    $("#slot"+ (slot+1) + " img:last-child").remove();
+}
+
 function gameOver() {
     $(".gameOverBlocker").css("z-index", 15);
     $(".GUI").hide();

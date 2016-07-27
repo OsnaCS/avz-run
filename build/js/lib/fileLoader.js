@@ -26,7 +26,20 @@ var FileLoader = function() {
             function (geometry,mat) {
                 // on success:
                 console.log("got:"+name);
-                material = new THREE.MeshFaceMaterial(mat)
+                material = new THREE.MultiMaterial(mat)
+
+
+                // Die Schleife ist dafür da, damit nur eine Seite der Objekte gerendert wird
+                material.materials.forEach(function (e) {
+                    if (e instanceof THREE.MeshPhongMaterial || e instanceof THREE.MeshLambertMaterial) {
+                        e.side = THREE.FrontSide;
+                    }
+                });
+                // Glättet die Objekte
+                geometry.mergeVertices();
+                // geometry.computeVertexNormals();
+
+
                 loadedFiles[name] = new THREE.Mesh(geometry,material);
 
                 filesSuccessfullyLoaded += 1;
