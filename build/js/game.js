@@ -89,15 +89,12 @@ function init(event) {
     loop();
 }
 
-
-
-
 // Stats
 var stats = new Stats();
 stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild(stats.dom);
 
-
+//Create the Scene
 function createScene() {
 
     blocker = document.getElementById('blocker');
@@ -179,6 +176,7 @@ function createScene() {
 
 
 function loop() {
+
 
     if (!menu && !pause) {
         if (player.health <= 0) {

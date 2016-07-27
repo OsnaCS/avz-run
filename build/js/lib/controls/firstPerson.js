@@ -467,6 +467,9 @@ function controlLoop(controls) {
         velocity.y = 0;
         controls.getObject().position.y = PLAYERHEIGHT + 5;
     }
+    if (controls.getObject().position.y < -500){
+        player.damage(10000);
+    }
 
     // checks if we can stand up (may be forbidden when crouching beneath an object)
     handleStandup();
