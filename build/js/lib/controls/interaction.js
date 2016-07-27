@@ -129,8 +129,10 @@ function pickUpItem() {
     player.pickUp(this);
 }
 
-function destroy() {
-    if(this.type == TYPE_INTERACTABLE && selectedItem.name == itemList[0]){
+
+function destroy(){
+    if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[0]){
+
         this.delFromScene();
         console.log('destroyed');
         player.delActItem();
@@ -205,7 +207,7 @@ function openLockedDoor() {
 
 
 function extinguish() {
-	if(this.type == TYPE_FIRE && selectedItem.name == itemList[6]){
+	if(this.type == TYPE_FIRE && selectedItem.name == newItemList[12]){
     	delFire(this);
     	console.log('extinguished');
     	player.delActItem();
