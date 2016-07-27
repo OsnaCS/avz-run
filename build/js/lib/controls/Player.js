@@ -2,7 +2,7 @@ var INV_SIZE = 3; // maximum number of objects in inventory
 var inventory; // array that stores references to inventory items
 var inv_pos; // array has constant length -> to save how many spots have been filled
 var item_count;
-var MAX_HEALTH= 10000;
+var MAX_HEALTH= 1000;
 var activeSlot=-1;
 var selectedItem;
 
@@ -23,12 +23,12 @@ Player = function() {
         // check if inventory has already been filled
         if (item_count < INV_SIZE) {
             for(inv_pos = 0; inv_pos < INV_SIZE && inventory[inv_pos]!=null; inv_pos++){
-                    
+
             }
             // add object to array
             inventory[inv_pos] = game_obj;
             addIcon(game_obj,inv_pos);
-            
+
             item_count++;
 
             // delete object representation from scene
@@ -62,7 +62,7 @@ Player = function() {
         if(inventory[activeSlot] == selectedItem){
             inventory[activeSlot] = null;
             item_count--;
-            
+
             setActiveSlot(-1);
         }
     }
