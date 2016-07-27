@@ -49,6 +49,8 @@ var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
 
 
+var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json', 'feuerloescher.json', 'tuer.json'];
+
 
 
 function init(event) {
@@ -263,6 +265,7 @@ function createRoom() {
 
 
 
+
 }
 
 
@@ -282,6 +285,7 @@ function createItems(){
      }
 
 
+
     addTrigger(-64,-71,action);
     function action() {
         console.log("hi");
@@ -293,6 +297,7 @@ function createItems(){
 // Add Object with given Path to given coordinates
 
 function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name){
+
         var tmpName =  file.split("/");
         var tmpName = tmpName[tmpName.length-1];
         console.log(tmpName);
@@ -311,6 +316,8 @@ function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name
         scene.add(mesh);
 
 
+
+            scene.add(mesh);
 }
 
 
