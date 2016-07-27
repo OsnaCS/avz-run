@@ -18,19 +18,21 @@ var TYPE_TRIGGER = 3;
 document.addEventListener( 'click', onMouseClick, false );
 
 function interactionLoop() {
+    //this gets called once per loop. shoots a ray in viewdirection
     interactionRayCaster.set(controls.getObject().position, controls.getDirection());
     interactions = interactionRayCaster.intersectObjects(terrain);
 
+    //if it intersects something which is interactable we call its interaction function
     if(interactions.length>0 && interactions[0].object.type==TYPE_INTERACTABLE) {
 
         if(activeObject!=interactions[0].object) {
             scene.remove(outlineMesh);
             outlineMesh=null;
             activeObject= interactions[0].object;
-
+            //if we switch objects we change the outline
 
         } else {
-
+            //if we find an interactable object we outline it
             activeObject= interactions[0].object;
             if(outlineMesh==null) {
                 outlineMesh = activeObject.mesh.clone();
@@ -42,21 +44,22 @@ function interactionLoop() {
 
 
         }
-    }else if (interactions.length>0 && interactions[0].object.type==TYPE_EXIT) {
-        // nextLevel(); TODO: implement somewhere
-
     } else {
+        //remove outline mesh if there are no interactive items found
         activeObject=null;
         if(outlineMesh!=null) {
             scene.remove(outlineMesh);
             outlineMesh=null;
         }
     }
-
-
+            //reaching the exit
+    if (interactions.length>0 && interactions[0].object.type==TYPE_EXIT) {
+        // nextLevel(); TODO: implement somewhere
+    }
+    //
     if(interactions.length>0 && interactions[0].object.type==TYPE_FIRE) {
         console.log("interact");
-
+        //this might be changed..
         if(activeObject!=interactions[0].object) {
             scene.remove(outlineMesh);
             outlineMesh=null;

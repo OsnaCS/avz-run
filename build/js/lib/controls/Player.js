@@ -51,7 +51,7 @@ Player = function() {
             console.log(inventory[i]);
         }
     }
-
+//damages the player by given amount
     this.damage = function(damage) {
         var healthPercent = (this.health / MAX_HEALTH) * 100;
         this.health -= damage;
@@ -70,7 +70,7 @@ Player = function() {
 
 }
 
-
+//this creates a frame around the active slots(if there is an item in that slot)
 function setActiveSlot(slot)  {
     if(slot == -1 || inventory[slot]!=null) {
         if(activeSlot>-1) {

@@ -161,13 +161,15 @@ function initControls() {
 
         switch (event.keyCode) {
 
-
+            //inventory slot 1
             case 49:
                 setActiveSlot(0);
                 break;
+            //inventory slot 2
             case 50:
                 setActiveSlot(1);
                 break;
+            //inventory slot 3
             case 51:
                 setActiveSlot(2);
                 break;
@@ -334,7 +336,7 @@ function initControls() {
 }
 
 
-var firstTime = true;
+var firstTime = true;//we fall through the floor while spawning.. sick workaround
 
 function controlLoop(controls) {
 
@@ -367,12 +369,15 @@ function controlLoop(controls) {
 
     // forbid player to move farther if there are obstacles in the respective directions
     if (intersectionsY.length > 0) {
+        //collision with fire!
         if (intersectionsY[0].object.type == TYPE_FIRE) {
             fireAction();
         } else if (intersectionsY[0].object.type == TYPE_TRIGGER) {
+            //collision with trigger
             intersectionsY[0].object.interact();
             removeTrigger(intersectionsY[0].object);
         }
+        //stop when hitting the floor
         velocity.y = Math.max(0, velocity.y);
         firstTime = false;
 
@@ -429,6 +434,8 @@ function controlLoop(controls) {
 
     if((moveForward || moveBackward || moveRight || moveLeft)&&!ducked) {
         if (running) {
+            //add positive value to y position while we are below threshold
+            //change to negative when
             if(controls.getObject().position.y>39) upMotion = -1;
             if(controls.getObject().position.y<32) upMotion = 1;
             controls.getObject().position.y += upMotion*0.9;
@@ -491,7 +498,7 @@ function controlLoop(controls) {
 
 
 
-
+//if we are blocked upwards while ducking and try to stand up..
 function handleStandup() {
     if (standupRequest) {
         var intersectionsYpos = raycasterYpos.intersectObjects(terrain);
@@ -549,7 +556,7 @@ function setRays() {
         raycasterZneg.set(playerGround, rayDirectionZneg);
 
     } else {
-
+        //if we are ducked we shoot the rays straight ahead
         raycasterYpos.ray.origin.copy(controls.getObject().position);
         raycasterY.ray.origin.copy(playerGround);
         raycasterXpos.set(controls.getObject().position, controls.getObject().getWorldDirection().applyAxisAngle(new THREE.Vector3(0, 1, 0), (Math.PI) / 2).normalize());
@@ -562,6 +569,7 @@ function setRays() {
 
 }
 
+//take damage and flash screen when colliding with fire
 function fireAction() {
     if (flashCooldown == -1) {
         scene.add(flashLight);

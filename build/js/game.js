@@ -42,7 +42,7 @@ var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.js
 var fileLoader= new FileLoader();// = new FileLoader();
 
 function init(event) {
-    console.log("init");
+
 
     // set up the scene, the camera and the renderer
     createScene();
@@ -275,6 +275,7 @@ function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name
 
 }
 
+//adds a trigger at given position, performs action when walking over it and consumes it
 function addTrigger (xPos, zPos, action) {
     var triggerGeom = new THREE.BoxGeometry(30,30,30);
     var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, color:0xFFFFFF});
