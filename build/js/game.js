@@ -268,9 +268,7 @@ function createRoom() {
 function createItems(){
 
     addItem((newItemList[0]), -50, 10, 10, 10, true, pickUpItem, newItemList[0]);
-
     addItem((newItemList[12]), 0, 5, -10, 3, true, pickUpItem, newItemList[12]);
-   // addItem((newItemList[44]), 0, 5, -10, 3, true, pickUpItem, newItemList[28]);
 
 }
 addTrigger(-64,-71,action);
