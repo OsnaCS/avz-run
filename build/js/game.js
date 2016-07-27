@@ -28,7 +28,6 @@ var scene,
 var menu = true;
 var pause = false;
 
-var pathItem = '../avz_model/materials/objects/';
 //variable used for increasing fog
 var MAX_FOG = 0.015;
 var myfog=0.002;
@@ -42,7 +41,7 @@ var newItemList =[];
 
 function init(event) {
     //loads all Objects before creating
-    loadObjects(complete, newItemList);
+    makeArrayFromXML(complete, newItemList, "../avz_model/materials/objects.xml");
 
     // set up the scene, the camera and the renderer
     createScene();
@@ -256,10 +255,10 @@ function createRoom() {
 function createItems(){
 
      // addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
-      addItem(pathItem.concat(newItemList[0]), -50, 10, 10, 10, true, pickUpItem, itemList[0]);
-      addItem(pathItem.concat(newItemList[1]), 20, 5, 10, 1, true, destroy, itemList[1]);
-      addItem(pathItem.concat(newItemList[2]), 0, 5, 20, 3, true, pickUpItem, itemList[2]);
-      addItem(pathItem.concat(newItemList[12]), 0, 5, -10, 3, true, pickUpItem, itemList[3]);
+      addItem((newItemList[0]), -50, 10, 10, 10, true, pickUpItem, newItemList[0]);
+      addItem((newItemList[1]), 20, 5, 10, 1, true, destroy, newItemList[1]);
+      addItem((newItemList[2]), 0, 5, 20, 3, true, pickUpItem, newItemList[2]);
+      addItem((newItemList[12]), 0, 5, -10, 3, true, pickUpItem, newItemList[12]);
    // addItem(pathItem.concat(newItemList[4]), 30, 5, -30, 1, false, 0, itemList[4]);
   //  addItem(pathItem.concat(newItemList[5]), 30, 5, -30, 1, true, openLockedDoor, itemList[5]);
    // addItem(pathItem.concat(newItemList[6]), 30, 5, -100, 1, true, pickUpItem, itemList[6]);
