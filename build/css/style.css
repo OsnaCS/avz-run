@@ -241,6 +241,7 @@ body {
     background-size: 100%;
     background-color: rgba(0,0,0,0.5);
     background-repeat: no-repeat;
+    display: none;
 
     position: relative;
     margin-left: 40%;
@@ -288,4 +289,85 @@ body {
 .pinButton:active,.pinButton:focus {
     outline: none !important;
     border: none;
+}
+
+/* Transponder */
+
+#compHack {
+    background-image: url('../../avz_model/materials/textures/transponder_hack.png');
+    background-size: 100%;
+    background-color: rgba(0,0,0,0.5);
+    background-repeat: no-repeat;
+
+
+    width: 1084px;
+    height: 800px;
+    top: 10%;
+    left: auto;
+    right: auto;
+    position: absolute;
+
+    display: none;
+
+    z-index: 0;
+}
+
+ #pinDisplayCH {
+
+    position: relative;
+
+    top: 300px;
+    left: 295px;
+
+    font-family: 'VT323', monospace;
+    font-size: 20;
+    color: red;
+
+}
+
+
+#buttonGridCH {
+    position: relative;
+
+    left: 320px;
+    top: 367px;
+    /*abstand der tasten zum Rand*/
+
+
+}
+
+.hackButton {
+    position: relative;
+    width: 39px;
+    height: 20px;
+
+    padding: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+     background-color: Transparent;
+    background-repeat:no-repeat;
+
+    border: white;
+    overflow: hidden;
+    outline:white;
+
+}
+
+.hackButtonEnter {
+    position: relative;
+    width: 280px;
+    height: 20px;
+
+    top:15px;
+    padding: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+     background-color: Transparent;
+    background-repeat:no-repeat;
+
+    border: white;
+    overflow: hidden;
+    outline:white;
+
+
 }

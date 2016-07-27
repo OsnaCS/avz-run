@@ -250,14 +250,12 @@ function createLights() {
 
 function createRoom() {
 
-   var mesh = fileLoader.get("test_level");
+    var mesh = fileLoader.get("test_level");
     terrain.push(mesh);
     mesh.position.y = 0;
     mesh.position.x = 5;
     mesh.scale.set(20, 20, 20);
     scene.add(mesh);
-
-
 
 }
 
