@@ -212,6 +212,18 @@ function openLockedDoor() {
 
 }
 
+
+function extinguish() {
+    if(this.type == TYPE_FIRE && selectedItem.name == newItemList[12]){
+        delFire(this);
+        console.log('extinguished');
+        player.delActItem();
+    }
+    else{
+        console.log('nicht anwendbar');
+    }
+}
+
 // lappen.json muss durch den eigentlichen Namen ersetzt werden, dann ist die Methode nutzbar
 function coverMouth(){
     if(this.type == TYPE_INTERACTABLE && selectedItem.name == 'lappen.json'){
