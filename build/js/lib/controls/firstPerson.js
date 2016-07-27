@@ -372,7 +372,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (intersectionsY[0].object.type == TYPE_TRIGGER) {
             intersectionsY[0].object.interact();
-            intersectionsY[0].object.type = -1;
+            removeTrigger(intersectionsY[0].object);
         }
         velocity.y = Math.max(0, velocity.y);
         firstTime = false;
@@ -384,7 +384,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (intersectionsZpos[0].object.type == TYPE_TRIGGER) {
             intersectionsZpos[0].object.interact();
-            intersectionsZpos[0].object.type = -1;
+            removeTrigger(intersectionsZpos[0].object);
         } else {
             velocity.z = Math.min(0, velocity.z);
         }
@@ -395,7 +395,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (intersectionsZneg[0].object.type == TYPE_TRIGGER) {
             intersectionsZneg[0].object.interact();
-            intersectionsZneg[0].object.type = -1;
+            removeTrigger(intersectionsZneg[0].object);
         } else {
             velocity.z = Math.max(0, velocity.z);
         }
@@ -406,7 +406,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (intersectionsXpos[0].object.type == TYPE_TRIGGER) {
             intersectionsXpos[0].object.interact();
-            intersectionsXpos[0].object.type = -1;
+            removeTrigger(intersectionsXpos[0].object);
         } else {
             velocity.x = Math.min(0, velocity.x);
         }
@@ -417,7 +417,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (intersectionsXneg[0].object.type == TYPE_TRIGGER) {
             intersectionsXneg[0].object.interact();
-            intersectionsXneg[0].object.type = -1;
+            removeTrigger(intersectionsXneg[0].object);
         } else {
             velocity.x = Math.max(0, velocity.x);
         }
@@ -428,7 +428,7 @@ function controlLoop(controls) {
 
     //RUNNING MOTION
 
-    if (moveForward || moveBackward || moveRight || moveLeft) {
+    if((moveForward || moveBackward || moveRight || moveLeft)&&!ducked) {
         if (running) {
             if (controls.getObject().position.y > 39) upMotion = -1;
             if (controls.getObject().position.y < 32) upMotion = 1;

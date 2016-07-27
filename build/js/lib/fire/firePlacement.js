@@ -138,11 +138,6 @@ function delFire(fireColBox) {
         console.log('error in delFire');
         console.log(index);
         console.log(smoke_and_light_count);
-    } else {
-
-        fireColBox.delFromScene();
-
-        fireColBox.mesh.children[0].stop(); // stop sound
     }else{
 
         fireColBox.delFromScene();
