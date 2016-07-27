@@ -10,8 +10,6 @@ var FileLoader = function() {
         // Texturen
         "test_level.json"
 
-
-
     ];
     for (var i = 0;i<itemList.length;i++) {
         files.push(pathItem.concat(itemList[i]));
@@ -76,8 +74,12 @@ var FileLoader = function() {
         // gibt true zurück, wenn alle Files geladen wurden
         return (filesSuccessfullyLoaded == files.length);
     }
+
     // "public" Methoden:
     return {
+        getProgress: function() {
+            return (filesSuccessfullyLoaded/files.length)*100;
+        },
         isReady: isReady,
         getAll: function() {
             // gibt alle geladenen Dateien zurück

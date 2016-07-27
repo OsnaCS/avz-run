@@ -37,7 +37,7 @@ var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
 
-var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json', 'feuerloescher.json'];
+var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json', 'feuerloescher.json', 'tuer.json'];
 
 var fileLoader= new FileLoader();// = new FileLoader();
 
@@ -234,9 +234,6 @@ function createRoom() {
     mesh.scale.set(20, 20, 20);
     scene.add(mesh);
 
-
-
-
     addItem(itemList[0], -50, 10, 10, 2, true, pickUpItem, itemList[0]);
     addItem(itemList[1], 20, 5, 10, 1, true, destroy, itemList[1]);
     addItem(itemList[2], 0, 5, 20, 3, true, pickUpItem, itemList[2]);
@@ -244,7 +241,6 @@ function createRoom() {
     addItem(itemList[4], 30, 5, -30, 1, false, 0, itemList[4]);
     addItem(itemList[5], 30, 5, -30, 1, true, openLockedDoor, itemList[5]);
     addItem(itemList[6], 30, 5, -100, 1, true, pickUpItem, itemList[6]);
-
     addTrigger(-64,-71,action);
     function action() {
         console.log("hi");
@@ -259,20 +255,18 @@ function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name
 
         var mesh = fileLoader.get(file.split(".")[0]);
 
-        mesh.position.y = yPos;
-        mesh.position.x = xPos;
-        mesh.position.z = zPos;
-        mesh.scale.set(20*scale,20*scale,20*scale);
-        if(interact_type){
-            var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, name);
-            terrain.push(intItem);
-        } else {
-            terrain.push(mesh);
-        }
+            mesh.position.y = yPos;
+            mesh.position.x = xPos;
+            mesh.position.z = zPos;
+            mesh.scale.set(20*scale,20*scale,20*scale);
+            if(interact_type){
+                var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, name);
+                terrain.push(intItem);
+            } else {
+                terrain.push(mesh);
+            }
 
-        scene.add(mesh);
-
-
+            scene.add(mesh);
 }
 
 //adds a trigger at given position, performs action when walking over it and consumes it

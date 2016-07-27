@@ -88,7 +88,7 @@ function interactionLoop() {
 
 
 
-
+//this is a wrapper for meshes with a function, type and name
 GameObject = function(mesh, interaction, type, name) {
     this.type = type;
     this.mesh = mesh;
@@ -97,7 +97,7 @@ GameObject = function(mesh, interaction, type, name) {
     this.name=name;
 
     this.open = false;
-
+    //
     this.raycast = function(raycaster, intersects) {
 
         this.mesh.raycast( raycaster, intersects);
