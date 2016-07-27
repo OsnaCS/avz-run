@@ -47,15 +47,6 @@ var FileLoader = function() {
         );
     }
 
-    function loadImage(file, name) {
-        var textureLoader = new THREE.TextureLoader();
-        textureLoader.setCrossOrigin('anonymous');
-        // load texture
-        textureLoader.load(file, function (texture) {
-            loadedFiles[name] = texture;
-            filesSuccessfullyLoaded += 1;
-        });
-    }
 
     // alle gewünschten Files laden
     for (var i = 0; i < files.length; i++) {
@@ -65,18 +56,7 @@ var FileLoader = function() {
         var type = h[h.length-1].split(".")[1];
 
         // abhängig vom Dateityp: korrekten Loader auswählen
-        switch (type) {
-            case "json":
-                loadJson(file, name);
-                break;
-            case "png": // no break!
-            case "jpg": // no break!
-            case "jpeg":
-                loadImage(file, name);
-                break;
-            default:
-                console.log("Error: unknown file format: "+file);
-        }
+        loadJson(file, name);
     }
 
 

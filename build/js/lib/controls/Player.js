@@ -119,7 +119,7 @@ function addIcon(item,slot) {
     tName = tName[tName.length-1];
     tName = tName.split(".")[0];
     console.log(tName);
-    $("#slot"+(slot+1)).append("<img id='"+tName+"' src='bilder/Inventar/"+tName+".png'/>" );
+    $("#slot"+(slot+1)).append("<img id='"+tName+"' src='icons/"+tName+".png'/>" );
 }
 
 function removeIcon(slot) {
