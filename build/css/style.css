@@ -82,10 +82,17 @@ body {
     position: fixed;
     display: block;
 }
+.inventory img {
+    max-width: 100%;
+    margin-top:-15px;
+    height: auto;
+    display: block;
+}
 
 #slot1,
 #slot2,
 #slot3 {
+
     height: 100%;
     width: 80px;
     display: inline-block;
