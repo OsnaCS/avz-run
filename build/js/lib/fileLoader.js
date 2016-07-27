@@ -6,7 +6,9 @@ var FileLoader = function() {
     console.log("FileLoader running ...");
 
     // Pfad zu allen Dateien
+
     var files = [];
+
     for (var i = 0;i<newItemList.length;i++) {
         files.push(newItemList[i]);
     }

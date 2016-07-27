@@ -47,11 +47,7 @@ var fogTime=20;
 var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
-
-
-var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json', 'feuerloescher.json', 'tuer.json'];
-
-
+var itemList = ['axt.json', 'klo_und_tuer.json', 'OHP.json', 'klo.json', 'pflanze.json', 'tuer_klo.json', 'feuerloescher.json', '/tueren/tuer.json'];
 
 function init(event) {
 
