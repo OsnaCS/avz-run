@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <rooms>
+
+	<!-- DAS HIER IST FINAL!!!!! -->
 	<room name="lectureroom1" filename="lectureroom1.json">
-		<origin x="0" y="0" />
-		<length x="14" y="10" />
+		<size xmin="-2" ymin="-2" xmax="12" ymax="8" />
 		<doors>
 		   <door type="norm" index="1" position="(12,-0.75)" normal="(1,0)"/>
 		</doors>
@@ -12,18 +13,128 @@
 		</spawns>
 	</room>
 	
-	
-	<room name="lectureroom2" filename="lectureroom2.json">
-		<origin x="10" y="10" />
-		<length x="114" y="110" />
+	<!-- DAS HIER IST FINAL!!!!! -->
+	<room name="circle_walled" filename="circle_WALLED.json">
+		<origin x="0" y="0"/>
+		<size xmin="-8.94993" xmax="11.00008" ymin="-28.19999" ymax="13.50002"/>
 		<doors>
-		   <door type="norm" index="1" position="(12,-0.75)" normal="(1,0)">FUU1</door>
-		   <door type="glas" index="2" position="(12,-0.75)" normal="(1,0)"/>
-		</doors>
+		   <door type="norm" index="1" position="(11,25.85 )" normal="(1, 0)"/>
+		   <door type="norm" index="2" position="(11,20.4)" normal="(1, 0)"/>
+		   <door type="norm" index="3" position="(11,14.9)" normal="(1, 0)"/>
+		   <door type="norm" index="4" position="(11,10.4)" normal="(1, 0)"/>
+		   <door type="norm" index="5" position="(11,4.25)" normal="(1, 0)"/>
+		   <door type="norm" index="6" position="(11,-1.15)" normal="(1, 0)"/>
+		   <door type="norm" index="7" position="(11,-5.95)" normal="(1, 0)"/>
+		   <door type="norm" index="8" position="(11,-10.95)" normal="(1, 0)"/>
+		   <door type="glass" index="9" position="(9.78,-13.5)" normal="(0, -1)"/>
+		   <door type="glass" index="10" position="(-7.73,-13.5)" normal="(0, -1)"/>
+		   <door type="norm" index="11" position="(-8.95,-7.95 )" normal="(-1, 0)"/>
+		   <door type="norm" index="12" position="(-8.95,-4.1)" normal="(-1, 0)"/>
+		   <door type="norm" index="13" position="(-8.95,0.3)" normal="(-1, 0)"/>
+		   <door type="norm" index="14" position="(-8.95,5.6)" normal="(-1, 0)"/>
+		   <door type="norm" index="15" position="(-8.95,10.1)" normal="(-1, 0)"/>
+		   <door type="norm" index="16" position="(-8.95,15.6)" normal="(-1, 0)"/>
+		   <door type="norm" index="17" position="(-8.95,19.57)" normal="(-1, 0)"/>
+		   <door type="norm" index="18" position="(-7.15,23.24)" normal="(0, 1)"/>
+		   <door type="glass" index="19" position="(-1.72,23.24)" normal="(0, 1)"/>
+		   <door type="norm" index="20" position="(3.15,23.24)" normal="(0, 1)"/>
+		   <door type="norm" index="21" position="(-3.75,2.85)" normal="(1, 0)"/>
+		   <door type="norm" index="22" position="(-3.75, -1.85)" normal="(1, 0)"/>
+		</doors>  
 		<spawns>
-		   <spawn index="1" position="(10,4)" object="table" normaltowall="(1,0)"/>
 		</spawns>
 	</room>
 
+	<!-- replaceme -->
+	<room name="entrance" filename="entrance.json">
+		<origin x="0" y="0" />
+		<size xmin="-8.80486" xmax="0.00113" ymin="0.05864" ymax="20.05864"/>
+		<doors>
+		   <door type="norm" index="1" position="(0.00113,13.51706 )" normal="(-1, 0)"/>
+		   <door type="norm" index="2" position="(0.00113,6.44593)" normal="(-1, 0)"/>
+		</doors>
+		<spawns>
+		</spawns>
+	</room>
+	
+	<!-- DAS HIER IST FINAL!!!!! -->
+	<room name="center" filename="center_clrd.json">
+		<origin x="-3" y="3" z="2.5"/>
+		<size xmin = "-14" xmax = "8" ymin = "-8" ymax = "14"/>
+		<doors>
+			<door index="1" type="glass"  normal="(0,1)" position="(4.77,14)"/>
+			<door index="2" type="glass"  normal="(1,0)" position="(8,11.77)"/>
+			<door index="3" type="glass"  normal="(1,0)" position="(8,-5.77)"/>
+			<door index="4" type="glass"  normal="(0,-1)" position="(5.77,-8)"/>
+			<door index="5" type="glass"  normal="(0,-1)" position="(-11.77, -8)"/>
+			<door index="6" type="glass"  normal="(-1,0)" position="(-14,-5.77)"/>
+			<door index="7" type="glass"  normal="(-1,0)" position="(-14, 10.77)"/>
+			<door index="8" type="glass"  normal="(0,1)" position="(-11.77, 14)"/>
+		</doors>
+		<spawns>
+		</spawns>
+	</room>
+		
+	<!-- DAS HIER IST FINAL!!!!! -->
+	<room name="klogang_solo" filename="klogang_solo.json">
+		<origin x="0" y="0" z="0"/>
+		<size xmin = "-4.6" xmax = "2.8" ymin = "-8.1" ymax = "11.02"/>
+		<doors>
+			<door index="1" type="floor"  normal="(0,-1)" position="(-2, 11.02)"/>
+			<door index="2" type="glass"  normal="(0,1)" position="(1.57, -8.1)"/>
+			<door index="3" type="norm"  normal="(1,0)" position="(2.8, -0.15)"/>
+			<door index="4" type="norm"  normal="(1,0)" position="(2.8, 5.25)"/>
+			<door index="5" type="norm"  normal="(1,0)" position="(2.8, 8.45)"/>
+			<door index="6" type="norm"  normal="(-1,0)" position="(-4.6, 8.1)"/>
+			<door index="7" type="norm"  normal="(-1,0)" position="(-4.6, 6.1)"/>
+			<door index="8" type="norm"  normal="(-1,0)" position="(-4.6, 4.25)"/>
+			<door index="9" type="norm"  normal="(-1,0)" position="(-4.6, 2.25)"/>
+			<!-- Innen-Türen!-->
+			<door index="10" type="norm"  normal="(1,0)" position="(0.6, 8.45)"/>
+			<door index="11" type="glass"  normal="(0,-1)" position="(1.57, -1.2)"/>
+			<door index="12" type="norm"  normal="(-1,0)" position="(-0.5, -3.56)"/>
+		</doors>
+		<spawns>
+		</spawns>
+	</room>
+			
+	<!-- DAS HIER IST FINAL!!!!! -->
+	<room name="gangende_fenster" filename="gangende_fenster.json">
+		<origin x="0" y="0" z="0"/>
+		<size xmin = "-2.90" xmax = "2.7" ymin = "3.58" ymax = "5.78"/>
+		<doors>
+			<door index="1" type="floor"  normal="(0,1)" position="(0.13, 3.58)"/>
+		</doors>	
+	</room>	
+
+	<!-- DAS HIER IST FINAL!!!!! -->
+	<room name="buero" filename="buero_und_blackboard.json">
+		<origin x="0" y="0" z="0"/>
+		<size xmin = "0" xmax = "7" ymin = "-8.5" ymax = "0"/>
+		<doors>
+			<door index="1" type="norm"  normal="(0,-1)" position="(1.85, 0)"/>
+		</doors>	
+	</room>	
+	
+	
+	
+	
+<!-- 
+		<spawns>
+		   <spawn index="1" position="(10,4)" object="table" normaltowall="(1,0)"/>
+		</spawns>
+		<fires>
+		   <fire index="1" position="(x,y,z)" size="(x,y,z)", val="10" />
+		   <fire index="1" position="(x,y,z)" size="(x,y,z)", val="10" />
+		</fires>
+		<lights>
+		   <light kind="pointlight" index="1" position="(x,y,z)" intensity="1"/>
+		   <light kind="spotlight" index="2" direction="?" position="(x,y,z)" intensity="1"/>
+		</lights>	
+-->		
+	
 	
 </rooms>
+
+
+
