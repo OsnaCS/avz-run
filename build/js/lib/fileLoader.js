@@ -23,7 +23,7 @@ var FileLoader = function() {
         jsonLoader.load(file,
             function (geometry,mat) {
                 // on success:
-                console.log("got:"+name);
+                //console.log("got:"+name);
                 material = new THREE.MultiMaterial(mat)
                 loadedFiles[name] = new THREE.Mesh(geometry,material);
 
@@ -71,7 +71,7 @@ var FileLoader = function() {
 
     function isReady() {
         // gibt true zurück, wenn alle Files geladen wurden filesSuccessfullyLoaded == files.length
-        return (true);
+        return (true );
     }
     // "public" Methoden:
     return {
@@ -82,7 +82,6 @@ var FileLoader = function() {
         },
         get: function(name) {
             var result = isReady() ? loadedFiles[name] : undefined;
-            console.log(name);
             if (result == undefined) {
                 console.log("FileLoader could not find texture '"+name+"'");
             }

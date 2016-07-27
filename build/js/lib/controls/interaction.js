@@ -88,6 +88,7 @@ GameObject = function(mesh, interaction, type, name) {
     this.mesh = mesh;
     this.interact = interaction;
 
+
     this.name=name;
 
     this.open = false;
