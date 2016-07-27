@@ -234,7 +234,7 @@ function initControls() {
                 break;
 
             case 80: //pause p
-                if (!moveForward && !moveLeft && !moveRight && !moveBackward && !ducked && !jump) {
+                if (!moveForward && !moveLeft && !moveRight && !moveBackward && !ducked) {
                     if (!menu) {
                         pause = !pause;
                     }
@@ -490,9 +490,6 @@ function controlLoop(controls) {
     }
 
 }
-
-
-
 
 
 function handleStandup() {

@@ -9,12 +9,9 @@ var FileLoader = function() {
     var files = [
         // Texturen
         "test_level.json"
-
-
-
     ];
-    for (var i = 0;i<itemList.length;i++) {
-        files.push(pathItem.concat(itemList[i]));
+    for (var i = 0;i<newItemList.length;i++) {
+        files.push(newItemList[i]);
     }
     // Key-Value-Store für die geladenen Dateien (Key: Name => Value: Inhalt)
     var loadedFiles = {};
@@ -30,6 +27,7 @@ var FileLoader = function() {
                 console.log("got:"+name);
                 material = new THREE.MeshFaceMaterial(mat)
                 loadedFiles[name] = new THREE.Mesh(geometry,material);
+
                 filesSuccessfullyLoaded += 1;
             }
         );
@@ -73,8 +71,8 @@ var FileLoader = function() {
     console.log("FileLoader done.");
 
     function isReady() {
-        // gibt true zurück, wenn alle Files geladen wurden
-        return (filesSuccessfullyLoaded == files.length);
+        // gibt true zurück, wenn alle Files geladen wurden filesSuccessfullyLoaded == files.length
+        return (true);
     }
     // "public" Methoden:
     return {
@@ -84,12 +82,14 @@ var FileLoader = function() {
             return isReady() ? loadedFiles : undefined;
         },
         get: function(name) {
-            var result = isReady() ? loadedFiles[name].clone() : undefined;
+            var result = isReady() ? loadedFiles[name] : undefined;
+            console.log(name);
             if (result == undefined) {
                 console.log("FileLoader could not find texture '"+name+"'");
             }
             return result;
         }
     }
+
 
 };
