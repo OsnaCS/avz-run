@@ -9,9 +9,6 @@ var FileLoader = function() {
     var files = [
         // Texturen
         "test_level.json"
-
-
-
     ];
     for (var i = 0;i<itemList.length;i++) {
         files.push(pathItem.concat(itemList[i]));
