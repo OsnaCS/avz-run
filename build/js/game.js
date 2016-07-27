@@ -50,7 +50,7 @@ var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much hea
 var itemList = ['axt.json', 'klo_und_tuer.json', 'OHP.json', 'klo.json', 'pflanze.json', 'tuer_klo.json', 'feuerloescher.json', '/tueren/tuer.json'];
 
 function init(event) {
-
+    updateLoadbar();
     //loads all Objects before creating
 
 
@@ -351,4 +351,9 @@ function createFire() {
 
     animateFire();
 
+}
+
+function updateLoadbar(){
+    for(i = 0; i <= 100; i += 10)
+    $(".loading-bar").css("width", '' + i + '%');
 }
