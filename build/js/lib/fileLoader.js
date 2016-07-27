@@ -6,13 +6,7 @@ var FileLoader = function() {
     console.log("FileLoader running ...");
 
     // Pfad zu allen Dateien
-    var files = [
-        // Texturen
-        "test_level.json"
-
-
-
-    ];
+    var files = [];
     for (var i = 0;i<newItemList.length;i++) {
         files.push(newItemList[i]);
     }
@@ -28,7 +22,7 @@ var FileLoader = function() {
             function (geometry,mat) {
                 // on success:
                 console.log("got:"+name);
-                material = new THREE.MeshFaceMaterial(mat)
+                material = new THREE.MultiMaterial(mat)
                 loadedFiles[name] = new THREE.Mesh(geometry,material);
 
                 filesSuccessfullyLoaded += 1;

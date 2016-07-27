@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects path="../avz_model/materials/objects/">
+<objects pathObjects="../avz_model/materials/objects/" pathLevel="../avz_model/building_parts/">
+	<level path="test_level.json" />
 	<object path="axt.json" interaction="1" scale ="2"/>
 	<object path="beamer.json" interaction="0" scale ="2"/>
 	<object path="tafel.json" interaction="1" scale ="2"/>
@@ -24,9 +25,31 @@
 	<object path="stuhl.json" interaction="1" scale ="2"/>
 	<object path="tisch.json" interaction="0" scale ="2"/>
 	<object path="transponder.json" interaction="1" scale ="2"/>
-	<object path="tuer_halbkaputt.json" interaction="0" scale ="2"/>
-	<object path="zuer_kaputt.json" interaction="1" scale ="2"/>
-	<object path="uer_klo.json" interaction="0" scale ="2"/>
+
+	<object path="tuer_klo.json" interaction="0" scale ="2"/>
 	<object path="wand_kaputt.json" interaction="1" scale ="2"/>
 	<object path="waschbecken.json" interaction="0" scale ="2"/>
+	<object path="aufzug/aufzug.json" interaction="0" scale ="2"/>
+	<object path="buecherregal./buecherregal.json" interaction="0" scale ="2"/>
+	<object path="computer/computer.json" interaction="0" scale ="2"/>
+	<object path="computer/computer_mit_nachricht.json" interaction="0" scale ="2"/>
+	<object path="lappen/lappen.json" interaction="0" scale ="2"/>
+	<object path="plakat/Brandschutzplakat.json" interaction="0" scale ="2"/>
+	<object path="plakat/Europawahl.json" interaction="0" scale ="2"/>
+	<object path="plakat/Feuerplakat.json" interaction="0" scale ="2"/>
+	<object path="plakat/Hasenplakat.json" interaction="0" scale ="2"/>
+	<object path="plakat/Infotag.json" interaction="0" scale ="2"/>
+	<object path="plakat/Messe.json" interaction="0" scale ="2"/>
+	<object path="pult/Pult_Endversion.json" interaction="0" scale ="2"/>
+	<object path="rubble/rubble.json" interaction="0" scale ="2"/>
+	<object path="rubble2/rubble2.json" interaction="0" scale ="2"/>
+	<object path="sponge/sponge.json" interaction="0" scale ="2"/>
+	<object path="plakat/Brandschutzplakat.json" interaction="0" scale ="2"/>
+	<object path="tueren/tuer_halbkaputt.json" interaction="0" scale ="2"/>
+	<object path="tueren/tuer_kaputt.json" interaction="1" scale ="2"/>
+	<object path="tueren/tuer_glas.json" interaction="1" scale ="2"/>
+	<object path="tueren/tuer.json" interaction="1" scale ="2"/>
+	<object path="ziegel/ziegel.json" interaction="1" scale ="2"/>
+
+
 </objects>

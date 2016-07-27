@@ -271,53 +271,38 @@ function createRoom() {
 
 function createItems(){
 
-     // addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
-      addItem((newItemList[0]), -50, 10, 10, 10, true, pickUpItem, newItemList[0]);
-      addItem((newItemList[1]), 20, 5, 10, 1, true, destroy, newItemList[1]);
-      addItem((newItemList[2]), 0, 5, 20, 3, true, pickUpItem, newItemList[2]);
-      addItem((newItemList[12]), 0, 5, -10, 3, true, pickUpItem, newItemList[12]);
-   // addItem(pathItem.concat(newItemList[4]), 30, 5, -30, 1, false, 0, itemList[4]);
-  //  addItem(pathItem.concat(newItemList[5]), 30, 5, -30, 1, true, openLockedDoor, itemList[5]);
-   // addItem(pathItem.concat(newItemList[6]), 30, 5, -100, 1, true, pickUpItem, itemList[6]);
+    addItem((newItemList[0]), -50, 10, 10, 10, true, pickUpItem, newItemList[0]);
 
-     for(var i =0; i< newItemList.length; i++){
-        console.log(newItemList[i]);
-     }
+    addItem((newItemList[12]), 0, 5, -10, 3, true, pickUpItem, newItemList[12]);
+   // addItem((newItemList[44]), 0, 5, -10, 3, true, pickUpItem, newItemList[28]);
 
-
-
-    addTrigger(-64,-71,action);
+}
+addTrigger(-64,-71,action);
     function action() {
-        console.log("hi");
-    }
-
-
+    console.log("hi");
 }
 
 // Add Object with given Path to given coordinates
 
 function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name){
 
-        var tmpName =  file.split("/");
-        var tmpName = tmpName[tmpName.length-1];
-        console.log(tmpName);
-        var mesh = fileLoader.get(tmpName.split(".")[0]);
-        mesh.position.y = yPos;
-        mesh.position.x = xPos;
-        mesh.position.z = zPos;
-        mesh.scale.set(20*scale,20*scale,20*scale);
-        if(interact_type){
-            var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, name);
-            terrain.push(intItem);
-        } else {
-            terrain.push(mesh);
-        }
+    var tmpName =  file.split("/");
+    var tmpName = tmpName[tmpName.length-1];
+    console.log(tmpName);
+    var mesh = fileLoader.get(tmpName.split(".")[0]);
+    mesh.position.y = yPos;
+    mesh.position.x = xPos;
+    mesh.position.z = zPos;
+    mesh.scale.set(20*scale,20*scale,20*scale);
+    if(interact_type){
+        var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, name);
+        terrain.push(intItem);
+    } else {
+        terrain.push(mesh);
+    }
 
-        scene.add(mesh);
+    scene.add(mesh);
 
-
-
-            scene.add(mesh);
 }
 
 
