@@ -370,6 +370,7 @@ function controlLoop(controls) {
 
     // forbid player to move farther if there are obstacles in the respective directions
     if (intersectionsY.length > 0) {
+
         //collision with fire!
         if (intersectionsY[0].object.type == TYPE_FIRE) {
             fireAction();

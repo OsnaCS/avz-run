@@ -66,21 +66,20 @@ var FileLoader = function() {
 
     function isReady() {
         // gibt true zurück, wenn alle Files geladen wurden filesSuccessfullyLoaded == files.length
-        return (true);
+        //return (filesSuccessfullyLoaded==files.length);
+        return true; //while objects.xml contains errors
     }
 
     // "public" Methoden:
     return {
-        getProgress: function() {
-            return (filesSuccessfullyLoaded/files.length)*100;
-        },
+
         isReady: isReady,
         getAll: function() {
             // gibt alle geladenen Dateien zurück
             return isReady() ? loadedFiles : undefined;
         },
         get: function(name) {
-            var result = isReady() ? loadedFiles[name] : undefined;
+            var result = isReady() ? loadedFiles[name].clone() : undefined;
             console.log(name);
             if (result == undefined) {
                 console.log("FileLoader could not find texture '"+name+"'");
