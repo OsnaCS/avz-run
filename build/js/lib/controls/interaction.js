@@ -155,8 +155,8 @@ function open() {
 }
 
 function damage_door() {
-    //placeholder; it should be checked if axe is active item
-    if(true){
+    //check if axe is active item
+    if(this.type == TYPE_INTERACTABLE && selectedItem.name == itemList[0]){
         damaged_x = this.mesh.position.x;
         damaged_y = this.mesh.position.y;
         damaged_z = this.mesh.position.z;
@@ -172,9 +172,9 @@ function damage_door() {
 }
 
 function destroy_door() {
-    //placeholder; it should be checked if axe is active item
-    if(true){
-        // TODO: delete axe from inventory, maybe message for player ("Die Tür ist kaputt, die Axt jetzt leider auch.")
+    //check if axe is active item
+    if(this.type == TYPE_INTERACTABLE && selectedItem.name == itemList[0]){
+        // TODO:maybe message for player ("Die Tür ist kaputt, die Axt jetzt leider auch.")
         damaged_x = this.mesh.position.x;
         damaged_y = this.mesh.position.y;
         damaged_z = this.mesh.position.z;
@@ -184,6 +184,7 @@ function destroy_door() {
         });
         addItem(pathItem.concat(destroyed_door[0]), damaged_x, damaged_y, damaged_z, 1, false, 0);
         this.delFromScene();
+        player.delActItem();
 
     }else{
         //Message for player? ("Das Loch ist noch nicht groß genug... wie könnte ich es wohl vergrößern?")
