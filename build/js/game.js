@@ -15,6 +15,7 @@
 
 // call initControls() in init()
 // call controlLoop(controls) in loop()
+alert("works");
 var newItemList =[];
 var fileLoader =null;
 function loadFiles(){
