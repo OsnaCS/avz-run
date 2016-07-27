@@ -15,9 +15,21 @@
 
 // call initControls() in init()
 // call controlLoop(controls) in loop()
+var newItemList =[];
+var fileLoader =null;
+function loadFiles(){
+    makeArrayFromXML(complete, newItemList, "../avz_model/materials/objects.xml");
+
+}
+
+function complete(){
+    fileLoader= new FileLoader();// = new FileLoader();
+    window.setTimeout(init, 1500);
+
+}
 
 
-window.addEventListener('load', init, false);
+window.addEventListener('load', loadFiles, false);
 
 
 var scene,
@@ -36,12 +48,16 @@ var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
 
-var itemList = ['axe.json', 'toilett_open_with_door.json', 'plant.json', 'ohp.json', 'toilett_open_without_door.json', 'toilett_door.json', 'feuerloescher.json'];
-var newItemList =[];
+
+
 
 function init(event) {
+
     //loads all Objects before creating
-    makeArrayFromXML(complete, newItemList, "../avz_model/materials/objects.xml");
+
+
+    console.log("init");
+
 
     // set up the scene, the camera and the renderer
     createScene();
@@ -56,7 +72,7 @@ function init(event) {
     createRoom();
 
 
-
+    createItems();
 
     createLights();
 
@@ -69,9 +85,9 @@ function init(event) {
 
     loop();
 }
-function complete(){
-    createItems();
-}
+
+
+
 
 // Stats
 var stats = new Stats();
@@ -235,16 +251,13 @@ function createLights() {
 
 
 function createRoom() {
-    var jloader2 = new THREE.JSONLoader();
-    jloader2.load('test_level.json', function(geo, mat) {
-        var materials = new THREE.MeshFaceMaterial(mat);
-        var mesh = new THREE.Mesh(geo, materials);
-        terrain.push(mesh);
-        mesh.position.y = 0;
-        mesh.position.x = 5;
-        mesh.scale.set(20, 20, 20);
-        scene.add(mesh);
-    });
+
+   var mesh = fileLoader.get("test_level");
+    terrain.push(mesh);
+    mesh.position.y = 0;
+    mesh.position.x = 5;
+    mesh.scale.set(20, 20, 20);
+    scene.add(mesh);
 
 
 
@@ -268,6 +281,7 @@ function createItems(){
         console.log(newItemList[i]);
      }
 
+
     addTrigger(-64,-71,action);
     function action() {
         console.log("hi");
@@ -279,11 +293,10 @@ function createItems(){
 // Add Object with given Path to given coordinates
 
 function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name){
-        var jloader2 = new THREE.JSONLoader();
-        jloader2.load(file, function(geo, mat){
-            var materials = new THREE.MeshFaceMaterial( mat );
-            var mesh = new THREE.Mesh(geo, materials);
-
+        var tmpName =  file.split("/");
+        var tmpName = tmpName[tmpName.length-1];
+        console.log(tmpName);
+        var mesh = fileLoader.get(tmpName.split(".")[0]);
         mesh.position.y = yPos;
         mesh.position.x = xPos;
         mesh.position.z = zPos;
@@ -297,23 +310,33 @@ function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name
 
         scene.add(mesh);
 
-    });
+
 }
 
 
 function addTrigger (xPos, zPos, action) {
     var triggerGeom = new THREE.BoxGeometry(30,30,30);
-    var mat = new THREE.MeshBasicMaterial({ transparent: false, opacity: 1, depthWrite: false, color:0xFFFFFF});
+    var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, color:0xFFFFFF});
     var triggerMesh = new THREE.Mesh(triggerGeom,mat);
     var trigger = new GameObject(triggerMesh,action,TYPE_TRIGGER);
 
 
     trigger.mesh.position.x = xPos;
     trigger.mesh.position.z = zPos;
-    trigger.mesh.position.y = -15;
+    trigger.mesh.position.y = 0;
     scene.add(trigger.mesh);
     terrain.push(trigger);
 
+}
+
+function removeTrigger(trigger) {
+    scene.remove(trigger.mesh);
+    for (var i =0;i < terrain.length;i++) {
+        if(terrain[i]==trigger) {
+            terrain.splice(i,1);
+        }
+
+    }
 }
 
 
