@@ -41,6 +41,7 @@ var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.js
 
 var fileLoader= new FileLoader();// = new FileLoader();
 
+
 function init(event) {
     console.log("init");
 
