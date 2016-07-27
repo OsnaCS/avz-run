@@ -44,7 +44,7 @@ var running = false;
 var standupRequest = false;
 var regenerate = false;
 var speed_factor = 1;
-var upMotion=1;
+var upMotion = 1;
 var sideMotion = 1;
 
 var PLAYERHEIGHT = 25;
@@ -208,6 +208,7 @@ function initControls() {
             case 16: //RUN FOREST! (shift)
 
                 if (!ducked && !regenerate) {
+                    adjustPlaybackRate(footsteps,1.5,true);
                     running = true;
                     speed_factor = RUN_SPEED;
                 }
@@ -233,7 +234,7 @@ function initControls() {
                 break;
 
             case 80: //pause p
-                if (!moveForward && !moveLeft && !moveRight && !moveBackward) {
+                if (!moveForward && !moveLeft && !moveRight && !moveBackward && !ducked && !jump) {
                     if (!menu) {
                         pause = !pause;
                     }
@@ -287,7 +288,7 @@ function initControls() {
 
 
             case 16: // shift
-
+                adjustPlaybackRate(footsteps,1, true);
                 speed_factor = 1;
                 running = false;
                 break;
@@ -416,7 +417,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (intersectionsXneg[0].object.type == TYPE_TRIGGER) {
             intersectionsXneg[0].object.interact();
-            intersectionsXneg[0].object.type=-1;
+            intersectionsXneg[0].object.type = -1;
         } else {
             velocity.x = Math.max(0, velocity.x);
         }
@@ -427,32 +428,32 @@ function controlLoop(controls) {
 
     //RUNNING MOTION
 
-    if(moveForward || moveBackward || moveRight || moveLeft) {
+    if (moveForward || moveBackward || moveRight || moveLeft) {
         if (running) {
-            if(controls.getObject().position.y>39) upMotion = -1;
-            if(controls.getObject().position.y<32) upMotion = 1;
-            controls.getObject().position.y += upMotion*0.9;
-            sideMotion+= 0.1;
-            sideMotion= sideMotion%(2*Math.PI);
-            controls.getObject().position.x += 0.4*Math.sin(sideMotion);
+            if (controls.getObject().position.y > 39) upMotion = -1;
+            if (controls.getObject().position.y < 32) upMotion = 1;
+            controls.getObject().position.y += upMotion * 0.9;
+            sideMotion += 0.1;
+            sideMotion = sideMotion % (2 * Math.PI);
+            controls.getObject().position.x += 0.4 * Math.sin(sideMotion);
 
         } else {
-            if(controls.getObject().position.y>38) upMotion = -1;
-            if(controls.getObject().position.y<33) upMotion = 1;
-            controls.getObject().position.y += upMotion*0.35;
+            if (controls.getObject().position.y > 38) upMotion = -1;
+            if (controls.getObject().position.y < 33) upMotion = 1;
+            controls.getObject().position.y += upMotion * 0.35;
         }
     }
 
     // player can get exhausted/regenerate energy
     if (running) {
-        energy -= delta*30;
+        energy -= delta * 30;
         if (energy <= 0) {
             regenerate = true;
             speed_factor = 1;
             running = false;
         }
     } else {
-        energy += delta*10;
+        energy += delta * 10;
         if (energy >= STAMINA) {
             energy = STAMINA;
             regenerate = false;
@@ -472,7 +473,7 @@ function controlLoop(controls) {
 
     if (velocity.y == 0) {
         canJump = true;
-        if(moveForward || moveBackward || moveRight || moveLeft){
+        if (moveForward || moveBackward || moveRight || moveLeft) {
             startFootsteps();
         }
     }
