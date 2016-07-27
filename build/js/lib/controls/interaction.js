@@ -18,18 +18,21 @@ var TYPE_TRIGGER = 3;
 document.addEventListener( 'click', onMouseClick, false );
 
 function interactionLoop() {
+    //this gets called once per loop. shoots a ray in viewdirection
     interactionRayCaster.set(controls.getObject().position, controls.getDirection());
     interactions = interactionRayCaster.intersectObjects(terrain);
+
+    //if it intersects something which is interactable we call its interaction function
     if(interactions.length>0 && interactions[0].object.type==TYPE_INTERACTABLE) {
 
         if(activeObject!=interactions[0].object) {
             scene.remove(outlineMesh);
             outlineMesh=null;
             activeObject= interactions[0].object;
-
+            //if we switch objects we change the outline
 
         } else {
-
+            //if we find an interactable object we outline it
             activeObject= interactions[0].object;
             if(outlineMesh==null) {
                 outlineMesh = activeObject.mesh.clone();
@@ -41,20 +44,22 @@ function interactionLoop() {
 
 
         }
-    }else if (interactions.length>0 && interactions[0].object.type==TYPE_EXIT) {
-        // nextLevel(); TODO: implement somewhere
-
     } else {
+        //remove outline mesh if there are no interactive items found
         activeObject=null;
         if(outlineMesh!=null) {
             scene.remove(outlineMesh);
             outlineMesh=null;
         }
     }
-
+            //reaching the exit
+    if (interactions.length>0 && interactions[0].object.type==TYPE_EXIT) {
+        // nextLevel(); TODO: implement somewhere
+    }
+    //
     if(interactions.length>0 && interactions[0].object.type==TYPE_FIRE) {
         console.log("interact");
-
+        //this might be changed..
         if(activeObject!=interactions[0].object) {
             scene.remove(outlineMesh);
             outlineMesh=null;
@@ -83,6 +88,7 @@ function interactionLoop() {
 
 
 
+//this is a wrapper for meshes with a function, type and name
 GameObject = function(mesh, interaction, type, name) {
     this.type = type;
     this.mesh = mesh;
@@ -91,9 +97,7 @@ GameObject = function(mesh, interaction, type, name) {
     this.name=name;
 
     this.open = false;
-
-    this.activeTransponder = false;
-
+    //
     this.raycast = function(raycaster, intersects) {
 
         this.mesh.raycast( raycaster, intersects);
@@ -114,6 +118,7 @@ GameObject = function(mesh, interaction, type, name) {
         if (terrain[i] == this) terrain.splice(i,1);
 
     }
+
 }
 
 
@@ -130,6 +135,7 @@ function pickUpItem() {
 }
 
 
+
 function destroy(){
     if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[0]){
 
@@ -142,7 +148,7 @@ function destroy(){
     }
 }
 
-function open() {
+function open(){
     if(!this.open) {
         this.mesh.rotateY(Math.PI/2.0);
         this.open = !this.open;
@@ -193,25 +199,25 @@ function destroy_door() {
 }
 
 function openLockedDoor() {
-	if(lockOpen){
-		if(!this.open) {
-	        this.mesh.rotateY(Math.PI/2.0);
-	        this.open = !this.open;
-	    }
-	    else {
-	        this.mesh.rotateY(-Math.PI/2.0);
-	        this.open = !this.open;
-	    }
+    if(lockOpen){
+        if(!this.open) {
+            this.mesh.rotateY(Math.PI/2.0);
+            this.open = !this.open;
+        }
+        else {
+            this.mesh.rotateY(-Math.PI/2.0);
+            this.open = !this.open;
+        }
     }
 
 }
 
 
 function extinguish() {
-	if(this.type == TYPE_FIRE && selectedItem.name == newItemList[12]){
-    	delFire(this);
-    	console.log('extinguished');
-    	player.delActItem();
+    if(this.type == TYPE_FIRE && selectedItem.name == newItemList[12]){
+        delFire(this);
+        console.log('extinguished');
+        player.delActItem();
     }
     else{
         console.log('nicht anwendbar');

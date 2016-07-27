@@ -4,6 +4,8 @@
 
 THREE.PointerLockControls = function (camera, position) {
 
+//Taken from github example pointerlock controls
+
 	var scope = this;
 
 	camera.rotation.set(0, 0, 0);
