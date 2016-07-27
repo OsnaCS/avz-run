@@ -17,26 +17,39 @@ body {
     height: 40px;
     width: 400px;
     overflow: hidden;
-    background-color: #F5F5F5;
+    background-color: white;
     border-radius: 4px;
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1) inset;
-    z-index: 40;
+    z-index: 20;
     position: fixed;
-  top: 50%;
-  left: 50%;
-  margin-top: -20px;
-  margin-left: -200px;
-       
+    top: 50%;
+    left: 50%;
+    margin-top: -20px;
+    margin-left: -200px;
+    color: red;
+    text-align: center;
     display: inline-block;
+
 }
+
 .loading-bar {
-    float: left;
+   float: left;
     width: 0px;
     height: 100%;
-    color: #F00;
-    background-color: #F00;
-    box-shadow: 0px -1px 0px rgba(0, 0, 0, 0.15) inset;
+    background-color: blue;
     transition: width 0.1s ease 0s;
+    z-index: 20;
+
+}
+
+.loadtext{
+    position: fixed;
+    top: 47.5%;
+    left: 47%;
+    z-index: 50;
+    text-align: center;
+    color: red;
+    font-size: 150%;
 }
 
 /*HEALTH GUI */
@@ -185,6 +198,7 @@ body {
     z-index: 20;
     position: absolute;
     text-align: center;
+    display: none;
 }
 
 /* GameOverScreen */
