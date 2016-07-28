@@ -1,5 +1,7 @@
 package controller;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
@@ -44,6 +46,10 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 	// View
 	private DrawingPanelView drawingPanelView;
 	private JFrame frame;
+	private Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+	private int height= dim.height;
+	private int width=dim.width;
+
 
 	// Model
 	private LinkedList<DrawableObject> drawableObjectsModel;
@@ -81,7 +87,7 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		this.oldFiles = null;
 
 		drawableObjectsModel = new LinkedList<DrawableObject>();
-		drawingPanelView = new DrawingPanelView(640, 480, drawableObjectsModel);
+		drawingPanelView = new DrawingPanelView(width, height, drawableObjectsModel);
 
 		this.ways = new Way[0];
 		this.roomListener = new RoomListener(this, new Room(), ways);
@@ -532,6 +538,15 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 
 	public void setController(DrawingPanelViewController controller) {
 		this.controller = controller;
+	}
+	
+
+	public int getHeight() {
+		return height;
+	}
+
+	public int getWidth() {
+		return width;
 	}
 
 }
