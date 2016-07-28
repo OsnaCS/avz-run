@@ -78,7 +78,7 @@ var FileLoader = function() {
     window.setTimeout(
         function(){
             if(filesSuccessfullyLoaded != file.length){
-                alert("Warning! Not all elements are loaded. Play at your own risk.");
+                alert("Warnung! Es sind noch nicht alle Dateien geladen worden.");
                 $("#loadingBlocker").hide();
                 $("#startInstructions").show();
             }
