@@ -80,12 +80,11 @@ public class XMLhandler {
 
 		// creates Nodelist with all doors in it
 		NodeList doors = current.getChildNodes().item(1).getChildNodes();
-
+		
 		int length = doors.getLength();
-		Way waylist[] = new Way[length];
+		LinkedList<Way> waylist = new LinkedList<Way>();
 
 		for (int i = 0; i < length - 1; i++) {
-
 			Node doorTemp = doors.item(i);
 			String type = doorTemp.getAttributes().getNamedItem("type").getNodeValue();
 
@@ -96,7 +95,7 @@ public class XMLhandler {
 			int normalY = Integer.parseInt(doorTemp.getAttributes().getNamedItem("normalY").getNodeValue());
 
 			Way way = new Way(x, y, type, normalX, normalY);
-			waylist[i] = way;
+			waylist.add(way);
 		}
 
 		Room room = new Room(itemName, xmin, xmax, ymin, ymax, waylist);
