@@ -457,6 +457,7 @@ function controlLoop(controls) {
     if (running) {
         energy -= delta * 30;
         if (energy <= 0) {
+            outOfBreath();
             regenerate = true;
             speed_factor = 1;
             running = false;
@@ -582,6 +583,7 @@ function fireAction() {
         scene.fog.color.set(0xff0000);;
         flashCooldown = 1;
         player.damage(300);
+        painSound();
         flashInterval = setInterval(function() {
             flashCooldown--;
         }, 1000);
