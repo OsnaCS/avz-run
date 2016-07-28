@@ -66,7 +66,7 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 	// Counter für Files
 	int i = 0;
 
-	private Way[] ways;
+	private LinkedList<Way> ways;
 	private RoomListener roomListener;
 	private DrawingPanelViewController controller = this;
 
@@ -83,7 +83,7 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		drawableObjectsModel = new LinkedList<DrawableObject>();
 		drawingPanelView = new DrawingPanelView(640, 480, drawableObjectsModel);
 		
-		this.ways = new Way[0];
+		this.ways = new LinkedList<Way>();
 		this.roomListener = new RoomListener(this, null, ways);
 		this.ways = this.roomListener.getAllways();
 		
@@ -138,7 +138,7 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 				
 				Room room = handler.createRoomFromXML(selectedRoom);
 				
-				Way[] ways = getRoomListener().getAllways();
+				LinkedList<Way> ways = getRoomListener().getAllways();
 				
 				RoomListener roomListener = new RoomListener(getController(), room, ways);
 				
@@ -458,11 +458,11 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		this.i = i;
 	}
 
-	public Way[] getWays() {
+	public LinkedList<Way> getWays() {
 		return ways;
 	}
 
-	public void setWays(Way[] ways) {
+	public void setWays(LinkedList<Way> ways) {
 		this.ways = ways;
 	}
 
