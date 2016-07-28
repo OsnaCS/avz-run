@@ -54,7 +54,7 @@ var pause = false;
 //variable used for increasing fog
 var MAX_FOG = 0.015;
 var myfog=0.002;
-var fogTime=20;
+var fogTime=60;
 var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
@@ -67,6 +67,9 @@ var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much hea
 
 
 function init(event) {
+	CreateSegment("lectureroom1");
+
+
     // set up the scene, the camera and the renderer
     createScene(audio);
 
@@ -79,27 +82,11 @@ function init(event) {
 
             function room() {
                 // add the objects and lights - replace those functions as you please
-                createRoom(items);
-                function items () {
-                    // set up items
-                    createItems(lights);
-
-
-                    function lights() {
-                        // set up lights
-                        createLights(fire);
-
-                        function fire() {
-                            // set up fire
-                            createFire(startLoop);
-
-                            function startLoop (){
-                                // start a loop that will update the objects' positions
-                                // and render the scene on each frame
-                                loop();
-                            }
-                        }
-                    }
+                createRoom(startLoop);
+                function startLoop () {
+					// start a loop that will update the objects' positions
+					// and render the scene on each frame
+					loop();                                             
                 }
             }
         }
@@ -234,7 +221,7 @@ var hemisphereLight, shadowLight;
 
 // TEST ENVIRONMENT
 
-function createLights(callback) {
+function createLights() {
 
     // A hemisphere light is a gradient colored light;
     // the first parameter is the sky color, the second parameter is the ground color,
@@ -267,30 +254,70 @@ function createLights(callback) {
     // to activate the lights, just add them to the scene
     scene.add(hemisphereLight);
     scene.add(shadowLight);
-    callback();
+    
 }
 
 
 function createRoom(callback) {
-
-    var mesh = fileLoader.get("test_level");
-    terrain.push(mesh);
-    mesh.position.y = 0;
-    mesh.position.x = 5;
-    mesh.scale.set(20, 20, 20);
-    scene.add(mesh);
-    callback();
+	
+	setTimeout(PutSegments,2000);
+	setTimeout(door_in_doors,2200);
+	setTimeout(objects_in_spawns,2400);
+	setTimeout(set_fires,2600);
+	setTimeout(turn_on_lights,2800);
+	
+   // var mesh = fileLoader.get("lectureroom1");
+    // terrain.push(mesh);
+    // mesh.position.y = 0;
+    // mesh.position.x = 5;
+    // mesh.scale.set(20, 20, 20);
+    // scene.add(mesh);
+	
+	callback();
 
 }
 
 
+//debug-stuff, deleteme
+function ShowSegments() {
+	var text = ""; 
+	for (i = 0; i <segments.length; i++) {
+		text += printmost(segments[i])+"<br>";  //JSON.stringify(segments[i])
+	}
+	alert(text);
+}
+function printmost(obj) {
+	var output = '';
+	for (var property in obj) {
+	  if (property != 'mesh')
+		{ output += property + ': ' + obj[property]+'; '; }
+	}
+	return output;
+}	
+//debugstuffdeleteme ende
+
 function createItems(callback){
 
-    addItem((newItemList[0]), -50, 10, 10, 10, 90, true, pickUpItem);
-    addItem((newItemList[0]), -50, 10, 10, 10, 0, true, pickUpItem);
-    addItem((newItemList[0]), -50, 10, 10, 10, 180, true, pickUpItem);
-    addItem((newItemList[40]), 50, 0, 10, 2, 270, false, pickUpItem);
-    addItem((newItemList[48]), 0, 0, -700, 1, 0, false, null);
+
+     // addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
+	 
+	 // addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name)
+	 // TYPE_INTERACTABLE; TYPE_TRIGGER; TYPE_FIRE; TYPE_EXIT; 
+	 // intfunction = damage_door, destroy_door, pickUpItem, destroy, open, openLockedDoor, extinguish
+
+	 //wände/terrain/statics, interactibles(auch feuer und türen), triggerevents(auch feuer), licher (auch feuer), 
+	 
+      addItem((newItemList[0]), -50, 10, 10, 10, true, pickUpItem, newItemList[0]);
+      addItem((newItemList[1]), 20, 5, 10, 1, true, destroy, newItemList[1]);
+      addItem((newItemList[2]), 0, 5, 20, 3, true, pickUpItem, newItemList[2]);
+      addItem((newItemList[12]), 0, 5, -10, 3, true, pickUpItem, newItemList[12]);
+   // addItem(pathItem.concat(newItemList[4]), 30, 5, -30, 1, false, 0, itemList[4]);
+  //  addItem(pathItem.concat(newItemList[5]), 30, 5, -30, 1, true, openLockedDoor, itemList[5]);
+   // addItem(pathItem.concat(newItemList[6]), 30, 5, -100, 1, true, pickUpItem, itemList[6]);
+
+     for(var i =0; i< newItemList.length; i++){
+        console.log(newItemList[i]);
+     }
 
     addTrigger(-64,-71,action);
 
@@ -352,19 +379,4 @@ function removeTrigger(trigger) {
         }
 
     }
-}
-
-
-function createFire(callback) {
-    VolumetricFire.texturePath = './levels/materials/textures/';
-
-    addFire(80, 0, 1, 30, 30, 30, 10);
-    addFire(80, 0, -30, 30, 30, 30, 10);
-    addFire(80, 0, -100, 30, 30, 30, 10);
-
-
-    animateFire();
-
-    callback();
-
 }
