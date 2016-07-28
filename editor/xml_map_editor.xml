@@ -98,7 +98,7 @@
 		</spawns>
 	</room>
 
-	<room name="gang" filename="gang_solo.json" >
+	<room name="gang_solo" filename="gang_solo.json" >
 		<size xmin="-3.01985" ymin="-12.11332" xmax="2.12382" ymax="10.47742"/>
 		<doors>
 		   <door type="floor" index="1" x="-0.4198496" y="-12.11332" normalX="0" normalY="-1"/>
