@@ -82,6 +82,7 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 
 		drawableObjectsModel = new LinkedList<DrawableObject>();
 		drawingPanelView = new DrawingPanelView(640, 480, drawableObjectsModel);
+
 		this.ways = new LinkedList<Way>();
 		this.roomListener = new RoomListener(this, new Room(), ways);
 		this.ways = this.roomListener.getAllways();
@@ -92,7 +93,7 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		drawingPanelView.getButton().setText("Clear");
 
 		// ComboBox befüllen
-		String[] box = { "Einzelflur", "Doppelflur", "zentraler Flur", "Toilettenflur", "Vorlesungsraum", "Büro" };
+		String[] box = { "Einzelflur", "Doppelflur", "Toilettenflur", "Vorlesungsraum", "Büro" };
 
 		drawingPanelView.getComboBox().setModel(new DefaultComboBoxModel<>(box));
 
@@ -136,11 +137,9 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 				case "Vorlesungsraum":
 					selectedRoom = "lectureroom1";
 					break;
-				case "zentraler Flur":
-					selectedRoom = "center";
+				default:
+					System.out.println("in");
 					break;
-					default:
-						System.out.println("in");
 				}
 
 				Room room = null;
@@ -151,9 +150,8 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 					System.err.println("Room was not found");
 					e2.printStackTrace();
 				}
-				
+
 				LinkedList<Way> ways = getRoomListener().getAllways();
-				
 
 				RoomListener roomListener = new RoomListener(getController(), room, ways);
 
@@ -229,7 +227,7 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 				}
 				akt.delete();
 				setAktFile(null);
-				if(!(old == null)) {
+				if (!(old == null)) {
 					old.delete();
 				}
 				setOldFiles(null);
@@ -275,28 +273,28 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		drawingPanelView.getDrawingPanel().repaint();
 
 		// keine Dashed-Rooms speichern
-		if (drawableObject instanceof Room) {
+		if (!(drawableObject instanceof DashedRoom)) {
 			this.roomlist.add((Room) drawableObject);
-		
-            // Hilfsfile anlegen
-            File newFile = null;
-            try {
-                String s = "roomTemp" + i + ".xml";
-                newFile = handler.writeXML(roomlist, s);
-                i++;
-                speicher.add(newFile);
-			} catch (ParserConfigurationException | TransformerException e) {
-                e.printStackTrace();
-            }
 
-            // aktuelles File neu setzen
-            this.oldFiles = this.aktFile;
-            this.aktFile = newFile;
-            
-            // XML-Anzeige neu laden
-            refreshXML(this.aktFile);
-            
-        }
+			// Hilfsfile anlegen
+			File newFile = null;
+			try {
+				String s = "roomTemp" + i + ".xml";
+				newFile = handler.writeXML(roomlist, s);
+				i++;
+				speicher.add(newFile);
+			} catch (ParserConfigurationException | TransformerException e) {
+				e.printStackTrace();
+			}
+
+			// aktuelles File neu setzen
+			this.oldFiles = this.aktFile;
+			this.aktFile = newFile;
+
+			// XML-Anzeige neu laden
+			refreshXML(this.aktFile);
+
+		}
 
 	}
 
@@ -310,18 +308,18 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		drawingPanelView.getDrawingPanel().repaint();
 		temporaryObject = null;
 
-		if(!speicher.isEmpty()){
+		if (!speicher.isEmpty()) {
 			speicher.removeLast();
 		}
 
 		String s = "roomTemp" + i + ".xml";
 
 		File help = new File(s);
-		if(help.exists()){
+		if (help.exists()) {
 			help.delete();
 		}
 
-		if(i > 0){
+		if (i > 0) {
 			i--;
 		}
 
