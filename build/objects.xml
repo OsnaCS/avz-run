@@ -5,7 +5,7 @@
 
 	<interactible>
 		<object name="axt" path="axt.json" scale="2" icon="icon.jpg"/>
-		<object name="roboter" path="roboter.json" scale="2" icon="icon.jpg"/>   
+		<object name="roboter" path="roboter.json" scale="2" icon="icon.jpg"/>
 		<object name="loscher" path="feuerloescher.json" scale="2" icon="icon.jpg"/>
 		<object name="klo" path="klo.json" scale="2" icon="icon.jpg"/>
 		<object name="klo_und_tuer" path="klo_und_tuer.json" scale="2" icon="icon.jpg"/>
@@ -17,7 +17,7 @@
 		<object name="becken" path="waschbecken.json" scale="2" />
 		<object name="schwamm" path="schwamm/schwamm.json" interaction="0" scale ="2"/>
 	</interactible>
-	
+
 	<statics>
 		<object path="pflanze.json" name="pflanze" scale="2" />
 		<object path="beamer.json" name="beamer" scale="2" />
@@ -46,7 +46,7 @@
 		<object path="plakat/Brandschutzplakat.json" interaction="0" scale ="2"/>
 		-->
 	</statics>
-	
+
 	<doors>
 		<object name="klotur" path="tuer_klo.json" interaction="0" scale ="2"/>
 		<object name="glastur" path="tueren/glastuer.json" interaction="1" scale ="2"/>
@@ -54,7 +54,7 @@
 		<object name="halbbrokentur" path="tueren/tuer_halbkaputt.json" interaction="0" scale ="2"/>
 		<object name="brokentur" path="tueren/tuer_kaputt.json" interaction="1" scale ="2"/>
 	</doors>
-	
+
 	<lamps>
 		<object name="deckenlicht" path="deckenlicht.json" interaction="0" scale ="2"/>
 		<object name="kleinlicht" path="deckenlicht_klein.json" interaction="1" scale ="2"/>

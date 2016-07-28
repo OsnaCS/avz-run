@@ -229,11 +229,12 @@ function dFire(){
 // Attach this function to the fire
 function extinguish() {
 	if(this.type == TYPE_FIRE && selectedItem.name == newItemList[12]){
-        extinguisherSound();
-
         // activeObject must be saved so that the dFire function is not influence
         // be new activeObject selected during the delay
         tempActObj = activeObject;
+
+      //  extinguisherAnimation();
+        extinguisherSound();
 
         setTimeout(dFire, 1000);
     	console.log('extinguished');
@@ -474,3 +475,32 @@ function openTransponderDoor(){
         console.log('nicht anwendbar');
     }
 }
+/*
+function extinguisherAnimation(){
+    var particles = new THREE.Geometry;
+    var particle;
+    var particlenum = 40;
+
+    var px = controls.getObject().position.x;
+    var py = controls.getObject().position.y;
+    var pz = controls.getObject().position.z;
+
+
+    for (var i = 0; i < particlenum; i++) {
+        particle = new THREE.Vector3( THREE.Math.randFloat(px, (tempActObj/particlenum) * i).mesh.position.x),THREE.Math.randFloat(py, tempActObj.mesh.position.y), THREE.Math.randFloat(pz, tempActObj.mesh.position.z));
+        particles.vertices.push(particle);
+    }
+
+    var particleMaterial = new THREE.ParticleBasicMaterial({ color: 0xeeeeee, size: 2 });
+
+    var particleSystem = new THREE.ParticleSystem(particles, particleMaterial);
+
+    scene.add(particleSystem);
+
+    function deleteExtinguisherParticles(){
+        scene.remove(particleSystem);
+    }
+
+    setTimeout(deleteExtinguisherParticles, 1000);
+}
+*/
