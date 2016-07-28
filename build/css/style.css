@@ -1,3 +1,5 @@
+@import 'https://fonts.googleapis.com/css?family=VT323';
+
 body {
     overflow: hidden;
     margin: 0;
@@ -12,6 +14,48 @@ body {
     z-index: 10;
 }
 
+
+/* Loading-Bar */
+.loading{
+    height: 40px;
+    width: 400px;
+    overflow: hidden;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1) inset;
+    z-index: 20;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -20px;
+    margin-left: -200px;
+    display: inline-block;
+
+}
+
+.loading-bar {
+   float: left;
+    width: 0px;
+    height: 100%;
+    background-color: blue;
+    transition: width 0.1s ease 0s;
+    z-index: 20;
+
+}
+
+.loadtext{
+	height: 40px;
+    width: 400px;
+	top: 50%;
+    left: 50%;
+	margin-top: -15px;
+    margin-left: -200px;
+    position: fixed;
+    z-index: 50;
+    text-align: center;
+    color: red;
+    font-size: 150%;
+}
 
 /*HEALTH GUI */
 
@@ -82,10 +126,17 @@ body {
     position: fixed;
     display: block;
 }
+.inventory img {
+    max-width: 100%;
+    margin-top:-15px;
+    height: auto;
+    display: block;
+}
 
 #slot1,
 #slot2,
 #slot3 {
+
     height: 100%;
     width: 80px;
     display: inline-block;
@@ -159,6 +210,7 @@ body {
     z-index: 20;
     position: absolute;
     text-align: center;
+    display: none;
 }
 
 /* GameOverScreen */
@@ -229,4 +281,143 @@ body {
     z-index: 11;
     left: 50%;
     top: 50%;
+
+}
+
+/* Special Interactions */
+
+#pinPad {
+    background-image: url('../../avz_model/materials/textures/pinPad_near.png');
+    background-size: 100%;
+    background-color: rgba(0,0,0,0.5);
+    background-repeat: no-repeat;
+    display: none;
+
+    position: relative;
+    margin-left: 40%;
+    margin-right: auto;
+    margin-top: 10%;
+    display: inline-block;
+    width: 340px;
+    height: 425px;
+
+    z-index: 0;
+}
+
+#pinDisplay {
+
+    padding-top: 20px;
+    padding-left: 45px;
+    font-family: 'VT323', monospace;
+    font-size: 40;
+    color: green;
+}
+
+#buttonGrid {
+    margin-left: 41px;
+    margin-top: 17px;
+
+}
+
+.pinButton {
+    position: relative;
+    width: 73px;
+    height: 63px;
+    margin-bottom: 10px;
+    margin-right: 12px;
+
+    background-color: transparent;
+    background-repeat:no-repeat;
+    border: none;
+    overflow: hidden;
+    outline:none;
+
+}
+
+/* is supposed to remove small dotted border from active buttons, but useless right now :/ */
+/* (minor issue though, you can hardly see it) */
+.pinButton:active,.pinButton:focus {
+    outline: none !important;
+    border: none;
+}
+
+/* Transponder */
+
+#compHack {
+    background-image: url('../../avz_model/materials/textures/transponder_hack.png');
+    background-size: 100%;
+    background-color: rgba(0,0,0,0.5);
+    background-repeat: no-repeat;
+
+    margin-left: 25%;
+    width: 1084px;
+    height: 800px;
+    top: 10%;
+    left: auto;
+    right: auto;
+    position: absolute;
+
+    display: none;
+
+    z-index: 0;
+}
+
+ #pinDisplayCH {
+
+    position: relative;
+
+    top: 302px;
+    left: 295px;
+
+    font-family: 'VT323', monospace;
+    font-size: 19;
+    color: red;
+
+}
+
+
+#buttonGridCH {
+    position: relative;
+
+    left: 320px;
+    top: 367px;
+    /*abstand der tasten zum Rand*/
+
+
+}
+
+.hackButton {
+    position: relative;
+    width: 39px;
+    height: 20px;
+
+    padding: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+     background-color: Transparent;
+    background-repeat:no-repeat;
+
+    border: white;
+    overflow: hidden;
+    outline:white;
+
+}
+
+.hackButtonEnter {
+    position: relative;
+    width: 280px;
+    height: 20px;
+
+    top:15px;
+    padding: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+     background-color: Transparent;
+    background-repeat:no-repeat;
+
+    border: white;
+    overflow: hidden;
+    outline:white;
+
+
 }

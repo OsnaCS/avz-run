@@ -17,8 +17,31 @@
 // call controlLoop(controls) in loop()
 
 
-window.addEventListener('load', init, false);
 
+// First all Files will be loaded
+window.addEventListener('load', loadFiles, false);
+
+// Initialize List for Files to load
+var newItemList =[];
+
+// Initialize fileLoader
+var fileLoader =null;
+
+// Load file-pathes from XML in list
+// callback function complete
+function loadFiles(){
+    makeArrayFromXML(complete, newItemList, "../avz_model/materials/objects.xml");
+}
+
+// if XML-Parsing done
+function complete(){
+    // Load all files in Loader
+    fileLoader= new FileLoader();// = new FileLoader();
+    // Wait untill ready
+    // starts init
+    window.setTimeout(init, 150);
+
+}
 
 var scene,
     camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
@@ -28,7 +51,6 @@ var scene,
 var menu = true;
 var pause = false;
 
-var pathItem = '../avz_model/materials/objects/';
 //variable used for increasing fog
 var MAX_FOG = 0.015;
 var myfog=0.002;
@@ -37,41 +59,60 @@ var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
 
-var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json', 'feuerloescher.json', 'tuer.json'];
 
-var fileLoader= new FileLoader();// = new FileLoader();
+
+
+    //loads all Objects before creating
+
+
 
 function init(event) {
-    console.log("init");
-
     // set up the scene, the camera and the renderer
-    createScene();
+    createScene(audio);
 
+    function audio (){
     // init audio support
-    createAudio();
+        createAudio(controls);
 
-    // YOU NEED TO CALL THIS
-    initControls();
+        function controls() {
+            initControls(room);
 
-    // add the objects and lights - replace those functions as you please
-    createRoom();
-    createLights();
+            function room() {
+                // add the objects and lights - replace those functions as you please
+                createRoom(items);
+                function items () {
+                    // set up items
+                    createItems(lights);
 
-    createFire();
 
-    // start a loop that will update the objects' positions
-    // and render the scene on each frame
-    loop();
+                    function lights() {
+                        // set up lights
+                        createLights(fire);
+
+                        function fire() {
+                            // set up fire
+                            createFire(startLoop);
+
+                            function startLoop (){
+                                // start a loop that will update the objects' positions
+                                // and render the scene on each frame
+                                loop();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
-
 
 // Stats
 var stats = new Stats();
 stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild(stats.dom);
 
-
-function createScene() {
+//Create the Scene
+function createScene(complete) {
 
     blocker = document.getElementById('blocker');
     container = document.getElementById('world');
@@ -148,13 +189,16 @@ function createScene() {
     window.addEventListener('resize', handleWindowResize, false);
 
     scene.fog = new THREE.FogExp2(0x424242, 0.005);
+    complete();
 }
 
 
 function loop() {
 
+
     if (!menu && !pause) {
         if (player.health <= 0) {
+            gameOverSound();
             gameOver();
         } else {
 
@@ -190,7 +234,7 @@ var hemisphereLight, shadowLight;
 
 // TEST ENVIRONMENT
 
-function createLights() {
+function createLights(callback) {
 
     // A hemisphere light is a gradient colored light;
     // the first parameter is the sky color, the second parameter is the ground color,
@@ -223,57 +267,74 @@ function createLights() {
     // to activate the lights, just add them to the scene
     scene.add(hemisphereLight);
     scene.add(shadowLight);
+    callback();
 }
 
 
-function createRoom() {
+function createRoom(callback) {
+
     var mesh = fileLoader.get("test_level");
     terrain.push(mesh);
     mesh.position.y = 0;
     mesh.position.x = 5;
     mesh.scale.set(20, 20, 20);
     scene.add(mesh);
-
-    addItem(itemList[0], -50, 10, 10, 2, true, pickUpItem, itemList[0]);
-    addItem(itemList[1], 20, 5, 10, 1, true, destroy, itemList[1]);
-    addItem(itemList[2], 0, 5, 20, 3, true, pickUpItem, itemList[2]);
-    addItem(itemList[3], 0, 5, -10, 3, true, pickUpItem, itemList[3]);
-    addItem(itemList[4], 30, 5, -30, 1, false, 0, itemList[4]);
-    addItem(itemList[5], 30, 5, -30, 1, true, openLockedDoor, itemList[5]);
-    addItem(itemList[6], 30, 5, -100, 1, true, pickUpItem, itemList[6]);
-    addTrigger(-64,-71,action);
-    function action() {
-        console.log("hi");
-    }
+    callback();
 
 }
 
+
+function createItems(callback){
+
+    addItem((newItemList[0]), -50, 10, 10, 10, 90, true, pickUpItem);
+    addItem((newItemList[0]), -50, 10, 10, 10, 0, true, pickUpItem);
+    addItem((newItemList[0]), -50, 10, 10, 10, 180, true, pickUpItem);
+    addItem((newItemList[40]), 50, 0, 10, 2, 270, false, pickUpItem);
+    addItem((newItemList[48]), 0, 0, -700, 1, 0, false, null);
+
+    addTrigger(-64,-71,action);
+
+    callback();
+
+}
+
+
+function action() {
+    console.log("hi");
+}
 
 // Add Object with given Path to given coordinates
+function addItem(file, xPos, yPos, zPos, scale, angle, interact_type, intfunction){
+    var tmpName =  file.split("/");
+    var tmpName = tmpName[tmpName.length-1];
+    var mesh = (fileLoader.get(tmpName.split(".")[0])).clone();
+    var angleObj = (Math.PI*2*angle)/360;
+    mesh.position.y = yPos;
+    mesh.position.x = xPos;
+    mesh.position.z = zPos;
+    mesh.scale.set(20*scale,20*scale,20*scale);
+    mesh.rotateY(angleObj);
 
-function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name){
+    if(interact_type){
+        var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, file);
+        terrain.push(intItem);
+    } else {
+        terrain.push(mesh);
+    }
 
-        var mesh = fileLoader.get(file.split(".")[0]);
 
-            mesh.position.y = yPos;
-            mesh.position.x = xPos;
-            mesh.position.z = zPos;
-            mesh.scale.set(20*scale,20*scale,20*scale);
-            if(interact_type){
-                var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, name);
-                terrain.push(intItem);
-            } else {
-                terrain.push(mesh);
-            }
+    scene.add(mesh);
 
-            scene.add(mesh);
 }
 
+
+//adds a trigger at given position, performs action when walking over it and consumes it
 function addTrigger (xPos, zPos, action) {
     var triggerGeom = new THREE.BoxGeometry(30,30,30);
     var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, color:0xFFFFFF});
     var triggerMesh = new THREE.Mesh(triggerGeom,mat);
     var trigger = new GameObject(triggerMesh,action,TYPE_TRIGGER);
+
 
     trigger.mesh.position.x = xPos;
     trigger.mesh.position.z = zPos;
@@ -294,11 +355,16 @@ function removeTrigger(trigger) {
 }
 
 
-function createFire() {
+function createFire(callback) {
     VolumetricFire.texturePath = './levels/materials/textures/';
 
     addFire(80, 0, 1, 30, 30, 30, 10);
+    addFire(80, 0, -30, 30, 30, 30, 10);
+    addFire(80, 0, -100, 30, 30, 30, 10);
+
 
     animateFire();
+
+    callback();
 
 }
