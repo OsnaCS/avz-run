@@ -162,7 +162,7 @@ public class XMLhandler {
 		StreamResult result = new StreamResult(f);
 
 		// Output to console for testing
-		result = new StreamResult(System.out);
+		//result = new StreamResult(System.out);
 
 		transformer.transform(source, result);
 
