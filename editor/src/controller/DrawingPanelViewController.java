@@ -82,26 +82,20 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 
 		drawableObjectsModel = new LinkedList<DrawableObject>();
 		drawingPanelView = new DrawingPanelView(640, 480, drawableObjectsModel);
-		
+
 		this.ways = new Way[0];
 		this.roomListener = new RoomListener(this, null, ways);
 		this.ways = this.roomListener.getAllways();
-		
+
 		this.drawingPanelView.addMouseListener(roomListener);
 
 		// das UI anpassen
 		drawingPanelView.getButton().setText("Clear");
 
-
-		
-
-
-
 		// ComboBox befüllen
 		String[] box = { "Einzelflur", "Doppelflur", "zentraler Flur", "Toilettenflur", "Vorlesungsraum", "Büro" };
-		
-		drawingPanelView.getComboBox().setModel(new DefaultComboBoxModel<>(box));
 
+		drawingPanelView.getComboBox().setModel(new DefaultComboBoxModel<>(box));
 
 		// Event-Listener für Button
 		ActionListener clear = new ActionListener() {
@@ -126,22 +120,43 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 				JComboBox<String> cb = (JComboBox<String>) e.getSource();
 
 				String selectedRoom = (String) cb.getSelectedItem();
-				
-				Room room=null;
+
+				switch (selectedRoom) {
+				case "Büro":
+					selectedRoom = "buero";
+					break;
+				case "Einzelflur":
+					selectedRoom = "gang_solo";
+					break;
+				case "Doppelflur":
+					selectedRoom = "circle_walled";
+					break;
+				case "Toilettenflur":
+					selectedRoom = "klogang_solo";
+					break;
+				case "Vorlesungsraum":
+					selectedRoom = "lectureroom1";
+					break;
+				case "zentraler Flur":
+					selectedRoom = "center";
+					break;
+				}
+
+				Room room = null;
 				try {
 					room = handler.createRoomFromXML(selectedRoom);
-				}  catch (FileNotFoundException e2) {
+				} catch (FileNotFoundException e2) {
 					// TODO Auto-generated catch block
 					System.err.println("Room was not found");
 					e2.printStackTrace();
 				}
-				
+
 				Way[] ways = getRoomListener().getAllways();
-				
+
 				RoomListener roomListener = new RoomListener(getController(), room, ways);
-				
+
 				setRoomListener(roomListener);
-				
+
 				this.changeMouseInputListenerTo(roomListener);
 
 			}
@@ -298,7 +313,7 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		if (!(drawableObject instanceof DashedRoom)) {
 			this.roomlist.add((Room) drawableObject);
 		}
-		
+
 		// Hilfsfile anlegen
 		File newFile = null;
 		try {
@@ -364,9 +379,8 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		return null;
 	}
 
-	
 	/* Getter and Setter */
-	
+
 	public DrawingPanelView getDrawingPanelView() {
 		return drawingPanelView;
 	}
@@ -479,5 +493,4 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		this.controller = controller;
 	}
 
-	
 }
