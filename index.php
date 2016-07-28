@@ -1,6 +1,6 @@
-<?php include_once("./build/home.html"); ?>
+<?php include_once("/build/home.html"); ?>
 <?php error_reporting(E_ALL);?>
-<link href='/build/css/style.css' type='text/css' rel='stylesheet'/>
+<!-- <link href='/build/css/style.css' type='text/css' rel='stylesheet'/>
 <script type="text/javascript" src="/build/js/jquery-3.1.0.min.js"></script>
 <script src="/build/js/three.min.js"></script>
 <script src="/build/js/lib/util/doSynchronousLoop.js"></script>
@@ -16,4 +16,4 @@
 <script src="/build/js/lib/fire/firePlacement.js"></script>
 <script src="/build/js/lib/stats/stats.min.js"></script>
 <script src="/build/js/lib/xml_loader/xml_loader.js"></script>
-<script src="/build/js/game.js"></script>
+<script src="/build/js/game.js"></script> -->
