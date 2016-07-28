@@ -8,7 +8,8 @@ var FileLoader = function() {
     // Pfad zu allen Dateien
     var files = [
         // Texturen
-        "test_level.json"
+        "test_level.json",
+		"../avz_model/building_parts/lectureroom1.json"    //TODO: diese hier dynamisch anhand der xmls laden
 
     ];
     for (var i = 0;i<newItemList.length;i++) {

@@ -43,7 +43,7 @@ var pause = false;
 //variable used for increasing fog
 var MAX_FOG = 0.015;
 var myfog=0.002;
-var fogTime=20;
+var fogTime=60;
 var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
@@ -57,6 +57,7 @@ var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much hea
 function init(event) {
 
 
+	CreateSegment("lectureroom1");
 
     // set up the scene, the camera and the renderer
     createScene();
@@ -75,7 +76,7 @@ function init(event) {
 
     createLights();
 
-    createFire();
+    //createFire();
 
 
     // start a loop that will update the objects' positions
@@ -250,25 +251,53 @@ function createLights() {
 
 
 function createRoom() {
-
-   var mesh = fileLoader.get("test_level");
-    terrain.push(mesh);
-    mesh.position.y = 0;
-    mesh.position.x = 5;
-    mesh.scale.set(20, 20, 20);
-    scene.add(mesh);
-
-
-
-
+	
+	setTimeout(PutSegments,1000);
+	setTimeout(door_in_doors,1200);
+	setTimeout(objects_in_spawns,1400);
+	setTimeout(set_fires,1600);
+	setTimeout(turn_on_lights,1800);
+	
+   // var mesh = fileLoader.get("lectureroom1");
+    // terrain.push(mesh);
+    // mesh.position.y = 0;
+    // mesh.position.x = 5;
+    // mesh.scale.set(20, 20, 20);
+    // scene.add(mesh);
 
 
 }
 
 
+
+//debug-stuff, deleteme
+function ShowSegments() {
+	var text = ""; 
+	for (i = 0; i <segments.length; i++) {
+		text += printmost(segments[i])+"<br>";  //JSON.stringify(segments[i])
+	}
+	alert(text);
+}
+function printmost(obj) {
+	var output = '';
+	for (var property in obj) {
+	  if (property != 'mesh')
+		{ output += property + ': ' + obj[property]+'; '; }
+	}
+	return output;
+}	
+//debugstuffdeleteme ende
+
 function createItems(){
 
      // addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
+	 
+	 // addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name)
+	 // TYPE_INTERACTABLE; TYPE_TRIGGER; TYPE_FIRE; TYPE_EXIT; 
+	 // intfunction = damage_door, destroy_door, pickUpItem, destroy, open, openLockedDoor, extinguish
+
+	 //wände/terrain/statics, interactibles(auch feuer und türen), triggerevents(auch feuer), licher (auch feuer), 
+	 
       addItem((newItemList[0]), -50, 10, 10, 10, true, pickUpItem, newItemList[0]);
       addItem((newItemList[1]), 20, 5, 10, 1, true, destroy, newItemList[1]);
       addItem((newItemList[2]), 0, 5, 20, 3, true, pickUpItem, newItemList[2]);
@@ -339,14 +368,4 @@ function removeTrigger(trigger) {
         }
 
     }
-}
-
-
-function createFire() {
-    VolumetricFire.texturePath = './levels/materials/textures/';
-
-    addFire(80, 0, 1, 30, 30, 30, 10);
-
-    animateFire();
-
 }
