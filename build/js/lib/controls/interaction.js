@@ -20,7 +20,6 @@ document.addEventListener( 'click', onMouseClick, false );
 function interactionLoop() {
     interactionRayCaster.set(controls.getObject().position, controls.getDirection());
     interactions = interactionRayCaster.intersectObjects(terrain);
-
     if(interactions.length>0 && interactions[0].object.type==TYPE_INTERACTABLE) {
 
         if(activeObject!=interactions[0].object) {
@@ -53,7 +52,6 @@ function interactionLoop() {
         }
     }
 
-
     if(interactions.length>0 && interactions[0].object.type==TYPE_FIRE) {
         console.log("interact");
 
@@ -85,7 +83,6 @@ function interactionLoop() {
 
 
 
-
 GameObject = function(mesh, interaction, type, name) {
     this.type = type;
     this.mesh = mesh;
@@ -94,6 +91,8 @@ GameObject = function(mesh, interaction, type, name) {
     this.name=name;
 
     this.open = false;
+
+    this.activeTransponder = false;
 
     this.raycast = function(raycaster, intersects) {
 
@@ -115,7 +114,6 @@ GameObject = function(mesh, interaction, type, name) {
         if (terrain[i] == this) terrain.splice(i,1);
 
     }
-
 }
 
 
@@ -215,4 +213,45 @@ function extinguish() {
     else{
         console.log('nicht anwendbar');
     }
+}
+
+// lappen.json muss durch den eigentlichen Namen ersetzt werden, dann ist die Methode nutzbar
+function coverMouth(){
+    if(this.type == TYPE_INTERACTABLE && selectedItem.name == 'lappen.json'){
+        HEALTH_PER_SECOND = HEALTH_PER_SECOND / 2;
+        console.log('covered mouth');
+        player.delActItem();
+    }else{
+        console.log('nicht anwendbar');
+    }
+}
+
+
+function activateTransponder(){
+    if(this.type == TYPE_INTERACTABLE && selectedItem.name == 'transponder.json'){
+        selectedItem.activeTransponder = true;
+        console.log('transponder activated');
+    }else{
+        console.log('nicht anwendbar');
+    }
+}
+
+
+function openTransponderDoor(){
+    if(selectedItem.activeTransponder){
+        if(!this.open) {
+            this.mesh.rotateY(Math.PI/2.0);
+            this.open = !this.open;
+        }
+        else {
+            this.mesh.rotateY(-Math.PI/2.0);
+            this.open = !this.open;
+        }
+        // transponder can only be used once
+        selectedItem.activeTransponder = false;
+        player.delActItem();
+    }else{
+        console.log('nicht anwendbar');
+    }
+
 }
