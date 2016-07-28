@@ -84,7 +84,7 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		drawingPanelView = new DrawingPanelView(640, 480, drawableObjectsModel);
 
 		this.ways = new Way[0];
-		this.roomListener = new RoomListener(this, null, ways);
+		this.roomListener = new RoomListener(this, new Room(), ways);
 		this.ways = this.roomListener.getAllways();
 
 		this.drawingPanelView.addMouseListener(roomListener);
@@ -140,6 +140,8 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 				case "zentraler Flur":
 					selectedRoom = "center";
 					break;
+					default:
+						System.out.println("in");
 				}
 
 				Room room = null;

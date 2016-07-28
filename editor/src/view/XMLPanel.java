@@ -29,10 +29,13 @@ public class XMLPanel extends JPanel {
         // Create Label
         JLabel l = new JLabel("XML-Datei");
         this.add(l, BorderLayout.NORTH);
-
         textField = new JTextPane();
+        JScrollPane scrollPanel = new JScrollPane();
+        scrollPanel.add(textField);
+        
+       
 
-        this.add(textField, BorderLayout.CENTER);
+        this.add(scrollPanel, BorderLayout.CENTER);
 
 
         // Buttons
