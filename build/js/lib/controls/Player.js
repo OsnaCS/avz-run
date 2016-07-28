@@ -61,6 +61,7 @@ Player = function() {
     this.delActItem = function(){
         if(inventory[activeSlot] == selectedItem){
             inventory[activeSlot] = null;
+            selectedItem = "dummy.json";
             item_count--;
 
             setActiveSlot(-1);
