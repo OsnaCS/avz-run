@@ -81,14 +81,14 @@ if (havePointerLock) {
 
             //          controlsEnabled = true;
             controls.enabled = true;
-            blocker.style.display = 'none';
+            $("#blocker").hide();
 
         } else {
             controls.enabled = false;
 
-            blocker.style.display = 'block';
-
-            // instructions.style.display = '';
+            if (player.health > 0) {
+                $("#blocker").show();
+            }
             menu = true;
             $('.gui').hide();
         }
@@ -97,7 +97,7 @@ if (havePointerLock) {
 
     var pointerlockerror = function(event) {
 
-        instructions.style.display = '';
+         $("#blocker").hide();
 
     };
 
@@ -116,11 +116,10 @@ if (havePointerLock) {
 
         // Ask the browser to lock the pointer
         element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
-
+        element.requestPointerLock();
         menu = false;
         $(".GUI").show();
 
-        element.requestPointerLock();
 
     }, false);
 
@@ -143,6 +142,12 @@ if (havePointerLock) {
         location.reload();
 
     }, false);
+
+    buttonRestart.addEventListener('click', function(event) {
+        location.reload();
+
+    }, false);
+
 
 } else {
 
@@ -204,7 +209,7 @@ function initControls() {
             case 16: //RUN FOREST! (shift)
 
                 if (!ducked && !regenerate) {
-                    adjustPlaybackRate(footsteps,1.5,true);
+                    adjustPlaybackRate(footsteps, 1.5, true);
                     running = true;
                     speed_factor = RUN_SPEED;
                 }
@@ -236,11 +241,11 @@ function initControls() {
                     }
                     if (pause) {
                         controls.enabled = false;
-                        $(".pauseBlocker").css("display", "initial");
+                        $("#blocker").show();
                         $(".GUI").hide();
                     } else {
                         controls.enabled = true;
-                        $(".pauseBlocker").css("z-index", 0);
+                        $("#blocker").hide();
                         $(".GUI").show();
                     }
                 }
@@ -284,7 +289,7 @@ function initControls() {
 
 
             case 16: // shift
-                adjustPlaybackRate(footsteps,1, true);
+                adjustPlaybackRate(footsteps, 1, true);
                 speed_factor = 1;
                 running = false;
                 break;
@@ -424,7 +429,7 @@ function controlLoop(controls) {
 
     //RUNNING MOTION
 
-    if((moveForward || moveBackward || moveRight || moveLeft)&&!ducked) {
+    if ((moveForward || moveBackward || moveRight || moveLeft) && !ducked) {
         if (running) {
             if (controls.getObject().position.y > 39) upMotion = -1;
             if (controls.getObject().position.y < 32) upMotion = 1;
