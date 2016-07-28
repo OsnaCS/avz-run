@@ -275,6 +275,17 @@ function createItems(){
     addItem((newItemList[0]), -50, 10, 10, 10, 180, true, pickUpItem);
     addItem((newItemList[40]), 50, 0, 10, 2, 270, false, pickUpItem);
     addItem((newItemList[48]), 0, 0, -700, 1, 0, false, null);
+    addItem((newItemList[12]), -50, 10, -200, 1, 90, true, pickUpItem);
+    addItem((newItemList[29]), -50, 10, -300, 1, 90, true, destroy);
+
+    // Transponder test
+    addItem((newItemList[23]), 50, 5, -100, 2, 270, true, pickUpItem);
+    addItem((newItemList[29]), 50, 0, -150, 2, 270, true, enterCH);
+    addItem((newItemList[46]), 50, 0, -200, 2, 270, true, openTransponderDoor);
+
+    // lappen test
+    addItem((newItemList[31]), 0, 5, -100, 2, 270, true, pickUpItem);
+    addItem((newItemList[26]), 0, 5, -150, 2, 270, true, coverMouth);
 
     addTrigger(-64,-71,action);
 

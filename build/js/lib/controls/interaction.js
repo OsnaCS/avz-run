@@ -7,7 +7,6 @@ var outlineMaterial = new THREE.MeshPhongMaterial({color:0xFFFFFF,wireframe:true
 var activeObject;
 
 var lockOpen = false; // pin pad boolean
-var configured = false;  // transponder config boolean
 
 var outlineMesh=null;
 
@@ -347,23 +346,29 @@ function pinPad(pinvalue) {
 
 function enterCH() {
 
-    pin_pos = 0;
+    if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[23]){
+        pin_pos = 0;
 
-    // get object out of focus
-    scene.remove(outlineMesh);
-    outlineMesh = null;
-    activeObject = null;
+        // get object out of focus
+        scene.remove(outlineMesh);
+        outlineMesh = null;
+        activeObject = null;
 
-    menu = true;
+        menu = true;
 
-    $("#compHack").css("z-index", 20);
-    $("#compHack").css("display","block");
-    $("#compHack").show();
+        $("#compHack").css("z-index", 20);
+        $("#compHack").css("display","block");
+        $("#compHack").show();
 
-    document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
-    console.log(document.exitPointerLock);
+        document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
+        console.log(document.exitPointerLock);
 
-    document.exitPointerLock();
+        document.exitPointerLock();
+    } else {
+        console.log(selectedItem.name);
+        console.log('nicht anwendbar');
+    }
+
 }
 
 
@@ -377,11 +382,15 @@ function exitCH() {
     menu = false;
 
     // determine if entered code was correct
-    if (CORRECT_TRANSPONDER[0] == transponder_config[0] && CORRECT_TRANSPONDER[1] == transponder_config[1]) configured = true;
-    else configured = false;
+    if (CORRECT_TRANSPONDER[0] == transponder_config[0] && CORRECT_TRANSPONDER[1] == transponder_config[1]){
+        correctSound();
+        selectedItem.activeTransponder = true;
+    }
+    else {
+        failedSound();
+        selectedItem.activeTransponder = false;
+    }
 
-    //if (configured) correctSound();
-    //else failedSound();
 
     // reset delta
     prevTime = performance.now();
@@ -427,9 +436,10 @@ function compHack(hackButtonValue) {
 
 // Attach this function to the sink
 function coverMouth(){
-    if(this.type == TYPE_INTERACTABLE && selectedItem.name == 'lappen.json'){
+    if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[31]){
         startHeavyBreathing();
         HEALTH_PER_SECOND = HEALTH_PER_SECOND / 2;
+        addItem((newItemList[31]), playerPos[1], playerPos[2] + 10, playerPos[3], 2, 270, true, pickUpItem);
         console.log('covered mouth');
         player.delActItem();
     }else{
@@ -437,22 +447,11 @@ function coverMouth(){
     }
 }
 
-// Attach this function to the computer that activates the transponder
-function activateTransponder(){
-    if(this.type == TYPE_INTERACTABLE && selectedItem.name == 'transponder.json'){
-        successSound();
-        selectedItem.activeTransponder = true;
-        console.log('transponder activated');
-    }else{
-        console.log('nicht anwendbar');
-    }
-}
 
 // Attach this function the door to be opened by a transponder
 function openTransponderDoor(){
 
     if(selectedItem.activeTransponder){
-        if (configured) {
 
             doorSound();
             if(!this.open) {
@@ -470,8 +469,8 @@ function openTransponderDoor(){
             selectedItem.activeTransponder = false;
             player.delActItem();
 
-        }
     } else{
+        doorLockedSound();
         console.log('nicht anwendbar');
     }
 }
