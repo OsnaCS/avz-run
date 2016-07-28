@@ -247,6 +247,7 @@ function initControls() {
                     } else {
                         controls.enabled = true;
                         $(".pauseBlocker").css("z-index", 0);
+                        prevTime = performance.now();
                         $(".GUI").show();
                     }
                 }
