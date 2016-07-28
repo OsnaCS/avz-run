@@ -77,22 +77,19 @@ if (havePointerLock) {
         if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
 
             controls.enabled = true;
-            blocker.style.display = 'none';
+
             $(".GUI").show();
+            $("#blocker").hide();
 
         } else {
 
             controls.enabled = false;
 
-            blocker.style.display = '-webkit-box';
-            blocker.style.display = '-moz-box';
-            blocker.style.display = 'box';
-
-            instructions.style.display = '';
+            if (player.health > 0) {
+                $("#blocker").show();
+            }
             menu = true;
-            $(".GUI").hide();
-
-
+            $('.gui').hide();
         }
 
 
@@ -100,7 +97,7 @@ if (havePointerLock) {
 
     var pointerlockerror = function(event) {
 
-        instructions.style.display = '';
+         $("#blocker").hide();
 
     };
 
@@ -119,11 +116,14 @@ if (havePointerLock) {
 
         // Ask the browser to lock the pointer
         element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
-
+        element.requestPointerLock();
         menu = false;
         $(".GUI").show();
 
-        element.requestPointerLock();
+        playername = $("#nickname").val();
+        console.log(playername);
+        $(".showNickname").html(playername);
+
 
     }, false);
 
@@ -148,6 +148,12 @@ if (havePointerLock) {
 
     }, false);
 
+    buttonRestart.addEventListener('click', function(event) {
+        location.reload();
+
+    }, false);
+
+
 } else {
 
     startInstructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
@@ -155,7 +161,7 @@ if (havePointerLock) {
 }
 
 //CALL THIS IN YOUR INIT BLOCK
-function initControls() {
+function initControls(callback) {
 
     var onKeyDown = function(event) {
 
@@ -210,7 +216,7 @@ function initControls() {
             case 16: //RUN FOREST! (shift)
 
                 if (!ducked && !regenerate) {
-                    adjustPlaybackRate(footsteps,1.5,true);
+                    adjustPlaybackRate(footsteps, 1.5, true);
                     running = true;
                     speed_factor = RUN_SPEED;
                 }
@@ -233,24 +239,6 @@ function initControls() {
                     raycasterZneg.far = 3;
                 }
 
-                break;
-
-            case 80: //pause p
-                if (!moveForward && !moveLeft && !moveRight && !moveBackward && !ducked) {
-                    if (!menu) {
-                        pause = !pause;
-                    }
-                    if (pause) {
-                        controls.enabled = false;
-                        $(".pauseBlocker").css("z-index", 15);
-                        $(".GUI").hide();
-                    } else {
-                        controls.enabled = true;
-                        $(".pauseBlocker").css("z-index", 0);
-                        prevTime = performance.now();
-                        $(".GUI").show();
-                    }
-                }
                 break;
 
             case 73: // i to show inventory  (maybe also to toggle later?)
@@ -291,7 +279,7 @@ function initControls() {
 
 
             case 16: // shift
-                adjustPlaybackRate(footsteps,1, true);
+                adjustPlaybackRate(footsteps, 1, true);
                 speed_factor = 1;
                 running = false;
                 break;
@@ -334,6 +322,8 @@ function initControls() {
     rayDirectionXneg = new THREE.Vector3();
     rayDirectionZpos = new THREE.Vector3();
     rayDirectionZneg = new THREE.Vector3();
+
+    callback();
 
 }
 
@@ -435,7 +425,7 @@ function controlLoop(controls) {
 
     //RUNNING MOTION
 
-    if((moveForward || moveBackward || moveRight || moveLeft)&&!ducked) {
+    if ((moveForward || moveBackward || moveRight || moveLeft) && !ducked) {
         if (running) {
 
             //add positive value to y position while we are below threshold
@@ -460,6 +450,7 @@ function controlLoop(controls) {
         if (running) {
             energy -= delta * 30;
             if (energy <= 0) {
+                outOfBreath();
                 regenerate = true;
                 speed_factor = 1;
                 running = false;

@@ -74,12 +74,11 @@ var FileLoader = function() {
     window.setTimeout(
         function(){
             if(filesSuccessfullyLoaded != file.length){
-                alert("Warning! Not all elements are loaded. Play at your own risk.");
-                $(".loading").css("display" , " none" );
-                $(".loadtext").css("display" , " none" );
-                $(".btn").css("display" , " inline-block" );
+                alert("Warnung! Es sind noch nicht alle Dateien geladen worden.");
+                $("#loadingBlocker").hide();
+                $("#startInstructions").show();
             }
-            
+
         },3000
     );
 
