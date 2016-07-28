@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects path="../avz_model/materials/objects/">
+	<object path="axt.json" interaction="1" scale ="2"/>
+	<object path="beamer.json" interaction="0" scale ="2"/>
+	<object path="tafel.json" interaction="1" scale ="2"/>
+	<object path="deckenlicht.json" interaction="0" scale ="2"/>
+	<object path="decken_licht_klein.json" interaction="1" scale ="2"/>
+	<object path="klo.json" interaction="0" scale ="2"/>
+	<object path="klo_und_tuer.json" interaction="1" scale ="2"/>
+	<object path="lichtschalter.json" interaction="0" scale ="2"/>
+	<object path="muelleimer.json" interaction="1" scale ="2"/>
+	<object path="ohp.json" interaction="0" scale ="2"/>
+	<object path="roboter.json" interaction="1" scale ="2"/>
+	<object path="schreibtisch_and_pc.json" interaction="0" scale ="2"/>
+	<object path="feuerloescher.json" interaction="1" scale ="2"/>
+	<object path="stuhl.json" interaction="1" scale ="2"/>
+	<object path="light_switch.json" interaction="0" scale ="2"/>
+	<object path="ohp.json" interaction="1" scale ="2"/>
+	<object path="Chair.json" interaction="0" scale ="2"/>
+	<object path="plant.json" interaction="1" scale ="2"/>
+	<object path="power_socket.json" interaction="0" scale ="2"/>
+	<object path="robot.json" interaction="1" scale ="2"/>
+	<object path="schreibtisch_and_pc.json" interaction="0" scale ="2"/>
+	<object path="stuhl.json" interaction="1" scale ="2"/>
+	<object path="tisch.json" interaction="0" scale ="2"/>
+	<object path="transponder.json" interaction="1" scale ="2"/>
+	<object path="tuer_halbkaputt.json" interaction="0" scale ="2"/>
+	<object path="tuer_kaputt.json" interaction="1" scale ="2"/>
+	<object path="tuer_klo.json" interaction="0" scale ="2"/>
+	<object path="wand_kaputt.json" interaction="1" scale ="2"/>
+	<object path="waschbecken.json" interaction="0" scale ="2"/>
+</objects>
