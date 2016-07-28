@@ -4,6 +4,7 @@ import model.Way;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.util.LinkedList;
 
 /**
  * Created by Thomas Dautzenberg on 27/07/2016.
@@ -16,9 +17,9 @@ public class Room extends Rectangle {
 
 
     protected String name;
-    protected Way[] waylist;
+    protected LinkedList<Way> waylist;
 
-    public Room(String name, double xmin, double ymin, double xmax, double ymax, Way[] waylist){
+    public Room(String name, double xmin, double ymin, double xmax, double ymax, LinkedList<Way> waylist){
 
         this.name = name;
 
@@ -33,6 +34,10 @@ public class Room extends Rectangle {
         this.center = new Point(0,0);
     }
 
+    public Room() {
+    	
+    }
+    
     public Room(Room r) {
         this.name = r.getName();
 
@@ -70,7 +75,7 @@ public class Room extends Rectangle {
     }
 
 
-    public boolean checkMerge(Way[] allways){
+    public boolean checkMerge(LinkedList<Way> allways){
 
         int MERGETHRESHOLD = 5;
 
@@ -136,11 +141,11 @@ public class Room extends Rectangle {
         this.name = name;
     }
 
-    public Way[] getWaylist() {
+    public LinkedList<Way> getWaylist() {
         return waylist;
     }
 
-    public void setWaylist(Way[] waylist) {
+    public void setWaylist(LinkedList<Way> waylist) {
         this.waylist = waylist;
     }
 

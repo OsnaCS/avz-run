@@ -2,9 +2,10 @@ var INV_SIZE = 3; // maximum number of objects in inventory
 var inventory; // array that stores references to inventory items
 var inv_pos; // array has constant length -> to save how many spots have been filled
 var item_count;
-var MAX_HEALTH = 1000;
-var activeSlot = -1;
+var MAX_HEALTH= 20000;
+var activeSlot=-1;
 var selectedItem;
+var playername;
 
 // var healthBar = document.getElementsByClassName("progress-bar");
 
@@ -78,13 +79,13 @@ function setActiveSlot(slot)  {
         if(activeSlot>-1) {
             switch (activeSlot) {
                 case 0:
-                    $("#slot1").css("border", "0px solid yellow");
+                    $("#slot1").css("border", "2px solid rgba(255, 255, 255, 0.2)");
                     break;
                 case 1:
-                    $("#slot2").css("border", "0px solid yellow");
+                    $("#slot2").css("border", "2px solid rgba(255, 255, 255, 0.2)");
                     break;
                 case 2:
-                    $("#slot3").css("border", "0px solid yellow");
+                    $("#slot3").css("border", "2px solid rgba(255, 255, 255, 0.2)");
                     break;
             }
         }
@@ -93,19 +94,19 @@ function setActiveSlot(slot)  {
         switch (slot) {
             case 0:
                 if (inventory[0] != null) {
-                    $("#slot1").css("border", "2px groove #ffcc66");
+                    $("#slot1").css("border", "2px solid rgba(255, 255, 255, 1)");
                     selectedItem = inventory[0];
                 }
                 break;
             case 1:
                 if (inventory[1] != null) {
-                    $("#slot2").css("border", "2px groove #ffcc66");
+                    $("#slot2").css("border", "2px solid rgba(255, 255, 255, 1)");
                     selectedItem = inventory[1];
                 }
                 break;
             case 2:
                 if (inventory[2] != null) {
-                    $("#slot3").css("border", "2px groove #ffcc66");
+                    $("#slot3").css("border", "2px solid rgba(255, 255, 255, 1)");
                     selectedItem = inventory[2];
                 }
                 break;

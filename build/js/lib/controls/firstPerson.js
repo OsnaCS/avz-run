@@ -111,6 +111,8 @@ if (havePointerLock) {
     document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
 
     buttonStart.addEventListener('click', function(event) {
+		
+
 
         startInstructions.style.display = 'none';
 
@@ -119,6 +121,10 @@ if (havePointerLock) {
         element.requestPointerLock();
         menu = false;
         $(".GUI").show();
+
+        playername = $("#nickname").val();
+        console.log(playername);
+        $(".showNickname").html(playername);
 
 
     }, false);
@@ -235,25 +241,6 @@ function initControls(callback) {
                     raycasterZneg.far = 3;
                 }
 
-                break;
-
-
-            case 80: //pause p
-                if (!moveForward && !moveLeft && !moveRight && !moveBackward && !ducked) {
-
-                    if (!menu) {
-                        pause = !pause;
-                    }
-                    if (pause) {
-                        controls.enabled = false;
-                        $("#blocker").show();
-                        $(".GUI").hide();
-                    } else {
-                        controls.enabled = true;
-                        $("#blocker").hide();
-                        $(".GUI").show();
-                    }
-                }
                 break;
 
             case 73: // i to show inventory  (maybe also to toggle later?)
@@ -480,10 +467,10 @@ function controlLoop(controls) {
         $(".energy-bar").css("width", '' + energy + '%');
     }
 
-    // stop gravity at ground level as collision detection sometimes fails for floor
+    // stop gravity at ground level as collision detection sometimes fails for floor  
     if (controls.getObject().position.y < PLAYERHEIGHT && firstTime) {
         velocity.y = 0;
-        controls.getObject().position.y = PLAYERHEIGHT + 5;
+        controls.getObject().position.y = PLAYERHEIGHT +5;
     }
     if (controls.getObject().position.y < -500){
         player.damage(10000);

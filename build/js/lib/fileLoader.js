@@ -7,11 +7,11 @@ var FileLoader = function() {
 
     var jsonLoader = new THREE.JSONLoader();
     // Pfad zu allen Dateien
-
-
     var files = [
-        "test.json"
-    ];
+        // Texturen
+        "test_level.json",
+		"../avz_model/building_parts/lectureroom1.json"    //TODO: diese hier dynamisch anhand der xmls laden
+	];
 
 
     for (var i = 0;i<newItemList.length;i++) {
@@ -78,7 +78,7 @@ var FileLoader = function() {
     window.setTimeout(
         function(){
             if(filesSuccessfullyLoaded != file.length){
-                alert("Warning! Not all elements are loaded. Play at your own risk.");
+                alert("Warnung! Es sind noch nicht alle Dateien geladen worden.");
                 $("#loadingBlocker").hide();
                 $("#startInstructions").show();
             }
