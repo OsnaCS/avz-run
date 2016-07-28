@@ -254,19 +254,9 @@ function createLights() {
     scene.add(shadowLight);
 }
 
+function createItems(){
 
-function createRoom() {
 
-<<<<<<< HEAD
-    addItem(pathItem.concat(itemList[0]), -50, 10, 10, 2, true, pickUpItem, itemList[0]);
-    addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true, destroy, itemList[1]);
-    addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true, pickUpItem, itemList[2]);
-    addItem(pathItem.concat(itemList[3]), 0, 5, -10, 3, true, pickUpItem, itemList[3]);
-    addItem(pathItem.concat(itemList[4]), 30, 5, -30, 1, false, 0, itemList[4]);
-    addItem(pathItem.concat(itemList[5]), 30, 5, -30, 1, true, openLockedDoor, itemList[5]);
-    addItem(pathItem.concat(itemList[6]), 30, 5, -100, 1, true, pickUpItem, itemList[6]);
-    addItem(pathItem.concat(itemList[7]), 100, 5, -100, 1, true, damage_door, itemList[7]);
-=======
     var mesh = fileLoader.get("test_level");
     terrain.push(mesh);
     mesh.position.y = 0;
@@ -284,7 +274,6 @@ function createItems(){
     addItem((newItemList[0]), -50, 10, 10, 10, 180, true, pickUpItem);
     addItem((newItemList[40]), 50, 0, 10, 2, 270, false, pickUpItem);
     addItem((newItemList[48]), 0, 0, -700, 1, 0, false, null);
->>>>>>> OsnaCS/master
 
     addTrigger(-64,-71,action);
 
