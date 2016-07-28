@@ -75,11 +75,10 @@ var FileLoader = function() {
         function(){
             if(filesSuccessfullyLoaded != file.length){
                 alert("Warning! Not all elements are loaded. Play at your own risk.");
-                $(".loading").css("display" , " none" );
-                $(".loadtext").css("display" , " none" );
-                $(".btn").css("display" , " inline-block" );
+                $("#loadingBlocker").hide();
+                $("#startInstructions").show();
             }
-            
+
         },3000
     );
 
