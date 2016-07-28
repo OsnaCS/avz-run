@@ -66,29 +66,42 @@ var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much hea
 
 function init(event) {
     // set up the scene, the camera and the renderer
-    createScene();
+    createScene(audio);
 
+    function audio (){
     // init audio support
-    createAudio();
+        createAudio(controls);
 
-    // YOU NEED TO CALL THIS
-    initControls();
+        function controls() {
+            initControls(room);
 
-    // add the objects and lights - replace those functions as you please
-    createRoom();
+            function room() {
+                // add the objects and lights - replace those functions as you please
+                createRoom(items);
+                function items () {
+                    // set up items
+                    createItems(lights);
 
-    // set up items
-    createItems();
 
-    // set up lights
-    createLights();
+                    function lights() {
+                        // set up lights
+                        createLights(fire);
 
-    // set up fire
-    createFire();
+                        function fire() {
+                            // set up fire
+                            createFire(startLoop);
 
-    // start a loop that will update the objects' positions
-    // and render the scene on each frame
-    loop();
+                            function startLoop (){
+                                // start a loop that will update the objects' positions
+                                // and render the scene on each frame
+                                loop();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 // Stats
@@ -97,7 +110,7 @@ stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild(stats.dom);
 
 //Create the Scene
-function createScene() {
+function createScene(complete) {
 
     blocker = document.getElementById('blocker');
     container = document.getElementById('world');
@@ -175,6 +188,7 @@ function createScene() {
     window.addEventListener('resize', handleWindowResize, false);
 
     scene.fog = new THREE.FogExp2(0x424242, 0.005);
+    complete();
 }
 
 
@@ -183,6 +197,7 @@ function loop() {
 
     if (!menu && !pause) {
         if (player.health <= 0) {
+            gameOverSound();
             gameOver();
         } else {
 
@@ -218,7 +233,7 @@ var hemisphereLight, shadowLight;
 
 // TEST ENVIRONMENT
 
-function createLights() {
+function createLights(callback) {
 
     // A hemisphere light is a gradient colored light;
     // the first parameter is the sky color, the second parameter is the ground color,
@@ -251,10 +266,11 @@ function createLights() {
     // to activate the lights, just add them to the scene
     scene.add(hemisphereLight);
     scene.add(shadowLight);
+    callback();
 }
 
 
-function createRoom() {
+function createRoom(callback) {
 
    var mesh = fileLoader.get("test_level");
     terrain.push(mesh);
@@ -262,11 +278,12 @@ function createRoom() {
     mesh.position.x = 5;
     mesh.scale.set(20, 20, 20);
     scene.add(mesh);
+    callback();
 
 }
 
 
-function createItems(){
+function createItems(callback){
 
     addItem((newItemList[0]), -50, 10, 10, 10, 90, true, pickUpItem);
     addItem((newItemList[0]), -50, 10, 10, 10, 0, true, pickUpItem);
@@ -275,6 +292,8 @@ function createItems(){
     addItem((newItemList[48]), 0, 0, -700, 1, 0, false, null);
 
     addTrigger(-64,-71,action);
+
+    callback();
 
 }
 
@@ -335,11 +354,16 @@ function removeTrigger(trigger) {
 }
 
 
-function createFire() {
+function createFire(callback) {
     VolumetricFire.texturePath = './levels/materials/textures/';
 
     addFire(80, 0, 1, 30, 30, 30, 10);
+    addFire(80, 0, -30, 30, 30, 30, 10);
+    addFire(80, 0, -100, 30, 30, 30, 10);
+
 
     animateFire();
+
+    callback();
 
 }

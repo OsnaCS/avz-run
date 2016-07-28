@@ -22,12 +22,11 @@ var FileLoader = function() {
 
     function loadJson(file, name) {
         var jsonLoader = new THREE.JSONLoader();
-        console.log("debug: " + file);
         jsonLoader.load(file,
             function (geometry,mat) {
                 // on success:
 
-                console.log("got:"+name);
+                //console.log("got:"+name);
                 material = new THREE.MultiMaterial(mat)
 
 
@@ -76,11 +75,10 @@ var FileLoader = function() {
         function(){
             if(filesSuccessfullyLoaded != file.length){
                 alert("Warning! Not all elements are loaded. Play at your own risk.");
-                $(".loading").css("display" , " none" );
-                $(".loadtext").css("display" , " none" );
-                $(".btn").css("display" , " inline-block" );
+                $("#loadingBlocker").hide();
+                $("#startInstructions").show();
             }
-            
+
         },3000
     );
 

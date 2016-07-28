@@ -2,8 +2,8 @@ var INV_SIZE = 3; // maximum number of objects in inventory
 var inventory; // array that stores references to inventory items
 var inv_pos; // array has constant length -> to save how many spots have been filled
 var item_count;
-var MAX_HEALTH= 1000;
-var activeSlot=-1;
+var MAX_HEALTH = 1000;
+var activeSlot = -1;
 var selectedItem;
 
 // var healthBar = document.getElementsByClassName("progress-bar");
@@ -22,12 +22,12 @@ Player = function() {
 
         // check if inventory has already been filled
         if (item_count < INV_SIZE) {
-            for(inv_pos = 0; inv_pos < INV_SIZE && inventory[inv_pos]!=null; inv_pos++){
+            for (inv_pos = 0; inv_pos < INV_SIZE && inventory[inv_pos] != null; inv_pos++) {
 
             }
             // add object to array
             inventory[inv_pos] = game_obj;
-            addIcon(game_obj,inv_pos);
+            addIcon(game_obj, inv_pos);
 
             item_count++;
 
@@ -58,9 +58,10 @@ Player = function() {
         $(".progress-bar").css("width", '' + healthPercent + '%');
     }
 
-    this.delActItem = function(){
-        if(inventory[activeSlot] == selectedItem){
+    this.delActItem = function() {
+        if (inventory[activeSlot] == selectedItem) {
             inventory[activeSlot] = null;
+            selectedItem = "dummy.json";
             item_count--;
             removeIcon(activeSlot);
             setActiveSlot(-1);
@@ -87,25 +88,25 @@ function setActiveSlot(slot)  {
                     break;
             }
         }
-            activeSlot=slot;
+        activeSlot = slot;
 
         switch (slot) {
             case 0:
-                if(inventory[0]!=null) {
+                if (inventory[0] != null) {
                     $("#slot1").css("border", "2px groove #ffcc66");
-                    selectedItem=inventory[0];
+                    selectedItem = inventory[0];
                 }
                 break;
             case 1:
-                if(inventory[1]!=null) {
+                if (inventory[1] != null) {
                     $("#slot2").css("border", "2px groove #ffcc66");
-                    selectedItem=inventory[1];
+                    selectedItem = inventory[1];
                 }
                 break;
             case 2:
-                if(inventory[2]!=null) {
+                if (inventory[2] != null) {
                     $("#slot3").css("border", "2px groove #ffcc66");
-                    selectedItem=inventory[2];
+                    selectedItem = inventory[2];
                 }
                 break;
         }
@@ -127,6 +128,11 @@ function removeIcon(slot) {
 }
 
 function gameOver() {
-    $(".gameOverBlocker").css("z-index", 15);
     $(".GUI").hide();
+    $(".gameOverBlocker").show();
+    document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
+
+    // Attempt to unlock
+    document.exitPointerLock();
+    $("#blocker").hide();
 }

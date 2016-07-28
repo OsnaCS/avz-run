@@ -16,6 +16,7 @@ var sliceSpacing = -1;
 
 var clock = new THREE.Clock();
 
+// this function is used in addFire. Don't use it anywhere else.
 function initFire() {
     fire = new VolumetricFire(
         fireWidth,
@@ -30,6 +31,8 @@ function initFire() {
     fire_count++;
 }
 
+// Adds a fire with a pointlight and smoke to the scene. For better performance
+// fire objects with same size only exist once and their meshes are cloned.
 function addFire(x, y, z, width, height, depth, spacing) {
 
     // Compare to last used fire
@@ -56,16 +59,18 @@ function addFire(x, y, z, width, height, depth, spacing) {
             initFire();
         }
     }
-
+    // Pointlight
     var pointlight = new THREE.PointLight(0xff9933, 1, 1.5);
     pointlight.position.set(x, y + 1, z);
     scene.add(pointlight);
 
+    // Firemesh
     var fmesh = fire.mesh.clone();
     scene.add(fmesh);
     fmesh.position.set(x, y + fireHeight / 2, z);
     fire_mesh_list.push(fmesh);
 
+    // Collision Box
     fireGeom = new THREE.BoxGeometry(fireWidth, fireHeight, fireDepth);
     var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
     var fireMesh = new THREE.Mesh(fireGeom, mat);
@@ -100,6 +105,7 @@ function addSmallFire(x, y, z) {
     addFire(x, y, z, 1.5, 2, 1.5, 0.5);
 }
 
+// Call this function once after all the fires have been added to the scene
 function animateFire() {
 
     requestAnimationFrame(animateFire);
@@ -146,14 +152,14 @@ function delFire(fireColBox) {
         scene.remove(smoke_list[index]);
         scene.remove(fire_mesh_list[index]);
         fireColBox.mesh.children[0].stop();
-/*
-        fire_collision_box_list[index,1];
+
+        fire_collision_box_list.splice(index,1);
         pointlight_list.splice(index,1);
         smoke_list.splice(index,1);
         fire_mesh_list.splice(index,1);
 
         smoke_and_light_count--;
-*/
+
     }
 
 

@@ -13,7 +13,9 @@ public class XMLPanel extends JPanel {
     private JButton saveButton;
     private JButton undoButton;
 
-    private JTextField textField;
+    // JTextField don't have newLines
+    // Choose JTextPane
+    private JTextPane textField;
 
     /**
      * Konstruktor, der die Buttons und das Textfeld erstellt und 
@@ -28,7 +30,7 @@ public class XMLPanel extends JPanel {
         JLabel l = new JLabel("XML-Datei");
         this.add(l, BorderLayout.NORTH);
 
-        textField = new JTextField();
+        textField = new JTextPane();
 
         this.add(textField, BorderLayout.CENTER);
 
@@ -67,7 +69,7 @@ public class XMLPanel extends JPanel {
      * 
      * @return XML-Textfeld
      */
-    public JTextField getTextField(){
+    public JTextPane getTextField(){
         return textField;
     }
 }

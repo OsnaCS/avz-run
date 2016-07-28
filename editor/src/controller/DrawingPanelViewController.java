@@ -1,18 +1,13 @@
 package controller;
 
-import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,13 +16,13 @@ import java.util.LinkedList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.event.MouseInputAdapter;
 import javax.swing.event.MouseInputListener;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import controller.listener.RoomListener;
-
+import model.Way;
+import model.drawables.DashedRoom;
 import model.drawables.DrawableObject;
 import model.drawables.Point;
 import model.drawables.Room;
@@ -40,6 +35,8 @@ import view.DrawingPanelView;
  * passieren. Ggf. muss die View aufgefordert werden sich neu zu zeichnen.
  * 
  * @author Nicolas Neubauer
+ * @author Laura Hembrock
+ * @author Barbara Butz
  * 
  */
 public class DrawingPanelViewController implements DrawableObjectProcessing {
@@ -69,7 +66,9 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 	// Counter für Files
 	int i = 0;
 
-	// private Way[] ways;
+	private Way[] ways;
+	private RoomListener roomListener;
+	private DrawingPanelViewController controller = this;
 
 	/**
 	 * Der Konstruktor initialisiert die View und legt die Listener an.
@@ -83,17 +82,20 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 
 		drawableObjectsModel = new LinkedList<DrawableObject>();
 		drawingPanelView = new DrawingPanelView(640, 480, drawableObjectsModel);
+		
+		this.ways = new Way[0];
+		this.roomListener = new RoomListener(this, null, ways);
+		this.ways = this.roomListener.getAllways();
+		
+		this.drawingPanelView.addMouseListener(roomListener);
 
 		// das UI anpassen
 		drawingPanelView.getButton().setText("Clear");
 
-		Room testroom = handler.createRoomFromXML();
-
-		// Diverse Listener für unterschiedliche Drawables anlegen
-		MouseInputAdapter[] listener = { new RoomListener(this, testroom, testroom.getWaylist()) };
-
-		// Listener in die ComboBox packen
-		drawingPanelView.getComboBox().setModel(new DefaultComboBoxModel<>(listener));
+		// ComboBox befüllen
+		String[] box = { "Einzelflur", "Doppelflur", "zentraler Flur", "Toilettenflur", "Vorlesungsraum", "Büro" };
+		
+		drawingPanelView.getComboBox().setModel(new DefaultComboBoxModel<>(box));
 
 		// Event-Listener für Button
 		ActionListener clear = new ActionListener() {
@@ -115,14 +117,34 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 				// Hänge das aktuell gewählte Objekt als Listener an die
 				// View
 				@SuppressWarnings("unchecked")
-				JComboBox<MouseInputAdapter> cb = (JComboBox<MouseInputAdapter>) e.getSource();
+				JComboBox<String> cb = (JComboBox<String>) e.getSource();
 
-				Object item = cb.getSelectedItem();
-				if (cb.getSelectedItem() instanceof MouseInputAdapter) {
-					changeMouseInputListenerTo((MouseInputAdapter) item);
-				} else {
-					throw new RuntimeException("Non-MouseInputAdapter Objects in ComboBox!");
+				String selectedRoom = (String) cb.getSelectedItem();
+				
+				switch(selectedRoom) {
+				case "Büro": 
+					selectedRoom = "buero"; break;
+				case "Einzelflur":
+					selectedRoom = "gang_solo"; break;
+				case "Doppelflur":
+					selectedRoom = "circle_walled"; break;
+				case "Toilettenflur":
+					selectedRoom = "klogang_solo"; break;
+				case "Vorlesungsraum":
+					selectedRoom = "lectureroom1"; break;
+				case "zentraler Flur":
+					selectedRoom = "center"; break;
 				}
+				
+				Room room = handler.createRoomFromXML(selectedRoom);
+				
+				Way[] ways = getRoomListener().getAllways();
+				
+				RoomListener roomListener = new RoomListener(getController(), room, ways);
+				
+				setRoomListener(roomListener);
+				
+				this.changeMouseInputListenerTo(roomListener);
 
 			}
 
@@ -275,11 +297,11 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		this.processDrawableObject(temporaryObject);
 
 		// keine Dashed-Rooms speichern
-		if (drawableObject instanceof Room) {
+		if (!(drawableObject instanceof DashedRoom)) {
 			this.roomlist.add((Room) drawableObject);
 		}
-
-		// Hilfsfiele anlegen
+		
+		// Hilfsfile anlegen
 		File newFile = null;
 		try {
 			String s = "roomTemp" + i + ".xml";
@@ -324,6 +346,8 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		}
 		// Textfeld neu setzen
 		this.drawingPanelView.getXMLPanel().getTextField().setText(temp.toString());
+		// Test output, output has wanted format, but textField don't. 
+		System.out.println(temp.toString());
 	}
 
 	/**
@@ -343,10 +367,41 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		return null;
 	}
 
-	/**
-	 * 
-	 * @return aktuelles File
-	 */
+	
+	/* Getter and Setter */
+	
+	public DrawingPanelView getDrawingPanelView() {
+		return drawingPanelView;
+	}
+
+	public void setDrawingPanelView(DrawingPanelView drawingPanelView) {
+		this.drawingPanelView = drawingPanelView;
+	}
+
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
+	}
+
+	public LinkedList<DrawableObject> getDrawableObjectsModel() {
+		return drawableObjectsModel;
+	}
+
+	public void setDrawableObjectsModel(LinkedList<DrawableObject> drawableObjectsModel) {
+		this.drawableObjectsModel = drawableObjectsModel;
+	}
+
+	public DrawableObject getTemporaryObject() {
+		return temporaryObject;
+	}
+
+	public void setTemporaryObject(DrawableObject temporaryObject) {
+		this.temporaryObject = temporaryObject;
+	}
+
 	public File getAktFile() {
 		return aktFile;
 	}
@@ -363,21 +418,69 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		this.oldFiles = oldFiles;
 	}
 
-	public String getFilename() {
-		return filename;
-	}
-
 	public LinkedList<File> getSpeicher() {
 		return speicher;
 	}
 
-	/**
-	 * Gibt die verwaltete View zurück
-	 * 
-	 * @return die View
-	 */
-	public DrawingPanelView getView() {
-		return drawingPanelView;
+	public void setSpeicher(LinkedList<File> speicher) {
+		this.speicher = speicher;
 	}
 
+	public String getFilename() {
+		return filename;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
+	public LinkedList<Room> getRoomlist() {
+		return roomlist;
+	}
+
+	public void setRoomlist(LinkedList<Room> roomlist) {
+		this.roomlist = roomlist;
+	}
+
+	public XMLhandler getHandler() {
+		return handler;
+	}
+
+	public void setHandler(XMLhandler handler) {
+		this.handler = handler;
+	}
+
+	public int getI() {
+		return i;
+	}
+
+	public void setI(int i) {
+		this.i = i;
+	}
+
+	public Way[] getWays() {
+		return ways;
+	}
+
+	public void setWays(Way[] ways) {
+		this.ways = ways;
+	}
+
+	public RoomListener getRoomListener() {
+		return roomListener;
+	}
+
+	public void setRoomListener(RoomListener roomListener) {
+		this.roomListener = roomListener;
+	}
+
+	public DrawingPanelViewController getController() {
+		return controller;
+	}
+
+	public void setController(DrawingPanelViewController controller) {
+		this.controller = controller;
+	}
+
+	
 }
