@@ -122,13 +122,13 @@ function initPointerLock() {
             element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
             element.requestPointerLock();
             menu = false;
-            loop();
+
             $(".GUI").show();
 
             playername = $("#nickname").val();
             console.log(playername);
             $(".showNickname").html(playername);
-
+            loop();
 
         }, false);
 
@@ -140,12 +140,12 @@ function initPointerLock() {
             element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
 
             menu = false;
-            loop();
+
             $(".GUI").show();
             prevTime = performance.now();
 
             element.requestPointerLock();
-
+            loop();
         }, false);
 
         button2.addEventListener('click', function(event) {
