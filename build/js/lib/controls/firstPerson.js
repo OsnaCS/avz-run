@@ -77,22 +77,19 @@ if (havePointerLock) {
         if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
 
             controls.enabled = true;
-            blocker.style.display = 'none';
+
             $(".GUI").show();
+            $("#blocker").hide();
 
         } else {
 
             controls.enabled = false;
 
-            blocker.style.display = '-webkit-box';
-            blocker.style.display = '-moz-box';
-            blocker.style.display = 'box';
-
-            instructions.style.display = '';
+            if (player.health > 0) {
+                $("#blocker").show();
+            }
             menu = true;
-            $(".GUI").hide();
-
-
+            $('.gui').hide();
         }
 
 
@@ -100,7 +97,7 @@ if (havePointerLock) {
 
     var pointerlockerror = function(event) {
 
-        instructions.style.display = '';
+         $("#blocker").hide();
 
     };
 
@@ -114,16 +111,17 @@ if (havePointerLock) {
     document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
 
     buttonStart.addEventListener('click', function(event) {
+		
+
 
         startInstructions.style.display = 'none';
 
         // Ask the browser to lock the pointer
         element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
-
+        element.requestPointerLock();
         menu = false;
         $(".GUI").show();
 
-        element.requestPointerLock();
 
     }, false);
 
@@ -147,6 +145,12 @@ if (havePointerLock) {
         location.reload();
 
     }, false);
+
+    buttonRestart.addEventListener('click', function(event) {
+        location.reload();
+
+    }, false);
+
 
 } else {
 
@@ -210,7 +214,7 @@ function initControls(callback) {
             case 16: //RUN FOREST! (shift)
 
                 if (!ducked && !regenerate) {
-                    adjustPlaybackRate(footsteps,1.5,true);
+                    adjustPlaybackRate(footsteps, 1.5, true);
                     running = true;
                     speed_factor = RUN_SPEED;
                 }
@@ -244,11 +248,11 @@ function initControls(callback) {
                     }
                     if (pause) {
                         controls.enabled = false;
-                        $(".pauseBlocker").css("z-index", 15);
+                        $("#blocker").show();
                         $(".GUI").hide();
                     } else {
                         controls.enabled = true;
-                        $(".pauseBlocker").css("z-index", 0);
+                        $("#blocker").hide();
                         $(".GUI").show();
                     }
                 }
@@ -292,7 +296,7 @@ function initControls(callback) {
 
 
             case 16: // shift
-                adjustPlaybackRate(footsteps,1, true);
+                adjustPlaybackRate(footsteps, 1, true);
                 speed_factor = 1;
                 running = false;
                 break;
@@ -438,7 +442,7 @@ function controlLoop(controls) {
 
     //RUNNING MOTION
 
-    if((moveForward || moveBackward || moveRight || moveLeft)&&!ducked) {
+    if ((moveForward || moveBackward || moveRight || moveLeft) && !ducked) {
         if (running) {
 
             //add positive value to y position while we are below threshold
@@ -478,10 +482,10 @@ function controlLoop(controls) {
         $(".energy-bar").css("width", '' + energy + '%');
     }
 
-    // stop gravity at ground level as collision detection sometimes fails for floor
+    // stop gravity at ground level as collision detection sometimes fails for floor  
     if (controls.getObject().position.y < PLAYERHEIGHT && firstTime) {
         velocity.y = 0;
-        controls.getObject().position.y = PLAYERHEIGHT + 5;
+        controls.getObject().position.y = PLAYERHEIGHT +5;
     }
     if (controls.getObject().position.y < -500){
         player.damage(10000);
