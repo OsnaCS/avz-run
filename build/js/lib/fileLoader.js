@@ -5,10 +5,13 @@
 var FileLoader = function() {
     console.log("FileLoader running ...");
 
+    var jsonLoader = new THREE.JSONLoader();
     // Pfad zu allen Dateien
 
 
-    var files = [];
+    var files = [
+        "test.json"
+    ];
 
 
     for (var i = 0;i<newItemList.length;i++) {
@@ -21,12 +24,13 @@ var FileLoader = function() {
     var filesSuccessfullyLoaded = 0;
 
     function loadJson(file, name) {
-        var jsonLoader = new THREE.JSONLoader();
+
         jsonLoader.load(file,
             function (geometry,mat) {
                 // on success:
-
                 console.log("got:"+name);
+
+
                 material = new THREE.MultiMaterial(mat)
 
 
@@ -55,7 +59,7 @@ var FileLoader = function() {
                 //updates loadingbar
                 $(".loading-bar").css("width" , ' '+ (filesSuccessfullyLoaded / file.length * 100) +'%');
             }
-        );
+        ,undefined,function() { console.log("could not load:"+name)});
     }
 
 
@@ -79,7 +83,7 @@ var FileLoader = function() {
                 $(".loadtext").css("display" , " none" );
                 $(".btn").css("display" , " inline-block" );
             }
-            
+
         },3000
     );
 
