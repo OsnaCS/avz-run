@@ -59,7 +59,7 @@ function pickUpSound(){
 
 // sound when out of breath after running
 function outOfBreath(){
-    var oob = createSound("run-breath",50,5,false,5).play();
+    var oob = createSound("run-breath",50,5,false,5);
     camera.add(oob);
     oob.play();
 }

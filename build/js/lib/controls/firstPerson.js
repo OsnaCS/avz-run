@@ -459,6 +459,7 @@ function controlLoop(controls) {
         if (running) {
             energy -= delta * 30;
             if (energy <= 0) {
+                outOfBreath();
                 regenerate = true;
                 speed_factor = 1;
                 running = false;
