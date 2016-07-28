@@ -15,9 +15,6 @@
 
 // call initControls() in init()
 // call controlLoop(controls) in loop()
-alert("works");
-
-
 
 // First all Files will be loaded
 window.addEventListener('load', loadFiles, false);
@@ -118,6 +115,7 @@ function createScene() {
 
     // Create the scene
     scene = new THREE.Scene();
+    console.log(scene);
 
     scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
 
