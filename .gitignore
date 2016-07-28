@@ -1,5 +1,7 @@
 # PHPStorm
 .idea/
+.metadata/
+editor/bin/
 
 #############
 ## Windows detritus
