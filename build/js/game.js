@@ -254,8 +254,8 @@ function createLights() {
     scene.add(shadowLight);
 }
 
-function createItems(){
 
+function createRoom() {
 
     var mesh = fileLoader.get("test_level");
     terrain.push(mesh);
