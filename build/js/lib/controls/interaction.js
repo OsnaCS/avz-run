@@ -27,18 +27,21 @@ document.addEventListener( 'click', onMouseClick, false );
 
 function interactionLoop() {
 
+    //this gets called once per loop. shoots a ray in viewdirection
     interactionRayCaster.set(controls.getObject().position, controls.getDirection());
     interactions = interactionRayCaster.intersectObjects(terrain);
+
+    //if it intersects something which is interactable we call its interaction function
     if(interactions.length>0 && interactions[0].object.type==TYPE_INTERACTABLE) {
 
         if(activeObject!=interactions[0].object) {
             scene.remove(outlineMesh);
             outlineMesh=null;
             activeObject= interactions[0].object;
-
+            //if we switch objects we change the outline
 
         } else {
-
+            //if we find an interactable object we outline it
             activeObject= interactions[0].object;
             if(outlineMesh==null) {
                 outlineMesh = activeObject.mesh.clone();
@@ -50,20 +53,22 @@ function interactionLoop() {
 
 
         }
-    }else if (interactions.length>0 && interactions[0].object.type==TYPE_EXIT) {
-        // nextLevel(); TODO: implement somewhere
-
     } else {
+        //remove outline mesh if there are no interactive items found
         activeObject=null;
         if(outlineMesh!=null) {
             scene.remove(outlineMesh);
             outlineMesh=null;
         }
     }
-
+            //reaching the exit
+    if (interactions.length>0 && interactions[0].object.type==TYPE_EXIT) {
+        // nextLevel(); TODO: implement somewhere
+    }
+    //
     if(interactions.length>0 && interactions[0].object.type==TYPE_FIRE) {
         console.log("interact");
-
+        //this might be changed..
         if(activeObject!=interactions[0].object) {
             scene.remove(outlineMesh);
             outlineMesh=null;
@@ -89,17 +94,17 @@ function interactionLoop() {
 
 
 
+//this is a wrapper for meshes with a function, type and name
 GameObject = function(mesh, interaction, type, name) {
     this.type = type;
     this.mesh = mesh;
     this.interact = interaction;
 
+
     this.name=name;
 
     this.open = false;
-
-    this.activeTransponder = false;
-
+    //
     this.raycast = function(raycaster, intersects) {
 
         this.mesh.raycast( raycaster, intersects);
@@ -120,6 +125,7 @@ GameObject = function(mesh, interaction, type, name) {
         if (terrain[i] == this) terrain.splice(i,1);
 
     }
+
 }
 
 
@@ -133,13 +139,14 @@ function onMouseClick() {
 
 function pickUpItem() {
     player.pickUp(this);
-
+    pickUpSound();
 }
+
 
 
 function destroy(){
     if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[0]){
-
+        damageDoorSound();
         this.delFromScene();
         console.log('destroyed');
         player.delActItem();
@@ -148,8 +155,8 @@ function destroy(){
         console.log('nicht anwendbar');
     }
 }
-
 function open() {
+    doorSound();
     if(!this.open) {
         this.mesh.rotateY(Math.PI/2.0);
         this.open = !this.open;
@@ -158,20 +165,19 @@ function open() {
         this.mesh.rotateY(-Math.PI/2.0);
         this.open = !this.open;
     }
-
 }
 
 function damage_door() {
     //check if axe is active item
-    if(this.type == TYPE_INTERACTABLE && selectedItem.name == itemList[0]){
+    if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[0]){
         damaged_x = this.mesh.position.x;
         damaged_y = this.mesh.position.y;
         damaged_z = this.mesh.position.z;
         var damaged_door = ['tuer_halbkaputt.json'];
-        var crashing = createSound("crashing_door",50,5,false,3,function () {
-            crashing.play();
-        });
-        addItem(pathItem.concat(damaged_door[0]), damaged_x, damaged_y, damaged_z, 1, true, destroy_door);
+
+        damageDoorSound();
+
+        addItem((damaged_door[0]), damaged_x, damaged_y, damaged_z, 1, true, destroy_door);
         this.delFromScene();
     }else{
         //Message for player? ("Wie könnte ich diese Tür wohl öffnen?")
@@ -180,16 +186,16 @@ function damage_door() {
 
 function destroy_door() {
     //check if axe is active item
-    if(this.type == TYPE_INTERACTABLE && selectedItem.name == itemList[0]){
+    if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[0]){
         // TODO:maybe message for player ("Die Tür ist kaputt, die Axt jetzt leider auch.")
         damaged_x = this.mesh.position.x;
         damaged_y = this.mesh.position.y;
         damaged_z = this.mesh.position.z;
         var destroyed_door = ['tuer_kaputt.json'];
-        var crashing = createSound("crashing_door",50,5,false,3,function () {
-            crashing.play();
-        });
-        addItem(pathItem.concat(destroyed_door[0]), damaged_x, damaged_y, damaged_z, 1, false, 0);
+
+        damageDoorSound();
+
+        addItem((destroyed_door[0]), damaged_x, damaged_y, damaged_z, 1, false, 0);
         this.delFromScene();
         player.delActItem();
 
@@ -201,6 +207,7 @@ function destroy_door() {
 
 function openLockedDoor() {
 	if(lockOpen){
+        doorSound();
 		if(!this.open) {
 	        this.mesh.rotateY(Math.PI/2.0);
 	        this.open = !this.open;
@@ -216,6 +223,7 @@ function openLockedDoor() {
 
 function extinguish() {
 	if(this.type == TYPE_FIRE && selectedItem.name == newItemList[12]){
+        extinguisherSound();
     	delFire(this);
     	console.log('extinguished');
     	player.delActItem();
@@ -268,8 +276,8 @@ function exitPinPad() {
     else lockOpen = false;
 
     // REPLACE WITH RESPECTIVE SOUND CALLS
-    if (lockOpen) console.log('YEP');
-    else console.log('NOPE');
+    if (lockOpen) correctSound();
+    else failedSound();
 
     // reset delta
     prevTime = performance.now();
@@ -285,6 +293,7 @@ function pinPad(pinvalue) {
 
         // reset button focus
         document.activeElement.blur();
+        buttonSound();
 
         switch (pinvalue) {
 
@@ -306,6 +315,8 @@ function pinPad(pinvalue) {
                 break;
 
             default:
+
+
 
                 if (pin_pos<4) { // unless 4 digits have already been entered
                     pin[pin_pos] = pinvalue; // set current digit to entered number
@@ -357,8 +368,8 @@ function exitCH() {
     if (CORRECT_TRANSPONDER[0] == transponder_config[0] && CORRECT_TRANSPONDER[1] == transponder_config[1]) configured = true;
     else configured = false;
 
-    // if (configured) console.log('YEP');
-    // else console.log('NOPE');
+    //if (configured) correctSound();
+    //else failedSound();
 
     // reset delta
     prevTime = performance.now();
@@ -370,6 +381,7 @@ function compHack(hackButtonValue) {
 
         // reset button focus
         document.activeElement.blur();
+        buttonSound();
 
         switch (hackButtonValue) {
 
@@ -404,6 +416,7 @@ function compHack(hackButtonValue) {
 // lappen.json muss durch den eigentlichen Namen ersetzt werden, dann ist die Methode nutzbar
 function coverMouth(){
     if(this.type == TYPE_INTERACTABLE && selectedItem.name == 'lappen.json'){
+        startHeavyBreathing();
         HEALTH_PER_SECOND = HEALTH_PER_SECOND / 2;
         console.log('covered mouth');
         player.delActItem();
@@ -415,6 +428,7 @@ function coverMouth(){
 
 function activateTransponder(){
     if(this.type == TYPE_INTERACTABLE && selectedItem.name == 'transponder.json'){
+        successSound();
         selectedItem.activeTransponder = true;
         console.log('transponder activated');
     }else{
@@ -427,6 +441,8 @@ function openTransponderDoor(){
 
     if(selectedItem.activeTransponder){
         if (configured) {
+
+            doorSound();
             if(!this.open) {
 
                 this.mesh.rotateY(Math.PI/2.0);
@@ -441,6 +457,7 @@ function openTransponderDoor(){
             // transponder can only be used once
             selectedItem.activeTransponder = false;
             player.delActItem();
+
         }
     } else{
         console.log('nicht anwendbar');

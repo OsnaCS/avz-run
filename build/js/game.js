@@ -15,22 +15,33 @@
 
 // call initControls() in init()
 // call controlLoop(controls) in loop()
-var newItemList =[];
-var fileLoader =null;
-function loadFiles(){
-    makeArrayFromXML(complete, newItemList, "../avz_model/materials/objects.xml");
-
-}
-
-function complete(){
-    fileLoader= new FileLoader();// = new FileLoader();
-    window.setTimeout(init, 1500);
-
-}
 
 
+
+// First all Files will be loaded
 window.addEventListener('load', loadFiles, false);
 
+// Initialize List for Files to load
+var newItemList =[];
+
+// Initialize fileLoader
+var fileLoader =null;
+
+// Load file-pathes from XML in list
+// callback function complete
+function loadFiles(){
+    makeArrayFromXML(complete, newItemList, "../avz_model/materials/objects.xml");
+}
+
+// if XML-Parsing done
+function complete(){
+    // Load all files in Loader
+    fileLoader= new FileLoader();// = new FileLoader();
+    // Wait untill ready
+    // starts init
+    window.setTimeout(init, 150);
+
+}
 
 var scene,
     camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
@@ -47,14 +58,15 @@ var fogTime=20;
 var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
-var itemList = ['axt.json', 'klo_und_tuer.json', 'OHP.json', 'klo.json', 'pflanze.json', 'tuer_klo.json', 'feuerloescher.json', '/tueren/tuer.json'];
 
-function init(event) {
+
+
 
     //loads all Objects before creating
 
 
-    console.log("init");
+
+function init(event) {
 
 
     // set up the scene, the camera and the renderer
@@ -69,30 +81,26 @@ function init(event) {
     // add the objects and lights - replace those functions as you please
     createRoom();
 
-
+    // set up items
     createItems();
 
+    // set up lights
     createLights();
 
+    // set up fire
     createFire();
-
 
     // start a loop that will update the objects' positions
     // and render the scene on each frame
-
-
     loop();
 }
-
-
-
 
 // Stats
 var stats = new Stats();
 stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild(stats.dom);
 
-
+//Create the Scene
 function createScene() {
 
     blocker = document.getElementById('blocker');
@@ -174,6 +182,7 @@ function createScene() {
 
 
 function loop() {
+
 
     if (!menu && !pause) {
         if (player.health <= 0) {
@@ -262,54 +271,47 @@ function createRoom() {
 
 function createItems(){
 
-     // addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
-      addItem((newItemList[0]), -50, 10, 10, 10, true, pickUpItem, newItemList[0]);
-      addItem((newItemList[1]), 20, 5, 10, 1, true, destroy, newItemList[1]);
-      addItem((newItemList[2]), 0, 5, 20, 3, true, pickUpItem, newItemList[2]);
-      addItem((newItemList[12]), 0, 5, -10, 3, true, pickUpItem, newItemList[12]);
-   // addItem(pathItem.concat(newItemList[4]), 30, 5, -30, 1, false, 0, itemList[4]);
-      //addItem((newItemList[5]), 30, 5, -30, 1, true, openLockedDoor, itemList[5]);
-   // addItem(pathItem.concat(newItemList[6]), 30, 5, -100, 1, true, pickUpItem, itemList[6]);
-
-     for(var i =0; i< newItemList.length; i++){
-        console.log(newItemList[i]);
-     }
+    addItem((newItemList[0]), -50, 10, 10, 10, 90, true, pickUpItem);
+    addItem((newItemList[0]), -50, 10, 10, 10, 0, true, pickUpItem);
+    addItem((newItemList[0]), -50, 10, 10, 10, 180, true, pickUpItem);
+    addItem((newItemList[40]), 50, 0, 10, 2, 270, false, pickUpItem);
+    addItem((newItemList[48]), 0, 0, -700, 1, 0, false, null);
 
     addTrigger(-64,-71,action);
-    function action() {
-        console.log("hi");
-    }
+
+}
 
 
+function action() {
+    console.log("hi");
 }
 
 // Add Object with given Path to given coordinates
+function addItem(file, xPos, yPos, zPos, scale, angle, interact_type, intfunction){
+    var tmpName =  file.split("/");
+    var tmpName = tmpName[tmpName.length-1];
+    var mesh = (fileLoader.get(tmpName.split(".")[0])).clone();
+    var angleObj = (Math.PI*2*angle)/360;
+    mesh.position.y = yPos;
+    mesh.position.x = xPos;
+    mesh.position.z = zPos;
+    mesh.scale.set(20*scale,20*scale,20*scale);
+    mesh.rotateY(angleObj);
 
-function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name){
-
-        var tmpName =  file.split("/");
-        var tmpName = tmpName[tmpName.length-1];
-        console.log(tmpName);
-        var mesh = fileLoader.get(tmpName.split(".")[0]);
-        mesh.position.y = yPos;
-        mesh.position.x = xPos;
-        mesh.position.z = zPos;
-        mesh.scale.set(20*scale,20*scale,20*scale);
-        if(interact_type){
-            var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, name);
-            terrain.push(intItem);
-        } else {
-            terrain.push(mesh);
-        }
-
-        scene.add(mesh);
+    if(interact_type){
+        var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, file);
+        terrain.push(intItem);
+    } else {
+        terrain.push(mesh);
+    }
 
 
+    scene.add(mesh);
 
-        scene.add(mesh);
 }
 
 
+//adds a trigger at given position, performs action when walking over it and consumes it
 function addTrigger (xPos, zPos, action) {
     var triggerGeom = new THREE.BoxGeometry(30,30,30);
     var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, color:0xFFFFFF});
