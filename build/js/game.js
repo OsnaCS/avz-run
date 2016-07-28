@@ -67,8 +67,6 @@ var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much hea
 
 
 function init(event) {
-
-
     // set up the scene, the camera and the renderer
     createScene();
 
