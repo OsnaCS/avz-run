@@ -3,6 +3,7 @@ package model;
 import java.awt.geom.Point2D;
 
 import model.drawables.Point;
+import model.drawables.Room;
 
 public class Transformer {
 	private Point toTransform;
@@ -48,6 +49,7 @@ public class Transformer {
 		return newP;
 
 	}
+
 	
 	//scales to input scaling factor
 	public Point scale(int sFactor) {
