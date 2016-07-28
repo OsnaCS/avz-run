@@ -7,11 +7,11 @@ var FileLoader = function() {
 
     var jsonLoader = new THREE.JSONLoader();
     // Pfad zu allen Dateien
-
-
     var files = [
-        "test.json"
-    ];
+        // Texturen
+        "test_level.json",
+		"../avz_model/building_parts/lectureroom1.json"    //TODO: diese hier dynamisch anhand der xmls laden
+	];
 
 
     for (var i = 0;i<newItemList.length;i++) {
