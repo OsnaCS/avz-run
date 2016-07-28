@@ -77,7 +77,7 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 
 		this.filename = filename;
 
-		this.aktFile = new File("roomTemp9.xml");
+		this.aktFile = new File("roomTemp0.xml");
 		this.oldFiles = null;
 
 		drawableObjectsModel = new LinkedList<DrawableObject>();
@@ -229,7 +229,9 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 				}
 				akt.delete();
 				setAktFile(null);
-				old.delete();
+				if(!(old == null)) {
+					old.delete();
+				}
 				setOldFiles(null);
 
 				// Programm beenden
@@ -272,6 +274,30 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		drawableObjectsModel.add(drawableObject);
 		drawingPanelView.getDrawingPanel().repaint();
 
+		// keine Dashed-Rooms speichern
+		if (drawableObject instanceof Room) {
+			this.roomlist.add((Room) drawableObject);
+		
+            // Hilfsfile anlegen
+            File newFile = null;
+            try {
+                String s = "roomTemp" + i + ".xml";
+                newFile = handler.writeXML(roomlist, s);
+                i++;
+                speicher.add(newFile);
+			} catch (ParserConfigurationException | TransformerException e) {
+                e.printStackTrace();
+            }
+
+            // aktuelles File neu setzen
+            this.oldFiles = this.aktFile;
+            this.aktFile = newFile;
+            
+            // XML-Anzeige neu laden
+            refreshXML(this.aktFile);
+            
+        }
+
 	}
 
 	/**
@@ -283,6 +309,21 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		drawableObjectsModel.remove(temporaryObject);
 		drawingPanelView.getDrawingPanel().repaint();
 		temporaryObject = null;
+
+		if(!speicher.isEmpty()){
+			speicher.removeLast();
+		}
+
+		String s = "roomTemp" + i + ".xml";
+
+		File help = new File(s);
+		if(help.exists()){
+			help.delete();
+		}
+
+		if(i > 0){
+			i--;
+		}
 
 		try {
 			this.aktFile.createNewFile();
@@ -305,8 +346,9 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 	public void setTemporaryDrawableObject(DrawableObject drawableObject) {
 
 		// Erst löschen
-		if (temporaryObject != null)
+		if (temporaryObject != null) {
 			this.clearTemporaryDrawableObject();
+		}
 
 		temporaryObject = drawableObject;
 		this.processDrawableObject(temporaryObject);
@@ -314,32 +356,29 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		// keine Dashed-Rooms speichern
 		if (!(drawableObject instanceof DashedRoom)) {
 			this.roomlist.add((Room) drawableObject);
-		}
 
-		// Hilfsfile anlegen
-		File newFile = null;
-		try {
-			String s = "roomTemp" + i + ".xml";
-			newFile = handler.writeXML(roomlist, s);
-			i = (i + 1) % 10;
-			if (!speicher.contains(newFile)) {
+			// Hilfsfile anlegen
+			File newFile = null;
+			try {
+				String s = "roomTemp" + i + ".xml";
+				newFile = handler.writeXML(roomlist, s);
+				i++;
 				speicher.add(newFile);
+			} catch (ParserConfigurationException | TransformerException e) {
+				e.printStackTrace();
 			}
-		} catch (ParserConfigurationException | TransformerException e) {
-			e.printStackTrace();
+
+			// aktuelles File neu setzen
+			this.oldFiles = this.aktFile;
+			this.aktFile = newFile;
+
+			// XML-Anzeige neu laden
+			refreshXML(this.aktFile);
 		}
-
-		// aktuelles File neu setzen
-		this.oldFiles = this.aktFile;
-		this.aktFile = newFile;
-
-		// XML-Anzeige neu laden
-		refreshXML(this.aktFile);
-
 	}
 
 	/**
-	 * Setzt dei XML-Anzeige neu
+	 * Setzt die XML-Anzeige neu
 	 * 
 	 * @param f
 	 *            aktuelles File, das in der Anzeige angezeigt wird
