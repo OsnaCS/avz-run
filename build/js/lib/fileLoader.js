@@ -22,6 +22,7 @@ var FileLoader = function() {
 
     function loadJson(file, name) {
         var jsonLoader = new THREE.JSONLoader();
+        console.log("debug: " + file);
         jsonLoader.load(file,
             function (geometry,mat) {
                 // on success:
@@ -106,7 +107,6 @@ var FileLoader = function() {
             return isReady() ? loadedFiles : undefined;
         },
         get: function(name) {
-            console.log(name);
             var result = isReady() ? loadedFiles[name].clone() : undefined;
             console.log(name);
 
