@@ -34,6 +34,10 @@ public class Room extends Rectangle {
         this.center = new Point(0,0);
     }
 
+    public Room() {
+    	
+    }
+    
     public Room(Room r) {
         this.name = r.getName();
 
