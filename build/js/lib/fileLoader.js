@@ -4,13 +4,13 @@
 
 var FileLoader = function() {
     console.log("FileLoader running ...");
-    
-    // Pfad zu allen Dateien
-    var files = [
-        // Texturen
-        "test_level.json"
 
-    ];
+    // Pfad zu allen Dateien
+
+
+    var files = [];
+
+
     for (var i = 0;i<newItemList.length;i++) {
         files.push(newItemList[i]);
     }
@@ -25,6 +25,7 @@ var FileLoader = function() {
         jsonLoader.load(file,
             function (geometry,mat) {
                 // on success:
+
                 console.log("got:"+name);
                 material = new THREE.MultiMaterial(mat)
 
@@ -38,6 +39,7 @@ var FileLoader = function() {
                 // Glättet die Objekte
                 geometry.mergeVertices();
                 // geometry.computeVertexNormals();
+
 
 
                 loadedFiles[name] = new THREE.Mesh(geometry,material);
@@ -61,25 +63,20 @@ var FileLoader = function() {
         var type = h[h.length-1].split(".")[1];
 
         // abhängig vom Dateityp: korrekten Loader auswählen
-        switch (type) {
-            case "json":
-                loadJson(file, name);
-                break;
-            case "png": // no break!
-            case "jpg": // no break!
-            case "jpeg":
-                loadImage(file, name);
-                break;
-            default:
-                console.log("Error: unknown file format: "+file);
-        }
+
+
+        loadJson(file, name);
+
+
     }
     window.setTimeout(function(){
         $(".loading").css("display" , " none" );
         $(".loadtext").css("display" , " none" );
         $(".btn").css("display" , " inline-block" );},2000);
-    
-    
+
+
+
+
 
     //initialize Audio-files
 
@@ -87,8 +84,10 @@ var FileLoader = function() {
 
     function isReady() {
         // gibt true zurück, wenn alle Files geladen wurden filesSuccessfullyLoaded == files.length
+
         //return (filesSuccessfullyLoaded==files.length);
         return true; //while objects.xml contains errors
+
     }
 
     // "public" Methoden:
@@ -100,8 +99,10 @@ var FileLoader = function() {
             return isReady() ? loadedFiles : undefined;
         },
         get: function(name) {
+
             var result = isReady() ? loadedFiles[name].clone() : undefined;
             console.log(name);
+
             if (result == undefined) {
                 console.log("FileLoader could not find texture '"+name+"'");
             }
