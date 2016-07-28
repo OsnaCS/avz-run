@@ -57,9 +57,7 @@ var MOVEMENT_SPEED = 600;
 var JUMP_SPEED = 425;
 
 var STAMINA = 100;
-
 var energy = STAMINA;
-
 
 var flashCooldown = 0;
 var flashInterval;
@@ -78,30 +76,28 @@ if (havePointerLock) {
 
         if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
 
-
-            //          controlsEnabled = true;
             controls.enabled = true;
-            blocker.style.display = 'none';
+
+            $(".GUI").show();
+            $("#blocker").hide();
 
         } else {
+
             controls.enabled = false;
 
-            blocker.style.display = '-webkit-box';
-            blocker.style.display = '-moz-box';
-            blocker.style.display = 'box';
-
-            instructions.style.display = '';
+            if (player.health > 0) {
+                $("#blocker").show();
+            }
             menu = true;
-            $(".GUI").hide();
-
-
+            $('.gui').hide();
         }
+
 
     };
 
     var pointerlockerror = function(event) {
 
-        instructions.style.display = '';
+         $("#blocker").hide();
 
     };
 
@@ -122,11 +118,10 @@ if (havePointerLock) {
 
         // Ask the browser to lock the pointer
         element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
-
+        element.requestPointerLock();
         menu = false;
         $(".GUI").show();
 
-        element.requestPointerLock();
 
     }, false);
 
@@ -139,6 +134,7 @@ if (havePointerLock) {
 
         menu = false;
         $(".GUI").show();
+        prevTime = performance.now();
 
         element.requestPointerLock();
 
@@ -150,6 +146,12 @@ if (havePointerLock) {
 
     }, false);
 
+    buttonRestart.addEventListener('click', function(event) {
+        location.reload();
+
+    }, false);
+
+
 } else {
 
     startInstructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
@@ -157,7 +159,7 @@ if (havePointerLock) {
 }
 
 //CALL THIS IN YOUR INIT BLOCK
-function initControls() {
+function initControls(callback) {
 
     var onKeyDown = function(event) {
 
@@ -212,7 +214,7 @@ function initControls() {
             case 16: //RUN FOREST! (shift)
 
                 if (!ducked && !regenerate) {
-                    adjustPlaybackRate(footsteps,1.5,true);
+                    adjustPlaybackRate(footsteps, 1.5, true);
                     running = true;
                     speed_factor = RUN_SPEED;
                 }
@@ -237,18 +239,20 @@ function initControls() {
 
                 break;
 
+
             case 80: //pause p
-                if (!moveForward && !moveLeft && !moveRight && !moveBackward && !ducked && !jump) {
+                if (!moveForward && !moveLeft && !moveRight && !moveBackward && !ducked) {
+
                     if (!menu) {
                         pause = !pause;
                     }
                     if (pause) {
                         controls.enabled = false;
-                        $(".pauseBlocker").css("z-index", 15);
+                        $("#blocker").show();
                         $(".GUI").hide();
                     } else {
                         controls.enabled = true;
-                        $(".pauseBlocker").css("z-index", 0);
+                        $("#blocker").hide();
                         $(".GUI").show();
                     }
                 }
@@ -292,7 +296,7 @@ function initControls() {
 
 
             case 16: // shift
-                adjustPlaybackRate(footsteps,1, true);
+                adjustPlaybackRate(footsteps, 1, true);
                 speed_factor = 1;
                 running = false;
                 break;
@@ -336,6 +340,8 @@ function initControls() {
     rayDirectionZpos = new THREE.Vector3();
     rayDirectionZneg = new THREE.Vector3();
 
+    callback();
+
 }
 
 
@@ -347,8 +353,8 @@ function controlLoop(controls) {
 
 
     // determines stepwidth
-    var time = performance.now();
-    var delta = (time - prevTime) / 1000;
+    time = performance.now();
+    delta = (time - prevTime) / 1000;
 
     velocity.x -= velocity.x * 10.0 * delta;
     velocity.z -= velocity.z * 10.0 * delta;
@@ -436,7 +442,7 @@ function controlLoop(controls) {
 
     //RUNNING MOTION
 
-    if((moveForward || moveBackward || moveRight || moveLeft)&&!ducked) {
+    if ((moveForward || moveBackward || moveRight || moveLeft) && !ducked) {
         if (running) {
 
             //add positive value to y position while we are below threshold
@@ -456,27 +462,33 @@ function controlLoop(controls) {
     }
 
     // player can get exhausted/regenerate energy
-    if (running) {
-        energy -= delta * 30;
-        if (energy <= 0) {
-            regenerate = true;
-            speed_factor = 1;
-            running = false;
-        }
-    } else {
-        energy += delta * 10;
-        if (energy >= STAMINA) {
-            energy = STAMINA;
-            regenerate = false;
-        }
-    }
-    $(".energy-bar").css("width", '' + energy + '%');
+    if (!menu) {
 
+        if (running) {
+            energy -= delta * 30;
+            if (energy <= 0) {
+                outOfBreath();
+                regenerate = true;
+                speed_factor = 1;
+                running = false;
+            }
+        } else {
+            energy += delta * 10;
+            if (energy >= STAMINA) {
+                energy = STAMINA;
+                regenerate = false;
+            }
+        }
+        $(".energy-bar").css("width", '' + energy + '%');
+    }
 
     // stop gravity at ground level as collision detection sometimes fails for floor  
     if (controls.getObject().position.y < PLAYERHEIGHT && firstTime) {
         velocity.y = 0;
         controls.getObject().position.y = PLAYERHEIGHT +5;
+    }
+    if (controls.getObject().position.y < -500){
+        player.damage(10000);
     }
 
     // checks if we can stand up (may be forbidden when crouching beneath an object)
@@ -499,7 +511,6 @@ function controlLoop(controls) {
     }
 
 }
-
 
 
 
@@ -581,6 +592,7 @@ function fireAction() {
         scene.fog.color.set(0xff0000);;
         flashCooldown = 1;
         player.damage(300);
+        painSound();
         flashInterval = setInterval(function() {
             flashCooldown--;
         }, 1000);

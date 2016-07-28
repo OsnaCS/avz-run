@@ -10,8 +10,8 @@ var FileLoader = function() {
         // Texturen
         "test_level.json",
 		"../avz_model/building_parts/lectureroom1.json"    //TODO: diese hier dynamisch anhand der xmls laden
+	];
 
-    ];
     for (var i = 0;i<newItemList.length;i++) {
         files.push(newItemList[i]);
     }
@@ -26,6 +26,7 @@ var FileLoader = function() {
         jsonLoader.load(file,
             function (geometry,mat) {
                 // on success:
+
                 console.log("got:"+name);
                 material = new THREE.MultiMaterial(mat)
 
@@ -41,9 +42,19 @@ var FileLoader = function() {
                 // geometry.computeVertexNormals();
 
 
+
                 loadedFiles[name] = new THREE.Mesh(geometry,material);
 
                 filesSuccessfullyLoaded += 1;
+
+                //checks if everything is loaded and hides loadbar and shows start button
+                if(filesSuccessfullyLoaded == file.length){
+                    $(".loading").css("display" , " none" );
+                    $(".btn").css("display" , " inline-block" );
+                };
+
+                //updates loadingbar
+                $(".loading-bar").css("width" , ' '+ (filesSuccessfullyLoaded / file.length * 100) +'%');
             }
         );
     }
@@ -60,6 +71,19 @@ var FileLoader = function() {
         loadJson(file, name);
     }
 
+    //checks if everything is loaded after a set time periode
+    window.setTimeout(
+        function(){
+            if(filesSuccessfullyLoaded != file.length){
+                alert("Warning! Not all elements are loaded. Play at your own risk.");
+                $("#loadingBlocker").hide();
+                $("#startInstructions").show();
+            }
+
+        },3000
+    );
+
+
 
     //initialize Audio-files
 
@@ -67,8 +91,10 @@ var FileLoader = function() {
 
     function isReady() {
         // gibt true zurück, wenn alle Files geladen wurden filesSuccessfullyLoaded == files.length
+
         //return (filesSuccessfullyLoaded==files.length);
         return true; //while objects.xml contains errors
+
     }
 
     // "public" Methoden:
@@ -80,8 +106,10 @@ var FileLoader = function() {
             return isReady() ? loadedFiles : undefined;
         },
         get: function(name) {
+
             var result = isReady() ? loadedFiles[name].clone() : undefined;
             console.log(name);
+
             if (result == undefined) {
                 console.log("FileLoader could not find texture '"+name+"'");
             }

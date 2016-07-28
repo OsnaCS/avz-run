@@ -15,22 +15,33 @@
 
 // call initControls() in init()
 // call controlLoop(controls) in loop()
-var newItemList =[];
-var fileLoader =null;
-function loadFiles(){
-    makeArrayFromXML(complete, newItemList, "../avz_model/materials/objects.xml");
-
-}
-
-function complete(){
-    fileLoader= new FileLoader();// = new FileLoader();
-    window.setTimeout(init, 1500);
-
-}
 
 
+
+// First all Files will be loaded
 window.addEventListener('load', loadFiles, false);
 
+// Initialize List for Files to load
+var newItemList =[];
+
+// Initialize fileLoader
+var fileLoader =null;
+
+// Load file-pathes from XML in list
+// callback function complete
+function loadFiles(){
+    makeArrayFromXML(complete, newItemList, "../avz_model/materials/objects.xml");
+}
+
+// if XML-Parsing done
+function complete(){
+    // Load all files in Loader
+    fileLoader= new FileLoader();// = new FileLoader();
+    // Wait untill ready
+    // starts init
+    window.setTimeout(init, 150);
+
+}
 
 var scene,
     camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
@@ -50,52 +61,45 @@ var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much hea
 
 
 
+
     //loads all Objects before creating
 
 
 
 function init(event) {
-
-
 	CreateSegment("lectureroom1");
 
+
     // set up the scene, the camera and the renderer
-    createScene();
+    createScene(audio);
 
+    function audio (){
     // init audio support
-    createAudio();
+        createAudio(controls);
 
-    // YOU NEED TO CALL THIS
-    initControls();
+        function controls() {
+            initControls(room);
 
-    // add the objects and lights - replace those functions as you please
-    createRoom();
-
-
-    createItems();
-
-    createLights();
-
-    //createFire();
-
-
-    // start a loop that will update the objects' positions
-    // and render the scene on each frame
-
-
-    loop();
+            function room() {
+                // add the objects and lights - replace those functions as you please
+                createRoom(startLoop);
+                function startLoop () {
+					// start a loop that will update the objects' positions
+					// and render the scene on each frame
+					loop();                                             
+                }
+            }
+        }
+    }
 }
-
-
-
 
 // Stats
 var stats = new Stats();
 stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild(stats.dom);
 
-
-function createScene() {
+//Create the Scene
+function createScene(complete) {
 
     blocker = document.getElementById('blocker');
     container = document.getElementById('world');
@@ -172,13 +176,16 @@ function createScene() {
     window.addEventListener('resize', handleWindowResize, false);
 
     scene.fog = new THREE.FogExp2(0x424242, 0.005);
+    complete();
 }
 
 
 function loop() {
 
+
     if (!menu && !pause) {
         if (player.health <= 0) {
+            gameOverSound();
             gameOver();
         } else {
 
@@ -247,16 +254,17 @@ function createLights() {
     // to activate the lights, just add them to the scene
     scene.add(hemisphereLight);
     scene.add(shadowLight);
+    
 }
 
 
-function createRoom() {
+function createRoom(callback) {
 	
-	setTimeout(PutSegments,1000);
-	setTimeout(door_in_doors,1200);
-	setTimeout(objects_in_spawns,1400);
-	setTimeout(set_fires,1600);
-	setTimeout(turn_on_lights,1800);
+	setTimeout(PutSegments,2000);
+	setTimeout(door_in_doors,2200);
+	setTimeout(objects_in_spawns,2400);
+	setTimeout(set_fires,2600);
+	setTimeout(turn_on_lights,2800);
 	
    // var mesh = fileLoader.get("lectureroom1");
     // terrain.push(mesh);
@@ -264,10 +272,10 @@ function createRoom() {
     // mesh.position.x = 5;
     // mesh.scale.set(20, 20, 20);
     // scene.add(mesh);
-
+	
+	callback();
 
 }
-
 
 
 //debug-stuff, deleteme
@@ -288,7 +296,8 @@ function printmost(obj) {
 }	
 //debugstuffdeleteme ende
 
-function createItems(){
+function createItems(callback){
+
 
      // addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
 	 
@@ -310,36 +319,38 @@ function createItems(){
         console.log(newItemList[i]);
      }
 
-
-
     addTrigger(-64,-71,action);
-    function action() {
-        console.log("hi");
-    }
 
+    callback();
 
 }
 
+
+function action() {
+    console.log("hi");
+}
+
 // Add Object with given Path to given coordinates
+function addItem(file, xPos, yPos, zPos, scale, angle, interact_type, intfunction){
+    var tmpName =  file.split("/");
+    var tmpName = tmpName[tmpName.length-1];
+    var mesh = (fileLoader.get(tmpName.split(".")[0])).clone();
+    var angleObj = (Math.PI*2*angle)/360;
+    mesh.position.y = yPos;
+    mesh.position.x = xPos;
+    mesh.position.z = zPos;
+    mesh.scale.set(20*scale,20*scale,20*scale);
+    mesh.rotateY(angleObj);
 
-function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name){
+    if(interact_type){
+        var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, file);
+        terrain.push(intItem);
+    } else {
+        terrain.push(mesh);
+    }
 
-        var tmpName =  file.split("/");
-        var tmpName = tmpName[tmpName.length-1];
-        console.log(tmpName);
-        var mesh = fileLoader.get(tmpName.split(".")[0]);
-        mesh.position.y = yPos;
-        mesh.position.x = xPos;
-        mesh.position.z = zPos;
-        mesh.scale.set(20*scale,20*scale,20*scale);
-        if(interact_type){
-            var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, name);
-            terrain.push(intItem);
-        } else {
-            terrain.push(mesh);
-        }
 
-        scene.add(mesh);
+    scene.add(mesh);
 
 }
 
