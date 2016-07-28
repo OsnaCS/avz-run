@@ -31,7 +31,6 @@ var fileLoader =null;
 // callback function complete
 function loadFiles(){
     makeArrayFromXML(complete, newItemList, "../avz_model/materials/objects.xml");
-
 }
 
 // if XML-Parsing done
@@ -68,8 +67,6 @@ var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much hea
 
 
 function init(event) {
-
-
 
 
     // set up the scene, the camera and the renderer

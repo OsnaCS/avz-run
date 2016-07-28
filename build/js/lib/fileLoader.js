@@ -45,6 +45,11 @@ var FileLoader = function() {
                 loadedFiles[name] = new THREE.Mesh(geometry,material);
 
                 filesSuccessfullyLoaded += 1;
+                if(filesSuccessfullyLoaded == file.length){
+                    $(".loading").css("display" , " none" );
+                    $(".btn").css("display" , " inline-block" );
+                };
+                $(".loading-bar").css("width" , ' '+ (filesSuccessfullyLoaded / file.length * 100) +'%');
             }
         );
     }
@@ -59,9 +64,16 @@ var FileLoader = function() {
 
         // abhängig vom Dateityp: korrekten Loader auswählen
 
+
         loadJson(file, name);
 
+
     }
+    window.setTimeout(function(){
+        $(".loading").css("display" , " none" );
+        $(".loadtext").css("display" , " none" );
+        $(".btn").css("display" , " inline-block" );},2000);
+
 
 
 
