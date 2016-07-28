@@ -30,12 +30,17 @@ public class XMLPanel extends JPanel {
         JLabel l = new JLabel("XML-Datei");
         this.add(l, BorderLayout.NORTH);
         textField = new JTextPane();
-        JScrollPane scrollPanel = new JScrollPane();
-        scrollPanel.add(textField);
-        
        
+       
+      
 
-        this.add(scrollPanel, BorderLayout.CENTER);
+        final JScrollPane scroll = new JScrollPane(textField);
+
+    
+        setLayout(new BorderLayout());
+        add(scroll, BorderLayout.CENTER);
+        setSize(300, 300);
+        setVisible(true);
 
 
         // Buttons
