@@ -331,6 +331,8 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		}
 		// Textfeld neu setzen
 		this.drawingPanelView.getXMLPanel().getTextField().setText(temp.toString());
+		// Test output, output has wanted format, but textField don't. 
+		System.out.println(temp.toString());
 	}
 
 	/**
