@@ -87,7 +87,14 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		// das UI anpassen
 		drawingPanelView.getButton().setText("Clear");
 
-		Room testroom = handler.createRoomFromXML();
+		Room testroom=null;
+		try {
+			testroom = handler.createRoomFromXML("lectureroom1");
+		} catch (FileNotFoundException e2) {
+			// TODO Auto-generated catch block
+			System.err.println("Room was not found");
+			e2.printStackTrace();
+		}
 
 		// Diverse Listener für unterschiedliche Drawables anlegen
 		MouseInputAdapter[] listener = { new RoomListener(this, testroom, testroom.getWaylist()) };
@@ -324,8 +331,7 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		}
 		// Textfeld neu setzen
 		this.drawingPanelView.getXMLPanel().getTextField().setText(temp.toString());
-		// Test output, output has wanted format, but textField don't. 
-		System.out.println(temp.toString());
+
 	}
 
 	/**
