@@ -16,7 +16,7 @@
     <!-- Loading -->
     <div id="loadingBlocker">
         <div class="instructionsContent">
-            <div class="loadtext"> Lädt...</div>
+            <div class="loadtext"> Loading...</div>
             <div class="loading">
                 <div class="loading-bar" role="loadingbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
                 </div>
@@ -27,20 +27,23 @@
     <div id="startInstructions">
         <div class="instructionsContent">
             <h1>AVZ-Run</h1>
-            <h2>Kannst du entkommen?</h2>
+            <h2>Can you escape?</h2>
             <hr>
-            <h3>Namen eingeben:</h3>
-            <input id="nickname" type="text" class="form-control" placeholder="Nickname">
+            <div class="selectCharacter">
+                <h2>Select Character</h2>
+                <button id="buttonMale" class="btn btn-gender active">male</button>
+                <button id="buttonFemale" class="btn btn-gender">female</button>
+            </div>
             <hr>
-            <button id="buttonStart" class="btn">Spielen</button>
+            <button id="buttonStart" class="btn">Play</button>
         </div>
     </div>
     <!-- Pause Screen -->
     <div id="blocker">
         <div class="instructionsContent">
-            <button id="button" class="btn">Weiter</button>
+            <button id="button" class="btn">Continue</button>
             <hr>
-            <button id="button2" class="btn">Hauptmenü</button>
+            <button id="button2" class="btn">Main Menu</button>
         </div>
     </div>
     <!-- Game Over -->
@@ -48,13 +51,12 @@
         <div class="instructionsContent">
             <h1>Game Over!</h1>
             <hr>
-            <button id="buttonRestart" class="btn">Neu starten</button>
+            <button id="buttonRestart" class="btn">Restart</button>
         </div>
     </div>
     <!-- GUI -->
     <div class="gui">
         <div class="crosshair"></div>
-        <div class="showNickname"></div>
         <div class="userBar">
             <div class="userSection left">
                 <span class="sectionTitle"><img class="running-icon" src="bilder/running.png"></span>

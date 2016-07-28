@@ -122,10 +122,6 @@ if (havePointerLock) {
         menu = false;
         $(".GUI").show();
 
-        playername = $("#nickname").val();
-        console.log(playername);
-        $(".showNickname").html(playername);
-
 
     }, false);
 
@@ -241,6 +237,25 @@ function initControls(callback) {
                     raycasterZneg.far = 3;
                 }
 
+                break;
+
+
+            case 80: //pause p
+                if (!moveForward && !moveLeft && !moveRight && !moveBackward && !ducked) {
+
+                    if (!menu) {
+                        pause = !pause;
+                    }
+                    if (pause) {
+                        controls.enabled = false;
+                        $("#blocker").show();
+                        $(".GUI").hide();
+                    } else {
+                        controls.enabled = true;
+                        $("#blocker").hide();
+                        $(".GUI").show();
+                    }
+                }
                 break;
 
             case 73: // i to show inventory  (maybe also to toggle later?)

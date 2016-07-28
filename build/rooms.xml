@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<rooms>
+<rooms RoomPath="../avz_model/building_parts/">
 
 	<!-- DAS HIER IST KOMPLETT FINAL!!!!! -->
 	<room name="lectureroom1" filename="lectureroom1.json">
@@ -65,11 +65,12 @@
 		   <fire index="1" position="(9,0,0)" size="(2,2,2)" val="10" />
 		</fires>
 		<lights>
-		   <light index="1" kind="pointlight" objectname="deckenlicht" position="(5,2,4)" intensity="0.7" color="0xFFFFFF"/>
+		   <light index="1" kind="pointlight" objectname="deckenlicht" objectscale="0.5" position="(5,2,5)" normal="(0,0,-1)" intensity="1" color="0xFFFFFF"/>
 		</lights>	
 	</room>
 	
 	<!-- DAS HIER IST KOMPLETT FINAL!!!!! -->
+	<!--
 	<room name="groundlevel" filename="groundlevel.json">
         <origin x="0" y="0"/>
         <size xmin="-18.47646" xmax="31.0175" ymin="-25.4777" ymax="14"/>
@@ -79,7 +80,6 @@
 			<door type="norm" index="hs1" position="(17.39, 0)" normal="(0, 1)"/>
 			<door type="norm" index="hs2" position="(24.17, 0)" normal="(0, 1)"/>
 			<door type="glass" index="flur" position="(11, -6.28)" normal="(1, 0)"/>
-			<!--<door type="glass" index="exit" position="(11,-6.28)" normal="(1, 0)"/>-->
         </doors>
         <spawns>
 			<spawn  index="feuerloescher" position="(14.3, 3, 1)" object="feuerloescher" normaltowall="(0, 1, 0)"/>
@@ -116,9 +116,11 @@
 			<light index="hs2_back" kind="pointlight" objectname="deckenlicht" position="(26.87, 9.05, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
 			<light index="klo_small" kind="pointlight" objectname="deckenlicht" position="(7.71, -14.13, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
         </lights>
-	<!-- positon spieler spawn: (10.5, 4.8, 3) -->
     </room>
-
+	-->
+	<!-- positon spieler spawn: (10.5, 4.8, 3) -->
+	
+	
 	<!-- hier fehlen spawns, feuer, lights -->
 	<room name="circle_walled" filename="circle_WALLED.json">
 		<origin x="0" y="0" />
@@ -214,6 +216,7 @@
 	</room>
 
 	<!-- das hier ist komplett falsch -->
+	<!-- 
 	<room name="entrance" filename="entrance.json">
 		<origin x="0" y="0" z="0"/>
 		<size xmin = "0" xmax = "7" ymin = "-8.5" ymax = "0"/>
@@ -221,6 +224,7 @@
 			<door index="1" type="norm"  normal="(0,-1)" position="(1.85, 0)"/>
 		</doors>	
 	</room>	
+	-->
 	
 	
 	
