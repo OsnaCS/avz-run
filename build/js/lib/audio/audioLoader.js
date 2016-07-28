@@ -5,7 +5,7 @@ var audioListener, audioLoader, footsteps, atmosphere;
 var footstepsPlaying = false;
 
 // init loader and listener
-function createAudio() {
+function createAudio(complete) {
     // Init AudioListener
     audioListener = new THREE.AudioListener();
     camera.add(audioListener);
@@ -15,6 +15,7 @@ function createAudio() {
 
     // basic sounds like footsteps
     createBasicSounds();
+    complete();
 }
 
 // creates the sound with specific options
@@ -43,7 +44,7 @@ function stopSound(sound) {
 
 function createBasicSounds() {
     footsteps = createSound("footsteps", 10, 1, true, 1);
-    atmosphere = createSound("atmosphere", 10, 0.1, true, 1, function(){
+    atmosphere = createSound("atmosphere", 10, 0.1, true, 0.5, function(){
         atmosphere.play();
     });
     camera.add(footsteps);

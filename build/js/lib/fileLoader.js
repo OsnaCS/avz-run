@@ -6,10 +6,11 @@ var FileLoader = function() {
     console.log("FileLoader running ...");
 
     // Pfad zu allen Dateien
-
-
-    var files = [];
-
+    var files = [
+        // Texturen
+        "test_level.json",
+		"../avz_model/building_parts/lectureroom1.json"    //TODO: diese hier dynamisch anhand der xmls laden
+	];
 
     for (var i = 0;i<newItemList.length;i++) {
         files.push(newItemList[i]);
@@ -75,11 +76,10 @@ var FileLoader = function() {
         function(){
             if(filesSuccessfullyLoaded != file.length){
                 alert("Warning! Not all elements are loaded. Play at your own risk.");
-                $(".loading").css("display" , " none" );
-                $(".loadtext").css("display" , " none" );
-                $(".btn").css("display" , " inline-block" );
+                $("#loadingBlocker").hide();
+                $("#startInstructions").show();
             }
-            
+
         },3000
     );
 
