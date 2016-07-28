@@ -232,8 +232,8 @@ function initControls() {
 
                 break;
 
-            case 80: //pause p
-                if (!moveForward && !moveLeft && !moveRight && !moveBackward && !ducked && !jump) {
+         /*   case 80: //pause p
+                if (!moveForward && !moveLeft && !moveRight && !moveBackward && !ducked && ) {
                     if (!menu) {
                         pause = !pause;
                     }
@@ -247,7 +247,7 @@ function initControls() {
                         $(".GUI").show();
                     }
                 }
-                break;
+                break; */
 
             case 73: // i to show inventory  (maybe also to toggle later?)
                 player.showInv();
