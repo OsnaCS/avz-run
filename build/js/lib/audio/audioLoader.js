@@ -1,7 +1,7 @@
 // Audio Loader
 // Credits: Steffen Schiffel, B.Sc. for callback function optimization (CEO of Schiffel IT-Service GmbH)
 // provides general inilization of audio related stuff
-var audioListener, audioLoader, footsteps;
+var audioListener, audioLoader, footsteps, atmosphere;
 var footstepsPlaying = false;
 
 // init loader and listener
@@ -43,7 +43,11 @@ function stopSound(sound) {
 
 function createBasicSounds() {
     footsteps = createSound("footsteps", 10, 1, true, 1);
+    atmosphere = createSound("atmosphere", 10, 0.1, true, 1, function(){
+        atmosphere.play();
+    });
     camera.add(footsteps);
+    camera.add(atmosphere);
 }
 
 

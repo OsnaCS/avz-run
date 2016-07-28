@@ -17,8 +17,31 @@
 // call controlLoop(controls) in loop()
 
 
-window.addEventListener('load', init, false);
 
+// First all Files will be loaded
+window.addEventListener('load', loadFiles, false);
+
+// Initialize List for Files to load
+var newItemList =[];
+
+// Initialize fileLoader
+var fileLoader =null;
+
+// Load file-pathes from XML in list
+// callback function complete
+function loadFiles(){
+    makeArrayFromXML(complete, newItemList, "../avz_model/materials/objects.xml");
+}
+
+// if XML-Parsing done
+function complete(){
+    // Load all files in Loader
+    fileLoader= new FileLoader();// = new FileLoader();
+    // Wait untill ready
+    // starts init
+    window.setTimeout(init, 150);
+
+}
 
 var scene,
     camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
@@ -28,7 +51,6 @@ var scene,
 var menu = true;
 var pause = false;
 
-var pathItem = '../avz_model/materials/objects/';
 //variable used for increasing fog
 var MAX_FOG = 0.015;
 var myfog=0.002;
@@ -37,10 +59,14 @@ var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
 
-var itemList = ['Axe.json', 'toilett_open_with_door.json', 'plant.json', 'OHP.json', 'toilett_open_without_door.json', 'toilett_door.json', 'feuerloescher.json', 'tuer.json'];
+
+
+
+    //loads all Objects before creating
+
+
 
 function init(event) {
-
     // set up the scene, the camera and the renderer
     createScene();
 
@@ -52,8 +78,14 @@ function init(event) {
 
     // add the objects and lights - replace those functions as you please
     createRoom();
+
+    // set up items
+    createItems();
+
+    // set up lights
     createLights();
 
+    // set up fire
     createFire();
 
     // start a loop that will update the objects' positions
@@ -61,13 +93,12 @@ function init(event) {
     loop();
 }
 
-
 // Stats
 var stats = new Stats();
 stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild(stats.dom);
 
-
+//Create the Scene
 function createScene() {
 
     blocker = document.getElementById('blocker');
@@ -150,6 +181,7 @@ function createScene() {
 
 function loop() {
 
+
     if (!menu && !pause) {
         if (player.health <= 0) {
             gameOver();
@@ -224,17 +256,8 @@ function createLights() {
 
 
 function createRoom() {
-    var jloader2 = new THREE.JSONLoader();
-    jloader2.load('test_level.json', function(geo, mat) {
-        var materials = new THREE.MeshFaceMaterial(mat);
-        var mesh = new THREE.Mesh(geo, materials);
-        terrain.push(mesh);
-        mesh.position.y = 0;
-        mesh.position.x = 5;
-        mesh.scale.set(20, 20, 20);
-        scene.add(mesh);
-    });
 
+<<<<<<< HEAD
     addItem(pathItem.concat(itemList[0]), -50, 10, 10, 2, true, pickUpItem, itemList[0]);
     addItem(pathItem.concat(itemList[1]), 20, 5, 10, 1, true, destroy, itemList[1]);
     addItem(pathItem.concat(itemList[2]), 0, 5, 20, 3, true, pickUpItem, itemList[2]);
@@ -243,51 +266,84 @@ function createRoom() {
     addItem(pathItem.concat(itemList[5]), 30, 5, -30, 1, true, openLockedDoor, itemList[5]);
     addItem(pathItem.concat(itemList[6]), 30, 5, -100, 1, true, pickUpItem, itemList[6]);
     addItem(pathItem.concat(itemList[7]), 100, 5, -100, 1, true, damage_door, itemList[7]);
+=======
+    var mesh = fileLoader.get("test_level");
+    terrain.push(mesh);
+    mesh.position.y = 0;
+    mesh.position.x = 5;
+    mesh.scale.set(20, 20, 20);
+    scene.add(mesh);
+
+}
+
+
+function createItems(){
+
+    addItem((newItemList[0]), -50, 10, 10, 10, 90, true, pickUpItem);
+    addItem((newItemList[0]), -50, 10, 10, 10, 0, true, pickUpItem);
+    addItem((newItemList[0]), -50, 10, 10, 10, 180, true, pickUpItem);
+    addItem((newItemList[40]), 50, 0, 10, 2, 270, false, pickUpItem);
+    addItem((newItemList[48]), 0, 0, -700, 1, 0, false, null);
+>>>>>>> OsnaCS/master
 
     addTrigger(-64,-71,action);
-    function action() {
-        console.log("hi");
-    }
 
 }
 
+
+function action() {
+    console.log("hi");
+}
 
 // Add Object with given Path to given coordinates
+function addItem(file, xPos, yPos, zPos, scale, angle, interact_type, intfunction){
+    var tmpName =  file.split("/");
+    var tmpName = tmpName[tmpName.length-1];
+    var mesh = (fileLoader.get(tmpName.split(".")[0])).clone();
+    var angleObj = (Math.PI*2*angle)/360;
+    mesh.position.y = yPos;
+    mesh.position.x = xPos;
+    mesh.position.z = zPos;
+    mesh.scale.set(20*scale,20*scale,20*scale);
+    mesh.rotateY(angleObj);
 
-function addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name){
-        var jloader2 = new THREE.JSONLoader();
-        jloader2.load(file, function(geo, mat){
-            var materials = new THREE.MeshFaceMaterial( mat );
-            var mesh = new THREE.Mesh(geo, materials);
+    if(interact_type){
+        var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, file);
+        terrain.push(intItem);
+    } else {
+        terrain.push(mesh);
+    }
 
-            mesh.position.y = yPos;
-            mesh.position.x = xPos;
-            mesh.position.z = zPos;
-            mesh.scale.set(20*scale,20*scale,20*scale);
-            if(interact_type){
-                var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, name);
-                terrain.push(intItem);
-            } else {
-                terrain.push(mesh);
-            }
 
-            scene.add(mesh);
+    scene.add(mesh);
 
-        });
 }
 
+
+//adds a trigger at given position, performs action when walking over it and consumes it
 function addTrigger (xPos, zPos, action) {
     var triggerGeom = new THREE.BoxGeometry(30,30,30);
-    var mat = new THREE.MeshBasicMaterial({ transparent: false, opacity: 1, depthWrite: false, color:0xFFFFFF});
+    var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, color:0xFFFFFF});
     var triggerMesh = new THREE.Mesh(triggerGeom,mat);
     var trigger = new GameObject(triggerMesh,action,TYPE_TRIGGER);
 
+
     trigger.mesh.position.x = xPos;
     trigger.mesh.position.z = zPos;
-    trigger.mesh.position.y = -15;
+    trigger.mesh.position.y = 0;
     scene.add(trigger.mesh);
     terrain.push(trigger);
 
+}
+
+function removeTrigger(trigger) {
+    scene.remove(trigger.mesh);
+    for (var i =0;i < terrain.length;i++) {
+        if(terrain[i]==trigger) {
+            terrain.splice(i,1);
+        }
+
+    }
 }
 
 
