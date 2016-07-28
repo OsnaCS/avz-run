@@ -2,7 +2,7 @@
 <?php error_reporting(E_ALL);?>
 <link href='/build/css/style.css' type='text/css' rel='stylesheet'/>
 <script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
-<!-- <script src="js/three.min.js"></script>
+<script src="js/three.min.js"></script>
 <script src="js/lib/fileLoader.js"></script>
 <script src="js/lib/controls/firstPerson.js"></script>
 <script src="js/lib/controls/interaction.js"></script>
@@ -14,4 +14,4 @@
 <script src="js/lib/fire/firePlacement.js"></script>
 <script src="js/lib/stats/stats.min.js"></script>
 <script src="js/lib/xml_loader/objects.js"></script>
-<script src="js/game.js"></script> -->
+<script src="js/game.js"></script>
