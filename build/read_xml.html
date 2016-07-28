@@ -24,7 +24,7 @@ th,td {
 				getDoors(xhttp,whichroom);
 			}
 	    };
-	    xhttp.open("GET", "oldrooms.xml", true);
+	    xhttp.open("GET", "rooms.xml", true);
 	    xhttp.send();
 	}
 
@@ -37,7 +37,7 @@ th,td {
 		}
 		document.getElementById("FUU").innerHTML = text;
 	}
-	
+
 	function getDoors(xml, whichroom) {
 		var DoorArr = [];
 		var text = "";
@@ -55,14 +55,13 @@ th,td {
 					DoorArr.push(cudo);
 				}
 			}
-	    }		
+	    }
 		alert(DoorArr)
 	}
-	
-	
-	
+
+
+
 </script>
 
 </body>
 </html>
-

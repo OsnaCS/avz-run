@@ -44,7 +44,7 @@ var running = false;
 var standupRequest = false;
 var regenerate = false;
 var speed_factor = 1;
-var upMotion=1;
+var upMotion = 1;
 var sideMotion = 1;
 
 var PLAYERHEIGHT = 25;
@@ -57,9 +57,7 @@ var MOVEMENT_SPEED = 600;
 var JUMP_SPEED = 425;
 
 var STAMINA = 100;
-
 var energy = STAMINA;
-
 
 var flashCooldown = 0;
 var flashInterval;
@@ -78,12 +76,12 @@ if (havePointerLock) {
 
         if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
 
-
-            //          controlsEnabled = true;
             controls.enabled = true;
             blocker.style.display = 'none';
+            $(".GUI").show();
 
         } else {
+
             controls.enabled = false;
 
             blocker.style.display = '-webkit-box';
@@ -96,6 +94,7 @@ if (havePointerLock) {
 
 
         }
+
 
     };
 
@@ -137,6 +136,7 @@ if (havePointerLock) {
 
         menu = false;
         $(".GUI").show();
+        prevTime = performance.now();
 
         element.requestPointerLock();
 
@@ -161,13 +161,15 @@ function initControls() {
 
         switch (event.keyCode) {
 
-
+            //inventory slot 1
             case 49:
                 setActiveSlot(0);
                 break;
+            //inventory slot 2
             case 50:
                 setActiveSlot(1);
                 break;
+            //inventory slot 3
             case 51:
                 setActiveSlot(2);
                 break;
@@ -208,6 +210,7 @@ function initControls() {
             case 16: //RUN FOREST! (shift)
 
                 if (!ducked && !regenerate) {
+                    adjustPlaybackRate(footsteps,1.5,true);
                     running = true;
                     speed_factor = RUN_SPEED;
                 }
@@ -232,8 +235,10 @@ function initControls() {
 
                 break;
 
-         /*   case 80: //pause p
-                if (!moveForward && !moveLeft && !moveRight && !moveBackward && !ducked && ) {
+
+            case 80: //pause p
+                if (!moveForward && !moveLeft && !moveRight && !moveBackward && !ducked) {
+
                     if (!menu) {
                         pause = !pause;
                     }
@@ -247,7 +252,7 @@ function initControls() {
                         $(".GUI").show();
                     }
                 }
-                break; */
+                break;
 
             case 73: // i to show inventory  (maybe also to toggle later?)
                 player.showInv();
@@ -287,7 +292,7 @@ function initControls() {
 
 
             case 16: // shift
-
+                adjustPlaybackRate(footsteps,1, true);
                 speed_factor = 1;
                 running = false;
                 break;
@@ -334,7 +339,7 @@ function initControls() {
 }
 
 
-var firstTime = true;
+var firstTime = true;//we fall through the floor while spawning.. sick workaround
 
 function controlLoop(controls) {
 
@@ -342,8 +347,8 @@ function controlLoop(controls) {
 
 
     // determines stepwidth
-    var time = performance.now();
-    var delta = (time - prevTime) / 1000;
+    time = performance.now();
+    delta = (time - prevTime) / 1000;
 
     velocity.x -= velocity.x * 10.0 * delta;
     velocity.z -= velocity.z * 10.0 * delta;
@@ -367,12 +372,16 @@ function controlLoop(controls) {
 
     // forbid player to move farther if there are obstacles in the respective directions
     if (intersectionsY.length > 0) {
+
+        //collision with fire!
         if (intersectionsY[0].object.type == TYPE_FIRE) {
             fireAction();
         } else if (intersectionsY[0].object.type == TYPE_TRIGGER) {
+            //collision with trigger
             intersectionsY[0].object.interact();
-            intersectionsY[0].object.type = -1;
+            removeTrigger(intersectionsY[0].object);
         }
+        //stop when hitting the floor
         velocity.y = Math.max(0, velocity.y);
         firstTime = false;
 
@@ -383,7 +392,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (intersectionsZpos[0].object.type == TYPE_TRIGGER) {
             intersectionsZpos[0].object.interact();
-            intersectionsZpos[0].object.type = -1;
+            removeTrigger(intersectionsZpos[0].object);
         } else {
             velocity.z = Math.min(0, velocity.z);
         }
@@ -394,7 +403,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (intersectionsZneg[0].object.type == TYPE_TRIGGER) {
             intersectionsZneg[0].object.interact();
-            intersectionsZneg[0].object.type = -1;
+            removeTrigger(intersectionsZneg[0].object);
         } else {
             velocity.z = Math.max(0, velocity.z);
         }
@@ -405,7 +414,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (intersectionsXpos[0].object.type == TYPE_TRIGGER) {
             intersectionsXpos[0].object.interact();
-            intersectionsXpos[0].object.type = -1;
+            removeTrigger(intersectionsXpos[0].object);
         } else {
             velocity.x = Math.min(0, velocity.x);
         }
@@ -416,7 +425,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (intersectionsXneg[0].object.type == TYPE_TRIGGER) {
             intersectionsXneg[0].object.interact();
-            intersectionsXneg[0].object.type=-1;
+            removeTrigger(intersectionsXneg[0].object);
         } else {
             velocity.x = Math.max(0, velocity.x);
         }
@@ -427,8 +436,11 @@ function controlLoop(controls) {
 
     //RUNNING MOTION
 
-    if(moveForward || moveBackward || moveRight || moveLeft) {
+    if((moveForward || moveBackward || moveRight || moveLeft)&&!ducked) {
         if (running) {
+
+            //add positive value to y position while we are below threshold
+            //change to negative when
             if(controls.getObject().position.y>39) upMotion = -1;
             if(controls.getObject().position.y<32) upMotion = 1;
             controls.getObject().position.y += upMotion*0.9;
@@ -437,34 +449,39 @@ function controlLoop(controls) {
             controls.getObject().position.x += 0.4*Math.sin(sideMotion);
 
         } else {
-            if(controls.getObject().position.y>38) upMotion = -1;
-            if(controls.getObject().position.y<33) upMotion = 1;
-            controls.getObject().position.y += upMotion*0.35;
+            if (controls.getObject().position.y > 38) upMotion = -1;
+            if (controls.getObject().position.y < 33) upMotion = 1;
+            controls.getObject().position.y += upMotion * 0.35;
         }
     }
 
     // player can get exhausted/regenerate energy
-    if (running) {
-        energy -= delta*30;
-        if (energy <= 0) {
-            regenerate = true;
-            speed_factor = 1;
-            running = false;
-        }
-    } else {
-        energy += delta*10;
-        if (energy >= STAMINA) {
-            energy = STAMINA;
-            regenerate = false;
-        }
-    }
-    $(".energy-bar").css("width", '' + energy + '%');
+    if (!menu) {
 
+        if (running) {
+            energy -= delta * 30;
+            if (energy <= 0) {
+                regenerate = true;
+                speed_factor = 1;
+                running = false;
+            }
+        } else {
+            energy += delta * 10;
+            if (energy >= STAMINA) {
+                energy = STAMINA;
+                regenerate = false;
+            }
+        }
+        $(".energy-bar").css("width", '' + energy + '%');
+    }
 
     // stop gravity at ground level as collision detection sometimes fails for floor
     if (controls.getObject().position.y < PLAYERHEIGHT && firstTime) {
         velocity.y = 0;
         controls.getObject().position.y = PLAYERHEIGHT + 5;
+    }
+    if (controls.getObject().position.y < -500){
+        player.damage(10000);
     }
 
     // checks if we can stand up (may be forbidden when crouching beneath an object)
@@ -472,7 +489,7 @@ function controlLoop(controls) {
 
     if (velocity.y == 0) {
         canJump = true;
-        if(moveForward || moveBackward || moveRight || moveLeft){
+        if (moveForward || moveBackward || moveRight || moveLeft) {
             startFootsteps();
         }
     }
@@ -490,8 +507,7 @@ function controlLoop(controls) {
 
 
 
-
-
+//if we are blocked upwards while ducking and try to stand up..
 function handleStandup() {
     if (standupRequest) {
         var intersectionsYpos = raycasterYpos.intersectObjects(terrain);
@@ -549,7 +565,7 @@ function setRays() {
         raycasterZneg.set(playerGround, rayDirectionZneg);
 
     } else {
-
+        //if we are ducked we shoot the rays straight ahead
         raycasterYpos.ray.origin.copy(controls.getObject().position);
         raycasterY.ray.origin.copy(playerGround);
         raycasterXpos.set(controls.getObject().position, controls.getObject().getWorldDirection().applyAxisAngle(new THREE.Vector3(0, 1, 0), (Math.PI) / 2).normalize());
@@ -562,12 +578,14 @@ function setRays() {
 
 }
 
+//take damage and flash screen when colliding with fire
 function fireAction() {
     if (flashCooldown == -1) {
         scene.add(flashLight);
         scene.fog.color.set(0xff0000);;
         flashCooldown = 1;
         player.damage(300);
+        painSound();
         flashInterval = setInterval(function() {
             flashCooldown--;
         }, 1000);
