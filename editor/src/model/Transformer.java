@@ -126,8 +126,33 @@ public class Transformer {
 		
 		Point2D.Double newE = back.moveDouble(xDist, yDist);
 		
+		LinkedList<Way> waylistTmp = room.getWaylist();
+		LinkedList<Way> waylistNew = new LinkedList<Way>();
+		
+		while(!waylistTmp.isEmpty()){
+			Way tmp = waylistTmp.poll();
+			Point2D.Double loc = tmp.getLocation();
+			
+			Transformer originLoc = new Transformer(loc);
+			
+			Point2D.Double newLocTemp = originLoc.moveDouble(-xDist, -yDist);
+			
+			Transformer rotationLoc = new Transformer(newLocTemp);
+			
+			Point2D.Double newLoct = rotationLoc.rotateDouble(angle);
+			
+			Transformer backLoc = new Transformer(newLoct);
+			
+			Point2D.Double newLoc = backLoc.moveDouble(xDist, yDist);
+			
+			Way newWay = new Way(newLoc.getX(), newLoc.getY(), tmp.getType(), tmp.getNormalx(), tmp.getNormaly());
+			waylistNew.add(newWay);
+			
+			
+		}
+		
 		//creates new Room
-		Room newR = new Room(room.getName(), newA.x, newA.y, newE.x, newE.y, room.getWaylist());
+		Room newR = new Room(room.getName(), newA.x, newA.y, newE.x, newE.y, waylistNew);
 		return newR;
 	}
 	
