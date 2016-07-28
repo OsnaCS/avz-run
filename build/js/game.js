@@ -262,11 +262,11 @@ function createRoom() {
     mesh.position.x = 5;
     mesh.scale.set(20, 20, 20);
     scene.add(mesh);
+
 }
 
 
 function createItems(){
-
 
     addItem((newItemList[0]), -50, 10, 10, 10, 90, true, pickUpItem);
     addItem((newItemList[0]), -50, 10, 10, 10, 0, true, pickUpItem);
@@ -274,9 +274,11 @@ function createItems(){
     addItem((newItemList[40]), 50, 0, 10, 2, 270, false, pickUpItem);
     addItem((newItemList[48]), 0, 0, -700, 1, 0, false, null);
 
+    addTrigger(-64,-71,action);
 
 }
-addTrigger(-64,-71,action);
+
+
 function action() {
     console.log("hi");
 }
@@ -302,7 +304,6 @@ function addItem(file, xPos, yPos, zPos, scale, angle, interact_type, intfunctio
 
 
     scene.add(mesh);
-
 
 }
 
