@@ -21,6 +21,7 @@ function failedSound(){
     createSound("failed", 10, 1, false, 4).play();
 }
 
+// sound for coverd mouth
 function startHeavyBreathing(){
     if(hbreathing == null){
         hbreathing = createSound("breath", 10, 1, true, 0.3);
@@ -47,15 +48,24 @@ function painSound(){
 }
 
 function damageDoorSound(){
-    createSound("door-brake",50,5,false,3).play()
+    createSound("door-brake",50,5,false,3).play();
 }
 
 function pickUpSound(){
-    createSound("pickup",50,5,false,5).play()
+    var pui = createSound("pickup",50,5,false,2);
+    camera.add(pui);
+    pui.play();
 }
 
+// sound when out of breath after running
 function outOfBreath(){
-    var oob = createSound("run-breath",50,5,false,5).play()
+    var oob = createSound("run-breath",50,5,false,5);
     camera.add(oob);
     oob.play();
+}
+
+function gameOverSound(){
+    var gover = createSound("gameover",50,5,false,5);
+    camera.add(gover);
+    gover.play();
 }

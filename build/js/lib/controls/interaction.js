@@ -221,10 +221,22 @@ function openLockedDoor() {
 }
 
 
+var tempActObj;
+// function for extinguish
+function dFire(){
+    delFire(tempActObj);
+}
+
+// Attach this function to the fire
 function extinguish() {
 	if(this.type == TYPE_FIRE && selectedItem.name == newItemList[12]){
         extinguisherSound();
-    	delFire(this);
+
+        // activeObject must be saved so that the dFire function is not influence
+        // be new activeObject selected during the delay
+        tempActObj = activeObject;
+
+        setTimeout(dFire, 1000);
     	console.log('extinguished');
     	player.delActItem();
     }
@@ -413,7 +425,7 @@ function compHack(hackButtonValue) {
 
 
 
-// lappen.json muss durch den eigentlichen Namen ersetzt werden, dann ist die Methode nutzbar
+// Attach this function to the sink
 function coverMouth(){
     if(this.type == TYPE_INTERACTABLE && selectedItem.name == 'lappen.json'){
         startHeavyBreathing();
@@ -425,7 +437,7 @@ function coverMouth(){
     }
 }
 
-
+// Attach this function to the computer that activates the transponder
 function activateTransponder(){
     if(this.type == TYPE_INTERACTABLE && selectedItem.name == 'transponder.json'){
         successSound();
@@ -436,7 +448,7 @@ function activateTransponder(){
     }
 }
 
-
+// Attach this function the door to be opened by a transponder
 function openTransponderDoor(){
 
     if(selectedItem.activeTransponder){

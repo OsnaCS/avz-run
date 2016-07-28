@@ -184,6 +184,7 @@ function loop() {
 
     if (!menu && !pause) {
         if (player.health <= 0) {
+            gameOverSound();
             gameOver();
         } else {
 
@@ -340,6 +341,9 @@ function createFire() {
     VolumetricFire.texturePath = './levels/materials/textures/';
 
     addFire(80, 0, 1, 30, 30, 30, 10);
+    addFire(80, 0, -30, 30, 30, 30, 10);
+    addFire(80, 0, -100, 30, 30, 30, 10);
+
 
     animateFire();
 
