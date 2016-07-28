@@ -80,8 +80,7 @@ var FileLoader = function() {
             
         },3000
     );
-    
-    
+
 
     //initialize Audio-files
 

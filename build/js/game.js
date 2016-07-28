@@ -47,15 +47,10 @@ var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
 
-    
+
 function init(event) {
-
-
-	console.log("init");
-
-	  //loads all Objects before creating
-
-
+    console.log("init");
+    
     // set up the scene, the camera and the renderer
     createScene();
 
@@ -272,7 +267,7 @@ function createItems(){
       addItem((newItemList[2]), 0, 5, 20, 3, true, pickUpItem, newItemList[2]);
       addItem((newItemList[12]), 0, 5, -10, 3, true, pickUpItem, newItemList[12]);
    // addItem(pathItem.concat(newItemList[4]), 30, 5, -30, 1, false, 0, itemList[4]);
-  //  addItem(pathItem.concat(newItemList[5]), 30, 5, -30, 1, true, openLockedDoor, itemList[5]);
+     addItem((newItemList[26]), 30, 5, -30, 1, true, damage_door, newItemList[26]);
    // addItem(pathItem.concat(newItemList[6]), 30, 5, -100, 1, true, pickUpItem, itemList[6]);
 
      for(var i =0; i< newItemList.length; i++){
