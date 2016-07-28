@@ -121,6 +121,21 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 
 				String selectedRoom = (String) cb.getSelectedItem();
 				
+				switch(selectedRoom) {
+				case "Büro": 
+					selectedRoom = "buero"; break;
+				case "Einzelflur":
+					selectedRoom = "gang_solo"; break;
+				case "Doppelflur":
+					selectedRoom = "circle_walled"; break;
+				case "Toilettenflur":
+					selectedRoom = "klogang_solo"; break;
+				case "Vorlesungsraum":
+					selectedRoom = "lectureroom1"; break;
+				case "zentraler Flur":
+					selectedRoom = "center"; break;
+				}
+				
 				Room room = handler.createRoomFromXML(selectedRoom);
 				
 				Way[] ways = getRoomListener().getAllways();
