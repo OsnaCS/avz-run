@@ -4,7 +4,7 @@
 
 var FileLoader = function() {
     console.log("FileLoader running ...");
-
+    
     // Pfad zu allen Dateien
     var files = [
         // Texturen
@@ -43,6 +43,11 @@ var FileLoader = function() {
                 loadedFiles[name] = new THREE.Mesh(geometry,material);
 
                 filesSuccessfullyLoaded += 1;
+                if(filesSuccessfullyLoaded == file.length){
+                    $(".loading").css("display" , " none" );
+                    $(".btn").css("display" , " inline-block" );
+                };
+                $(".loading-bar").css("width" , ' '+ (filesSuccessfullyLoaded / file.length * 100) +'%');
             }
         );
     }
@@ -56,9 +61,25 @@ var FileLoader = function() {
         var type = h[h.length-1].split(".")[1];
 
         // abhängig vom Dateityp: korrekten Loader auswählen
-        loadJson(file, name);
+        switch (type) {
+            case "json":
+                loadJson(file, name);
+                break;
+            case "png": // no break!
+            case "jpg": // no break!
+            case "jpeg":
+                loadImage(file, name);
+                break;
+            default:
+                console.log("Error: unknown file format: "+file);
+        }
     }
-
+    window.setTimeout(function(){
+        $(".loading").css("display" , " none" );
+        $(".loadtext").css("display" , " none" );
+        $(".btn").css("display" , " inline-block" );},2000);
+    
+    
 
     //initialize Audio-files
 
