@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<level>
+	<room name="gang" filename="gang_solo.json" >
+		<size xmin="-3.01985" ymin="-12.11332" xmax="2.12382" ymax="10.47742"/>
+		<doors>
+		   <door type="floor" index="1" x="-0.4198496" y="-12.11332" normalX="0" normalY="-1"/>
+		   <door type="floor" index="2" x="-0.4761844" y="10.47742" normalX="0" normalY="1"/>
+
+		   <door type="norm" index="3" x="2.18015" y="4.03394" normalX="1" normalY="0"/>
+		   <door type="norm" index="4" x="2.18015" y="-0.9660568" normalX="1" normalY="0"/>
+		   <door type="norm" index="5" x="2.18015" y="-6.01606" normalX="1" normalY="0"/>
+		   <door type="norm" index="6" x="2.18015" y="-9.91605" normalX="1" normalY="0"/>
+
+		   <door type="norm" index="7" x="-3.01985" y="5.68394" normalX="-1" normalY="0"/>
+		   <door type="norm" index="8" x="-3.01985" y="3.68394" normalX="-1" normalY="0"/>
+		   <door type="norm" index="9" x="-3.01985" y="1.18394" normalX="-1" normalY="0"/>
+		   <door type="norm" index="10" x="-3.01985" y="-0.816057" normalX="-1" normalY="0"/>
+		   <door type="norm" index="11" x="-3.01985" y="-4.31606" normalX="-1" normalY="0"/>
+		   <door type="norm" index="12" x="-3.01985" y="-6.31606" normalX="-1" normalY="0"/>
+		   <door type="norm" index="13" x="-3.01985" y="-8.31606" normalX="-1" normalY="0"/>
+		   <door type="norm" index="14" x="-3.01985" y="-10.31606" normalX="-1" normalY="0"/>
+		</doors>
+	</room>
+	<spawns>	
+	</spawns>
+</level>
