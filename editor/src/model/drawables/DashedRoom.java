@@ -1,5 +1,7 @@
 package model.drawables;
 
+import java.util.LinkedList;
+
 import model.Way;
 
 /**
@@ -7,7 +9,7 @@ import model.Way;
  */
 public class DashedRoom extends Room {
 
-    public DashedRoom(String name, double xmin, double ymin, double xmax, double ymax, Way[] waylist) {
+    public DashedRoom(String name, double xmin, double ymin, double xmax, double ymax, LinkedList<Way> waylist) {
         super(name, xmin, ymin, xmax, ymax, waylist);
     }
 
