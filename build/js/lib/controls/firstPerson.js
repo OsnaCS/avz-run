@@ -155,7 +155,7 @@ if (havePointerLock) {
 }
 
 //CALL THIS IN YOUR INIT BLOCK
-function initControls() {
+function initControls(callback) {
 
     var onKeyDown = function(event) {
 
@@ -235,8 +235,10 @@ function initControls() {
 
                 break;
 
+
             case 80: //pause p
                 if (!moveForward && !moveLeft && !moveRight && !moveBackward && !ducked) {
+
                     if (!menu) {
                         pause = !pause;
                     }
@@ -333,6 +335,8 @@ function initControls() {
     rayDirectionXneg = new THREE.Vector3();
     rayDirectionZpos = new THREE.Vector3();
     rayDirectionZneg = new THREE.Vector3();
+
+    callback();
 
 }
 
@@ -459,6 +463,7 @@ function controlLoop(controls) {
         if (running) {
             energy -= delta * 30;
             if (energy <= 0) {
+                outOfBreath();
                 regenerate = true;
                 speed_factor = 1;
                 running = false;

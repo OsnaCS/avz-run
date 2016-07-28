@@ -25,7 +25,7 @@ public class DrawingPanelView extends JPanel {
 	// View-Components
 	public  DrawingPanel drawingPanel;
 	private XMLPanel xmlPanel;
-	private JComboBox<MouseInputAdapter> comboBox;
+	private JComboBox<String> comboBox;
 	private JButton button;
 
 	/**
@@ -88,7 +88,7 @@ public class DrawingPanelView extends JPanel {
 	/**
 	 * @return the comboBox
 	 */
-	public JComboBox<MouseInputAdapter> getComboBox() {
+	public JComboBox<String> getComboBox() {
 		return comboBox;
 	}
 
