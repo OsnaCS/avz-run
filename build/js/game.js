@@ -19,7 +19,6 @@ var newItemList =[];
 var fileLoader =null;
 function loadFiles(){
     makeArrayFromXML(complete, newItemList, "../avz_model/materials/objects.xml");
-
 }
 
 function complete(){
@@ -49,15 +48,8 @@ var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
 
 
-
-    //loads all Objects before creating
-
-
-
 function init(event) {
-
-
-
+    console.log("init");
     // set up the scene, the camera and the renderer
     createScene();
 
@@ -350,3 +342,5 @@ function createFire() {
     animateFire();
 
 }
+
+
