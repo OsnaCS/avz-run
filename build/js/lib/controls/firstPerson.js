@@ -57,9 +57,7 @@ var MOVEMENT_SPEED = 600;
 var JUMP_SPEED = 425;
 
 var STAMINA = 100;
-
 var energy = STAMINA;
-
 
 var flashCooldown = 0;
 var flashInterval;
@@ -78,12 +76,12 @@ if (havePointerLock) {
 
         if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
 
-
-            //          controlsEnabled = true;
             controls.enabled = true;
             blocker.style.display = 'none';
+            $(".GUI").show();
 
         } else {
+
             controls.enabled = false;
 
             blocker.style.display = '-webkit-box';
@@ -96,6 +94,7 @@ if (havePointerLock) {
 
 
         }
+
 
     };
 
@@ -137,6 +136,7 @@ if (havePointerLock) {
 
         menu = false;
         $(".GUI").show();
+        prevTime = performance.now();
 
         element.requestPointerLock();
 
@@ -155,7 +155,7 @@ if (havePointerLock) {
 }
 
 //CALL THIS IN YOUR INIT BLOCK
-function initControls() {
+function initControls(callback) {
 
     var onKeyDown = function(event) {
 
@@ -235,8 +235,10 @@ function initControls() {
 
                 break;
 
+
             case 80: //pause p
-                if (!moveForward && !moveLeft && !moveRight && !moveBackward && !ducked && !jump) {
+                if (!moveForward && !moveLeft && !moveRight && !moveBackward && !ducked) {
+
                     if (!menu) {
                         pause = !pause;
                     }
@@ -334,6 +336,8 @@ function initControls() {
     rayDirectionZpos = new THREE.Vector3();
     rayDirectionZneg = new THREE.Vector3();
 
+    callback();
+
 }
 
 
@@ -345,8 +349,8 @@ function controlLoop(controls) {
 
 
     // determines stepwidth
-    var time = performance.now();
-    var delta = (time - prevTime) / 1000;
+    time = performance.now();
+    delta = (time - prevTime) / 1000;
 
     velocity.x -= velocity.x * 10.0 * delta;
     velocity.z -= velocity.z * 10.0 * delta;
@@ -454,23 +458,25 @@ function controlLoop(controls) {
     }
 
     // player can get exhausted/regenerate energy
-    if (running) {
-        energy -= delta * 30;
-        if (energy <= 0) {
-            outOfBreath();
-            regenerate = true;
-            speed_factor = 1;
-            running = false;
-        }
-    } else {
-        energy += delta * 10;
-        if (energy >= STAMINA) {
-            energy = STAMINA;
-            regenerate = false;
-        }
-    }
-    $(".energy-bar").css("width", '' + energy + '%');
+    if (!menu) {
 
+        if (running) {
+            energy -= delta * 30;
+            if (energy <= 0) {
+                outOfBreath();
+                regenerate = true;
+                speed_factor = 1;
+                running = false;
+            }
+        } else {
+            energy += delta * 10;
+            if (energy >= STAMINA) {
+                energy = STAMINA;
+                regenerate = false;
+            }
+        }
+        $(".energy-bar").css("width", '' + energy + '%');
+    }
 
     // stop gravity at ground level as collision detection sometimes fails for floor
     if (controls.getObject().position.y < PLAYERHEIGHT && firstTime) {
@@ -501,7 +507,6 @@ function controlLoop(controls) {
     }
 
 }
-
 
 
 

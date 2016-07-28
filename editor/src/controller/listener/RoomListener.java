@@ -2,7 +2,6 @@ package controller.listener;
 
 import controller.DrawableObjectProcessing;
 import model.Way;
-import model.drawables.DashedRectangle;
 import model.drawables.DashedRoom;
 import model.drawables.Point;
 import model.drawables.Room;
@@ -18,6 +17,7 @@ public class RoomListener extends RectangleListener {
     private Point tmp;
     private DrawableObjectProcessing delegate;
     private Room room;
+    private Room templateRoom;
     private Way[] allways;
 
     public Way[] getAllways() {
@@ -31,7 +31,7 @@ public class RoomListener extends RectangleListener {
     public RoomListener(DrawableObjectProcessing delegate, Room room, Way[] allways) {
         super(delegate);
         this.delegate=delegate;
-        this.room=room;
+        this.templateRoom=room;
         this.allways = allways;
     }
 
@@ -39,6 +39,8 @@ public class RoomListener extends RectangleListener {
 
         if (tmp == null){
             tmp = new Point(e.getX(), e.getY());
+            room = new Room(templateRoom);
+            room.setCenter(tmp);
         } else {
             if (SwingUtilities.isRightMouseButton(e)){
                 room.spin();
@@ -81,8 +83,11 @@ public class RoomListener extends RectangleListener {
         delegate.clearTemporaryDrawableObject();
 
         DashedRoom r = new DashedRoom(
-                new Point (ua),
-                new Point (ue),
+                room.getName(),
+                ua.x,
+                ua.y,
+                ue.x,
+                ue.y,
                 room.getWaylist()
         );
 

@@ -12,6 +12,9 @@ public class Room extends Rectangle {
 
     protected Point2D.Double realA;
     protected Point2D.Double realE;
+    protected Point center;
+
+
     protected String name;
     protected Way[] waylist;
 
@@ -26,6 +29,22 @@ public class Room extends Rectangle {
         this.e = new Point((int) xmax, (int) ymax);
 
         this.waylist = waylist;
+
+        this.center = new Point(0,0);
+    }
+
+    public Room(Room r) {
+        this.name = r.getName();
+
+        this.realA = r.getRealA();
+        this.realE = r.getRealE();
+
+        this.a = new Point((int) realA.getX(), (int) realA.getY());
+        this.e = new Point((int) realE.getX(), (int) realE.getY());
+
+        this.waylist = r.getWaylist();
+
+        this.center = r.getCenter();
     }
 
     //dreht den Raum um 90°
@@ -124,6 +143,15 @@ public class Room extends Rectangle {
     public void setWaylist(Way[] waylist) {
         this.waylist = waylist;
     }
+
+    public Point getCenter() {
+        return center;
+    }
+
+    public void setCenter(Point center) {
+        this.center = center;
+    }
+
 
     @Override
     public void paint(Graphics g) {

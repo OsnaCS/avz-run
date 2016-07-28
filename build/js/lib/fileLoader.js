@@ -45,10 +45,14 @@ var FileLoader = function() {
                 loadedFiles[name] = new THREE.Mesh(geometry,material);
 
                 filesSuccessfullyLoaded += 1;
+
+                //checks if everything is loaded and hides loadbar and shows start button
                 if(filesSuccessfullyLoaded == file.length){
                     $(".loading").css("display" , " none" );
                     $(".btn").css("display" , " inline-block" );
                 };
+
+                //updates loadingbar
                 $(".loading-bar").css("width" , ' '+ (filesSuccessfullyLoaded / file.length * 100) +'%');
             }
         );
@@ -63,18 +67,21 @@ var FileLoader = function() {
         var type = h[h.length-1].split(".")[1];
 
         // abhängig vom Dateityp: korrekten Loader auswählen
-
-
         loadJson(file, name);
-
-
     }
-    window.setTimeout(function(){
-        $(".loading").css("display" , " none" );
-        $(".loadtext").css("display" , " none" );
-        $(".btn").css("display" , " inline-block" );},2000);
 
-
+    //checks if everything is loaded after a set time periode
+    window.setTimeout(
+        function(){
+            if(filesSuccessfullyLoaded != file.length){
+                alert("Warning! Not all elements are loaded. Play at your own risk.");
+                $(".loading").css("display" , " none" );
+                $(".loadtext").css("display" , " none" );
+                $(".btn").css("display" , " inline-block" );
+            }
+            
+        },3000
+    );
 
 
 
