@@ -10,7 +10,7 @@ function doorSound(){
 }
 
 function buttonSound(){
-    createSound("button", 10, 1, false, 4).play();
+    createSound("button", 10, 1, false, 3).play();
 }
 
 function correctSound(){

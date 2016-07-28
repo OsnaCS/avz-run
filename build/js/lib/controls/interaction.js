@@ -6,18 +6,27 @@ var outlineMaterial = new THREE.MeshPhongMaterial({color:0xFFFFFF,wireframe:true
 
 var activeObject;
 
-var lockOpen = true;
+var lockOpen = false; // pin pad boolean
+var configured = false;  // transponder config boolean
 
 var outlineMesh=null;
+
+// pin pad variables.... may not be stored here?
+var pin = new Array(4);
+var transponder_config = new Array(2);
+var pin_pos = 0;
+
+var CORRECT_PIN = ['0','0','4','2'];
+var CORRECT_TRANSPONDER = ['4','3'];
 var TYPE_INTERACTABLE = 0;
 var TYPE_FIRE = 1;
 var TYPE_EXIT = 2;
 var TYPE_TRIGGER = 3;
 
-
 document.addEventListener( 'click', onMouseClick, false );
 
 function interactionLoop() {
+
     //this gets called once per loop. shoots a ray in viewdirection
     interactionRayCaster.set(controls.getObject().position, controls.getDirection());
     interactions = interactionRayCaster.intersectObjects(terrain);
@@ -80,9 +89,6 @@ function interactionLoop() {
 
         }
     }
-
-
-
 
 }
 
@@ -227,6 +233,186 @@ function extinguish() {
     }
 }
 
+
+// ***** robo lab pin pad *****
+
+// open pin pad image and its HTML
+function enterPin() {
+
+    pin_pos = 0;
+
+    // get object out of focus
+    scene.remove(outlineMesh);
+    outlineMesh = null;
+    activeObject = null;
+
+    // pause interaction loop
+    menu = true;
+
+    // show pin pad and make default pause screen invisible
+    $("#pinPad").css("z-index", 20);
+    $("#blocker").css("z-index", 0);
+    $("#pinPad").show();
+
+    // exit pointerLock so player can use cursor
+    document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
+    console.log(document.exitPointerLock);
+    document.exitPointerLock();
+}
+
+// return to game from pin pad
+function exitPinPad() {
+
+    // start loop again
+    menu = false;
+
+    // hide pin pad, reset blocker
+    $("#blocker").css("z-index", 20);
+    $("#pinPad").css("z-index", 0);
+    $("#pinPad").hide();
+
+    // determine if entered code was correct
+    if (CORRECT_PIN[0] == pin[0] && CORRECT_PIN[1] == pin[1] && CORRECT_PIN[2] == pin[2] && CORRECT_PIN[3] == pin[3]) lockOpen = true;
+    else lockOpen = false;
+
+    // REPLACE WITH RESPECTIVE SOUND CALLS
+    if (lockOpen) correctSound();
+    else failedSound();
+
+    // reset delta
+    prevTime = performance.now();
+
+    //ask browser to lock the pointer again
+    element.requestPointerLock();
+
+}
+
+// handles input from HTML buttons that are invisible on the pin pad image
+
+function pinPad(pinvalue) {
+
+        // reset button focus
+        document.activeElement.blur();
+        buttonSound();
+
+        switch (pinvalue) {
+
+            case '10': // 'X' button was pressed to delete previously entered numbers
+
+                // reset array, array position and display
+                pin[0] = null;
+                pin[1] = null;
+                pin[2] = null;
+                pin[3] = null;
+                pin_pos = 0;
+
+                document.getElementById("pinDisplay").innerHTML = "PIN EINGEBEN";
+                break;
+
+            case '11': // accept code
+
+                exitPinPad();
+                break;
+
+            default:
+
+
+
+                if (pin_pos<4) { // unless 4 digits have already been entered
+                    pin[pin_pos] = pinvalue; // set current digit to entered number
+                    pin_pos++;
+
+                    // set display
+                    document.getElementById("pinDisplay").innerHTML = pin.join("");
+                }
+                break;
+        }
+}
+
+
+// ***** transponder "hack" *****
+// (similar to pin pad handling, please look up pin pad comments)
+
+function enterCH() {
+
+    pin_pos = 0;
+
+    // get object out of focus
+    scene.remove(outlineMesh);
+    outlineMesh = null;
+    activeObject = null;
+
+    menu = true;
+
+    $("#compHack").css("z-index", 20);
+    $("#compHack").css("display","block");
+    $("#compHack").show();
+
+    document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
+    console.log(document.exitPointerLock);
+
+    document.exitPointerLock();
+}
+
+
+function exitCH() {
+
+    $("#blocker").css("z-index", 20);
+    $("#compHack").css("z-index", 0);
+    $("#compHack").hide();
+
+    // Ask the browser to lock the pointer
+    menu = false;
+
+    // determine if entered code was correct
+    if (CORRECT_TRANSPONDER[0] == transponder_config[0] && CORRECT_TRANSPONDER[1] == transponder_config[1]) configured = true;
+    else configured = false;
+
+    //if (configured) correctSound();
+    //else failedSound();
+
+    // reset delta
+    prevTime = performance.now();
+
+    element.requestPointerLock();
+}
+
+function compHack(hackButtonValue) {
+
+        // reset button focus
+        document.activeElement.blur();
+        buttonSound();
+
+        switch (hackButtonValue) {
+
+            case '10':
+
+                transponder_config[0] = null;
+                transponder_config[1] = null;
+                pin_pos = 0;
+                document.getElementById("pinDisplayCH").innerHTML = "key lock:";
+                break;
+
+            case '11':
+
+                exitCH();
+                break;
+
+            default:
+
+                if (pin_pos<2) {
+                    transponder_config[pin_pos] = hackButtonValue;
+                    pin_pos++;
+                    document.getElementById("pinDisplayCH").innerHTML = "key lock: " + transponder_config.join("");
+                }
+                break;
+
+        }
+}
+
+
+
+
 // lappen.json muss durch den eigentlichen Namen ersetzt werden, dann ist die Methode nutzbar
 function coverMouth(){
     if(this.type == TYPE_INTERACTABLE && selectedItem.name == 'lappen.json'){
@@ -252,21 +438,28 @@ function activateTransponder(){
 
 
 function openTransponderDoor(){
+
     if(selectedItem.activeTransponder){
-        doorSound();
-        if(!this.open) {
-            this.mesh.rotateY(Math.PI/2.0);
-            this.open = !this.open;
+        if (configured) {
+
+            doorSound();
+            if(!this.open) {
+
+                this.mesh.rotateY(Math.PI/2.0);
+                this.open = !this.open;
+            }
+
+            else {
+                this.mesh.rotateY(-Math.PI/2.0);
+                this.open = !this.open;
+            }
+
+            // transponder can only be used once
+            selectedItem.activeTransponder = false;
+            player.delActItem();
+
         }
-        else {
-            this.mesh.rotateY(-Math.PI/2.0);
-            this.open = !this.open;
-        }
-        // transponder can only be used once
-        selectedItem.activeTransponder = false;
-        player.delActItem();
-    }else{
+    } else{
         console.log('nicht anwendbar');
     }
-
 }
