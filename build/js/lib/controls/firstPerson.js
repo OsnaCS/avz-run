@@ -155,7 +155,7 @@ if (havePointerLock) {
 }
 
 //CALL THIS IN YOUR INIT BLOCK
-function initControls() {
+function initControls(callback) {
 
     var onKeyDown = function(event) {
 
@@ -333,6 +333,8 @@ function initControls() {
     rayDirectionXneg = new THREE.Vector3();
     rayDirectionZpos = new THREE.Vector3();
     rayDirectionZneg = new THREE.Vector3();
+
+    callback();
 
 }
 
