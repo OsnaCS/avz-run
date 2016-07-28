@@ -29,7 +29,7 @@ public class App {
 
 		DrawingPanelViewController c = new DrawingPanelViewController(filename, frame);
 
-		frame.add(c.getView(), BorderLayout.CENTER);
+		frame.add(c.getDrawingPanelView(), BorderLayout.CENTER);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setVisible(true);

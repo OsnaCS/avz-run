@@ -13,7 +13,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -40,7 +39,7 @@ public class XMLhandler {
 	protected DocumentBuilderFactory factory;
 	DocumentBuilder builder;
 
-	public Room createRoomFromXML() {
+	public Room createRoomFromXML(String name) {
 
 		double xmin, xmax, ymin, ymax;
 
@@ -154,9 +153,6 @@ public class XMLhandler {
 		// write the content into xml file
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
-		// formats String
-		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 		DOMSource source = new DOMSource(doc);
 		File f = new File(filname);
 		StreamResult result = new StreamResult(f);

@@ -235,8 +235,10 @@ function initControls(callback) {
 
                 break;
 
+
             case 80: //pause p
                 if (!moveForward && !moveLeft && !moveRight && !moveBackward && !ducked) {
+
                     if (!menu) {
                         pause = !pause;
                     }
@@ -461,6 +463,7 @@ function controlLoop(controls) {
         if (running) {
             energy -= delta * 30;
             if (energy <= 0) {
+                outOfBreath();
                 regenerate = true;
                 speed_factor = 1;
                 running = false;
