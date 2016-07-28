@@ -1,4 +1,4 @@
-<?php include_once("/build/home.html"); ?>
+<?php include_once("./build/home.html"); ?>
 <?php error_reporting(E_ALL);?>
 <!-- <link href='/build/css/style.css' type='text/css' rel='stylesheet'/>
 <script type="text/javascript" src="/build/js/jquery-3.1.0.min.js"></script>
