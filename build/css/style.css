@@ -26,8 +26,6 @@ body {
     left: 50%;
     margin-top: -20px;
     margin-left: -200px;
-    color: red;
-    text-align: center;
     display: inline-block;
 
 }
@@ -43,9 +41,13 @@ body {
 }
 
 .loadtext{
+	height: 40px;
+    width: 400px;
+	top: 50%;
+    left: 50%;
+	margin-top: -15px;
+    margin-left: -200px;
     position: fixed;
-    top: 47.5%;
-    left: 47%;
     z-index: 50;
     text-align: center;
     color: red;
@@ -121,10 +123,17 @@ body {
     position: fixed;
     display: block;
 }
+.inventory img {
+    max-width: 100%;
+    margin-top:-15px;
+    height: auto;
+    display: block;
+}
 
 #slot1,
 #slot2,
 #slot3 {
+
     height: 100%;
     width: 80px;
     display: inline-block;
