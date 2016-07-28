@@ -68,26 +68,19 @@ var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much hea
 
 function init(event) {
 	CreateSegment("lectureroom1");
-
-
     // set up the scene, the camera and the renderer
     createScene(audio);
 
     function audio (){
     // init audio support
-        createAudio(controls);
+        createAudio(room);
 
-        function controls() {
-            initControls(room);
+        function room() {
 
-            function room() {
+            createRoom(controls);
+            function controls() {
                 // add the objects and lights - replace those functions as you please
-                createRoom(startLoop);
-                function startLoop () {
-					// start a loop that will update the objects' positions
-					// and render the scene on each frame
-					loop();                                             
-                }
+                initControls();
             }
         }
     }
@@ -200,9 +193,10 @@ function loop() {
             renderer.render(scene, camera);
             stats.end();
         }
-    } else {
-        requestAnimationFrame(loop);
     }
+    // } else {
+    //     requestAnimationFrame(loop);
+    // }
 };
 
 
@@ -219,60 +213,21 @@ function handleWindowResize() {
 var hemisphereLight, shadowLight;
 
 
-// TEST ENVIRONMENT
-
-function createLights() {
-
-    // A hemisphere light is a gradient colored light;
-    // the first parameter is the sky color, the second parameter is the ground color,
-    // the third parameter is the intensity of the light
-    hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, .9)
-
-    // A directional light shines from a specific direction.
-    // It acts like the sun, that means that all the rays produced are parallel.
-    shadowLight = new THREE.DirectionalLight(0xffffff, .9);
-
-    // Set the direction of the light
-    shadowLight.position.set(50, 50, 50);
-
-    // Allow shadow casting
-    shadowLight.castShadow = true;
-
-    // define the visible area of the projected shadow
-    shadowLight.shadow.camera.left = -400;
-    shadowLight.shadow.camera.right = 400;
-    shadowLight.shadow.camera.top = 400;
-    shadowLight.shadow.camera.bottom = -400;
-    shadowLight.shadow.camera.near = 1;
-    shadowLight.shadow.camera.far = 1000;
-
-    // define the resolution of the shadow; the higher the better,
-    // but also the more expensive and less performant
-    shadowLight.shadow.mapSize.width = 2048;
-    shadowLight.shadow.mapSize.height = 2048;
-
-    // to activate the lights, just add them to the scene
-    scene.add(hemisphereLight);
-    scene.add(shadowLight);
-    
-}
-
-
 function createRoom(callback) {
-	
+
 	setTimeout(PutSegments,2000);
 	setTimeout(door_in_doors,2200);
 	setTimeout(objects_in_spawns,2400);
 	setTimeout(set_fires,2600);
 	setTimeout(turn_on_lights,2800);
-	
+
    // var mesh = fileLoader.get("lectureroom1");
     // terrain.push(mesh);
     // mesh.position.y = 0;
     // mesh.position.x = 5;
     // mesh.scale.set(20, 20, 20);
     // scene.add(mesh);
-	
+
 	callback();
 
 }
@@ -280,7 +235,7 @@ function createRoom(callback) {
 
 //debug-stuff, deleteme
 function ShowSegments() {
-	var text = ""; 
+	var text = "";
 	for (i = 0; i <segments.length; i++) {
 		text += printmost(segments[i])+"<br>";  //JSON.stringify(segments[i])
 	}
@@ -293,37 +248,8 @@ function printmost(obj) {
 		{ output += property + ': ' + obj[property]+'; '; }
 	}
 	return output;
-}	
-//debugstuffdeleteme ende
-
-function createItems(callback){
-
-
-     // addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
-	 
-	 // addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name)
-	 // TYPE_INTERACTABLE; TYPE_TRIGGER; TYPE_FIRE; TYPE_EXIT; 
-	 // intfunction = damage_door, destroy_door, pickUpItem, destroy, open, openLockedDoor, extinguish
-
-	 //wände/terrain/statics, interactibles(auch feuer und türen), triggerevents(auch feuer), licher (auch feuer), 
-	 
-      addItem((newItemList[0]), -50, 10, 10, 10, true, pickUpItem, newItemList[0]);
-      addItem((newItemList[1]), 20, 5, 10, 1, true, destroy, newItemList[1]);
-      addItem((newItemList[2]), 0, 5, 20, 3, true, pickUpItem, newItemList[2]);
-      addItem((newItemList[12]), 0, 5, -10, 3, true, pickUpItem, newItemList[12]);
-   // addItem(pathItem.concat(newItemList[4]), 30, 5, -30, 1, false, 0, itemList[4]);
-  //  addItem(pathItem.concat(newItemList[5]), 30, 5, -30, 1, true, openLockedDoor, itemList[5]);
-   // addItem(pathItem.concat(newItemList[6]), 30, 5, -100, 1, true, pickUpItem, itemList[6]);
-
-     for(var i =0; i< newItemList.length; i++){
-        console.log(newItemList[i]);
-     }
-
-    addTrigger(-64,-71,action);
-
-    callback();
-
 }
+//debugstuffdeleteme ende
 
 
 function action() {

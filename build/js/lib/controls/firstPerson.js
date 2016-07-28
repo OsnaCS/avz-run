@@ -64,107 +64,111 @@ var flashInterval;
 var flashLight = new THREE.AmbientLight(0xFF0000);
 
 var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
-$(".GUI").hide();
 
-// maybe insert menu into following method
+function initPointerLock() {
+    $(".GUI").hide();
 
-if (havePointerLock) {
+    // maybe insert menu into following method
 
-    var element = document.getElementById('world');
+    if (havePointerLock) {
 
-    var pointerlockchange = function(event) {
+        var element = document.getElementById('world');
 
-        if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
+        var pointerlockchange = function(event) {
 
-            controls.enabled = true;
+            if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
 
-            $(".GUI").show();
-            $("#blocker").hide();
+                controls.enabled = true;
 
-        } else {
+                $(".GUI").show();
+                $("#blocker").hide();
 
-            controls.enabled = false;
+            } else {
 
-            if (player.health > 0) {
-                $("#blocker").show();
+                controls.enabled = false;
+
+                if (player.health > 0) {
+                    $("#blocker").show();
+                }
+                menu = true;
+                $('.gui').hide();
             }
-            menu = true;
-            $('.gui').hide();
-        }
 
 
-    };
+        };
 
-    var pointerlockerror = function(event) {
+        var pointerlockerror = function(event) {
 
-         $("#blocker").hide();
+             $("#blocker").hide();
 
-    };
+        };
 
-    // Hook pointer lock state change events
-    document.addEventListener('pointerlockchange', pointerlockchange, false);
-    document.addEventListener('mozpointerlockchange', pointerlockchange, false);
-    document.addEventListener('webkitpointerlockchange', pointerlockchange, false);
+        // Hook pointer lock state change events
+        document.addEventListener('pointerlockchange', pointerlockchange, false);
+        document.addEventListener('mozpointerlockchange', pointerlockchange, false);
+        document.addEventListener('webkitpointerlockchange', pointerlockchange, false);
 
-    document.addEventListener('pointerlockerror', pointerlockerror, false);
-    document.addEventListener('mozpointerlockerror', pointerlockerror, false);
-    document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
+        document.addEventListener('pointerlockerror', pointerlockerror, false);
+        document.addEventListener('mozpointerlockerror', pointerlockerror, false);
+        document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
 
-    buttonStart.addEventListener('click', function(event) {
-		
-
-
-        startInstructions.style.display = 'none';
-
-        // Ask the browser to lock the pointer
-        element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
-        element.requestPointerLock();
-        menu = false;
-        $(".GUI").show();
-
-        playername = $("#nickname").val();
-        console.log(playername);
-        $(".showNickname").html(playername);
+        buttonStart.addEventListener('click', function(event) {
 
 
-    }, false);
 
-    button.addEventListener('click', function(event) {
+            startInstructions.style.display = 'none';
 
-        startInstructions.style.display = 'none';
+            // Ask the browser to lock the pointer
+            element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+            element.requestPointerLock();
+            menu = false;
+            loop();
+            $(".GUI").show();
 
-        // Ask the browser to lock the pointer
-        element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
-
-        menu = false;
-        $(".GUI").show();
-        prevTime = performance.now();
-
-        element.requestPointerLock();
-
-    }, false);
-
-    button2.addEventListener('click', function(event) {
-
-        location.reload();
-
-    }, false);
-
-    buttonRestart.addEventListener('click', function(event) {
-        location.reload();
-
-    }, false);
+            playername = $("#nickname").val();
+            console.log(playername);
+            $(".showNickname").html(playername);
 
 
-} else {
+        }, false);
 
-    startInstructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
+        button.addEventListener('click', function(event) {
 
+            startInstructions.style.display = 'none';
+
+            // Ask the browser to lock the pointer
+            element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+
+            menu = false;
+            loop();
+            $(".GUI").show();
+            prevTime = performance.now();
+
+            element.requestPointerLock();
+
+        }, false);
+
+        button2.addEventListener('click', function(event) {
+
+            location.reload();
+
+        }, false);
+
+        buttonRestart.addEventListener('click', function(event) {
+            location.reload();
+
+        }, false);
+
+
+    } else {
+
+        startInstructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
+
+    }
 }
-
 //CALL THIS IN YOUR INIT BLOCK
-function initControls(callback) {
-
+function initControls() {
+    initPointerLock();
     var onKeyDown = function(event) {
 
         switch (event.keyCode) {
@@ -325,7 +329,6 @@ function initControls(callback) {
     rayDirectionZpos = new THREE.Vector3();
     rayDirectionZneg = new THREE.Vector3();
 
-    callback();
 
 }
 
@@ -367,15 +370,16 @@ function controlLoop(controls) {
         //collision with fire!
         if (intersectionsY[0].object.type == TYPE_FIRE) {
             fireAction();
+
         } else if (intersectionsY[0].object.type == TYPE_TRIGGER) {
             //collision with trigger
             intersectionsY[0].object.interact();
             removeTrigger(intersectionsY[0].object);
-        }
+        } else {
         //stop when hitting the floor
-        velocity.y = Math.max(0, velocity.y);
-        firstTime = false;
-
+            velocity.y = Math.max(0, velocity.y);
+            firstTime = false;
+        }
     }
 
     if (intersectionsZpos.length > 0) {
@@ -467,7 +471,7 @@ function controlLoop(controls) {
         $(".energy-bar").css("width", '' + energy + '%');
     }
 
-    // stop gravity at ground level as collision detection sometimes fails for floor  
+    // stop gravity at ground level as collision detection sometimes fails for floor
     if (controls.getObject().position.y < PLAYERHEIGHT && firstTime) {
         velocity.y = 0;
         controls.getObject().position.y = PLAYERHEIGHT +5;
