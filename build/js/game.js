@@ -60,8 +60,17 @@ var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
 
-// creates everything and start the loop
+
+
+
+    //loads all Objects before creating
+
+
+
 function init(event) {
+
+
+
 
     // set up the scene, the camera and the renderer
     createScene();
@@ -295,11 +304,14 @@ function addItem(file, xPos, yPos, zPos, scale, angle, interact_type, intfunctio
         terrain.push(mesh);
     }
 
+
     scene.add(mesh);
+
 
 }
 
 
+//adds a trigger at given position, performs action when walking over it and consumes it
 function addTrigger (xPos, zPos, action) {
     var triggerGeom = new THREE.BoxGeometry(30,30,30);
     var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, color:0xFFFFFF});

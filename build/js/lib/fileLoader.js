@@ -7,7 +7,9 @@ var FileLoader = function() {
 
     // Pfad zu allen Dateien
 
+
     var files = [];
+
 
     for (var i = 0;i<newItemList.length;i++) {
         files.push(newItemList[i]);
@@ -23,8 +25,23 @@ var FileLoader = function() {
         jsonLoader.load(file,
             function (geometry,mat) {
                 // on success:
-                //console.log("got:"+name);
+
+                console.log("got:"+name);
                 material = new THREE.MultiMaterial(mat)
+
+
+                // Die Schleife ist dafür da, damit nur eine Seite der Objekte gerendert wird
+                material.materials.forEach(function (e) {
+                    if (e instanceof THREE.MeshPhongMaterial || e instanceof THREE.MeshLambertMaterial) {
+                        e.side = THREE.FrontSide;
+                    }
+                });
+                // Glättet die Objekte
+                geometry.mergeVertices();
+                // geometry.computeVertexNormals();
+
+
+
                 loadedFiles[name] = new THREE.Mesh(geometry,material);
 
                 filesSuccessfullyLoaded += 1;
@@ -32,15 +49,6 @@ var FileLoader = function() {
         );
     }
 
-    function loadImage(file, name) {
-        var textureLoader = new THREE.TextureLoader();
-        textureLoader.setCrossOrigin('anonymous');
-        // load texture
-        textureLoader.load(file, function (texture) {
-            loadedFiles[name] = texture;
-            filesSuccessfullyLoaded += 1;
-        });
-    }
 
     // alle gewünschten Files laden
     for (var i = 0; i < files.length; i++) {
@@ -50,19 +58,9 @@ var FileLoader = function() {
         var type = h[h.length-1].split(".")[1];
 
         // abhängig vom Dateityp: korrekten Loader auswählen
-        switch (type) {
-            case "json":
 
-                loadJson(file, name);
-                break;
-            case "png": // no break!
-            case "jpg": // no break!
-            case "jpeg":
-                loadImage(file, name);
-                break;
-            default:
-                console.log("Error: unknown file format: "+file);
-        }
+        loadJson(file, name);
+
     }
 
 
@@ -74,17 +72,25 @@ var FileLoader = function() {
 
     function isReady() {
         // gibt true zurück, wenn alle Files geladen wurden filesSuccessfullyLoaded == files.length
-        return (true );
+
+        //return (filesSuccessfullyLoaded==files.length);
+        return true; //while objects.xml contains errors
+
     }
+
     // "public" Methoden:
     return {
+
         isReady: isReady,
         getAll: function() {
             // gibt alle geladenen Dateien zurück
             return isReady() ? loadedFiles : undefined;
         },
         get: function(name) {
-            var result = isReady() ? loadedFiles[name] : undefined;
+
+            var result = isReady() ? loadedFiles[name].clone() : undefined;
+            console.log(name);
+
             if (result == undefined) {
                 console.log("FileLoader could not find texture '"+name+"'");
             }

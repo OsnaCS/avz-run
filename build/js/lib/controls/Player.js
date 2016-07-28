@@ -51,7 +51,7 @@ Player = function() {
             console.log(inventory[i]);
         }
     }
-
+//damages the player by given amount
     this.damage = function(damage) {
         var healthPercent = (this.health / MAX_HEALTH) * 100;
         this.health -= damage;
@@ -62,15 +62,16 @@ Player = function() {
         if(inventory[activeSlot] == selectedItem){
             inventory[activeSlot] = null;
             item_count--;
-
+            removeIcon(activeSlot);
             setActiveSlot(-1);
+
         }
     }
 
 
 }
 
-
+//this creates a frame around the active slots(if there is an item in that slot)
 function setActiveSlot(slot)  {
     if(slot == -1 || inventory[slot]!=null) {
         if(activeSlot>-1) {
@@ -114,8 +115,17 @@ function setActiveSlot(slot)  {
 
 
 function addIcon(item,slot) {
-  //  $("#slot"+slot).css("background-image","url("+item.name+".png)");
+    var tName = item.name.split("/");
+    tName = tName[tName.length-1];
+    tName = tName.split(".")[0];
+    console.log(tName);
+    $("#slot"+(slot+1)).append("<img id='"+tName+"' src='icons/"+tName+".png'/>" );
 }
+
+function removeIcon(slot) {
+    $("#slot"+ (slot+1) + " img:last-child").remove();
+}
+
 function gameOver() {
     $(".gameOverBlocker").css("z-index", 15);
     $(".GUI").hide();
