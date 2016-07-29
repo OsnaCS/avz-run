@@ -13,7 +13,7 @@
 		   <spawn index="1" position="(10, 4, 0)" object="axt" normaltowall="(1,0)" scale="2" oninteract="interact_funct"/>
 		   <spawn index="2" position="(10, 6, 1)" object="pflanze" normaltowall="(1,0)" scale="2"/>
 		   
-		   <!-- 
+		   
 		   <spawn index="stuhl" position="(8, 7, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
 		   <spawn index="stuhl" position="(8, 6.4, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
 		   <spawn index="stuhl" position="(8, 5.8, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
@@ -60,7 +60,6 @@
 		   <spawn index="stuhl" position="(5, 2.2, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
 		   <spawn index="stuhl" position="(5, 1.6, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
 		   <spawn index="stuhl" position="(5, 1, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
-		   -->
 		   <!-- in den spawns können entweder explizite objekte oder die kategorien static/interactible stehen. (wenn interactible braucht sie nat. auch ein oninteract.) -->
 		</spawns>
 		<fires>
@@ -156,10 +155,8 @@
 		   <door type="norm" index="18" position="(-7.15,23.24)" normal="(0, 1)"/>
 		   <door type="glass" index="19" position="(-1.72,23.24)" normal="(0, 1)"/>
 		   <door type="norm" index="20" position="(3.15,23.24)" normal="(0, 1)"/>
-		   <!--
 		   <door type="norm" index="21" position="(-3.75,2.85)" normal="(1, 0)"/>
 		   <door type="norm" index="22" position="(-3.75, -1.85)" normal="(1, 0)"/>
-		-->
 		</doors>
 		<lights>
 			<light index="1" kind="pointlight" objectname="deckenlicht" position="(-6,12.5,3)" intensity="0.1" color="0xFFFFFF"/>
@@ -259,8 +256,7 @@
 		<origin x="0" y="0"/>
 		<size xmin="-8.94993" xmax="11.00008" ymin="-28.19999" ymax="13.50002"/>
 		<doors>
-		   <door type="norm" index="1" position="(0.00113,13.51706 )" normal="(-1, 0)"/>
-		   <door type="norm" index="2" position="(0.00113,6.44593)" normal="(-1, 0)"/>
+		   <door type="norm" index="1" position="(1.88, 0)" normal="(0, 1)"/>
 		</doors>
 		<lights>
 			<light index="1" kind="pointlight" objectname="deckenlicht" position="(3.5, -4.5, 5)" normal="(0,1,0)" intensity="0.7" color="0xFFFFFF" />
