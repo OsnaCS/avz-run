@@ -4,7 +4,7 @@
 <objects ObjectPath="../avz_model/materials/objects/" IconPath="../avz_model/inventar">
 
 	<interactible>
-		<object name="axt" path="axt.json" scale="2" icon="axt.png"/>
+		<object name="axt" path="axt/axt.json" scale="2" icon="axt.png"/>
 		<object name="transponder" path="transponder.json" scale="2" icon="transponder.png"/>
 		<object name="lappen" path="lappen/lappen.json" scale ="2" icon="lappen.png" />
 		<object name="schwamm" path="schwamm/schwamm.json" scale ="2" icon="schwamm.png"/>
@@ -46,7 +46,8 @@
 
 	<door>
 		<object name="klotur" path="tuer_klo.json" interaction="0" scale ="2"/>
-		<object name="glastur" path="tueren/glastuer.json" interaction="1" scale ="2"/>
+		<object name="glastur" path="tueren/glass_door_simple.json" interaction="1" scale ="2"/>
+		<object name="glastur_rahmen" path="tueren/glassdoor_frame.json" interaction="1" scale ="2"/>
 		<object name="holztur" path="tueren/holztuer.json" interaction="1" scale ="2"/>
 		<object name="halbbrokentur" path="tueren/tuer_halbkaputt.json" interaction="0" scale ="2"/>
 		<object name="brokentur" path="tueren/tuer_kaputt.json" interaction="1" scale ="2"/>
