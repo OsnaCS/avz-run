@@ -14,15 +14,25 @@ public class Room extends DrawableObject {
     private LinkedList<Way> waylist;
     private String name;
 
-    public Room(double ax, double ay, double ex, double ey,Point center, LinkedList<Way> waylist){
+    public Room(double ax, double ay, double ex, double ey, Point center, LinkedList<Way> waylist){
+
+        this.cA = new Coordinates(ax, ay);
+        this.cE = new Coordinates(ex, ey);
+        this.cC = new Coordinates(center.getX(), center.getY());
+
+        this.waylist = waylist;
 
     }
 
+    //erstellt raum mithilfe des xmlhandlers
     public Room(String name){
         //center = 0,0
     }
 
     public LinkedList<Way> compareWays(LinkedList<Way> allways){
+
+
+
 
         return allways;
     }
@@ -35,11 +45,18 @@ public class Room extends DrawableObject {
 
     //Rotiert um 90° um cC
     public void rotate(){
-
+        cA.rotation(Math.PI/2, cC);
+        cE.rotation(Math.PI/2, cC);
     }
 
     //verschiebt anhand cC
     public void translate(){
+        Coordinates newA = new Coordinates()
+        Coordinates newE = new Coordinates()
+
+
+        cA.translateTo(newA);
+        cE.translateTo(newE);
 
     }
 
@@ -75,7 +92,11 @@ public class Room extends DrawableObject {
         return waylist;
     }
 
-    public void setCenter(Coordinates cC) {
+    public void setcC(Coordinates cC) {
         this.cC = cC;
+    }
+
+    public void updateCenter(Point center){
+
     }
 }
