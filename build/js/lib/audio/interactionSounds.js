@@ -9,6 +9,10 @@ function doorSound(){
     createSound("door-open", 10, 1, false, 20).play();
 }
 
+function doorLockedSound(){
+    createSound("door-locked", 10, 1, false, 10).play();
+}
+
 function buttonSound(){
     createSound("button", 10, 1, false, 3).play();
 }
@@ -24,7 +28,7 @@ function failedSound(){
 // sound for coverd mouth
 function startHeavyBreathing(){
     if(hbreathing == null){
-        hbreathing = createSound("breath", 10, 1, true, 0.3);
+        hbreathing = createSound("breath", 10, 1, true, 0.2);
         camera.add(hbreathing);
     }
 
