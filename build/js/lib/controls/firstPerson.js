@@ -112,14 +112,13 @@ if (havePointerLock) {
 
     buttonStart.addEventListener('click', function(event) {
 		
-
-
+        
         startInstructions.style.display = 'none';
-
         // Ask the browser to lock the pointer
         element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
         element.requestPointerLock();
         menu = false;
+
         $(".GUI").show();
 
         playername = $("#nickname").val();

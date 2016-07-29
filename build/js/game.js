@@ -67,7 +67,6 @@ var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much hea
 function init(event) {
 	CreateSegment("lectureroom1");
 
-
     // set up the scene, the camera and the renderer
     createScene(audio);
 
@@ -84,6 +83,7 @@ function init(event) {
                 function startLoop () {
 					// start a loop that will update the objects' positions
 					// and render the scene on each frame
+                    
 					loop();                                             
                 }
             }
@@ -97,16 +97,15 @@ stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild(stats.dom);
 
 //Create the Scene
-function createScene(complete) {
-
+function createScene(callback) {
     blocker = document.getElementById('blocker');
     container = document.getElementById('world');
     startInstructions = document.getElementById('startInstructions');
+
     buttonStart = document.getElementById('buttonStart');
     instructions = document.getElementById('instructions');
     button = document.getElementById('button');
     button2 = document.getElementById('button2');
-
     // Get the width and the height of the screen,
     // use them to set up the aspect ratio of the camera
     // and the size of the renderer.
@@ -175,7 +174,7 @@ function createScene(complete) {
     window.addEventListener('resize', handleWindowResize, false);
 
     scene.fog = new THREE.FogExp2(0x424242, 0.005);
-    complete();
+    callback();
 }
 
 
