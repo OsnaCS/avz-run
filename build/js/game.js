@@ -86,7 +86,7 @@ function init(event) {
                 function startLoop () {
 					// start a loop that will update the objects' positions
 					// and render the scene on each frame
-					loop();                                             
+					loop();
                 }
             }
         }
@@ -254,25 +254,25 @@ function createLights() {
     // to activate the lights, just add them to the scene
     scene.add(hemisphereLight);
     scene.add(shadowLight);
-    
+
 }
 
 
 function createRoom(callback) {
-	
+
 	setTimeout(PutSegments,2000);
 	setTimeout(door_in_doors,2200);
 	setTimeout(objects_in_spawns,2400);
 	setTimeout(set_fires,2600);
 	setTimeout(turn_on_lights,2800);
-	
+
    // var mesh = fileLoader.get("lectureroom1");
     // terrain.push(mesh);
     // mesh.position.y = 0;
     // mesh.position.x = 5;
     // mesh.scale.set(20, 20, 20);
     // scene.add(mesh);
-	
+
 	callback();
 
 }
@@ -280,7 +280,7 @@ function createRoom(callback) {
 
 //debug-stuff, deleteme
 function ShowSegments() {
-	var text = ""; 
+	var text = "";
 	for (i = 0; i <segments.length; i++) {
 		text += printmost(segments[i])+"<br>";  //JSON.stringify(segments[i])
 	}
@@ -293,20 +293,20 @@ function printmost(obj) {
 		{ output += property + ': ' + obj[property]+'; '; }
 	}
 	return output;
-}	
+}
 //debugstuffdeleteme ende
 
 function createItems(callback){
 
 
      // addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
-	 
+
 	 // addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name)
-	 // TYPE_INTERACTABLE; TYPE_TRIGGER; TYPE_FIRE; TYPE_EXIT; 
+	 // TYPE_INTERACTABLE; TYPE_TRIGGER; TYPE_FIRE; TYPE_EXIT;
 	 // intfunction = damage_door, destroy_door, pickUpItem, destroy, open, openLockedDoor, extinguish
 
-	 //wände/terrain/statics, interactibles(auch feuer und türen), triggerevents(auch feuer), licher (auch feuer), 
-	 
+	 //wände/terrain/statics, interactibles(auch feuer und türen), triggerevents(auch feuer), licher (auch feuer),
+
       addItem((newItemList[0]), -50, 10, 10, 10, true, pickUpItem, newItemList[0]);
       addItem((newItemList[1]), 20, 5, 10, 1, true, destroy, newItemList[1]);
       addItem((newItemList[2]), 0, 5, 20, 3, true, pickUpItem, newItemList[2]);
@@ -319,16 +319,11 @@ function createItems(callback){
         console.log(newItemList[i]);
      }
 
-    addTrigger(-64,-71,action);
 
     callback();
 
 }
 
-
-function action() {
-    console.log("hi");
-}
 
 // Add Object with given Path to given coordinates
 function addItem(file, xPos, yPos, zPos, scale, angle, interact_type, intfunction){
@@ -356,6 +351,8 @@ function addItem(file, xPos, yPos, zPos, scale, angle, interact_type, intfunctio
 
 
 //adds a trigger at given position, performs action when walking over it and consumes it
+// ***** TO FADE IN THOUGHTS: look up partial, showThoughts, hideThoughts in interact! ******
+
 function addTrigger (xPos, zPos, action) {
     var triggerGeom = new THREE.BoxGeometry(30,30,30);
     var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, color:0xFFFFFF});
