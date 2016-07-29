@@ -2,9 +2,10 @@
 
 
 
-var FileLoader = function() {
-    console.log("FileLoader running ...");
+var FileLoader = function(callback) {
 
+    console.log("FileLoader running ...");
+    var ready= false;
     var jsonLoader = new THREE.JSONLoader();
     // Pfad zu allen Dateien
     var files = [
@@ -51,9 +52,11 @@ var FileLoader = function() {
                 filesSuccessfullyLoaded += 1;
 
                 //checks if everything is loaded and hides loadbar and shows start button
-                if(filesSuccessfullyLoaded == file.length){
+                if(filesSuccessfullyLoaded == files.length){
+                    ready=true;
                     $(".loading").css("display" , " none" );
                     $(".btn").css("display" , " inline-block" );
+                    callback();
                 };
 
                 //updates loadingbar
@@ -75,12 +78,14 @@ var FileLoader = function() {
     }
 
     //checks if everything is loaded after a set time periode
-    window.setTimeout(
+    setTimeout(
         function(){
-            if(filesSuccessfullyLoaded != file.length){
+            if(filesSuccessfullyLoaded != files.length){
+                ready=true;
                 alert("Warnung! Es sind noch nicht alle Dateien geladen worden.");
                 $("#loadingBlocker").hide();
                 $("#startInstructions").show();
+                callback();
             }
 
         },3000
@@ -99,6 +104,12 @@ var FileLoader = function() {
         return true; //while objects.xml contains errors
 
     }
+    // while(!ready) {
+    //     console.log(ready);
+    //     if(filesSuccessfullyLoaded == file.length) {
+    //         ready=true;
+    //     }
+    // }
 
     // "public" Methoden:
     return {
