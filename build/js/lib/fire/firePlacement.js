@@ -60,14 +60,15 @@ function addFire(x, y, z, width, height, depth, spacing) {
         }
     }
     // Pointlight
-    var pointlight = new THREE.PointLight(0xff9933, 1, 1.5);
-    /*if(fireDepth > fireWidth) {
-        pointlight = new THREE.PointLight(0xff9933, 1, fireWidth);
+    var pointlight;
+    if(fireDepth > fireWidth) {
+        pointlight = new THREE.PointLight(0xff9933, 1, fireWidth, 2);
     }else{
-        pointlight = new THREE.PointLight(0xff9933, 1, fireDepth);
-    }*/
-    pointlight.position.set(x, y , z);
+        pointlight = new THREE.PointLight(0xff9933, 1, fireDepth, 2);
+    }
+    pointlight.position.set(x, y + (fireHeight / 2) , z);
     scene.add(pointlight);
+    console.log(pointlight);
 
     // Firemesh
     var fmesh = fire.mesh.clone();
