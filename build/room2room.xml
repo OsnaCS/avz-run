@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<room2room>
+	<father name="center">
+		<child name="circle_walled"/>
+		<child name="klogang_solo"/>
+	</father>
+	<father name="klogang_solo">
+		<child name="circle_walled"/>
+	</father>
+	<father name="circle_walled">
+		<child name="buero"/>
+		<child name="gangende_fenster"/>
+		<child name="lectureroom1"/>
+	</father>
+</room2room>
