@@ -1,7 +1,8 @@
-package model;
+package model.leveleditor;
 
 import java.awt.geom.Point2D;
 
+import model.Matrix;
 import model.drawables.Point;
 
 public class Transformer {
