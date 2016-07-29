@@ -1,4 +1,4 @@
-package model;
+package model.leveleditor;
 
 import model.drawables.Point;
 

@@ -1,10 +1,10 @@
 package controller.listener;
 
 import controller.DrawableObjectProcessing;
-import model.Way;
-import model.drawables.DashedRoom;
 import model.drawables.Point;
-import model.drawables.Room;
+import model.leveleditor.DashedRoom;
+import model.leveleditor.Room;
+import model.leveleditor.Way;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;

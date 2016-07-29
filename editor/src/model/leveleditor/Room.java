@@ -1,6 +1,8 @@
-package model.drawables;
+package model.leveleditor;
 
-import model.Way;
+import model.drawables.Line;
+import model.drawables.Point;
+import model.drawables.Rectangle;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -90,8 +92,31 @@ public class Room extends Rectangle {
         return true;
     }
 
+    /**
+	 * Zeichnet das Rechteck in einen grafischen Kontext
+	 * 
+	 * @param g
+	 *            der grafische Kontext in den das Rechteck gezeichnet wird
+	 */
+	public void paint(Graphics g) {
+		
+		Point drawA = this.a;
+		Point drawE = this.e;
+		
+		drawA.x *=2;
+		drawA.y *=2;
+		drawE.x *=2;
+		drawE.y *=2;
+		
+		
+		Point ur = new Point(drawE.x, drawA.y);
+		Point ll = new Point(drawA.x, drawE.y);
 
-
+		new Line(drawA, ur).paint(g);
+		new Line(ur, drawE).paint(g);
+		new Line(drawE, ll).paint(g);
+		new Line(ll, drawA).paint(g);
+	}
 
 
 
@@ -155,12 +180,5 @@ public class Room extends Rectangle {
 
     public void setCenter(Point center) {
         this.center = center;
-    }
-
-
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-
     }
 }
