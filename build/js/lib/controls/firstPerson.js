@@ -489,6 +489,7 @@ function controlLoop(controls) {
                 regenerate = true;
                 speed_factor = 1;
                 running = false;
+                $(".energy").css("box-shadow"," 0px 0px 20px 3px rgba(255, 82, 82, 0.6)");
             }
         } else {
             energy += delta * 10;
@@ -496,6 +497,7 @@ function controlLoop(controls) {
                 energy = STAMINA;
                 if (regenerate) {
                     regenerate = false;
+                    $(".energy").css("box-shadow","none");
                 }
             }
         }
