@@ -1,8 +1,9 @@
-package model;
+package model.leveleditor;
 
 import java.awt.geom.Point2D;
 import java.util.LinkedList;
 
+import model.Matrix;
 import model.drawables.Point;
 import model.drawables.Room;
 
