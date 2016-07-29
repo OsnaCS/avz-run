@@ -60,12 +60,12 @@ function addFire(x, y, z, width, height, depth, spacing) {
         }
     }
     // Pointlight
-    var pointlight;
-    if(fireDepth > fireWidth) {
+    var pointlight = new THREE.PointLight(0xff9933, 1, 1.5);
+    /*if(fireDepth > fireWidth) {
         pointlight = new THREE.PointLight(0xff9933, 1, fireWidth);
     }else{
         pointlight = new THREE.PointLight(0xff9933, 1, fireDepth);
-    }
+    }*/
     pointlight.position.set(x, y , z);
     scene.add(pointlight);
 
