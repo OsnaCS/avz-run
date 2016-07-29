@@ -68,19 +68,17 @@ var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much hea
 
 function init(event) {
 	CreateSegment("lectureroom1");
-
-
     // set up the scene, the camera and the renderer
     createScene(audio);
 
     function audio (){
     // init audio support
-        createAudio(controls);
+        createAudio(room);
 
-        function controls() {
-            initControls(room);
+        function room() {
 
-            function room() {
+            createRoom(controls);
+            function controls() {
                 // add the objects and lights - replace those functions as you please
                 createRoom(startLoop);
                 function startLoop () {
@@ -88,6 +86,7 @@ function init(event) {
 					// and render the scene on each frame
 					loop();
                 }
+                initControls();
             }
         }
     }
@@ -200,9 +199,10 @@ function loop() {
             renderer.render(scene, camera);
             stats.end();
         }
-    } else {
-        requestAnimationFrame(loop);
     }
+    // } else {
+    //     requestAnimationFrame(loop);
+    // }
 };
 
 
@@ -323,6 +323,7 @@ function createItems(callback){
     callback();
 
 }
+//debugstuffdeleteme ende
 
 
 // Add Object with given Path to given coordinates
