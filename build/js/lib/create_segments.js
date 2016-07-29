@@ -12,12 +12,12 @@
 // -Beim Einbauen der Objekte sowohl auf die Skalierung in der Objects.xml als auch in der rooms.xml achten (momentan nur rooms)
 
 //consts (change iff you know what you're doing! :P)
-var JSONPATH = "../avz_model/building_parts/";
-var OBJECTPATH = "../avz_model/materials/objects/";
+var JSONPATH = "/avz_model/building_parts/";
+var OBJECTPATH = "/avz_model/materials/objects/";
 var TEXTUREPATH = "jsons/textures/"
-var ROOMSXML = "rooms.xml"
-var OBJECTSXML = "objects.xml"
-var LEVELSXML = "levels.xml"
+var ROOMSXML = "/build/rooms.xml"
+var OBJECTSXML = "/build/objects.xml"
+var LEVELSXML = "/build/levels.xml"
 var SKALIERUNGSFAKTOR = 30;
 var HOLZTURBREITE = SKALIERUNGSFAKTOR*0.8;
 var GLASTURBREITE = SKALIERUNGSFAKTOR*1.2;
