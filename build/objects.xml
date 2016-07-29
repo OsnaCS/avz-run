@@ -42,6 +42,7 @@
 		<object path="schutt/schutt.json" name="schutt" scale ="1"/>
 		<object path="schutt2/schutt2.json" name="schutt2" scale ="1"/>
 		<object path="steckdose.json" name="steckdose" scale="1" />
+		<object path="glastuerrahmen.json" name="glastuerrahmen" scale="1" />
 	</static>
 
 	<door>
@@ -53,8 +54,8 @@
 	</door>
 
 	<lamp>
-		<object name="deckenlicht" path="deckenlicht.json" interaction="0" scale ="1"/>
-		<object name="kleinlicht" path="deckenlicht_klein.json" interaction="1" scale ="1"/>
+		<object name="deckenlicht" path="deckenlicht.json" interaction="0" scale ="0.5"/>
+		<object name="kleinlicht" path="deckenlicht_klein.json" interaction="1" scale ="0.5"/>
 	</lamp>
 
 </objects>
