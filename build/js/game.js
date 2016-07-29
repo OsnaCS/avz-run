@@ -151,7 +151,7 @@ function createScene(complete) {
     );
 
     // Set the position of the camera, PLAYERHEIGHT is defined in firstPerson.js
-    var camPos = new THREE.Vector3(0, PLAYERHEIGHT + 10, 0);
+    var camPos = new THREE.Vector3(0, PLAYERHEIGHT + PLAYERHEIGHT * 0.4, 0);
     controls = new THREE.PointerLockControls(camera, camPos);
     scene.add(controls.getObject());
 

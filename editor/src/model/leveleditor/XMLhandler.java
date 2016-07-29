@@ -1,7 +1,4 @@
-package controller;
-
-import model.Way;
-import model.drawables.Room;
+package model.leveleditor;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
