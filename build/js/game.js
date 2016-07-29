@@ -73,7 +73,10 @@ var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much hea
 
 
 function init(event) {
-	CreateSegment("lectureroom1",scene);
+
+	CreateSegment("buero", 
+
+
     // set up the scene, the camera and the renderer
     function scene (){
         createScene(audio);
@@ -99,6 +102,7 @@ function init(event) {
             }
         }
     }
+    );
 }
 
 // Stats
@@ -151,7 +155,7 @@ function createScene(complete) {
     );
 
     // Set the position of the camera, PLAYERHEIGHT is defined in firstPerson.js
-    var camPos = new THREE.Vector3(0, PLAYERHEIGHT + 10, 0);
+    var camPos = new THREE.Vector3(0, PLAYERHEIGHT + PLAYERHEIGHT * 0.4, 0);
     controls = new THREE.PointerLockControls(camera, camPos);
     scene.add(controls.getObject());
 

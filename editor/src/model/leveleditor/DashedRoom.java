@@ -1,8 +1,6 @@
-package model.drawables;
+package model.leveleditor;
 
 import java.util.LinkedList;
-
-import model.Way;
 
 /**
  * Created by Thomas Dautzenberg on 28/07/2016.

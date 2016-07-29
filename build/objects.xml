@@ -50,7 +50,6 @@
 		<object name="holztur" path="tueren/holztuer.json" interaction="1" scale ="1"/>
 		<object name="halbbrokentur" path="tueren/tuer_halbkaputt.json" interaction="0" scale ="1"/>
 		<object name="brokentur" path="tueren/tuer_kaputt.json" interaction="1" scale ="1"/>
-
 	</door>
 
 	<lamp>
