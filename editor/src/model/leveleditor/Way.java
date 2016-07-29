@@ -1,86 +1,59 @@
 package model.leveleditor;
 
-import model.drawables.Point;
+import model.drawables.DrawableObject;
 
+import model.drawables.Line;
+import model.drawables.*;
+
+import java.awt.Graphics;
 import java.awt.geom.Point2D;
 
-public class Way {
-	private Point2D.Double location;
-	private String type;
-	private int normalx;
-	private int normaly;
-
-	public int getNormalx() {
-		return normalx;
-	}
-
-	public void setNormalx(int normalx) {
-		this.normalx = normalx;
-	}
-
-	public int getNormaly() {
-		return normaly;
-	}
-
-	public void setNormaly(int normaly) {
-		this.normaly = normaly;
-	}
 
 
-
-	public Way(Point2D.Double location, String type, int normalx, int normaly){
-		this.location = location;
-		this.type = type;
-		this.normalx=normalx;
-		this.normaly=normaly;
+public class Way extends DrawableObject {
+	
+	Coordinates pos;
+	Coordinates normal;
+	Room father;
+	
+	public Way(Coordinates pos, Coordinates normal, Room father){
+		this.pos= pos;
+		this.normal = normal;
+		this.father = father;
 	}
 	
-	public Way(double x, double y, String type, int normalx, int normaly){
-		location = new Point2D.Double(x, y);
-		this.type = type;
-		this.normalx=normalx;
-		this.normaly=normaly;
-	}
-
-	public Point2D.Double getLocation(){
-		return location;
-	}
-
-	public Point getRounded(){
-		return new Point((int) location.getX(), (int) location.getY());
-	}
-
-	public Point getNormald(){
-		return new Point((int) location.getX()+normalx, (int) location.getY()+normaly);
-	}
-
-	public double getX(){
-		return location.x;
+	public boolean compareDistance(Way other){
+		return true;
 	}
 	
-	public double getY(){
-		return location.y;
+	public Way calcNormal(){
+		double x = 1.0;
+		double y = 0.0;
+		Coordinates nNormal = new Coordinates(x, y);
+		Way way =  new Way (pos, nNormal, father);
+		return way;
 	}
 	
-	public String getType(){
-		return type;
-	}
-
+	public Point fittingPos(){
+		Point nowPos = pos.getScaledIntCoordinates(2);
+		Point papaPos = father.center.getScaledIntCoordinates(2);
+		
+		int x = nowPos.x + papaPos.x;
+		int y = nowPos.y + papaPos.y;
+		
+		Point fitPos = new Point(x,y);
+		
+		return fitPos;
 	
-	public void setLocation(Point2D.Double loc){
-		location = loc;
-	}
-	
-	public void setX(int newX){
-		location.x = newX;
-	}
-	
-	public void setY(int newY){
-		location.y = newY;
 	}
 	
-	public void setType(String newType){
-		type = newType;
+	public void paint(Graphics g){
+		Point a = new Point(0, 0);
+		Point b = new Point (1, 1);
+		new Line(a, b).paint(g);
+		
 	}
-
+	
+	
+	
 }
