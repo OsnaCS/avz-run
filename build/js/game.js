@@ -73,7 +73,10 @@ var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much hea
 
 
 function init(event) {
-	CreateSegment("lectureroom1",scene);
+
+	CreateSegment("klogang_solo", 
+
+
     // set up the scene, the camera and the renderer
     function scene (){
         createScene(audio);
@@ -99,6 +102,7 @@ function init(event) {
             }
         }
     }
+    );
 }
 
 // Stats
