@@ -61,7 +61,12 @@ function addFire(x, y, z, width, height, depth, spacing) {
     }
     // Pointlight
     var pointlight = new THREE.PointLight(0xff9933, 1, 1.5);
-    pointlight.position.set(x, y + 1, z);
+    /*if(fireDepth > fireWidth) {
+        pointlight = new THREE.PointLight(0xff9933, 1, fireWidth);
+    }else{
+        pointlight = new THREE.PointLight(0xff9933, 1, fireDepth);
+    }*/
+    pointlight.position.set(x, y , z);
     scene.add(pointlight);
 
     // Firemesh
