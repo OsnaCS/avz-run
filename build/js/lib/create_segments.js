@@ -2,14 +2,11 @@
 // -dass der der angegebene Punkt immer die Raummitte ist
 // -dass Door2Door fehlerfrei, trotz aller rotationen klappt
 // -Doors, Statics, fires, lamps, etc. alle  zu ner eigenen art Segment hinzufügen. Dafür mit anderen Gruppen kurzschließen
-// -Die paar Räume die noch fehlen adden
-// -Alle Feuer, Lampen & Objekte in die Räume-xml packen
-// -Getlights & getfires noch kurz
 // -Items könnten noch anhand von normaltowall gedreht werden
 // -Dass der nicht immer 2 Türen in nen Doppelt genutzten Türrahmen packt
 // -Dass er all das was ich so manuell eingebe aus der levels.xml liest
 // -Objekte noch passend zur normaltowall drehen
-// -Beim Einbauen der Objekte sowohl auf die Skalierung in der Objects.xml als auch in der rooms.xml achten (momentan nur rooms)
+
 
 //consts (change iff you know what you're doing! :P)
 var JSONPATH = "../avz_model/building_parts/";
@@ -34,35 +31,37 @@ var doors = [];
 //functions
 
 //this function takes as input the name of a room, and adds to the "segments"-array the object containing its info + mesh (no return value due to asynchrony)
-//the callback-function is either nothing, object_in_spawns oder fitdoor
+//the callback-function is either nothing, fitdoor or the one loading the info from the levels.xml
 	function CreateSegment(forwhichroom, callback) {
 		var currseg = {filename:"", doors:[], spawns:[], lights:[], fires:[], xmin:0, ymin:0, xmax:0, ymax:0, orx:0, ory:0, orz: 0, transx:0, transy:0, rot:0, rauch: 0, applied:false};
 		if (typeof callback !== 'function')
 		{
-			currseg.transx = 0;  //TODO aus dem levels.xlm laden
+			currseg.transx = 0;  .
 			currseg.transy = 0;
 			currseg.rot = 0;
 		}
 		segments.push(currseg);
 		if (typeof callback === 'function') {
-			loadStuff(forwhichroom,segments.length-1, callback);  //callback is either object_in_spawns oder fitdoor or nothing.
+			loadStuff(forwhichroom,segments.length-1, callback); //callback is either fitdoor (which packs a segment door2door to a previous one) OR gets tranx,transy&rot von der levels.xml
 		} else {
 			loadStuff(forwhichroom,segments.length-1);
 		}
 	}
 
 
-//loads everything needed from the rooms.xml file (and calls the next three functions in this function)
+//this function will be done as soon as the leveldesign group is done.
+	function getTransRotFromXML(){
+		//gets called as callback from createsegment.
+	}
+	
+
+//loads everything needed from the rooms.xml file (and then calls the followup-functions)
 	function loadStuff(whichroom, segmentindex, callback) {
 
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function() {
 			if (xhttp.readyState == 4 && xhttp.status == 200) {
-
 				getDoors(xhttp,segmentindex,whichroom,spawns);
-
-
-
 			}
 			function spawns () {
 				getSpawns(xhttp,segmentindex,whichroom,lights);
@@ -131,6 +130,7 @@ var doors = [];
 					cudo.push(curdoor[j].getAttribute("type"));
 					cudo.push(curdoor[j].getAttribute("position"));
 					cudo.push(curdoor[j].getAttribute("normal"));
+					cudo.push(curdoor[j].getAttribute("act"));
 					DoorArr.push(cudo);
 				}
 			}
@@ -242,7 +242,7 @@ var doors = [];
 				spawny = spawny + parseInt(segments[INDEX1].transy)+xz[1];
 
 				var what = (tospawn[5] == null) ? "static" : "interactible"
-				addObjectViaName(tospawn[2], what, spawnx, spawny, spawnz, tospawn[4], rotate, tospawn[5]);
+				addObjectViaName(tospawn[2], what, spawnx, spawny, spawnz, tospawn[4], rotate, tospawn[5]); //4: scale | 5: oninteract/""
 			}
 		}
 	}
@@ -393,13 +393,48 @@ var doors = [];
 
 			door1x = door1x + parseInt(segments[INDEX1].transx)+xz[0];
 			door1y = door1y + parseInt(segments[INDEX1].transy)+xz[1];
-
-			if (room1door[1] === "norm") { addObjectViaName("holztur", "door", door1x, door1y, 0, 1.05, rotate-segments[INDEX1].rot, "open") }
-			else if (room1door[1] === "glass") { addObjectViaName("glastur", "door", door1x, door1y, 0, 1.05, rotate-segments[INDEX1].rot, "open") }
+			
+			var doorkind = (room1door[1] === "norm") ? "holztur" : "glastur";
+			
+			var act = "";
+			switch(room1door[4]) {
+				case "openable": act = "open"; break;
+				case "open": act = "openopened"; rotate -= 1; break;
+				case "transponderopenable": act = "openTransponderDoor"; break;
+				case "axtopenable": act = "damageDoor"; break;
+				case "codeopenable": act = "openLockedDoor"; break;
+			}
+			//Todo: bei axtopenable muss die tür sich verwandeln
+			//TODO: codeopenable funktioniert auch nicht..
+			
+			addObjectViaName(doorkind, "door", door1x, door1y, 0, 1.05, rotate-segments[INDEX1].rot, act)  
 
 		}
 	}
 }
+	
+	//TODO: diese Funktionen. In synchron. Am besten per globalen Variablen (...dafür checken die Funktionen vorher ob die Variablen != "")
+	
+	function objectFilenameToName(filename){
+		var tName = filename.split("/");
+		tName = tName[tName.length-1].split(".")[0];  //TODO: bei einigen Objekten ist der Name ungleich dem Filenamen! Das hier ist nur die Notlösung!
+		return tName;
+	}
+	
+	function objectNameToFilename(name){
+		
+	}
+	
+	function roomFilenameToName(filename){
+		var tName = filename.split("/");
+		tName = tName[tName.length-1].split(".")[0];	//TODO: bei einigen Objekten ist der Name ungleich dem Filenamen! Das hier ist nur die Notlösung!	
+		return tName;
+	}
+	
+	function roomNameToFilename(name){
+		
+	}
+
 
 //needed for other functions, (to turn objects)
 	function vec2dir(vec){
@@ -511,8 +546,7 @@ var doors = [];
 
 	function addobject(objectpfad, posx, posy, posz, scale, rotate, responsefunct) {
 		var intItem = null;
-		var tName = objectpfad.split("/");
-		var tName = tName[tName.length-1].split(".")[0];
+		var tName = objectFilenameToName(objectpfad);
 		mesh = fileLoader.get(tName);
 		mesh.scale.set(SKALIERUNGSFAKTOR*scale,SKALIERUNGSFAKTOR*scale,SKALIERUNGSFAKTOR*scale);
 		mesh.position.x = Math.round(posx);
@@ -521,11 +555,11 @@ var doors = [];
 		mesh.rotation.y = 0.5*Math.PI*(4-rotate);
 		if (responsefunct == "") { static_obj.push(mesh) } else { interact_obj.push(mesh); }
 
-		if (responsefunct == "open") {
-			var intItem = new GameObject(mesh, open, TYPE_INTERACTABLE, objectpfad);
+		if ((responsefunct != "") && (responsefunct != null)) {
+			var functPtr = eval(responsefunct);
+			var intItem = new GameObject(mesh, functPtr, TYPE_INTERACTABLE, objectpfad);
 		}
 		addtoscene(mesh, intItem);
-
 	}
 
 	function addObjectViaName(objectname, objecttype, spawnx, spawny, spawnz, scale, rotate, actionfunction) {
@@ -541,7 +575,7 @@ var doors = [];
 					for (i = 0; i < typeItems.length; i++) {
 						if (typeItems[i].getAttribute("name") === objectname) {
 							pfad += typeItems[i].getAttribute("path");
-							addobject(pfad, spawnx, spawny, spawnz, scale, rotate, actionfunction)
+							addobject(pfad, spawnx, spawny, spawnz, scale*typeItems[i].getAttribute("scale"), rotate, actionfunction)
 						}
 					}
 				}

@@ -1,41 +1,44 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <rooms RoomPath="../avz_model/building_parts/">
 
+	<!-- Tür-acts: open, openable, closed, transponderopenable, codeopanable, axtopenable -->
+	
 	<!-- DAS HIER IST KOMPLETT FINAL!!!!! -->
 	<room name="lectureroom1" filename="lectureroom1.json">
 		<origin x="0" y="0"/>
 		<size xmin="-2" ymin="-2" xmax="12" ymax="8" />
 		<doors>
-		   <door type="norm" index="1" position="(12,-0.75)" normal="(1,0)"/>
+		   <door type="norm" index="1" position="(12,-0.75)" normal="(1,0)" act="axtopenable"/> 
 		</doors>
 		<spawns>
-		   <spawn index="1" position="(10, 4, 0)" object="axt" normaltowall="(1,0)" scale="2" oninteract="interact_funct"/>
-		   <spawn index="2" position="(10, 6, 1)" object="pflanze" normaltowall="(1,0)" scale="2"/>
+		   <spawn index="1" position="(10, 4, 0.4)" object="axt" normaltowall="(1,0)" scale="2" oninteract="pickUpItem"/>
+		   <spawn index="2" position="(10, 6, 1)" object="transponder" normaltowall="(1,0)" scale="2" oninteract="pickUpItem"/>
+		   <spawn index="2" position="(10, 5, 0.3)" object="computer" normaltowall="(1,0)" scale="2" oninteract="enterCH"/>
 		   
-		   <spawn index="stuhl" position="(8, 7, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
-		   <spawn index="stuhl" position="(8, 6.4, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
-		   <spawn index="stuhl" position="(8, 5.8, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
-		   <spawn index="stuhl" position="(8, 5.2, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
-		   <spawn index="stuhl" position="(8, 4.6, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
-		   <spawn index="stuhl" position="(8, 4, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
-		   <spawn index="stuhl" position="(8, 3.4, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
-		   <spawn index="stuhl" position="(8, 2.8, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
-		   <spawn index="stuhl" position="(8, 2.2, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
-		   <spawn index="stuhl" position="(8, 1.6, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
-		   <spawn index="stuhl" position="(8, 1, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="stuhl1" position="(8, 7, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="stuhl2" position="(8, 6.4, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="stuhl3" position="(8, 5.8, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="stuhl4" position="(8, 5.2, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="stuhl5" position="(8, 4.6, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="stuhl6" position="(8, 4, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="stuhl7" position="(8, 3.4, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="stuhl8" position="(8, 2.8, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="stuhl9" position="(8, 2.2, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="stuhl10" position="(8, 1.6, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="stuhl11" position="(8, 1, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
 		   
 		   
-		   <spawn index="stuhl" position="(7, 7, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
-		   <spawn index="stuhl" position="(7, 6.4, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
-		   <spawn index="stuhl" position="(7, 5.8, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
-		   <spawn index="stuhl" position="(7, 5.2, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
-		   <spawn index="stuhl" position="(7, 4.6, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
-		   <spawn index="stuhl" position="(7, 4, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
-		   <spawn index="stuhl" position="(7, 3.4, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
-		   <spawn index="stuhl" position="(7, 2.8, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
-		   <spawn index="stuhl" position="(7, 2.2, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
-		   <spawn index="stuhl" position="(7, 1.6, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
-		   <spawn index="stuhl" position="(7, 1, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="stuhl12" position="(7, 7, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="stuhl13" position="(7, 6.4, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="stuhl14" position="(7, 5.8, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="stuhl15" position="(7, 5.2, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="stuhl16" position="(7, 4.6, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="stuhl17" position="(7, 4, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="stuhl18" position="(7, 3.4, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="stuhl19" position="(7, 2.8, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="stuhl20" position="(7, 2.2, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="stuhl21" position="(7, 1.6, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="stuhl22" position="(7, 1, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
 		   
 		   <spawn index="stuhl" position="(6, 7, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
 		   <spawn index="stuhl" position="(6, 6.4, 0)" object="pult" normaltowall="(1,0)" scale="1"/>
@@ -62,7 +65,7 @@
 		   <!-- in den spawns können entweder explizite objekte oder die kategorien static/interactible stehen. (wenn interactible braucht sie nat. auch ein oninteract.) -->
 		</spawns>
 		<fires>
-		   <fire index="1" position="(9,0,0)" size="(2,2,2)" val="10" />
+		   <fire index="1" position="(9,0,0)" size="(1,1,2)" val="10" />
 		</fires>
 		<lights>
 

@@ -138,12 +138,12 @@ function onMouseClick() {
 
 function pickUpItem() {
     player.pickUp(this);
-    pickUpSound();
+    //pickUpSound();
 }
 
 function destroy(){
     if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[0]){
-        damageDoorSound();
+        //damageDoorSound();
         this.delFromScene();
         console.log('destroyed');
         player.delActItem();
@@ -152,6 +152,20 @@ function destroy(){
         console.log('nicht anwendbar');
     }
 }
+
+function openopened() {
+    //doorSound(); //TODO: das klappt nicht, sorry.
+    if(!this.closed) {
+        this.mesh.rotateY(Math.PI/2.0);
+        this.closed = !this.closed;
+    }
+    else {
+        this.mesh.rotateY(-Math.PI/2.0);
+        this.closed = !this.closed;
+    }
+}
+
+
 function open() {
     //doorSound(); //TODO: das klappt nicht, sorry.
     if(!this.open) {
@@ -164,24 +178,29 @@ function open() {
     }
 }
 
-function damage_door() {
-    //check if axe is active item
-    if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[0]){
+function damageDoor() {
+    if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
         damaged_x = this.mesh.position.x;
         damaged_y = this.mesh.position.y;
         damaged_z = this.mesh.position.z;
-        var damaged_door = ['tuer_halbkaputt.json'];
+		damaged_rotate = this.mesh.rotation.y;
+		damaged_scale = this.mesh.scale.x;
+		
 
-        damageDoorSound();
-
-        addItem((damaged_door[0]), damaged_x, damaged_y, damaged_z, 1, true, destroy_door);
+        //damageDoorSound(); //Todo: klappt wieder nicht, sorry :(
+		
+		//finde das Segment der Tür 
+		
+		
+		addObjectViaName("halbbrokentur", "door", damaged_x-HOLZTURBREITE, damaged_y-HOLZTURBREITE, damaged_z, 1, damaged_rotate, "destroyDoor");
+		
         this.delFromScene();
     }else{
         showThoughts("Wie könnte ich diese Tür wohl öffnen?",5000);
     }
 }
 
-function destroy_door() {
+function destroyDoor() {
     //check if axe is active item
     if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[0]){
         // TODO:maybe message for player ("Die Tür ist kaputt, die Axt jetzt leider auch.")
@@ -190,7 +209,7 @@ function destroy_door() {
         damaged_z = this.mesh.position.z;
         var destroyed_door = ['tuer_kaputt.json'];
 
-        damageDoorSound();
+        //damageDoorSound();
 
         addItem((destroyed_door[0]), damaged_x, damaged_y, damaged_z, 1, false, 0);
         this.delFromScene();
@@ -204,7 +223,7 @@ function destroy_door() {
 
 function openLockedDoor() {
 	if(lockOpen){
-        doorSound();
+        //doorSound();
 		if(!this.open) {
 	        this.mesh.rotateY(Math.PI/2.0);
 	        this.open = !this.open;
@@ -345,9 +364,8 @@ function pinPad(pinvalue) {
 
 function enterCH() {
 
-    if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[23]){
+    if(this.type == TYPE_INTERACTABLE ){ //&& selectedItem.name == "transponder"){ //TODO change
         pin_pos = 0;
-
         // get object out of focus
         scene.remove(outlineMesh);
         outlineMesh = null;
