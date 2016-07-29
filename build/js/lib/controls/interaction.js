@@ -21,6 +21,9 @@ var TYPE_INTERACTABLE = 0;
 var TYPE_FIRE = 1;
 var TYPE_EXIT = 2;
 var TYPE_TRIGGER = 3;
+var FADE_TIME = 1200;
+
+
 
 document.addEventListener( 'click', onMouseClick, false );
 
@@ -150,7 +153,7 @@ function destroy(){
     }
 }
 function open() {
-    doorSound();
+    //doorSound(); //TODO: das klappt nicht, sorry.
     if(!this.open) {
         this.mesh.rotateY(Math.PI/2.0);
         this.open = !this.open;
@@ -174,7 +177,7 @@ function damage_door() {
         addItem((damaged_door[0]), damaged_x, damaged_y, damaged_z, 1, true, destroy_door);
         this.delFromScene();
     }else{
-        //Message for player? ("Wie könnte ich diese Tür wohl öffnen?")
+        showThoughts("Wie könnte ich diese Tür wohl öffnen?",5000);
     }
 }
 
@@ -468,15 +471,16 @@ function openTransponderDoor(){
     } else{
         doorLockedSound();
         console.log('nicht anwendbar');
+        // play doorLocked-Sound
+        showThoughts("Verschlossen. Vielleicht kann ich die Tür mit einem Transponder öffnen.",5000);
     }
 }
 
 
 // can be used to bind events with parameters to game objects
 // ALWAYS NEEDS EXTRA VARIABLE
-// usage example: showThoughts
-// thoughtsHW = partial(showThoughts, "Hello World");
-// addTrigger(0,-50,thoughtsHW);
+// usage example:
+// addTrigger(0,-50,partial(showThoughts, "Hello World",5000));
 
 var partial = function (func /*, 0..n args */) {
     var args = Array.prototype.slice.call(arguments, 1);
@@ -487,14 +491,14 @@ var partial = function (func /*, 0..n args */) {
 };
 
 // fadein/fadeout functions for thought box with event text
-function showThoughts(text) {
+function showThoughts(text, duration) {
     $(".thoughtBox").html("» "+text+" «");
-    $(".thoughtBox").fadeIn(1200);
-    showInterval = setInterval(hideThoughts, 5000);
+    $(".thoughtBox").fadeIn(FADE_TIME);
+    showInterval = setInterval(hideThoughts, duration);
 }
 
 function hideThoughts() {
-    $(".thoughtBox").fadeOut(1200);
+    $(".thoughtBox").fadeOut(FADE_TIME);
     showInterval = clearInterval();
 }
 
