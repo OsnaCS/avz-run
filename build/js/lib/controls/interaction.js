@@ -178,7 +178,7 @@ function damage_door() {
         addItem((damaged_door[0]), damaged_x, damaged_y, damaged_z, 1, true, destroy_door);
         this.delFromScene();
     }else{
-        showThoughts("Wie könnte ich diese Tür wohl öffnen?");
+        showThoughts("Wie könnte ich diese Tür wohl öffnen?",5000);
     }
 }
 
@@ -471,7 +471,7 @@ function openTransponderDoor(){
         }
     } else{
         // play doorLocked-Sound
-        showThoughts("Verschlossen. Vielleicht kann ich die Tür mit einem Transponder öffnen.");
+        showThoughts("Verschlossen. Vielleicht kann ich die Tür mit einem Transponder öffnen.",5000);
     }
 }
 
