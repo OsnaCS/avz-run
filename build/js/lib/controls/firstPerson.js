@@ -47,15 +47,29 @@ var speed_factor = 1;
 var upMotion = 1;
 var sideMotion = 1;
 
+// THIS ONE CHANGES EVERYTHING:
 var PLAYERHEIGHT = 25;
-var DUCK_SPEED = 0.6; // speed at which player is crouching
-var DUCK_DIFFERENCE = 2 * (PLAYERHEIGHT / 3);
-var RUN_SPEED = 2;
+
+var PLAYERMASS = PLAYERHEIGHT * 6.8; // to simulate gravity
+
+var DUCK_DIFFERENCE = 2 * (PLAYERHEIGHT / 3); // player height when ducked
+
 var INVERT_XZ = new THREE.Vector3(-1, 1, -1);
-var MOVEMENT_SPEED = 600;
 
-var JUMP_SPEED = 425;
+var MOVEMENT_SPEED = PLAYERHEIGHT* 24;
+var DUCK_SPEED = 0.6; // speed at which player is crouching in relation to MOVEMENT_SPEED
+var RUN_SPEED = 2; // speed at which player is running -"-
+var JUMP_SPEED = MOVEMENT_SPEED * 0.7; // speed of jump upwards -"-
 
+// for shake animation while moving
+var THRESH_RUN_UP = PLAYERHEIGHT * 1.56;
+var THRESH_RUN_DOWN = PLAYERHEIGHT * 1.28;
+var THRESH_UP = PLAYERHEIGHT * 1.52;
+var THRESH_DOWN = PLAYERHEIGHT * 1.32;
+var UPMOTION_RUN_SPEED = (THRESH_RUN_UP - THRESH_RUN_DOWN) * 0.128;
+var UPMOTION_SPEED = (THRESH_UP - THRESH_DOWN) * 0.07;
+
+// for energy bar
 var STAMINA = 100;
 var energy = STAMINA;
 
@@ -238,10 +252,10 @@ function initControls() {
 
                     // change far plane of collision rays (as they
                     // are now parallel to XZ plane)
-                    raycasterXpos.far = 3;
-                    raycasterXneg.far = 3;
-                    raycasterZpos.far = 3;
-                    raycasterZneg.far = 3;
+                    raycasterXpos.far = PLAYERHEIGHT * 0.12;
+                    raycasterXneg.far = PLAYERHEIGHT * 0.12;
+                    raycasterZpos.far = PLAYERHEIGHT * 0.12;
+                    raycasterZneg.far = PLAYERHEIGHT * 0.12;
                 }
 
                 break;
@@ -327,18 +341,18 @@ function initControls() {
 
     // create rays for collision detection in each direction(direction values will be changed later)
 
-    raycasterY = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 20); // beneath
+    raycasterY = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, PLAYERHEIGHT * 0.8); // beneath
 
 
-    raycasterYpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 20); // above
+    raycasterYpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, PLAYERHEIGHT * 0.8); // above
 
-    raycasterXpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, 32); // right
+    raycasterXpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, PLAYERHEIGHT * 1.28); // right
 
-    raycasterZpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, 32); // behind
+    raycasterZpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, PLAYERHEIGHT * 1.28); // behind
 
-    raycasterXneg = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, 32); // left
+    raycasterXneg = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, PLAYERHEIGHT * 1.28); // left
 
-    raycasterZneg = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, 32); // front
+    raycasterZneg = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, PLAYERHEIGHT * 1.28); // front
 
     playerGround = new THREE.Vector3();
 
@@ -365,7 +379,7 @@ function controlLoop(controls) {
     velocity.z -= velocity.z * 10.0 * delta;
 
     // gravity
-    velocity.y -= 9.8 * 170.0 * delta; // 100.0 = mass
+    velocity.y -= 9.8 * PLAYERMASS * delta;
 
     if (moveForward) velocity.z -= MOVEMENT_SPEED * speed_factor * delta;
     if (moveBackward) velocity.z += MOVEMENT_SPEED * speed_factor * delta;
@@ -453,17 +467,17 @@ function controlLoop(controls) {
 
             //add positive value to y position while we are below threshold
             //change to negative when
-            if(controls.getObject().position.y>39) upMotion = -1;
-            if(controls.getObject().position.y<32) upMotion = 1;
-            controls.getObject().position.y += upMotion*0.9;
+            if(controls.getObject().position.y > THRESH_RUN_UP) upMotion = -1;
+            if(controls.getObject().position.y< THRESH_RUN_DOWN) upMotion = 1;
+            controls.getObject().position.y += upMotion * UPMOTION_RUN_SPEED;
             sideMotion+= 0.1;
             sideMotion= sideMotion%(2*Math.PI);
             controls.getObject().position.x += 0.4*Math.sin(sideMotion);
 
         } else {
-            if (controls.getObject().position.y > 38) upMotion = -1;
-            if (controls.getObject().position.y < 33) upMotion = 1;
-            controls.getObject().position.y += upMotion * 0.35;
+            if (controls.getObject().position.y > THRESH_UP) upMotion = -1;
+            if (controls.getObject().position.y < THRESH_DOWN) upMotion = 1;
+            controls.getObject().position.y += upMotion * UPMOTION_SPEED;
         }
     }
 
@@ -482,16 +496,19 @@ function controlLoop(controls) {
             energy += delta * 10;
             if (energy >= STAMINA) {
                 energy = STAMINA;
-                regenerate = false;
+                if (regenerate) {
+                    regenerate = false;
+                }
             }
         }
         $(".energy-bar").css("width", '' + energy + '%');
     }
 
+
     // stop gravity at ground level as collision detection sometimes fails for floor
-    if (controls.getObject().position.y < PLAYERHEIGHT && firstTime) {
+    if (firstTime && controls.getObject().position.y < PLAYERHEIGHT) {
         velocity.y = 0;
-        controls.getObject().position.y = PLAYERHEIGHT +5;
+        controls.getObject().position.y = PLAYERHEIGHT + PLAYERHEIGHT * 0.2;
     }
     if (controls.getObject().position.y < -500){
         player.damage(10000);
@@ -529,13 +546,13 @@ function handleStandup() {
         if (intersectionsYpos.length == 0) {
 
             PLAYERHEIGHT += DUCK_DIFFERENCE;
-            controls.getObject().position.y += 20;
+            controls.getObject().position.y += DUCK_DIFFERENCE;
             ducked = false;
             speed_factor = 1;
-            raycasterXpos.far = 32;
-            raycasterXneg.far = 32;
-            raycasterZpos.far = 32;
-            raycasterZneg.far = 32;
+            raycasterXpos.far = PLAYERHEIGHT * 1.8;
+            raycasterXneg.far = PLAYERHEIGHT * 1.8;
+            raycasterZpos.far = PLAYERHEIGHT * 1.8;
+            raycasterZneg.far = PLAYERHEIGHT * 1.8;
             standupRequest = false;
         }
 
