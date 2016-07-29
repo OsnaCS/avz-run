@@ -54,7 +54,7 @@ var pause = false;
 //variable used for increasing fog
 var MAX_FOG = 0.015;
 var myfog=0.002;
-var fogTime=20;
+var fogTime=60;
 var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
@@ -67,30 +67,29 @@ var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much hea
 
 
 function init(event) {
+	CreateSegment("lectureroom1");
     // set up the scene, the camera and the renderer
-    createScene();
+    createScene(audio);
 
+    function audio (){
     // init audio support
-    createAudio();
+        createAudio(room);
 
-    // YOU NEED TO CALL THIS
-    initControls();
+        function room() {
 
-    // add the objects and lights - replace those functions as you please
-    createRoom();
-
-    // set up items
-    createItems();
-
-    // set up lights
-    createLights();
-
-    // set up fire
-    createFire();
-
-    // start a loop that will update the objects' positions
-    // and render the scene on each frame
-    loop();
+            createRoom(controls);
+            function controls() {
+                // add the objects and lights - replace those functions as you please
+                createRoom(startLoop);
+                function startLoop () {
+					// start a loop that will update the objects' positions
+					// and render the scene on each frame
+					loop();
+                }
+                initControls();
+            }
+        }
+    }
 }
 
 // Stats
@@ -99,7 +98,7 @@ stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild(stats.dom);
 
 //Create the Scene
-function createScene() {
+function createScene(complete) {
 
     blocker = document.getElementById('blocker');
     container = document.getElementById('world');
@@ -176,6 +175,7 @@ function createScene() {
     window.addEventListener('resize', handleWindowResize, false);
 
     scene.fog = new THREE.FogExp2(0x424242, 0.005);
+    complete();
 }
 
 
@@ -199,9 +199,10 @@ function loop() {
             renderer.render(scene, camera);
             stats.end();
         }
-    } else {
-        requestAnimationFrame(loop);
     }
+    // } else {
+    //     requestAnimationFrame(loop);
+    // }
 };
 
 
@@ -253,48 +254,77 @@ function createLights() {
     // to activate the lights, just add them to the scene
     scene.add(hemisphereLight);
     scene.add(shadowLight);
-}
-
-
-function createRoom() {
-
-    var mesh = fileLoader.get("test_level");
-    terrain.push(mesh);
-    mesh.position.y = 0;
-    mesh.position.x = 5;
-    mesh.scale.set(20, 20, 20);
-    scene.add(mesh);
 
 }
 
 
-function createItems(){
+function createRoom(callback) {
 
-    addItem((newItemList[0]), -50, 10, 10, 10, 90, true, pickUpItem);
-    addItem((newItemList[0]), -50, 10, 10, 10, 0, true, pickUpItem);
-    addItem((newItemList[0]), -50, 10, 10, 10, 180, true, pickUpItem);
-    addItem((newItemList[40]), 50, 0, 10, 2, 270, false, pickUpItem);
-    addItem((newItemList[48]), 0, 0, -700, 1, 0, false, null);
-    addItem((newItemList[12]), -50, 10, -200, 1, 90, true, pickUpItem);
-    addItem((newItemList[29]), -50, 10, -300, 1, 90, true, destroy);
+	setTimeout(PutSegments,2000);
+	setTimeout(door_in_doors,2200);
+	setTimeout(objects_in_spawns,2400);
+	setTimeout(set_fires,2600);
+	setTimeout(turn_on_lights,2800);
 
-    // Transponder test
-    addItem((newItemList[23]), 50, 5, -100, 2, 270, true, pickUpItem);
-    addItem((newItemList[29]), 50, 0, -150, 2, 270, true, enterCH);
-    addItem((newItemList[46]), 50, 0, -200, 2, 270, true, openTransponderDoor);
+   // var mesh = fileLoader.get("lectureroom1");
+    // terrain.push(mesh);
+    // mesh.position.y = 0;
+    // mesh.position.x = 5;
+    // mesh.scale.set(20, 20, 20);
+    // scene.add(mesh);
 
-    // lappen test
-    addItem((newItemList[31]), 0, 5, -100, 2, 270, true, pickUpItem);
-    addItem((newItemList[26]), 0, 5, -150, 2, 270, true, coverMouth);
-
-    addTrigger(-64,-71,action);
+	callback();
 
 }
 
 
-function action() {
-    console.log("hi");
+//debug-stuff, deleteme
+function ShowSegments() {
+	var text = "";
+	for (i = 0; i <segments.length; i++) {
+		text += printmost(segments[i])+"<br>";  //JSON.stringify(segments[i])
+	}
+	alert(text);
 }
+function printmost(obj) {
+	var output = '';
+	for (var property in obj) {
+	  if (property != 'mesh')
+		{ output += property + ': ' + obj[property]+'; '; }
+	}
+	return output;
+}
+//debugstuffdeleteme ende
+
+function createItems(callback){
+
+
+     // addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
+
+	 // addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name)
+	 // TYPE_INTERACTABLE; TYPE_TRIGGER; TYPE_FIRE; TYPE_EXIT;
+	 // intfunction = damage_door, destroy_door, pickUpItem, destroy, open, openLockedDoor, extinguish
+
+	 //wände/terrain/statics, interactibles(auch feuer und türen), triggerevents(auch feuer), licher (auch feuer),
+
+      addItem((newItemList[0]), -50, 10, 10, 10, true, pickUpItem, newItemList[0]);
+      addItem((newItemList[1]), 20, 5, 10, 1, true, destroy, newItemList[1]);
+      addItem((newItemList[2]), 0, 5, 20, 3, true, pickUpItem, newItemList[2]);
+      addItem((newItemList[12]), 0, 5, -10, 3, true, pickUpItem, newItemList[12]);
+   // addItem(pathItem.concat(newItemList[4]), 30, 5, -30, 1, false, 0, itemList[4]);
+  //  addItem(pathItem.concat(newItemList[5]), 30, 5, -30, 1, true, openLockedDoor, itemList[5]);
+   // addItem(pathItem.concat(newItemList[6]), 30, 5, -100, 1, true, pickUpItem, itemList[6]);
+
+     for(var i =0; i< newItemList.length; i++){
+        console.log(newItemList[i]);
+     }
+
+
+    callback();
+
+}
+//debugstuffdeleteme ende
+
 
 // Add Object with given Path to given coordinates
 function addItem(file, xPos, yPos, zPos, scale, angle, interact_type, intfunction){
@@ -322,6 +352,8 @@ function addItem(file, xPos, yPos, zPos, scale, angle, interact_type, intfunctio
 
 
 //adds a trigger at given position, performs action when walking over it and consumes it
+// ***** TO FADE IN THOUGHTS: look up partial, showThoughts, hideThoughts in interact! ******
+
 function addTrigger (xPos, zPos, action) {
     var triggerGeom = new THREE.BoxGeometry(30,30,30);
     var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, color:0xFFFFFF});
@@ -345,17 +377,4 @@ function removeTrigger(trigger) {
         }
 
     }
-}
-
-
-function createFire() {
-    VolumetricFire.texturePath = './levels/materials/textures/';
-
-    addFire(80, 0, 1, 30, 30, 30, 10);
-    addFire(80, 0, -30, 30, 30, 30, 10);
-    addFire(80, 0, -100, 30, 30, 30, 10);
-
-
-    animateFire();
-
 }

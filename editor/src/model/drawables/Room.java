@@ -4,6 +4,7 @@ import model.Way;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.util.LinkedList;
 
 /**
  * Created by Thomas Dautzenberg on 27/07/2016.
@@ -12,10 +13,13 @@ public class Room extends Rectangle {
 
     protected Point2D.Double realA;
     protected Point2D.Double realE;
-    protected String name;
-    protected Way[] waylist;
+    protected Point center;
 
-    public Room(String name, double xmin, double ymin, double xmax, double ymax, Way[] waylist){
+
+    protected String name;
+    protected LinkedList<Way> waylist;
+
+    public Room(String name, double xmin, double ymin, double xmax, double ymax, LinkedList<Way> waylist){
 
         this.name = name;
 
@@ -26,6 +30,26 @@ public class Room extends Rectangle {
         this.e = new Point((int) xmax, (int) ymax);
 
         this.waylist = waylist;
+
+        this.center = new Point(0,0);
+    }
+
+    public Room() {
+    	
+    }
+    
+    public Room(Room r) {
+        this.name = r.getName();
+
+        this.realA = r.getRealA();
+        this.realE = r.getRealE();
+
+        this.a = new Point((int) realA.getX(), (int) realA.getY());
+        this.e = new Point((int) realE.getX(), (int) realE.getY());
+
+        this.waylist = r.getWaylist();
+
+        this.center = r.getCenter();
     }
 
     //dreht den Raum um 90°
@@ -51,7 +75,7 @@ public class Room extends Rectangle {
     }
 
 
-    public boolean checkMerge(Way[] allways){
+    public boolean checkMerge(LinkedList<Way> allways){
 
         int MERGETHRESHOLD = 5;
 
@@ -117,13 +141,22 @@ public class Room extends Rectangle {
         this.name = name;
     }
 
-    public Way[] getWaylist() {
+    public LinkedList<Way> getWaylist() {
         return waylist;
     }
 
-    public void setWaylist(Way[] waylist) {
+    public void setWaylist(LinkedList<Way> waylist) {
         this.waylist = waylist;
     }
+
+    public Point getCenter() {
+        return center;
+    }
+
+    public void setCenter(Point center) {
+        this.center = center;
+    }
+
 
     @Override
     public void paint(Graphics g) {

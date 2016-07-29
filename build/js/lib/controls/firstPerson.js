@@ -64,99 +64,110 @@ var flashInterval;
 var flashLight = new THREE.AmbientLight(0xFF0000);
 
 var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
-$(".GUI").hide();
 
-// maybe insert menu into following method
+function initPointerLock() {
+    $(".GUI").hide();
 
-if (havePointerLock) {
+    // maybe insert menu into following method
 
-    var element = document.getElementById('world');
+    if (havePointerLock) {
 
-    var pointerlockchange = function(event) {
+        var element = document.getElementById('world');
 
-        if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
+        var pointerlockchange = function(event) {
 
-            controls.enabled = true;
-            blocker.style.display = 'none';
+            if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
+
+                controls.enabled = true;
+
+                $(".GUI").show();
+                $("#blocker").hide();
+
+            } else {
+
+                controls.enabled = false;
+
+                if (player.health > 0) {
+                    $("#blocker").show();
+                }
+                menu = true;
+                $('.gui').hide();
+            }
+
+
+        };
+
+        var pointerlockerror = function(event) {
+
+             $("#blocker").hide();
+
+        };
+
+        // Hook pointer lock state change events
+        document.addEventListener('pointerlockchange', pointerlockchange, false);
+        document.addEventListener('mozpointerlockchange', pointerlockchange, false);
+        document.addEventListener('webkitpointerlockchange', pointerlockchange, false);
+
+        document.addEventListener('pointerlockerror', pointerlockerror, false);
+        document.addEventListener('mozpointerlockerror', pointerlockerror, false);
+        document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
+
+
+        buttonStart.addEventListener('click', function(event) {
+
+            startInstructions.style.display = 'none';
+
+            // Ask the browser to lock the pointer
+            element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+            element.requestPointerLock();
+            menu = false;
+
             $(".GUI").show();
 
-        } else {
+            playername = $("#nickname").val();
+            console.log(playername);
+            $(".showNickname").html(playername);
+            loop();
 
-            controls.enabled = false;
+        }, false);
 
-            blocker.style.display = '-webkit-box';
-            blocker.style.display = '-moz-box';
-            blocker.style.display = 'box';
+        button.addEventListener('click', function(event) {
 
-            instructions.style.display = '';
-            menu = true;
-            $(".GUI").hide();
+            startInstructions.style.display = 'none';
+
+            // Ask the browser to lock the pointer
+            element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+
+            menu = false;
+
+            $(".GUI").show();
+            prevTime = performance.now();
+
+            element.requestPointerLock();
+            loop();
+        }, false);
+
+        button2.addEventListener('click', function(event) {
+
+            location.reload();
+
+        }, false);
+
+        buttonRestart.addEventListener('click', function(event) {
+            location.reload();
+
+        }, false);
 
 
-        }
+    } else {
 
+        startInstructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
 
-    };
-
-    var pointerlockerror = function(event) {
-
-        instructions.style.display = '';
-
-    };
-
-    // Hook pointer lock state change events
-    document.addEventListener('pointerlockchange', pointerlockchange, false);
-    document.addEventListener('mozpointerlockchange', pointerlockchange, false);
-    document.addEventListener('webkitpointerlockchange', pointerlockchange, false);
-
-    document.addEventListener('pointerlockerror', pointerlockerror, false);
-    document.addEventListener('mozpointerlockerror', pointerlockerror, false);
-    document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
-
-    buttonStart.addEventListener('click', function(event) {
-
-        startInstructions.style.display = 'none';
-
-        // Ask the browser to lock the pointer
-        element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
-
-        menu = false;
-        $(".GUI").show();
-
-        element.requestPointerLock();
-
-    }, false);
-
-    button.addEventListener('click', function(event) {
-
-        startInstructions.style.display = 'none';
-
-        // Ask the browser to lock the pointer
-        element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
-
-        menu = false;
-        $(".GUI").show();
-        prevTime = performance.now();
-
-        element.requestPointerLock();
-
-    }, false);
-
-    button2.addEventListener('click', function(event) {
-
-        location.reload();
-
-    }, false);
-
-} else {
-
-    startInstructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
-
+    }
 }
-
 //CALL THIS IN YOUR INIT BLOCK
 function initControls() {
-
+    initPointerLock();
     var onKeyDown = function(event) {
 
         switch (event.keyCode) {
@@ -210,7 +221,7 @@ function initControls() {
             case 16: //RUN FOREST! (shift)
 
                 if (!ducked && !regenerate) {
-                    adjustPlaybackRate(footsteps,1.5,true);
+                    adjustPlaybackRate(footsteps, 1.5, true);
                     running = true;
                     speed_factor = RUN_SPEED;
                 }
@@ -233,23 +244,6 @@ function initControls() {
                     raycasterZneg.far = 3;
                 }
 
-                break;
-
-            case 80: //pause p
-                if (!moveForward && !moveLeft && !moveRight && !moveBackward && !ducked) {
-                    if (!menu) {
-                        pause = !pause;
-                    }
-                    if (pause) {
-                        controls.enabled = false;
-                        $(".pauseBlocker").css("z-index", 15);
-                        $(".GUI").hide();
-                    } else {
-                        controls.enabled = true;
-                        $(".pauseBlocker").css("z-index", 0);
-                        $(".GUI").show();
-                    }
-                }
                 break;
 
             case 73: // i to show inventory  (maybe also to toggle later?)
@@ -290,7 +284,7 @@ function initControls() {
 
 
             case 16: // shift
-                adjustPlaybackRate(footsteps,1, true);
+                adjustPlaybackRate(footsteps, 1, true);
                 speed_factor = 1;
                 running = false;
                 break;
@@ -334,6 +328,7 @@ function initControls() {
     rayDirectionZpos = new THREE.Vector3();
     rayDirectionZneg = new THREE.Vector3();
 
+
 }
 
 
@@ -342,7 +337,6 @@ var firstTime = true;//we fall through the floor while spawning.. sick workaroun
 function controlLoop(controls) {
 
     setRays();
-
 
     // determines stepwidth
     time = performance.now();
@@ -374,15 +368,16 @@ function controlLoop(controls) {
         //collision with fire!
         if (intersectionsY[0].object.type == TYPE_FIRE) {
             fireAction();
+
         } else if (intersectionsY[0].object.type == TYPE_TRIGGER) {
             //collision with trigger
             intersectionsY[0].object.interact();
             removeTrigger(intersectionsY[0].object);
-        }
+        } else {
         //stop when hitting the floor
-        velocity.y = Math.max(0, velocity.y);
-        firstTime = false;
-
+            velocity.y = Math.max(0, velocity.y);
+            firstTime = false;
+        }
     }
 
     if (intersectionsZpos.length > 0) {
@@ -434,7 +429,7 @@ function controlLoop(controls) {
 
     //RUNNING MOTION
 
-    if((moveForward || moveBackward || moveRight || moveLeft)&&!ducked) {
+    if ((moveForward || moveBackward || moveRight || moveLeft) && !ducked) {
         if (running) {
 
             //add positive value to y position while we are below threshold
@@ -477,7 +472,7 @@ function controlLoop(controls) {
     // stop gravity at ground level as collision detection sometimes fails for floor
     if (controls.getObject().position.y < PLAYERHEIGHT && firstTime) {
         velocity.y = 0;
-        controls.getObject().position.y = PLAYERHEIGHT + 5;
+        controls.getObject().position.y = PLAYERHEIGHT +5;
     }
     if (controls.getObject().position.y < -500){
         player.damage(10000);

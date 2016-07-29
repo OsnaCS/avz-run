@@ -15,16 +15,14 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import java.awt.List;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -32,37 +30,61 @@ import java.util.LinkedList;
  */
 public class XMLhandler {
 
-	private String filename = "gang_solo.xml";
+	private String filename = "xml_map_editor.xml";
 
 	protected NodeList fileXML;
+
 	protected NodeList editorXML;
 	protected Document thedoc;
 	protected DocumentBuilderFactory factory;
 	DocumentBuilder builder;
 
-	public Room createRoomFromXML() {
+
+	public Room createRoomFromXML(String name) throws FileNotFoundException {
+
 
 		double xmin, xmax, ymin, ymax;
 
-		// String dis =
-		// fileXML.item(0).getChildNodes().item(0).getChildNodes().item(3)
-		// .getAttributes().getNamedItem("index").toString();
-		// System.out.println(dis);
-
-		Node size = fileXML.item(0).getChildNodes().item(0);
+		Node current = fileXML.item(0);
+//		System.out.println(current.getAttributes().getNamedItem("name").getNodeValue());
+//		System.out.println(name);
+//		System.out.println(current.getAttributes().getNamedItem("name").getNodeValue().equals(name));
+		// true if next iterration
+		String itemName="";
+		boolean next =true;
+		while(next){
+			// Name of current Node
+			itemName = current.getAttributes().getNamedItem("name").getNodeValue().toString(); 
+		
+			//System.out.println(itemName);
+			// iff different take next sibling
+			if(!itemName.equals(name)){
+				if (current.getNextSibling()!=null){
+					current = current.getNextSibling();
+				}else{
+					// if not found, abbort
+					next=false;
+					throw new FileNotFoundException();
+				}
+				
+			} else{
+				next =false;
+			}
+		}
+		
+		Node size = current.getChildNodes().item(0);
 		xmin = Double.parseDouble(size.getAttributes().getNamedItem("xmin").getNodeValue());
 		xmax = Double.parseDouble(size.getAttributes().getNamedItem("xmax").getNodeValue());
 		ymin = Double.parseDouble(size.getAttributes().getNamedItem("ymin").getNodeValue());
 		ymax = Double.parseDouble(size.getAttributes().getNamedItem("ymax").getNodeValue());
 
 		// creates Nodelist with all doors in it
-		NodeList doors = fileXML.item(0).getChildNodes().item(1).getChildNodes();
-
+		NodeList doors = current.getChildNodes().item(1).getChildNodes();
+		
 		int length = doors.getLength();
-		Way waylist[] = new Way[length];
+		LinkedList<Way> waylist = new LinkedList<Way>();
 
 		for (int i = 0; i < length - 1; i++) {
-
 			Node doorTemp = doors.item(i);
 			String type = doorTemp.getAttributes().getNamedItem("type").getNodeValue();
 
@@ -73,10 +95,10 @@ public class XMLhandler {
 			int normalY = Integer.parseInt(doorTemp.getAttributes().getNamedItem("normalY").getNodeValue());
 
 			Way way = new Way(x, y, type, normalX, normalY);
-			waylist[i] = way;
+			waylist.add(way);
 		}
 
-		Room room = new Room("solo", xmin, xmax, ymin, ymax, waylist);
+		Room room = new Room(itemName, xmin, xmax, ymin, ymax, waylist);
 
 		return room;
 
@@ -154,7 +176,8 @@ public class XMLhandler {
 		// write the content into xml file
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
-		// formats String
+		// Makes the XML Output beautiful
+		// DON'T DELETE AGAIN
 		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 		DOMSource source = new DOMSource(doc);
