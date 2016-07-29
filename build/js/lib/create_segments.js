@@ -172,9 +172,13 @@ var doors = [];
 				for (j = 0; j < curdoor.length; j++) {
 					var cudo = [];
 					cudo.push(curdoor[j].getAttribute("index"));
+					cudo.push(curdoor[j].getAttribute("kind"));
+					cudo.push(curdoor[j].getAttribute("objectname"));
+					cudo.push(curdoor[j].getAttribute("objectscale"));
 					cudo.push(curdoor[j].getAttribute("position"));
-					cudo.push(curdoor[j].getAttribute("size"));
-					cudo.push(curdoor[j].getAttribute("val"));
+					cudo.push(curdoor[j].getAttribute("normal"));
+					cudo.push(curdoor[j].getAttribute("intensity"));
+					cudo.push(curdoor[j].getAttribute("color"));
 					LightArr.push(cudo);
 				}
 			}
@@ -253,19 +257,23 @@ var doors = [];
 				createFire(spawnx, spawny, spawnz, sizex, sizey, sizez, fire[3]);
 			}
 		}
+		animateFire();
 	}
+
 
 
 //puts the lights where they belong
 	function turn_on_lights() {
 		for (INDEX1 = 0; INDEX1<segments.length; INDEX1++){
 
-			var fire = segments[INDEX1].lights;
-			for (i = 0; i <fire.length; i++) {
 
-				var spawnx = parseFloat(fire[i][1].slice(1,fire[i][1].indexOf(',')));
-				var spawny = parseFloat(fire[i][1].slice(fire[i][1].indexOf(',')+1,fire[i][1].lastIndexOf(',')));
-				var spawnz = parseFloat(fire[i][1].slice(fire[i][1].lastIndexOf(',')+1,fire[i][1].indexOf(')')));
+			var light = segments[INDEX1].lights;
+			for (i = 0; i <light.length; i++) {
+
+				var spawnx = parseFloat(light[i][4].slice(1,light[i][4].indexOf(',')));
+				var spawny = parseFloat(light[i][4].slice(light[i][4].indexOf(',')+1,light[i][4].lastIndexOf(',')));
+				var spawnz = parseFloat(light[i][4].slice(light[i][4].lastIndexOf(',')+1,light[i][4].indexOf(')')));
+
 
 				spawnx = spawnx*SKALIERUNGSFAKTOR;
 				spawny = spawny*SKALIERUNGSFAKTOR*-1;
@@ -281,10 +289,21 @@ var doors = [];
 				spawnx = spawnx + parseInt(segments[INDEX1].transx)+xz[0];
 				spawny = spawny + parseInt(segments[INDEX1].transy)+xz[1];
 
-				//createFire(spawnx, spawny, spawnz, sizex, sizey, sizez, fire[3]); //TODO: do
+				//todo: das mesh der lampe auch noch drehen.
+				var rotate = 0;
+
+				addObjectViaName(light[i][2], "lamp", spawnx, spawny, spawnz, light[i][3], rotate, ""); //TODO: die lampe klebt noch nicht ganz an der decke, kein plan gerade warum.
+				addLight(spawnx, spawnz, spawny, light[i][1], light[i][5], light[i][6], light[i][7]);  //TODO: das punktlicht sitzt jetzt einfach 20 px unter dem lapensprite, könnte man eleganter machen.
 			}
 		}
 	}
+
+	function addLight(x, y, z, kind, normal, intensity, color){
+		var light = new THREE.PointLight( 0xffffff, intensity, 10000 );  //TODO: color benutzen, und den letzten wert ins xml einbauen
+		light.position.set(x, y-20, z); //TODO: das licht zu einem lichter-array hinzufügen.
+		scene.add( light );
+	}
+
 
 
 //puts the objects to its door-location	(deleteme sobald object_in_spawns ordentlich klappt.)
@@ -507,7 +526,6 @@ var doors = [];
 	function createFire(x, z, y, sx, sy, sz, s) {
 		VolumetricFire.texturePath = './levels/materials/textures/';
 		addFire(x, y, z, sx*SKALIERUNGSFAKTOR, sy*SKALIERUNGSFAKTOR, sz*SKALIERUNGSFAKTOR, 20);
-		animateFire();
 	}
 
 

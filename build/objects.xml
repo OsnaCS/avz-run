@@ -15,7 +15,7 @@
 		<object name="klo_und_tuer" path="klo_und_tuer.json" scale="2" icon="icon.jpg"/>
 		<object name="computer" path="computer/computer.json" scale="2" icon="icon.jpg"/>
 		<object name="computer_message" path="computer/computer_mit_nachricht.json" scale="2" icon="icon.jpg"/>
-		<object name="tisch_pc" path="schreibtisch_and_pc.json" scale="2" icon="icon.jpg" />
+		<object name="tisch_pc" path="schreibtisch_und_pc.json" scale="2" icon="icon.jpg" />
 		<object name="becken" path="waschbecken.json" scale="2" icon="icon.jpg"/>
 	</interactible>
 	
@@ -30,22 +30,18 @@
 		<object path="ziegel/ziegel.json" name="ziegel" scale="2" />
 		<object path="stuhl.json" name="stuhl" scale="2" />
 		<object path="pult/Pult_Endversion.json" name="pult" scale ="2"/>
-		<!--
-		Kein Bock auf den Rest gerade.
-		<object path="power_socket.json" name="" scale="2" />
-		<object path="tisch.json" name="" scale="2" />
-		<object path="wand_kaputt.json" name="" scale="2" />
-		<object path="aufzug/aufzug.json" interaction="0" scale ="2"/>
-		<object path="plakat/Brandschutzplakat.json" interaction="0" scale ="2"/>
-		<object path="plakat/Europawahl.json" interaction="0" scale ="2"/>
-		<object path="plakat/Feuerplakat.json" interaction="0" scale ="2"/>
-		<object path="plakat/Hasenplakat.json" interaction="0" scale ="2"/>
-		<object path="plakat/Infotag.json" interaction="0" scale ="2"/>
-		<object path="plakat/Messe.json" interaction="0" scale ="2"/>
-		<object path="schutt/schutt.json" interaction="0" scale ="2"/>
-		<object path="schutt2/schutt2.json" interaction="0" scale ="2"/>
-		<object path="plakat/Brandschutzplakat.json" interaction="0" scale ="2"/>
-		-->
+		<object path="tisch.json" name="tisch" scale="2" />
+		<object path="wand_kaputt.json" name="wand_kaputt" scale="2" />
+		<object path="aufzug/aufzug.json" name="aufzug" interaction="0" scale ="2"/>
+		<object path="plakat/Brandschutzplakat.json" name="BSPlakat" scale ="2"/>
+		<object path="plakat/Europawahl.json" name="EPlakat" scale ="2"/>
+		<object path="plakat/Feuerplakat.json" name="FPlakat" scale ="2"/>
+		<object path="plakat/Hasenplakat.json" name="HPlakat" scale ="2"/>
+		<object path="plakat/Infotag.json" name="IPlakat" scale ="2"/>
+		<object path="plakat/Messe.json" name="MPlakat" scale ="2"/>
+		<object path="schutt/schutt.json" name="schutt" scale ="2"/>
+		<object path="schutt2/schutt2.json" name="schutt2" scale ="2"/>
+		<object path="steckdose.json" name="steckdose" scale="2" />
 	</static>
 	
 	<door>

@@ -4,20 +4,18 @@
 
 var FileLoader = function(callback) {
 
-    console.log("FileLoader running ...");
-    var ready= false;
-    var jsonLoader = new THREE.JSONLoader();
-    // Pfad zu allen Dateien
-    var files = [
-        // Texturen
-        "test_level.json",
-		"../avz_model/building_parts/lectureroom1.json"    //TODO: diese hier dynamisch anhand der xmls laden
-	];
 
+    console.log("FileLoader running ...");
+    var ready = false;
+    var jsonLoader = new THREE.JSONLoader();
+
+    // Pfad zu allen Dateien
+    var files = [];
 
     for (var i = 0;i<newItemList.length;i++) {
         files.push(newItemList[i]);
     }
+
     // Key-Value-Store für die geladenen Dateien (Key: Name => Value: Inhalt)
     var loadedFiles = {};
 
@@ -25,13 +23,12 @@ var FileLoader = function(callback) {
     var filesSuccessfullyLoaded = 0;
 
     function loadJson(file, name) {
-
+        var jsonLoader = new THREE.JSONLoader();
         jsonLoader.load(file,
             function (geometry,mat) {
                 // on success:
+
                 console.log("got:"+name);
-
-
                 material = new THREE.MultiMaterial(mat)
 
 
@@ -54,15 +51,18 @@ var FileLoader = function(callback) {
                 //checks if everything is loaded and hides loadbar and shows start button
                 if(filesSuccessfullyLoaded == files.length){
                     ready=true;
-                    $(".loading").css("display" , " none" );
-                    $(".btn").css("display" , " inline-block" );
+                    $("#loadingBlocker").hide();
+                    $("#startInstructions").show();
                     callback();
+                    //$(".loading").css("display" , " none" );
+                    //$(".btn").css("display" , " inline-block" );
+
                 };
 
                 //updates loadingbar
                 $(".loading-bar").css("width" , ' '+ (filesSuccessfullyLoaded / file.length * 100) +'%');
             }
-        ,undefined,function() { console.log("could not load:"+name)});
+        );
     }
 
 
@@ -83,6 +83,7 @@ var FileLoader = function(callback) {
             if(filesSuccessfullyLoaded != files.length){
                 ready=true;
                 alert("Warnung! Es sind noch nicht alle Dateien geladen worden.");
+
                 $("#loadingBlocker").hide();
                 $("#startInstructions").show();
                 callback();

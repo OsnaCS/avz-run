@@ -30,7 +30,10 @@ var fileLoader =null;
 // Load file-pathes from XML in list
 // callback function complete
 function loadFiles(){
-    makeArrayFromXML(completedXmlLoad, newItemList, "../avz_model/materials/objects.xml");
+
+
+    makeArrayFromXML(completedXmlLoad, newItemList);
+
 }
 
 // if XML-Parsing done
@@ -40,7 +43,6 @@ function completedXmlLoad(){
 
     // Wait untill ready
     // starts init
-
 
 }
 function completedFileLoad () {
