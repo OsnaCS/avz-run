@@ -1,4 +1,4 @@
-/** DOCUMENT
+﻿/** DOCUMENT
 * @project AVZ-RUN
 */
 
@@ -40,13 +40,6 @@ h2 {
     font-style: italic;
     margin: 0;
     text-transform: uppercase;
-}
-
-h3 {
-    font-size: 22px;
-    font-weight: 300;
-    margin: 0;
-    margin-bottom: 10px;
 }
 
 #world {
@@ -117,29 +110,38 @@ hr {
     opacity: 0.15;
 }
 
+.selectCharacter {
+    /*margin: 45px 0;*/
+    display: inline-block;
+    ;
+}
+
+.btn-gender {
+    margin-top: 15px !important;
+    font-size: 22px;
+    padding: 5px 25px;
+}
+
+.btn-gender:last-child {
+    margin-left: 15px;
+}
+
+.btn-gender:hover,
+.btn-gender:active,
+.btn-gender:focus,
+.btn-gender.active {
+    background: #FF5252;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    box-shadow: none;
+}
+
 #blocker {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     display: none;
     position: absolute;
-}
-
-.form-control {
-    font-weight: 300;
-    text-align: center;
-    padding: 4px;
-    background: rgba(0, 0, 0, 0.75);
-    color: #ffffff;
-    font-size: 22px;
-    border: 1px solid #ffffff;
-}
-
-.form-control:hover,
-.form-control:active,
-.form-control:focus {
-    border: 1px solid #FF5252;
-    box-shadow: 0px 0px 15px 8px rgba(255, 82, 82, 0.2);
 }
 
 
@@ -320,10 +322,10 @@ hr {
 }
 
 .inventory {
-    width: 306px;
+    width: 308px;
     position: absolute;
     left: 50%;
-    margin-left: -153px;
+    margin-left: -154px;
     min-height: 80px;
     bottom: 0;
 }
@@ -338,7 +340,7 @@ hr {
 #slot1,
 #slot2,
 #slot3 {
-    width: 85px;
+    width: 80px;
     display: inline-block;
 }
 
@@ -346,8 +348,7 @@ hr {
     border: 2px solid rgba(255, 255, 255, 0.2);
     padding: 5px;
     min-height: 80px;
-    height: 85px;
-    margin-top: 5px;
+    height: 80px;
 }
 
 .inventory .slotText {
