@@ -30,6 +30,7 @@ var fileLoader =null;
 // Load file-pathes from XML in list
 // callback function complete
 function loadFiles(){
+
     makeArrayFromXML(complete, newItemList);
 }
 
