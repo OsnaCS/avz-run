@@ -553,7 +553,7 @@ var doors = [];
 
 
 	function createFire(x, z, y, sx, sy, sz, s) {
-		VolumetricFire.texturePath = './levels/materials/textures/';
+		VolumetricFire.texturePath = '/build/levels/materials/textures/';
 		addFire(x, y, z, sx*SKALIERUNGSFAKTOR, sy*SKALIERUNGSFAKTOR, sz*SKALIERUNGSFAKTOR, 20);
 	}
 
