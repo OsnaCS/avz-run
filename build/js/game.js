@@ -84,7 +84,9 @@ function init(event) {
                 function controls() {
                     // add the objects and lights - replace those functions as you please
                     initControls(startLoop);
+
                     function startLoop () {
+                        renderer.render(scene, camera);
     					// start a loop that will update the objects' positions
     					// and render the scene on each frame
     					loop();
@@ -264,11 +266,11 @@ function createLights() {
 
 function createRoom(callback) {
 
-	setTimeout(PutSegments,2000);
-	door_in_doors;
-	objects_in_spawns;
-	set_fires;
-	turn_on_lights;
+	PutSegments();
+	door_in_doors();
+	objects_in_spawns();
+	set_fires();
+	turn_on_lights();
 
    // var mesh = fileLoader.get("lectureroom1");
     // terrain.push(mesh);

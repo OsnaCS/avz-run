@@ -54,24 +54,40 @@ var doors = [];
 
 //loads everything needed from the rooms.xml file (and calls the next three functions in this function)
 	function loadStuff(whichroom, segmentindex, callback) {
+
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function() {
 			if (xhttp.readyState == 4 && xhttp.status == 200) {
-				getDoors(xhttp,segmentindex,whichroom);
-				getSpawns(xhttp,segmentindex,whichroom);
-				getLights(xhttp,segmentindex,whichroom);  //TODO: do.
-				getFires(xhttp,segmentindex,whichroom);
-				getCoords(xhttp,segmentindex,whichroom);
-				getFileName(xhttp,segmentindex,whichroom); //this function calls, when done, the function to create and add the mesh.
-				typeof callback === 'function' && callback(); //if there is a callback specified, run it.
+
+				getDoors(xhttp,segmentindex,whichroom,spawns);
+
+
+
+			}
+			function spawns () {
+				getSpawns(xhttp,segmentindex,whichroom,lights);
+				function lights () {
+					getLights(xhttp,segmentindex,whichroom,fires);
+					function fires () {
+						getFires(xhttp,segmentindex,whichroom,coords);
+						function coords() {
+							getCoords(xhttp,segmentindex,whichroom,fileName);
+							function fileName() {
+								getFileName(xhttp,segmentindex,whichroom,callback); //this function calls, when done, the function to create and add the mesh.
+							}
+					// typeof callback === 'function' && callback(); //if there is a callback specified, run it.
+						}
+					}
+				}
 			}
 		};
 		xhttp.open("GET", ROOMSXML, true);
 		xhttp.send();
+
 	}
 
 //these functions read specific things from the rooms.xml-file
-	function getFileName(xml, segmentindex, whichroom) {
+	function getFileName(xml, segmentindex, whichroom,callback) {
 		var xmlDoc = xml.responseXML;
 		var curroom = xmlDoc.getElementsByTagName("room");
 		for (i = 0; i <curroom.length; i++) {
@@ -80,9 +96,10 @@ var doors = [];
 				addmesh(curroom[i].getAttribute("filename"), segmentindex);
 			}
 		}
+		callback();
 	}
 
-	function getCoords(xml, segmentindex, whichroom) {
+	function getCoords(xml, segmentindex, whichroom,callback) {
 		var xmlDoc = xml.responseXML;
 		var curroom = xmlDoc.getElementsByTagName("room");
 		for (i = 0; i <curroom.length; i++) {
@@ -98,9 +115,10 @@ var doors = [];
 				segments[segmentindex].orz = origininfo[0].getAttribute("z");
 			}
 		}
+		callback();
 	}
 
-	function getDoors(xml, segmentindex, whichroom) {
+	function getDoors(xml, segmentindex, whichroom,callback) {
 		var DoorArr = [];
 		var xmlDoc = xml.responseXML;
 		var curroom = xmlDoc.getElementsByTagName("room");
@@ -118,9 +136,10 @@ var doors = [];
 			}
 		}
 		segments[segmentindex].doors = DoorArr;
+		callback();
 	}
 
-	function getSpawns(xml, segmentindex, whichroom) {
+	function getSpawns(xml, segmentindex, whichroom,callback) {
 		var SpawnArr = [];
 		var xmlDoc = xml.responseXML;
 		var curroom = xmlDoc.getElementsByTagName("room");
@@ -140,9 +159,10 @@ var doors = [];
 			}
 		}
 		segments[segmentindex].spawns = SpawnArr;
+		callback();
 	}
 
-	function getFires(xml, segmentindex, whichroom) {
+	function getFires(xml, segmentindex, whichroom,callback) {
 		var FireArr = [];
 		var xmlDoc = xml.responseXML;
 		var curroom = xmlDoc.getElementsByTagName("room");
@@ -160,9 +180,10 @@ var doors = [];
 			}
 		}
 		segments[segmentindex].fires = FireArr;
+		callback();
 	}
 
-	function getLights(xml, segmentindex, whichroom) {
+	function getLights(xml, segmentindex, whichroom,callback) {
 		var LightArr = [];
 		var xmlDoc = xml.responseXML;
 		var curroom = xmlDoc.getElementsByTagName("room");
@@ -184,6 +205,7 @@ var doors = [];
 			}
 		}
 		segments[segmentindex].lights = LightArr;
+		callback();
 	}
 
 
