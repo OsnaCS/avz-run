@@ -128,21 +128,16 @@ GameObject = function(mesh, interaction, type, name) {
 
 }
 
-
-
 function onMouseClick() {
     if(activeObject!=null) {
         activeObject.interact();
     }
 }
 
-
 function pickUpItem() {
     player.pickUp(this);
     pickUpSound();
 }
-
-
 
 function destroy(){
     if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[0]){
@@ -474,4 +469,30 @@ function openTransponderDoor(){
     } else{
         console.log('nicht anwendbar');
     }
+}
+
+// can be used to bind events with parameters to game objects
+// ALWAYS NEEDS EXTRA VARIABLE
+// usage example: showThoughts
+// thoughtsHW = partial(showThoughts, "Hello World");
+// addTrigger(0,-50,thoughtsHW);
+
+var partial = function (func /*, 0..n args */) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    return function () {
+        var allArguments = args.concat(Array.prototype.slice.call(arguments));
+        return func.apply(this, allArguments);
+    };
+};
+
+// fadein/fadeout functions for thought box with event text
+function showThoughts(text) {
+    $(".thoughtBox").html("» "+text+" «");
+    $(".thoughtBox").fadeIn(1200);
+    showInterval = setInterval(hideThoughts, 5000);
+}
+
+function hideThoughts() {
+    $(".thoughtBox").fadeOut(1200);
+    showInterval = clearInterval();
 }
