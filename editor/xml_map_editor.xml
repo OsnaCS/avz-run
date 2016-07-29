@@ -15,7 +15,7 @@
 
 	<!-- DAS HIER IST FINAL!!!!! -->
 	<room name="circle_walled" filename="circle_WALLED.json">
-		<origin x="0" y="0"/>
+		<!--<origin x="0" y="0"/>-->
 		<size xmin="-8.94993" xmax="11.00008" ymin="-28.19999" ymax="13.50002"/>
 		<doors>
 		   <door type="norm" index="1" x = "11" y = "25.85" normalX ="1" normalY = "0"/>
@@ -25,7 +25,7 @@
 		   <door type="norm" index="5" x ="11"  y = "4.25" normalX = "1" normalY = "0"/>
 		   <door type="norm" index="6" x = "11" y = "-1.15" normalX ="1" normalY = "0"/>
 		   <door type="norm" index="7" x = "11" y = "-5.95" normalX ="1" normalY = "0"/>
-		   <door type="norm" index="8" x = "11" Y = "-10.95" normalX="1" normalY = "0"/>
+		   <door type="norm" index="8" x = "11" y = "-10.95" normalX="1" normalY = "0"/>
 		   <door type="glass" index="9" x = "9.78" y = "-13.5" normalX="0" normalY =  "-1"/>
 		   <door type="glass" index="10" x= "-7.73" y= "-13.5" normalX = "0" normalY = "-1"/>
 		   <door type="norm" index="11" x ="-8.95" y = "-7.95" normalX ="-1" normalY =  "0"/>
@@ -59,16 +59,16 @@
 
 	<!-- DAS HIER IST FINAL!!!!! -->
 	<room name="center" filename="center_clrd.json">
-		<origin x="-3" y="3" z="2.5"/>
+		<!--<origin x="-3" y="3" z="2.5"/>-->
 		<size xmin = "-14" xmax = "8" ymin = "-8" ymax = "14"/>
 		<doors>
 			<door index="1" type="glass"  normalX = "0" normalY = "1" x = "4.77" y = "14"/>
 			<door index="2" type="glass"  normalX = "1" normalY = "0" x = "8" y = "11.77"/>
 			<door index="3" type="glass"  normalX = "1" normalY = "0" x = "8" y = "-5.77"/>
-			<door index="4" type="glass"  normalX = "0" normalY = "-1" x = "5.77" y= "-8"/>
-			<door index="5" type="glass"  normalX = "0" normalY = "-1" x = "-11.77" y =  "-8"/>
+			<door index="4" type="glass"  normalX = "0" normalY = "-1" x = "5.77" y = "-8"/>
+			<door index="5" type="glass"  normalX = "0" normalY = "-1" x = "-11.77" y = "-8"/>
 			<door index="6" type="glass"  normalX = "-1" normalY = "0" x = "-14" y = "-5.77"/>
-			<door index="7" type="glass"  normalX = "-1" normalY = "0" x = "-14" y =  "10.77"/>
+			<door index="7" type="glass"  normalX = "-1" normalY = "0" x = "-14" y = "10.77"/>
 			<door index="8" type="glass"  normalX = "0" normalY = "1" x = "-11.77" y = "14"/>
 		</doors>
 		<spawns>
@@ -77,7 +77,7 @@
 
 	<!-- DAS HIER IST FINAL!!!!! -->
 	<room name="klogang_solo" filename="klogang_solo.json">
-		<origin x="0" y="0" z="0"/>
+		<!--<origin x="0" y="0" z="0"/>-->
 		<size xmin = "-4.6" xmax = "2.8" ymin = "-8.1" ymax = "11.02"/>
 		<doors>
 			<door index="1" type="floor"  normalX = "0" normalY = "-1" x = "-2" y =  "11.02"/>
@@ -91,7 +91,7 @@
 			<door index="9" type="norm"  normalX = "-1" normalY = "0" x = "-4.6"  y =  "2.25"/>
 			<!-- Innen-Türen!-->
 			<door index="10" type="norm"  normalX = "1" normalY = "0" x = "0.6"  y =  "8.45"/>
-			<door index="11" type="glass"  normalX = "0" normalY = "-1" x = "1.57" y=  "-1.2)"/>
+			<door index="11" type="glass"  normalX = "0" normalY = "-1" x = "1.57" y=  "-1.2"/>
 			<door index="12" type="norm"  normalX = "-1" normalY = "0" x = "-0.5"  y =  "-3.56"/>
 		</doors>
 		<spawns>
@@ -122,7 +122,7 @@
 
 	<!-- DAS HIER IST FINAL!!!!! -->
 	<room name="gangende_fenster" filename="gangende_fenster.json">
-		<origin x="0" y="0" z="0"/>
+		<!--<origin x="0" y="0" z="0"/>-->
 		<size xmin = "-2.90" xmax = "2.7" ymin = "3.58" ymax = "5.78"/>
 		<doors>
 			<door index="1" type="floor"  normalX = "0"  normalY = "1" x = "0.13" y =  "3.58"/>
@@ -131,7 +131,7 @@
 
 	<!-- DAS HIER IST FINAL!!!!! -->
 	<room name="buero" filename="buero_und_blackboard.json">
-		<origin x="0" y="0" z="0"/>
+		<!--<origin x="0" y="0" z="0"/>-->
 		<size xmin = "0" xmax = "7" ymin = "-8.5" ymax = "0"/>
 		<doors>
 			<door index="1" type="norm"  normalX = "0" normalY = "-1" x = "1.85" y =  "0"/>
