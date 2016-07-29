@@ -94,7 +94,7 @@
 			<fire index="cip" position="(-10.88, -21.41, 0.5)" size="(1,1,1)" val="6"/>
 			<fire index="cip" position="(-7.85, -21.97, 0.5)" size="(1,1,1)" val="6"/>
 			<fire index="lobby" position="(-8.24, 8.96, 0.5)" size="(1,1,1)" val="6"/>
-			<fire index="lobby" position="(2.4, -9.56, 0.5)" size="(1,1,1)" val="6"/>
+			<fire index="exit" position="(30, -6, 0.5)" size="(1,1,1)" val="6"/>
 			<fire index="lobby" position="(0.45, 1.79, 0.5)" size="(1,1,1)" val="6"/>
 			<fire index="flur" position="(24.02, -10.4, 0.5)" size="(1,1,1)" val="6"/>
 			<fire index="flur" position="(18.05, -4.71, 0.5)" size="(1,1,1)" val="6"/>
@@ -118,6 +118,8 @@
 			<light index="klo_small" kind="pointlight" objectname="kleinlicht" position="(7.71, -14.13, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
         </lights>
 	<!-- positon spieler spawn: (10.5, 4.8, 3) -->
+	<!-- triggerevent cip positon : (-8.5, -11.5, 0) -->
+	<!-- triggerevent bigfire positon coordinaten: (13.25, -6.5, 0) -->
     </room>
 
 	<!-- hier fehlen spawns, feuer, lights -->
@@ -132,7 +134,7 @@
 		</spawns>
 	</room>
 	
-	<!-- hier fehlen spawns, feuer -->
+	<!-- hier fehlen spawns -->
 	<room name="center" filename="center_clrd.json">
 		<origin x="-3" y="3" z="2.5"/>
 		<size xmin = "-14" xmax = "8" ymin = "-8" ymax = "14"/>
@@ -150,11 +152,16 @@
 			<light index="1" kind="pointlight" objectname="deckenlicht" position="(-0.29, -3.3, 5)" normal="(1,0,0)" intensity="0.7" color="0xFFFFFF" />
 			<light index="2" kind="pointlight" objectname="deckenlicht" position="(-0.29, 4.04, 5)" normal="(1,0,0)" intensity="0.7" color="0xFFFFFF" />
 		</lights>
+		<fires>
+			<fire index="1" position="(-3, 9, 0.5)" size="(1,1,1)" val="6"/>
+			<fire index="2" position="(3, -1.5, 0.5)" size="(1,1,1)" val="6"/>
+			<fire index="3" position="(-5, 2, 0.5)" size="(1,1,1)" val="6"/>
+		</fires>
 		<spawns>
 		</spawns>
 	</room>
 		
-	<!-- hier fehlen spawns, feuer -->
+	<!-- hier fehlen spawns-->
 	<room name="klogang_solo" filename="klogang_solo.json">
 		<origin x="0" y="0" z="0"/>
 		<size xmin = "-4.6" xmax = "2.8" ymin = "-8.1" ymax = "11.02"/>
@@ -179,6 +186,11 @@
 			<light index="3" kind="pointlight" objectname="deckenlicht" position="(1.5, -4.5, 5)" normal="(1,0,0)" intensity="0.7" color="0xFFFFFF" />
 			<light index="4" kind="pointlight" objectname="deckenlicht" position="(-1, 4, 5)" normal="(0,1,0)" intensity="0.7" color="0xFFFFFF" />
 		</lights>
+		<fires>
+			<fire index="1" position="(-3.5, 7.5, 0.5)" size="(1,1,1)" val="6"/>
+			<fire index="2" position="(0.12, -2, 0.5)" size="(1,1,1)" val="6"/>
+			<fire index="3" position="(2, 6, 0.5)" size="(1,1,1)" val="6"/>
+		</fires>
 		<spawns>
 		</spawns>
 	</room>
@@ -193,6 +205,10 @@
 		<lights>
 			<light index="1" kind="pointlight" objectname="kleinlicht" position="(0, 4.5, 5)" normal="(1,0,0)" intensity="0.7" color="0xFFFFFF" />
 		</lights>	
+		<fires>
+			<fire index="1" position="(-1, 4.5, 0.5)" size="(1,1,1)" val="6"/>
+			
+		</fires>
 	</room>	
 
 	<!-- hier fehlen spawns, feuer -->
