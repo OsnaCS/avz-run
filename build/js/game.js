@@ -66,11 +66,7 @@ var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
 
 
-
-
-    //loads all Objects before creating
-
-
+//loads all Objects before creating
 
 function init(event) {
 	CreateSegment("lectureroom1",scene);
