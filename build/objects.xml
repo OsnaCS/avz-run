@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<objects ObjectPath="../avz_model/materials/objects/" IconPath="../avz_model/inventar">
+<objects ObjectPath="/avz_model/materials/objects/" IconPath="/avz_model/inventar">
 
 	<interactible>
 		<object name="axt" path="axt.json" scale="2" icon="axt.png"/>

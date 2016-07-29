@@ -29,17 +29,22 @@ var fileLoader =null;
 // callback function complete
 function loadFiles(){
 
-    makeArrayFromXML(complete, newItemList);
+
+    makeArrayFromXML(completedXmlLoad, newItemList);
+
 }
 
 // if XML-Parsing done
-function complete(){
+function completedXmlLoad(){
     // Load all files in Loader
-    fileLoader= new FileLoader();// = new FileLoader();
+    fileLoader= new FileLoader(completedFileLoad);// = new FileLoader();
+
     // Wait untill ready
     // starts init
-    window.setTimeout(init, 1500);
 
+}
+function completedFileLoad () {
+    init();
 }
 
 var scene,
@@ -66,26 +71,29 @@ var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much hea
 
 
 function init(event) {
-	CreateSegment("lectureroom1");
+	CreateSegment("lectureroom1",scene);
     // set up the scene, the camera and the renderer
-    createScene(audio);
+    function scene (){
+        createScene(audio);
 
-    function audio (){
-    // init audio support
-        createAudio(room);
+        function audio (){
+        // init audio support
+            createAudio(room);
 
-        function room() {
+            function room() {
 
-            createRoom(controls);
-            function controls() {
-                // add the objects and lights - replace those functions as you please
-                function startLoop () {
-					// start a loop that will update the objects' positions
-					// and render the scene on each frame
-                    
-					loop();                                             
+                createRoom(controls);
+                function controls() {
+                    // add the objects and lights - replace those functions as you please
+                    initControls(startLoop);
+
+                    function startLoop () {
+                        renderer.render(scene, camera);
+    					// start a loop that will update the objects' positions
+    					// and render the scene on each frame
+    					loop();
+                    }
                 }
-                initControls();
             }
         }
     }
@@ -259,11 +267,11 @@ function createLights() {
 
 function createRoom(callback) {
 
-	setTimeout(PutSegments,2000);
-	setTimeout(door_in_doors,2200);
-	setTimeout(objects_in_spawns,2400);
-	setTimeout(set_fires,2600);
-	setTimeout(turn_on_lights,2800);
+	PutSegments();
+	door_in_doors();
+	objects_in_spawns();
+	set_fires();
+	turn_on_lights();
 
    // var mesh = fileLoader.get("lectureroom1");
     // terrain.push(mesh);
@@ -327,9 +335,9 @@ function createItems(callback){
 
 // Add Object with given Path to given coordinates
 function addItemLogic(mesh, interact_type, intfunction, file){
-	
+
 	alert("Ich habe eine Daseinsberechtigung");
-	
+
     if(interact_type){
         var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, file);
         terrain.push(intItem);

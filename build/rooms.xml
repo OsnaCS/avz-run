@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<rooms RoomPath="../avz_model/building_parts/">
+<rooms RoomPath="/build/avz_model/building_parts/">
 
 	<!-- DAS HIER IST KOMPLETT FINAL!!!!! -->
 	<room name="lectureroom1" filename="lectureroom1.json">
