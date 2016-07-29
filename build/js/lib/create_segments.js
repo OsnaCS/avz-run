@@ -276,7 +276,9 @@ var doors = [];
 				spawnx = spawnx + parseInt(segments[INDEX1].transx)+xz[0];
 				spawny = spawny + parseInt(segments[INDEX1].transy)+xz[1];
 
-				createFire(spawnx, spawny, spawnz, sizex, sizey, sizez, fire[3]);
+
+				createFire(spawnx, spawny, spawnz, sizex, sizez, sizey, fire[3]); //ja, ist richtig so mit x,y,z
+
 			}
 		}
 		animateFire();
@@ -392,8 +394,9 @@ var doors = [];
 			door1x = door1x + parseInt(segments[INDEX1].transx)+xz[0];
 			door1y = door1y + parseInt(segments[INDEX1].transy)+xz[1];
 
-			if (room1door[1] === "norm") { addObjectViaName("holztur", "door", door1x, door1y, 0, 1.05, rotate-segments[INDEX1].rot, null) }
-			else if (room1door[1] === "glass") { addObjectViaName("glastur", "door", door1x, door1y, 0, 1.05, rotate-segments[INDEX1].rot, null) }
+			if (room1door[1] === "norm") { addObjectViaName("holztur", "door", door1x, door1y, 0, 1.05, rotate-segments[INDEX1].rot, "open") }
+			else if (room1door[1] === "glass") { addObjectViaName("glastur", "door", door1x, door1y, 0, 1.05, rotate-segments[INDEX1].rot, "open") }
+
 		}
 	}
 }
@@ -507,18 +510,22 @@ var doors = [];
 //TODO: nen eigenes Objekt für jedes Objekt erzeugen, genauso wie die segments...! (2 verschiedene listen dann, für static & interactible)
 
 	function addobject(objectpfad, posx, posy, posz, scale, rotate, responsefunct) {
-		var jsloader = new THREE.JSONLoader();
-		jsloader.load(objectpfad, function(geo, mat){
-			var materials = new THREE.MeshFaceMaterial( mat );
-			mesh = new THREE.Mesh(geo, materials);
-			mesh.scale.set(SKALIERUNGSFAKTOR*scale,SKALIERUNGSFAKTOR*scale,SKALIERUNGSFAKTOR*scale);
-			mesh.position.x = Math.round(posx);
-			mesh.position.z = Math.round(posy); //IN BLENDER SIND Y UND Z ACHSE VERTAUSCHT
-			mesh.position.y = Math.round(posz);
-			mesh.rotation.y = 0.5*Math.PI*(4-rotate);
-			if (responsefunct == "") { static_obj.push(mesh) } else { interact_obj.push(mesh); }
-			addtoscene(mesh);
-		});
+		var intItem = null;
+		var tName = objectpfad.split("/");
+		var tName = tName[tName.length-1].split(".")[0];
+		mesh = fileLoader.get(tName);
+		mesh.scale.set(SKALIERUNGSFAKTOR*scale,SKALIERUNGSFAKTOR*scale,SKALIERUNGSFAKTOR*scale);
+		mesh.position.x = Math.round(posx);
+		mesh.position.z = Math.round(posy); //IN BLENDER SIND Y UND Z ACHSE VERTAUSCHT
+		mesh.position.y = Math.round(posz);
+		mesh.rotation.y = 0.5*Math.PI*(4-rotate);
+		if (responsefunct == "") { static_obj.push(mesh) } else { interact_obj.push(mesh); }
+
+		if (responsefunct == "open") {
+			var intItem = new GameObject(mesh, open, TYPE_INTERACTABLE, objectpfad);
+		}
+		addtoscene(mesh, intItem);
+
 	}
 
 	function addObjectViaName(objectname, objecttype, spawnx, spawny, spawnz, scale, rotate, actionfunction) {
@@ -528,7 +535,7 @@ var doors = [];
 				var xmlDoc = xhttp.responseXML;
 				var pfad = xmlDoc.getElementsByTagName("objects")[0].getAttribute("ObjectPath");
 				var typeItems = xmlDoc.getElementsByTagName(objecttype)[0].getElementsByTagName("object");
-				if (objectname === objecttype) {
+				if (objectname === objecttype) { //geht nur bei interactible&static
 					addobject(pfad+typeItems[Math.round(Math.random()*(typeItems.length-1))].getAttribute("path"), spawnx, spawny, spawnz, scale, rotate, actionfunction)
 				} else {
 					for (i = 0; i < typeItems.length; i++) {
@@ -601,9 +608,14 @@ var doors = [];
 	}
 
 //diese Funktion ist nötig, da in der scene_items SÄTMLICHE meshes der Räume stehen (ihre referenz), welche gerade angezeigt sind. Dadurch kann man sich alle auflisten lassen, verändern & löschen nach Bedarf.
-	function addtoscene(mesh){
+	function addtoscene(mesh, intItem){
 		scene.add(mesh);
-		terrain.push(mesh);
+		if (intItem == null) {
+			terrain.push(mesh);
+		} else {
+			terrain.push(intItem);
+		}
+
 		scene_items.push(mesh);
 	}
 

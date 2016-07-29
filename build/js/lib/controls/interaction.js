@@ -153,7 +153,7 @@ function destroy(){
     }
 }
 function open() {
-    doorSound();
+    //doorSound(); //TODO: das klappt nicht, sorry.
     if(!this.open) {
         this.mesh.rotateY(Math.PI/2.0);
         this.open = !this.open;

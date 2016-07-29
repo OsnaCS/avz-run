@@ -66,7 +66,11 @@ var fogInterval;
 var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
 
 
-//loads all Objects before creating
+
+
+    //loads all Objects before creating
+
+
 
 function init(event) {
 	CreateSegment("lectureroom1",scene);
@@ -91,7 +95,6 @@ function init(event) {
     					// and render the scene on each frame
     					loop();
                     }
-
                 }
             }
         }
@@ -333,16 +336,9 @@ function createItems(callback){
 
 
 // Add Object with given Path to given coordinates
-function addItem(file, xPos, yPos, zPos, scale, angle, interact_type, intfunction){
-    var tmpName =  file.split("/");
-    var tmpName = tmpName[tmpName.length-1];
-    var mesh = (fileLoader.get(tmpName.split(".")[0])).clone();
-    var angleObj = (Math.PI*2*angle)/360;
-    mesh.position.y = yPos;
-    mesh.position.x = xPos;
-    mesh.position.z = zPos;
-    mesh.scale.set(20*scale,20*scale,20*scale);
-    mesh.rotateY(angleObj);
+function addItemLogic(mesh, interact_type, intfunction, file){
+
+	alert("Ich habe eine Daseinsberechtigung");
 
     if(interact_type){
         var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, file);
@@ -355,7 +351,6 @@ function addItem(file, xPos, yPos, zPos, scale, angle, interact_type, intfunctio
     scene.add(mesh);
 
 }
-
 
 //adds a trigger at given position, performs action when walking over it and consumes it
 // ***** TO FADE IN THOUGHTS: look up partial, showThoughts, hideThoughts in interact! ******
