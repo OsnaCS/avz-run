@@ -2,21 +2,20 @@
 
 
 
-var FileLoader = function() {
+var FileLoader = function(callback) {
+
+
     console.log("FileLoader running ...");
-
+    var ready = false;
     var jsonLoader = new THREE.JSONLoader();
-    // Pfad zu allen Dateien
-    var files = [
-        // Texturen
-        "test_level.json",
-		"../avz_model/building_parts/lectureroom1.json"    //TODO: diese hier dynamisch anhand der xmls laden
-	];
 
+    // Pfad zu allen Dateien
+    var files = [];
 
     for (var i = 0;i<newItemList.length;i++) {
         files.push(newItemList[i]);
     }
+
     // Key-Value-Store für die geladenen Dateien (Key: Name => Value: Inhalt)
     var loadedFiles = {};
 
@@ -24,13 +23,12 @@ var FileLoader = function() {
     var filesSuccessfullyLoaded = 0;
 
     function loadJson(file, name) {
-
+        var jsonLoader = new THREE.JSONLoader();
         jsonLoader.load(file,
             function (geometry,mat) {
                 // on success:
+
                 console.log("got:"+name);
-
-
                 material = new THREE.MultiMaterial(mat)
 
 
@@ -51,15 +49,20 @@ var FileLoader = function() {
                 filesSuccessfullyLoaded += 1;
 
                 //checks if everything is loaded and hides loadbar and shows start button
-                if(filesSuccessfullyLoaded == file.length){
-                    $(".loading").css("display" , " none" );
-                    $(".btn").css("display" , " inline-block" );
+                if(filesSuccessfullyLoaded == files.length){
+                    ready=true;
+                    $("#loadingBlocker").hide();
+                    $("#startInstructions").show();
+                    callback();
+                    //$(".loading").css("display" , " none" );
+                    //$(".btn").css("display" , " inline-block" );
+
                 };
 
                 //updates loadingbar
                 $(".loading-bar").css("width" , ' '+ (filesSuccessfullyLoaded / file.length * 100) +'%');
             }
-        ,undefined,function() { console.log("could not load:"+name)});
+        );
     }
 
 
@@ -75,12 +78,15 @@ var FileLoader = function() {
     }
 
     //checks if everything is loaded after a set time periode
-    window.setTimeout(
+    setTimeout(
         function(){
-            if(filesSuccessfullyLoaded != file.length){
+            if(filesSuccessfullyLoaded != files.length){
+                ready=true;
                 alert("Warnung! Es sind noch nicht alle Dateien geladen worden.");
+
                 $("#loadingBlocker").hide();
                 $("#startInstructions").show();
+                callback();
             }
 
         },3000
@@ -99,6 +105,12 @@ var FileLoader = function() {
         return true; //while objects.xml contains errors
 
     }
+    // while(!ready) {
+    //     console.log(ready);
+    //     if(filesSuccessfullyLoaded == file.length) {
+    //         ready=true;
+    //     }
+    // }
 
     // "public" Methoden:
     return {
