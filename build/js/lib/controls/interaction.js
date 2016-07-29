@@ -7,7 +7,6 @@ var outlineMaterial = new THREE.MeshPhongMaterial({color:0xFFFFFF,wireframe:true
 var activeObject;
 
 var lockOpen = false; // pin pad boolean
-var configured = false;  // transponder config boolean
 
 var outlineMesh=null;
 
@@ -22,6 +21,9 @@ var TYPE_INTERACTABLE = 0;
 var TYPE_FIRE = 1;
 var TYPE_EXIT = 2;
 var TYPE_TRIGGER = 3;
+var FADE_TIME = 1200;
+
+
 
 document.addEventListener( 'click', onMouseClick, false );
 
@@ -128,21 +130,16 @@ GameObject = function(mesh, interaction, type, name) {
 
 }
 
-
-
 function onMouseClick() {
     if(activeObject!=null) {
         activeObject.interact();
     }
 }
 
-
 function pickUpItem() {
     player.pickUp(this);
     pickUpSound();
 }
-
-
 
 function destroy(){
     if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[0]){
@@ -156,7 +153,7 @@ function destroy(){
     }
 }
 function open() {
-    doorSound();
+    //doorSound(); //TODO: das klappt nicht, sorry.
     if(!this.open) {
         this.mesh.rotateY(Math.PI/2.0);
         this.open = !this.open;
@@ -180,7 +177,7 @@ function damage_door() {
         addItem((damaged_door[0]), damaged_x, damaged_y, damaged_z, 1, true, destroy_door);
         this.delFromScene();
     }else{
-        //Message for player? ("Wie könnte ich diese Tür wohl öffnen?")
+        showThoughts("Wie könnte ich diese Tür wohl öffnen?",5000);
     }
 }
 
@@ -230,11 +227,12 @@ function dFire(){
 // Attach this function to the fire
 function extinguish() {
 	if(this.type == TYPE_FIRE && selectedItem.name == newItemList[12]){
-        extinguisherSound();
-
         // activeObject must be saved so that the dFire function is not influence
         // be new activeObject selected during the delay
         tempActObj = activeObject;
+
+      //  extinguisherAnimation();
+        extinguisherSound();
 
         setTimeout(dFire, 1000);
     	console.log('extinguished');
@@ -347,23 +345,29 @@ function pinPad(pinvalue) {
 
 function enterCH() {
 
-    pin_pos = 0;
+    if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[23]){
+        pin_pos = 0;
 
-    // get object out of focus
-    scene.remove(outlineMesh);
-    outlineMesh = null;
-    activeObject = null;
+        // get object out of focus
+        scene.remove(outlineMesh);
+        outlineMesh = null;
+        activeObject = null;
 
-    menu = true;
+        menu = true;
 
-    $("#compHack").css("z-index", 20);
-    $("#compHack").css("display","block");
-    $("#compHack").show();
+        $("#compHack").css("z-index", 20);
+        $("#compHack").css("display","block");
+        $("#compHack").show();
 
-    document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
-    console.log(document.exitPointerLock);
+        document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
+        console.log(document.exitPointerLock);
 
-    document.exitPointerLock();
+        document.exitPointerLock();
+    } else {
+        console.log(selectedItem.name);
+        console.log('nicht anwendbar');
+    }
+
 }
 
 
@@ -377,11 +381,15 @@ function exitCH() {
     menu = false;
 
     // determine if entered code was correct
-    if (CORRECT_TRANSPONDER[0] == transponder_config[0] && CORRECT_TRANSPONDER[1] == transponder_config[1]) configured = true;
-    else configured = false;
+    if (CORRECT_TRANSPONDER[0] == transponder_config[0] && CORRECT_TRANSPONDER[1] == transponder_config[1]){
+        correctSound();
+        selectedItem.activeTransponder = true;
+    }
+    else {
+        failedSound();
+        selectedItem.activeTransponder = false;
+    }
 
-    //if (configured) correctSound();
-    //else failedSound();
 
     // reset delta
     prevTime = performance.now();
@@ -427,9 +435,10 @@ function compHack(hackButtonValue) {
 
 // Attach this function to the sink
 function coverMouth(){
-    if(this.type == TYPE_INTERACTABLE && selectedItem.name == 'lappen.json'){
+    if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[31]){
         startHeavyBreathing();
         HEALTH_PER_SECOND = HEALTH_PER_SECOND / 2;
+        addItem((newItemList[31]), playerPos[1], playerPos[2] + 10, playerPos[3], 2, 270, true, pickUpItem);
         console.log('covered mouth');
         player.delActItem();
     }else{
@@ -437,22 +446,11 @@ function coverMouth(){
     }
 }
 
-// Attach this function to the computer that activates the transponder
-function activateTransponder(){
-    if(this.type == TYPE_INTERACTABLE && selectedItem.name == 'transponder.json'){
-        successSound();
-        selectedItem.activeTransponder = true;
-        console.log('transponder activated');
-    }else{
-        console.log('nicht anwendbar');
-    }
-}
 
 // Attach this function the door to be opened by a transponder
 function openTransponderDoor(){
 
     if(selectedItem.activeTransponder){
-        if (configured) {
 
             doorSound();
             if(!this.open) {
@@ -470,8 +468,68 @@ function openTransponderDoor(){
             selectedItem.activeTransponder = false;
             player.delActItem();
 
-        }
     } else{
+        doorLockedSound();
         console.log('nicht anwendbar');
+        // play doorLocked-Sound
+        showThoughts("Verschlossen. Vielleicht kann ich die Tür mit einem Transponder öffnen.",5000);
     }
 }
+
+
+// can be used to bind events with parameters to game objects
+// ALWAYS NEEDS EXTRA VARIABLE
+// usage example:
+// addTrigger(0,-50,partial(showThoughts, "Hello World",5000));
+
+var partial = function (func /*, 0..n args */) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    return function () {
+        var allArguments = args.concat(Array.prototype.slice.call(arguments));
+        return func.apply(this, allArguments);
+    };
+};
+
+// fadein/fadeout functions for thought box with event text
+function showThoughts(text, duration) {
+    $(".thoughtBox").html("» "+text+" «");
+    $(".thoughtBox").fadeIn(FADE_TIME);
+    showInterval = setInterval(hideThoughts, duration);
+}
+
+function hideThoughts() {
+    $(".thoughtBox").fadeOut(FADE_TIME);
+    showInterval = clearInterval();
+}
+
+
+
+/*
+function extinguisherAnimation(){
+    var particles = new THREE.Geometry;
+    var particle;
+    var particlenum = 40;
+
+    var px = controls.getObject().position.x;
+    var py = controls.getObject().position.y;
+    var pz = controls.getObject().position.z;
+
+
+    for (var i = 0; i < particlenum; i++) {
+        particle = new THREE.Vector3( THREE.Math.randFloat(px, (tempActObj/particlenum) * i).mesh.position.x),THREE.Math.randFloat(py, tempActObj.mesh.position.y), THREE.Math.randFloat(pz, tempActObj.mesh.position.z));
+        particles.vertices.push(particle);
+    }
+
+    var particleMaterial = new THREE.ParticleBasicMaterial({ color: 0xeeeeee, size: 2 });
+
+    var particleSystem = new THREE.ParticleSystem(particles, particleMaterial);
+
+    scene.add(particleSystem);
+
+    function deleteExtinguisherParticles(){
+        scene.remove(particleSystem);
+    }
+
+    setTimeout(deleteExtinguisherParticles, 1000);
+}
+*/

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<rooms>
+<rooms RoomPath="../avz_model/building_parts/">
 
 	<!-- DAS HIER IST KOMPLETT FINAL!!!!! -->
 	<room name="lectureroom1" filename="lectureroom1.json">
@@ -65,11 +65,14 @@
 		   <fire index="1" position="(9,0,0)" size="(2,2,2)" val="10" />
 		</fires>
 		<lights>
-		   <light index="1" kind="pointlight" objectname="deckenlicht" position="(5,2,4)" intensity="0.7" color="0xFFFFFF"/>
+
+		   <light index="1" kind="pointlight" objectname="deckenlicht" position="(9,3,5)" intensity="0.7" color="0xFFFFFF"/>
+		   <light index="2" kind="pointlight" objectname="deckenlicht" position="(1,3,5)" intensity="0.7" color="0xFFFFFF"/>
 		</lights>	
 	</room>
 	
 	<!-- DAS HIER IST KOMPLETT FINAL!!!!! -->
+	<!--
 	<room name="groundlevel" filename="groundlevel.json">
         <origin x="0" y="0"/>
         <size xmin="-18.47646" xmax="31.0175" ymin="-25.4777" ymax="14"/>
@@ -79,7 +82,6 @@
 			<door type="norm" index="hs1" position="(17.39, 0)" normal="(0, 1)"/>
 			<door type="norm" index="hs2" position="(24.17, 0)" normal="(0, 1)"/>
 			<door type="glass" index="flur" position="(11, -6.28)" normal="(1, 0)"/>
-			<!--<door type="glass" index="exit" position="(11,-6.28)" normal="(1, 0)"/>-->
         </doors>
         <spawns>
 			<spawn  index="feuerloescher" position="(14.3, 3, 1)" object="feuerloescher" normaltowall="(0, 1, 0)"/>
@@ -104,8 +106,8 @@
         <lights>
 			<light index="cip_front" kind="pointlight" objectname="deckenlicht" position="(-15.04, -15.22, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
 			<light index="cip_back" kind="pointlight" objectname="deckenlicht" position="(-15.09, -21.69 , 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
-			<light index="cip_small_front" kind="pointlight" objectname="deckenlicht" position="(-8.11, -15.11, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
-			<light index="cip_small_back" kind="pointlight" objectname="deckenlicht" position="(-8.11 , -22, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
+			<light index="cip_small_front" kind="pointlight" objectname="kleinlicht" position="(-8.11, -15.11, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
+			<light index="cip_small_back" kind="pointlight" objectname="kleinlicht" position="(-8.11 , -22, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
 			<light index="lobby_pfoertner" kind="pointlight" objectname="deckenlicht" position="(-0.29, -3.3, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
 			<light index="lobby_aufzug" kind="pointlight" objectname="deckenlicht" position="(-0.29, 4.04, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
 			<light index="flur_front" kind="pointlight" objectname="deckenlicht" position="(15.74, -6, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
@@ -114,11 +116,13 @@
 			<light index="hs1_back" kind="pointlight" objectname="deckenlicht" position="(18.87, 6.23, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
 			<light index="hs2_front" kind="pointlight" objectname="deckenlicht" position="(26.87, 2.97, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
 			<light index="hs2_back" kind="pointlight" objectname="deckenlicht" position="(26.87, 9.05, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
-			<light index="klo_small" kind="pointlight" objectname="deckenlicht" position="(7.71, -14.13, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
+			<light index="klo_small" kind="pointlight" objectname="kleinlicht" position="(7.71, -14.13, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
         </lights>
-	<!-- positon spieler spawn: (10.5, 4.8, 3) -->
     </room>
-
+	-->
+	<!-- positon spieler spawn: (10.5, 4.8, 3) -->
+	
+	
 	<!-- hier fehlen spawns, feuer, lights -->
 	<room name="circle_walled" filename="circle_WALLED.json">
 		<origin x="0" y="0" />
@@ -131,7 +135,7 @@
 		</spawns>
 	</room>
 	
-	<!-- hier fehlen spawns, feuer, lights -->
+	<!-- hier fehlen spawns, feuer -->
 	<room name="center" filename="center_clrd.json">
 		<origin x="-3" y="3" z="2.5"/>
 		<size xmin = "-14" xmax = "8" ymin = "-8" ymax = "14"/>
@@ -145,11 +149,15 @@
 			<door index="7" type="glass"  normal="(-1,0)" position="(-14, 10.77)"/>
 			<door index="8" type="glass"  normal="(0,1)" position="(-11.77, 14)"/>
 		</doors>
+		<lights>
+			<light index="1" kind="pointlight" objectname="deckenlicht" position="(-0.29, -3.3, 5)" normal="(1,0,0)" intensity="0.7" color="0xFFFFFF" />
+			<light index="2" kind="pointlight" objectname="deckenlicht" position="(-0.29, 4.04, 5)" normal="(1,0,0)" intensity="0.7" color="0xFFFFFF" />
+		</lights>
 		<spawns>
 		</spawns>
 	</room>
 		
-	<!-- hier fehlen spawns, feuer, lights -->
+	<!-- hier fehlen spawns, feuer -->
 	<room name="klogang_solo" filename="klogang_solo.json">
 		<origin x="0" y="0" z="0"/>
 		<size xmin = "-4.6" xmax = "2.8" ymin = "-8.1" ymax = "11.02"/>
@@ -168,20 +176,29 @@
 			<door index="11" type="glass"  normal="(0,-1)" position="(1.57, -1.2)"/>
 			<door index="12" type="norm"  normal="(-1,0)" position="(-0.5, -3.56)"/>
 		</doors>
+		<lights>
+			<light index="1" kind="pointlight" objectname="kleinlicht" position="(-2.5, -3.5, 5)" normal="(1,0,0)" intensity="0.7" color="0xFFFFFF" />
+			<light index="2" kind="pointlight" objectname="kleinlicht" position="(1.7, 8, 5)" normal="(1,0,0)" intensity="0.7" color="0xFFFFFF" />
+			<light index="3" kind="pointlight" objectname="deckenlicht" position="(1.5, -4.5, 5)" normal="(1,0,0)" intensity="0.7" color="0xFFFFFF" />
+			<light index="4" kind="pointlight" objectname="deckenlicht" position="(-1, 4, 5)" normal="(0,1,0)" intensity="0.7" color="0xFFFFFF" />
+		</lights>
 		<spawns>
 		</spawns>
 	</room>
 			
-	<!-- hier fehlen spawns, feuer, lights -->
+	<!-- hier fehlen spawns, feuer -->
 	<room name="gangende_fenster" filename="gangende_fenster.json">
 		<origin x="0" y="0" z="0"/>
 		<size xmin = "-2.90" xmax = "2.7" ymin = "3.58" ymax = "5.78"/>
 		<doors>
 			<door index="1" type="floor"  normal="(0,1)" position="(0.13, 3.58)"/>
-		</doors>	
+		</doors>
+		<lights>
+			<light index="1" kind="pointlight" objectname="kleinlicht" position="(0, 4.5, 5)" normal="(1,0,0)" intensity="0.7" color="0xFFFFFF" />
+		</lights>	
 	</room>	
 
-	<!-- hier fehlen spawns, feuer, lights -->
+	<!-- hier fehlen spawns, feuer -->
 	<room name="buero" filename="buero_und_blackboard.json">
 		<origin x="0" y="0"/>
 		<size xmin="-8.94993" xmax="11.00008" ymin="-28.19999" ymax="13.50002"/>
@@ -209,11 +226,15 @@
 		   <door type="norm" index="21" position="(-3.75,2.85)" normal="(1, 0)"/>
 		   <door type="norm" index="22" position="(-3.75, -1.85)" normal="(1, 0)"/>
 		</doors>  
+		<lights>
+			<light index="1" kind="pointlight" objectname="deckenlicht" position="(3.5, -4.5, 5)" normal="(0,1,0)" intensity="0.7" color="0xFFFFFF" />
+		</lights>
 		<spawns>
 		</spawns>
 	</room>
 
 	<!-- das hier ist komplett falsch -->
+	<!-- 
 	<room name="entrance" filename="entrance.json">
 		<origin x="0" y="0" z="0"/>
 		<size xmin = "0" xmax = "7" ymin = "-8.5" ymax = "0"/>
@@ -221,11 +242,5 @@
 			<door index="1" type="norm"  normal="(0,-1)" position="(1.85, 0)"/>
 		</doors>	
 	</room>	
-	
-	
-	
-	
+	-->
 </rooms>
-
-
-

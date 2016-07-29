@@ -172,9 +172,13 @@ var doors = [];
 				for (j = 0; j < curdoor.length; j++) {
 					var cudo = [];
 					cudo.push(curdoor[j].getAttribute("index"));
+					cudo.push(curdoor[j].getAttribute("kind"));         
+					cudo.push(curdoor[j].getAttribute("objectname"));
+					cudo.push(curdoor[j].getAttribute("objectscale"));
 					cudo.push(curdoor[j].getAttribute("position"));
-					cudo.push(curdoor[j].getAttribute("size"));
-					cudo.push(curdoor[j].getAttribute("val"));
+					cudo.push(curdoor[j].getAttribute("normal"));
+					cudo.push(curdoor[j].getAttribute("intensity"));
+					cudo.push(curdoor[j].getAttribute("color"));
 					LightArr.push(cudo);
 				}
 			}
@@ -250,9 +254,10 @@ var doors = [];
 				spawnx = spawnx + parseInt(segments[INDEX1].transx)+xz[0];
 				spawny = spawny + parseInt(segments[INDEX1].transy)+xz[1];
 				
-				createFire(spawnx, spawny, spawnz, sizex, sizey, sizez, fire[3]);
+				createFire(spawnx, spawny, spawnz, sizex, sizez, sizey, fire[3]); //ja, ist richtig so mit x,y,z
 			}
 		}
+		animateFire();
 	}	
 	
 	
@@ -260,12 +265,12 @@ var doors = [];
 	function turn_on_lights() { 
 		for (INDEX1 = 0; INDEX1<segments.length; INDEX1++){
 			
-			var fire = segments[INDEX1].lights;
-			for (i = 0; i <fire.length; i++) {
+			var light = segments[INDEX1].lights;
+			for (i = 0; i <light.length; i++) {
 				
-				var spawnx = parseFloat(fire[i][1].slice(1,fire[i][1].indexOf(',')));
-				var spawny = parseFloat(fire[i][1].slice(fire[i][1].indexOf(',')+1,fire[i][1].lastIndexOf(',')));
-				var spawnz = parseFloat(fire[i][1].slice(fire[i][1].lastIndexOf(',')+1,fire[i][1].indexOf(')')));		
+				var spawnx = parseFloat(light[i][4].slice(1,light[i][4].indexOf(',')));
+				var spawny = parseFloat(light[i][4].slice(light[i][4].indexOf(',')+1,light[i][4].lastIndexOf(',')));
+				var spawnz = parseFloat(light[i][4].slice(light[i][4].lastIndexOf(',')+1,light[i][4].indexOf(')')));		
 
 				spawnx = spawnx*SKALIERUNGSFAKTOR;
 				spawny = spawny*SKALIERUNGSFAKTOR*-1;
@@ -281,10 +286,20 @@ var doors = [];
 				spawnx = spawnx + parseInt(segments[INDEX1].transx)+xz[0];
 				spawny = spawny + parseInt(segments[INDEX1].transy)+xz[1];
 				
-				//createFire(spawnx, spawny, spawnz, sizex, sizey, sizez, fire[3]); //TODO: do
+				//todo: das mesh der lampe auch noch drehen.
+				var rotate = 0;
+				
+				addObjectViaName(light[i][2], "lamp", spawnx, spawny, spawnz, light[i][3], rotate, ""); //TODO: die lampe klebt noch nicht ganz an der decke, kein plan gerade warum.
+				addLight(spawnx, spawnz, spawny, light[i][1], light[i][5], light[i][6], light[i][7]);  //TODO: das punktlicht sitzt jetzt einfach 20 px unter dem lapensprite, könnte man eleganter machen.
 			}
 		}
 	}		
+	
+	function addLight(x, y, z, kind, normal, intensity, color){
+		var light = new THREE.PointLight( 0xffffff, intensity, 10000 );  //TODO: color benutzen, und den letzten wert ins xml einbauen
+		light.position.set(x, y-20, z); //TODO: das licht zu einem lichter-array hinzufügen.
+		scene.add( light );		
+	}
 	
 	
 //puts the objects to its door-location	(deleteme sobald object_in_spawns ordentlich klappt.)
@@ -351,8 +366,8 @@ var doors = [];
 			door1x = door1x + parseInt(segments[INDEX1].transx)+xz[0];
 			door1y = door1y + parseInt(segments[INDEX1].transy)+xz[1];
 			
-			if (room1door[1] === "norm") { addObjectViaName("holztur", "door", door1x, door1y, 0, 1.05, rotate-segments[INDEX1].rot, null) }          
-			else if (room1door[1] === "glass") { addObjectViaName("glastur", "door", door1x, door1y, 0, 1.05, rotate-segments[INDEX1].rot, null) }
+			if (room1door[1] === "norm") { addObjectViaName("holztur", "door", door1x, door1y, 0, 1.05, rotate-segments[INDEX1].rot, "open") }          
+			else if (room1door[1] === "glass") { addObjectViaName("glastur", "door", door1x, door1y, 0, 1.05, rotate-segments[INDEX1].rot, "open") }
 		}
 	}
 }	
@@ -467,6 +482,7 @@ var doors = [];
 
 	function addobject(objectpfad, posx, posy, posz, scale, rotate, responsefunct) {
 		var jsloader = new THREE.JSONLoader();
+		var intItem = null;
 		jsloader.load(objectpfad, function(geo, mat){
 			var materials = new THREE.MeshFaceMaterial( mat );
 			mesh = new THREE.Mesh(geo, materials);
@@ -476,7 +492,11 @@ var doors = [];
 			mesh.position.y = Math.round(posz);
 			mesh.rotation.y = 0.5*Math.PI*(4-rotate);
 			if (responsefunct == "") { static_obj.push(mesh) } else { interact_obj.push(mesh); }
-			addtoscene(mesh);
+			
+			if (responsefunct == "open") {
+				var intItem = new GameObject(mesh, open, TYPE_INTERACTABLE, objectpfad);
+			}
+			addtoscene(mesh, intItem);
 		});		
 	}
 	
@@ -487,7 +507,7 @@ var doors = [];
 				var xmlDoc = xhttp.responseXML;
 				var pfad = xmlDoc.getElementsByTagName("objects")[0].getAttribute("ObjectPath");
 				var typeItems = xmlDoc.getElementsByTagName(objecttype)[0].getElementsByTagName("object");
-				if (objectname === objecttype) {
+				if (objectname === objecttype) { //geht nur bei interactible&static
 					addobject(pfad+typeItems[Math.round(Math.random()*(typeItems.length-1))].getAttribute("path"), spawnx, spawny, spawnz, scale, rotate, actionfunction)
 				} else {	
 					for (i = 0; i < typeItems.length; i++) {
@@ -507,7 +527,6 @@ var doors = [];
 	function createFire(x, z, y, sx, sy, sz, s) {
 		VolumetricFire.texturePath = './levels/materials/textures/';
 		addFire(x, y, z, sx*SKALIERUNGSFAKTOR, sy*SKALIERUNGSFAKTOR, sz*SKALIERUNGSFAKTOR, 20);
-		animateFire();
 	}
 	
 	
@@ -561,9 +580,14 @@ var doors = [];
 	}
 
 //diese Funktion ist nötig, da in der scene_items SÄTMLICHE meshes der Räume stehen (ihre referenz), welche gerade angezeigt sind. Dadurch kann man sich alle auflisten lassen, verändern & löschen nach Bedarf.
-	function addtoscene(mesh){
+	function addtoscene(mesh, intItem){
 		scene.add(mesh);
-		terrain.push(mesh);
+		if (intItem == null) {
+			terrain.push(mesh);
+		} else {
+			terrain.push(intItem);
+		}
+		
 		scene_items.push(mesh);
 	}
 		

@@ -1,4 +1,4 @@
-/** DOCUMENT
+﻿/** DOCUMENT
 * @project AVZ-RUN
 */
 
@@ -18,6 +18,12 @@ body {
 b,
 strong {
     font-weight: 700;
+}
+
+img {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 h1 {
@@ -216,12 +222,27 @@ hr {
 
 .showNickname {
     background-color: rgba(0, 0, 0, 0.5);
+    font-weight: 400;
     color: #ffffff;
     padding: 15px 30px;
     display: inline-block;
     position: absolute;
     right: 0;
     top: 0;
+}
+
+.thoughtBox {
+    color: #ffffff;
+    font-size: 36px;
+    font-style: italic;
+    padding: 15px 30px;
+    display: inline-block;
+    position: absolute;
+    right: 600px;
+    left: 50%;
+    width: 40%;
+    top: 300px;
+    display: none;
 }
 
 .userBar {
