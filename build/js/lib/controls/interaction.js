@@ -1,4 +1,4 @@
-var ACTIVE_DISTANCE =40;
+var ACTIVE_DISTANCE = PLAYERHEIGHT * 1.6;
 
 var interactionRayCaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, ACTIVE_DISTANCE); // front
 

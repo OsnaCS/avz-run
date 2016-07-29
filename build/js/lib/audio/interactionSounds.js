@@ -1,75 +1,63 @@
-var hbreathing;
 var hbreathing_playing = false;
 
 function extinguisherSound(){
-    createSound("extinguisher", 10, 1, false, 7).play();
+    extSound.play();
 }
 
 function doorSound(){
-    createSound("door-open", 10, 1, false, 20).play();
+    door_Sound.play();
 }
 
 function doorLockedSound(){
-    createSound("door-locked", 10, 1, false, 10).play();
+    doorLocked_Sound.play();
 }
 
 function buttonSound(){
-    createSound("button", 10, 1, false, 3).play();
+    button_Sound.play();
 }
 
 function correctSound(){
-    createSound("correct", 10, 1, false, 4).play();
+    correct_Sound.play();
 }
 
 function failedSound(){
-    createSound("failed", 10, 1, false, 4).play();
+    failed_Sound.play();
 }
 
 // sound for coverd mouth
 function startHeavyBreathing(){
-    if(hbreathing == null){
-        hbreathing = createSound("breath", 10, 1, true, 0.2);
-        camera.add(hbreathing);
-    }
-
     if(!hbreathing_playing){
-        hbreathing.play();
+        hbreathing_Sound.play();
         hbreathing_playing = true;
     }
 }
 
 function stopHeavyBreathing(){
-    hbreathing.stop();
+    hbreathing_Sound.stop();
     hbreathing_playing = false;
 }
 
 function successSound(){
-    createSound("quest-success", 10, 1, false, 20).play();
+    success_Sound.play();
 }
 
 function painSound(){
-    createSound("pain", 10, 1, false, 6).play();
+    pain_Sound.play();
 }
 
 function damageDoorSound(){
-    createSound("door-brake",50,5,false,3).play();
+    damageDoor_Sound.play();
 }
 
 function pickUpSound(){
-    var pui = createSound("pickup",50,5,false,2);
-    camera.add(pui);
-    pui.play();
+    pickUp_Sound.play();
 }
 
 // sound when out of breath after running
 function outOfBreath(){
-    var oob = createSound("run-breath",50,5,false,5);
-    camera.add(oob);
-    oob.play();
+    outOfBreath_Sound.play();
 }
 
 function gameOverSound(){
-    var gover = createSound("gameover",50,5,false,5);
-    camera.add(gover);
-    gover.play();
+    gameOver_Sound.play();
 }

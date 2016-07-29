@@ -5,8 +5,9 @@ var item_count;
 var MAX_HEALTH= 20000;
 var activeSlot=-1;
 var selectedItem;
+var critical_health = false;
 
-// var healthBar = document.getElementsByClassName("progress-bar");
+// var healthBar = document.getElementsByClassName("health-bar");
 
 // player object with own inventory
 
@@ -55,7 +56,11 @@ Player = function() {
     this.damage = function(damage) {
         var healthPercent = (this.health / MAX_HEALTH) * 100;
         this.health -= damage;
-        $(".progress-bar").css("width", '' + healthPercent + '%');
+        $(".health-bar").css("width", '' + healthPercent + '%');
+        if (!critical_health && this.health <= MAX_HEALTH/5) {
+            critical_health = true;
+            $(".health").css("box-shadow"," 0px 0px 20px 3px rgba(255, 82, 82, 0.6)");
+        }
     }
 
     this.delActItem = function() {
@@ -78,13 +83,13 @@ function setActiveSlot(slot)  {
         if(activeSlot>-1) {
             switch (activeSlot) {
                 case 0:
-                    $("#slot1").css("border", "0px solid yellow");
+                    $("#slot1").css("border", "2px solid rgba(255, 255, 255, 0.2)");
                     break;
                 case 1:
-                    $("#slot2").css("border", "0px solid yellow");
+                    $("#slot2").css("border", "2px solid rgba(255, 255, 255, 0.2)");
                     break;
                 case 2:
-                    $("#slot3").css("border", "0px solid yellow");
+                    $("#slot3").css("border", "2px solid rgba(255, 255, 255, 0.2)");
                     break;
             }
         }
