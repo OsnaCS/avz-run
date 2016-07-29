@@ -111,7 +111,7 @@ if (havePointerLock) {
     document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
 
     buttonStart.addEventListener('click', function(event) {
-		
+
 
 
         startInstructions.style.display = 'none';
@@ -336,7 +336,6 @@ function controlLoop(controls) {
 
     setRays();
 
-
     // determines stepwidth
     time = performance.now();
     delta = (time - prevTime) / 1000;
@@ -467,7 +466,7 @@ function controlLoop(controls) {
         $(".energy-bar").css("width", '' + energy + '%');
     }
 
-    // stop gravity at ground level as collision detection sometimes fails for floor  
+    // stop gravity at ground level as collision detection sometimes fails for floor
     if (controls.getObject().position.y < PLAYERHEIGHT && firstTime) {
         velocity.y = 0;
         controls.getObject().position.y = PLAYERHEIGHT +5;

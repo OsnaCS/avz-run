@@ -1,5 +1,7 @@
 package model;
 
+import java.awt.geom.Point2D;
+
 import model.drawables.Point;
 
 /**
@@ -134,6 +136,18 @@ public class Matrix {
 
 		Matrix r = this.multiply(new Matrix(vector));
 		return new Point((int) (r.getValue(0, 0) / r.getValue(2, 0)), (int) (r
+				.getValue(1, 0) / r.getValue(2, 0)));
+	}
+	
+	public Point2D.Double multiplyDouble(Point2D.Double p) {
+		// Betrachte Punkt als 3x1 Matrix
+		double[][] vector = new double[3][1];
+		vector[0][0] = p.x;
+		vector[1][0] = p.y;
+		vector[2][0] = 1.0; // homogene Koordinate
+
+		Matrix r = this.multiply(new Matrix(vector));
+		return new Point2D.Double((r.getValue(0, 0) / r.getValue(2, 0)), (r
 				.getValue(1, 0) / r.getValue(2, 0)));
 	}
 
