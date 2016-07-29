@@ -23,11 +23,12 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import controller.listener.RoomListener;
-import model.Way;
-import model.drawables.DashedRoom;
 import model.drawables.DrawableObject;
 import model.drawables.Point;
-import model.drawables.Room;
+import model.leveleditor.DashedRoom;
+import model.leveleditor.Room;
+import model.leveleditor.Way;
+import model.leveleditor.XMLhandler;
 import view.DrawingPanelView;
 
 /**
@@ -356,6 +357,8 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 
 		temporaryObject = drawableObject;
 		this.processDrawableObject(temporaryObject);
+
+		drawingPanelView.getDrawingPanel().repaint();
 
 		// keine Dashed-Rooms speichern
 		if (!(drawableObject instanceof DashedRoom)) {
