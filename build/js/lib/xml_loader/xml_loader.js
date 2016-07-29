@@ -31,6 +31,15 @@ function loadobjectsxml(xml, complete, arr) {
     var curobj = xmlDoc.getElementsByTagName("object");
     for (i = 0; i <curobj.length; i++) {
         var tmp = ObjectPath.concat(curobj[i].getAttribute("path"));
+        //error handling
+        $.ajax({
+            mimeType: 'text/plain; charset=x-user-defined',
+            url: tmp, //or your url
+            error: function(data){
+                console.log("could not load from xml: "+tmp);
+            },
+        })
+
         arr.push(tmp);
     }
 
@@ -45,6 +54,14 @@ function loadroomsxml(xml, complete, arr) {
     var curobj = xmlDoc.getElementsByTagName("room");
     for (i = 0; i <curobj.length; i++) {
         var tmp = ObjectPath.concat(curobj[i].getAttribute("filename"));
+        //error handling
+        $.ajax({
+            mimeType: 'text/plain; charset=x-user-defined',
+            url: tmp, //or your url,
+            error: function(){
+                console.log("could not load from xml: "+tmp);
+            },
+        })
         arr.push(tmp);
     }
 
