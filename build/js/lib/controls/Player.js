@@ -5,7 +5,6 @@ var item_count;
 var MAX_HEALTH= 20000;
 var activeSlot=-1;
 var selectedItem;
-var playername;
 
 // var healthBar = document.getElementsByClassName("progress-bar");
 
@@ -79,13 +78,13 @@ function setActiveSlot(slot)  {
         if(activeSlot>-1) {
             switch (activeSlot) {
                 case 0:
-                    $("#slot1").css("border", "2px solid rgba(255, 255, 255, 0.2)");
+                    $("#slot1").css("border", "0px solid yellow");
                     break;
                 case 1:
-                    $("#slot2").css("border", "2px solid rgba(255, 255, 255, 0.2)");
+                    $("#slot2").css("border", "0px solid yellow");
                     break;
                 case 2:
-                    $("#slot3").css("border", "2px solid rgba(255, 255, 255, 0.2)");
+                    $("#slot3").css("border", "0px solid yellow");
                     break;
             }
         }
@@ -94,19 +93,19 @@ function setActiveSlot(slot)  {
         switch (slot) {
             case 0:
                 if (inventory[0] != null) {
-                    $("#slot1").css("border", "2px solid rgba(255, 255, 255, 1)");
+                    $("#slot1").css("border", "2px groove #ffcc66");
                     selectedItem = inventory[0];
                 }
                 break;
             case 1:
                 if (inventory[1] != null) {
-                    $("#slot2").css("border", "2px solid rgba(255, 255, 255, 1)");
+                    $("#slot2").css("border", "2px groove #ffcc66");
                     selectedItem = inventory[1];
                 }
                 break;
             case 2:
                 if (inventory[2] != null) {
-                    $("#slot3").css("border", "2px solid rgba(255, 255, 255, 1)");
+                    $("#slot3").css("border", "2px groove #ffcc66");
                     selectedItem = inventory[2];
                 }
                 break;
