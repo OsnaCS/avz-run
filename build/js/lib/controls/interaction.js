@@ -226,12 +226,12 @@ function dFire(){
 
 // Attach this function to the fire
 function extinguish() {
-	if(this.type == TYPE_FIRE && selectedItem.name == newItemList[12]){
+	if(this.type == TYPE_FIRE/* && selectedItem.name == newItemList[12]*/){
         // activeObject must be saved so that the dFire function is not influence
         // be new activeObject selected during the delay
         tempActObj = activeObject;
 
-      //  extinguisherAnimation();
+    //    extinguisherAnimation();
         extinguisherSound();
 
         setTimeout(dFire, 1000);
@@ -508,15 +508,21 @@ function hideThoughts() {
 function extinguisherAnimation(){
     var particles = new THREE.Geometry;
     var particle;
-    var particlenum = 40;
+    var particlenum = 100;
 
+    // Player position
     var px = controls.getObject().position.x;
-    var py = controls.getObject().position.y;
+    var py = controls.getObject().position.y - 3;
     var pz = controls.getObject().position.z;
 
+    // Fire position
+    var fx = tempActObj.mesh.position.x;
+    var fy = tempActObj.mesh.position.y;
+    var fz = tempActObj.mesh.position.z;
 
     for (var i = 0; i < particlenum; i++) {
-        particle = new THREE.Vector3( THREE.Math.randFloat(px, (tempActObj/particlenum) * i).mesh.position.x),THREE.Math.randFloat(py, tempActObj.mesh.position.y), THREE.Math.randFloat(pz, tempActObj.mesh.position.z));
+        //particle = new THREE.Vector3( THREE.Math.randFloat(px, px + ((fx -px) / particlenum) * i),THREE.Math.randFloat(py, py + ((fy -py) / particlenum) * i), THREE.Math.randFloat(pz, pz + ((fz -pz) / particlenum) * i));
+        particle = new THREE.Vector3(px + ((fx -px) / particlenum) * i, py + ((fy -py) / particlenum) * i, pz + ((fz -pz) / particlenum) * i);
         particles.vertices.push(particle);
     }
 

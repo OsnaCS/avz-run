@@ -1,7 +1,7 @@
 var hbreathing_playing = false;
 
 function extinguisherSound(){
-    extSound.play();
+    extinguisher_Sound.play();
 }
 
 function doorSound(){
