@@ -49,7 +49,7 @@ function addSmoke(x, y, z) {
         '}',
     ].join('\n');
 
-    texture = textureLoader.load('./levels/materials/textures/smoke.png');
+    texture = textureLoader.load('/build/levels/materials/textures/smoke.png');
     uniforms = {
         time: {
             type: 'f',
