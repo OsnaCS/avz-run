@@ -343,6 +343,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 	function addLight(x, y, z, kind, normal, intensity, color, visiblewidth){
 		var light = new THREE.PointLight( parseInt(color), intensity, visiblewidth*SKALIERUNGSFAKTOR ); 
 		light.position.set(x, y, z); 
+	}
 
 
 //puts the right kind of door where it fits.
