@@ -43,7 +43,7 @@ public class Coordinates {
 	 * @return int-Koordinaten
 	 */
 	public Point getScaledIntCoordinates() {
-		
+		// Basis Trafo der Koordinatensysteme
 		int x = (int) ((factor * this.posx) + 0.5);
 		int y = (int) ((factor * this.posy) + 0.5);
 				
@@ -55,6 +55,8 @@ public class Coordinates {
 	 * @param point Neue Position
 	 */
 	public void setScaledIntCoordinates(Point point) {
+		
+		
 		
 	}
 	
@@ -97,7 +99,7 @@ public class Coordinates {
 	}
 	
 	/**
-	 * Führt eine Translation zu einem Punkt aus
+	 * Führt eine Translation um den 
 	 * @param point Punkt zu den translatiert werden soll
 	 */
 	public void translateTo(Coordinates point) {
@@ -118,14 +120,21 @@ public class Coordinates {
 	 * @param point Punkt, der addiert wird
 	 * @return Summe der Punkte
 	 */
+	public Coordinates addCoordinats(Coordinates point) {
+		return null;
+	}
+	
+	public static Coordinates basisChangeDoubleInt() {
+		return null;
+	}
+	
+	public static Coordinates basisChangeIntDouble() {
+		return null;
+	}
 	
 	/*********************************************************/
 	/***************** GETTER und SETTER *********************/
 	/*********************************************************/
-	
-	public Coordinates addCoordinats(Coordinates point) {
-		return null;
-	}
 
 	public double getPosx() {
 		return posx;

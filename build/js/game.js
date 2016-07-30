@@ -29,7 +29,6 @@ var fileLoader =null;
 // callback function complete
 function loadFiles(){
     makeArrayFromXML(completedXmlLoad, newItemList);
-
 }
 
 // if XML-Parsing done
@@ -53,7 +52,7 @@ var scene,
 var menu = true;
 var pause = false;
 
-//variable used for increasing fog
+//variable used for increasing fog  //TODO: wie schnell der fog kommt sollte raum/level-abhängig sein
 var MAX_FOG = 0.015;
 var myfog=0.002;
 var fogTime=60;
@@ -70,9 +69,8 @@ var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much hea
 
 function init(event) {
 
-	CreateSegment("klogang_solo", 
-
-
+	CreateSegment("lectureroom1", 
+	
     // set up the scene, the camera and the renderer
     function scene (){
         createScene(audio);
@@ -232,38 +230,38 @@ var hemisphereLight, shadowLight;
 
 function createLights() {
 
-    // A hemisphere light is a gradient colored light;
-    // the first parameter is the sky color, the second parameter is the ground color,
-    // the third parameter is the intensity of the light
-    hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, .9)
+    // // A hemisphere light is a gradient colored light;
+    // // the first parameter is the sky color, the second parameter is the ground color,
+    // // the third parameter is the intensity of the light
+    // hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, .9)
 
-    // A directional light shines from a specific direction.
-    // It acts like the sun, that means that all the rays produced are parallel.
-    shadowLight = new THREE.DirectionalLight(0xffffff, .9);
+    // // A directional light shines from a specific direction.
+    // // It acts like the sun, that means that all the rays produced are parallel.
+    // shadowLight = new THREE.DirectionalLight(0xffffff, .9);
 
-    // Set the direction of the light
-    shadowLight.position.set(50, 50, 50);
+    // // Set the direction of the light
+    // shadowLight.position.set(50, 50, 50);
 
-    // Allow shadow casting
-    shadowLight.castShadow = true;
+    // // Allow shadow casting
+    // shadowLight.castShadow = true;
 
-    // define the visible area of the projected shadow
-    shadowLight.shadow.camera.left = -400;
-    shadowLight.shadow.camera.right = 400;
-    shadowLight.shadow.camera.top = 400;
-    shadowLight.shadow.camera.bottom = -400;
-    shadowLight.shadow.camera.near = 1;
-    shadowLight.shadow.camera.far = 1000;
+    // // define the visible area of the projected shadow
+    // shadowLight.shadow.camera.left = -400;
+    // shadowLight.shadow.camera.right = 400;
+    // shadowLight.shadow.camera.top = 400;
+    // shadowLight.shadow.camera.bottom = -400;
+    // shadowLight.shadow.camera.near = 1;
+    // shadowLight.shadow.camera.far = 1000;
 
-    // define the resolution of the shadow; the higher the better,
-    // but also the more expensive and less performant
-    shadowLight.shadow.mapSize.width = 2048;
-    shadowLight.shadow.mapSize.height = 2048;
+    // // define the resolution of the shadow; the higher the better,
+    // // but also the more expensive and less performant
+    // shadowLight.shadow.mapSize.width = 2048;
+    // shadowLight.shadow.mapSize.height = 2048;
 
-    // to activate the lights, just add them to the scene
-    scene.add(hemisphereLight);
-    scene.add(shadowLight);
-
+    // // to activate the lights, just add them to the scene
+    // scene.add(hemisphereLight);
+    // scene.add(shadowLight);
+	
 }
 
 
@@ -274,14 +272,6 @@ function createRoom(callback) {
 	objects_in_spawns();
 	set_fires();
 	turn_on_lights();
-
-   // var mesh = fileLoader.get("lectureroom1");
-    // terrain.push(mesh);
-    // mesh.position.y = 0;
-    // mesh.position.x = 5;
-    // mesh.scale.set(20, 20, 20);
-    // scene.add(mesh);
-
 	callback();
 
 }
@@ -308,28 +298,28 @@ function printmost(obj) {
 function createItems(callback){
 
 
-     // addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
+     // // addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
 
-	 // addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name)
-	 // TYPE_INTERACTABLE; TYPE_TRIGGER; TYPE_FIRE; TYPE_EXIT;
-	 // intfunction = damage_door, destroy_door, pickUpItem, destroy, open, openLockedDoor, extinguish
+	 // // addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name)
+	 // // TYPE_INTERACTABLE; TYPE_TRIGGER; TYPE_FIRE; TYPE_EXIT;
+	 // // intfunction = damage_door, destroy_door, pickUpItem, destroy, open, openLockedDoor, extinguish
 
-	 //wände/terrain/statics, interactibles(auch feuer und türen), triggerevents(auch feuer), licher (auch feuer),
+	 // //wände/terrain/statics, interactibles(auch feuer und türen), triggerevents(auch feuer), licher (auch feuer),
 
-      addItem((newItemList[0]), -50, 10, 10, 10, true, pickUpItem, newItemList[0]);
-      addItem((newItemList[1]), 20, 5, 10, 1, true, destroy, newItemList[1]);
-      addItem((newItemList[2]), 0, 5, 20, 3, true, pickUpItem, newItemList[2]);
-      addItem((newItemList[12]), 0, 5, -10, 3, true, pickUpItem, newItemList[12]);
-   // addItem(pathItem.concat(newItemList[4]), 30, 5, -30, 1, false, 0, itemList[4]);
-  //  addItem(pathItem.concat(newItemList[5]), 30, 5, -30, 1, true, openLockedDoor, itemList[5]);
-   // addItem(pathItem.concat(newItemList[6]), 30, 5, -100, 1, true, pickUpItem, itemList[6]);
+      // addItem((newItemList[0]), -50, 10, 10, 10, true, pickUpItem, newItemList[0]);
+      // addItem((newItemList[1]), 20, 5, 10, 1, true, destroy, newItemList[1]);
+      // addItem((newItemList[2]), 0, 5, 20, 3, true, pickUpItem, newItemList[2]);
+      // addItem((newItemList[12]), 0, 5, -10, 3, true, pickUpItem, newItemList[12]);
+   // // addItem(pathItem.concat(newItemList[4]), 30, 5, -30, 1, false, 0, itemList[4]);
+  // //  addItem(pathItem.concat(newItemList[5]), 30, 5, -30, 1, true, openLockedDoor, itemList[5]);
+   // // addItem(pathItem.concat(newItemList[6]), 30, 5, -100, 1, true, pickUpItem, itemList[6]);
 
-     for(var i =0; i< newItemList.length; i++){
-        console.log(newItemList[i]);
-     }
+     // for(var i =0; i< newItemList.length; i++){
+        // console.log(newItemList[i]);
+     // }
 
 
-    callback();
+    // callback();
 
 }
 //debugstuffdeleteme ende
@@ -338,17 +328,17 @@ function createItems(callback){
 // Add Object with given Path to given coordinates
 function addItemLogic(mesh, interact_type, intfunction, file){
 
-	alert("Ich habe eine Daseinsberechtigung");
+	// alert("Ich habe eine Daseinsberechtigung");
 
-    if(interact_type){
-        var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, file);
-        terrain.push(intItem);
-    } else {
-        terrain.push(mesh);
-    }
+    // if(interact_type){
+        // var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, file);
+        // terrain.push(intItem);
+    // } else {
+        // terrain.push(mesh);
+    // }
 
 
-    scene.add(mesh);
+    // scene.add(mesh);
 
 }
 
