@@ -25,12 +25,12 @@
 		<object path="tafel.json" name="tafel" scale="1" />
 		<object path="lichtschalter.json" name="switch" scale="1" />
 		<object path="muelleimer.json" name="eimer" scale="1" />
-		<object path="ohp.json" name="ohp" scale="1" />
+		<object path="ohp.json" name="ohp" scale="0.5" />
 		<object path="buecherregal/buecherregal.json" name="regal" scale="1" />
 		<object path="ziegel/ziegel.json" name="ziegel" scale="1" />
-		<object path="stuhl.json" name="stuhl" scale="1" />
-		<object path="pult/Pult_Endversion.json" name="pult" scale ="1"/>
-		<object path="tisch.json" name="tisch" scale="1" />
+		<object path="stuhl.json" name="stuhl" scale="0.6" />
+		<object path="pult/Pult_Endversion.json" name="pult" scale ="1.1"/>
+		<object path="tisch.json" name="tisch" scale="0.9" />
 		<object path="wand_kaputt.json" name="wand_kaputt" scale="1" />
 		<object path="aufzug/aufzug.json" name="aufzug" interaction="0" scale ="1"/>
 		<object path="plakat/Brandschutzplakat.json" name="BSPlakat" scale ="1"/>
@@ -42,6 +42,7 @@
 		<object path="schutt/schutt.json" name="schutt" scale ="1"/>
 		<object path="schutt2/schutt2.json" name="schutt2" scale ="1"/>
 		<object path="steckdose.json" name="steckdose" scale="1" />
+		<object path="glastuerrahmen.json" name="glastuerrahmen" scale="1" />
 	</static>
 
 	<door>
@@ -53,8 +54,8 @@
 	</door>
 
 	<lamp>
-		<object name="deckenlicht" path="deckenlicht.json" interaction="0" scale ="1"/>
-		<object name="kleinlicht" path="deckenlicht_klein.json" interaction="1" scale ="1"/>
+		<object name="deckenlicht" path="deckenlicht.json" interaction="0" scale ="0.5"/>
+		<object name="kleinlicht" path="deckenlicht_klein.json" interaction="1" scale ="0.5"/>
 	</lamp>
 
 </objects>
