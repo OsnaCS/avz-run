@@ -12,6 +12,7 @@ var FileLoader = function(callback) {
     // Pfad zu allen Dateien
     var files = [];
 
+
     for (var i = 0;i<newItemList.length;i++) {
         files.push(newItemList[i]);
     }
@@ -121,7 +122,6 @@ var FileLoader = function(callback) {
             return isReady() ? loadedFiles : undefined;
         },
         get: function(name) {
-
             var result = isReady() ? loadedFiles[name].clone() : undefined;
             console.log(name);
 

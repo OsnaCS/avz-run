@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-
-<objects ObjectPath="../avz_model/materials/objects/" IconPath="../avz_model/inventar">
-
+<objects ObjectPath="/avz_model/materials/objects/" IconPath="/avz_model/inventar">
 	<interactible>
 		<object name="axt" path="axt.json" scale="1.2" icon="axt.png"/>
 		<object name="transponder" path="transponder.json" scale="1.2" icon="transponder.png"/>
@@ -18,7 +15,6 @@
 		<object name="tisch_pc" path="schreibtisch_und_pc.json" scale="1" icon="icon.jpg" />
 		<object name="becken" path="waschbecken.json" scale="1" icon="icon.jpg"/>
 	</interactible>
-
 	<static>
 		<object path="pflanze.json" name="pflanze" scale="1" />
 		<object path="beamer.json" name="beamer" scale="1" />
@@ -44,7 +40,6 @@
 		<object path="steckdose.json" name="steckdose" scale="1" />
 		<object path="glastuerrahmen.json" name="glastuerrahmen" scale="1" />
 	</static>
-
 	<door>
 		<object name="klotur" path="tuer_klo.json" interaction="0" scale ="1"/>
 		<object name="glastur" path="tueren/glastuer.json" interaction="1" scale ="1"/>
@@ -52,10 +47,8 @@
 		<object name="halbbrokentur" path="tueren/tuer_halbkaputt.json" interaction="0" scale ="1"/>
 		<object name="brokentur" path="tueren/tuer_kaputt.json" interaction="1" scale ="1"/>
 	</door>
-
 	<lamp>
 		<object name="deckenlicht" path="deckenlicht.json" interaction="0" scale ="0.5"/>
 		<object name="kleinlicht" path="deckenlicht_klein.json" interaction="1" scale ="0.5"/>
 	</lamp>
-
 </objects>

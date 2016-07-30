@@ -126,9 +126,7 @@ function initPointerLock() {
         document.addEventListener('mozpointerlockerror', pointerlockerror, false);
         document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
 
-
         buttonStart.addEventListener('click', function(event) {
-
             startInstructions.style.display = 'none';
 
             // Ask the browser to lock the pointer

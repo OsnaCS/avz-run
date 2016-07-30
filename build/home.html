@@ -5,11 +5,11 @@
     <title>AVZ-Run - Kannst du entkommen?</title>
     <meta name="description" content="You are the last person in the burning AVZ building. Try to escape.">
     <meta name="author" content="Project group: AVZ-Run">
-    <link rel="icon" href="bilder/favicon.ico" type="image/x-icon" />
-    <link rel="shortcut icon" href="bilder/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
+    <link rel="icon" href="/build/bilder/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/build/bilder/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="/build/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/build/css/style.css">
+    <script type="text/javascript" src="/build/js/jquery-3.1.0.min.js"></script>
 </head>
 
 <body>
@@ -58,7 +58,7 @@
         <div class="thoughtBox"></div>
         <div class="userBar">
             <div class="userSection left">
-                <span class="sectionTitle"><img class="running-icon" src="bilder/running.png"></span>
+                <span class="sectionTitle"><img class="running-icon" src="/build/bilder/running.png"></span>
                 <div class="energy">
                     <div class="energy-bar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
                     </div>
@@ -76,26 +76,22 @@
                 </div>
             </div>
         </div>
-        <div id="pinPad">
-            <div id="pinDisplay">PIN EINGEBEN</div>
-            <br>
-            <div id="buttonGrid">
-                <button type="button" class="pinButton" onclick="pinPad(this.value)" value="1"></button>
-                <button type="button" class="pinButton" onclick="pinPad(this.value)" value="2"></button>
-                <button type="button" class="pinButton" onclick="pinPad(this.value)" value="3"></button>
-                <br>
-                <button type="button" class="pinButton" onclick="pinPad(this.value)" value="4"></button>
-                <button type="button" class="pinButton" onclick="pinPad(this.value)" value="5"></button>
-                <button type="button" class="pinButton" onclick="pinPad(this.value)" value="6"></button>
-                <br>
-                <button type="button" class="pinButton" onclick="pinPad(this.value)" value="7"></button>
-                <button type="button" class="pinButton" onclick="pinPad(this.value)" value="8"></button>
-                <button type="button" class="pinButton" onclick="pinPad(this.value)" value="9"></button>
-                <br>
-                <button type="button" class="pinButton" onclick="pinPad(this.value)" value="10"></button>
-                <button type="button" class="pinButton" onclick="pinPad(this.value)" value="0"></button>
-                <button type="button" class="pinButton" onclick="pinPad(this.value)" value="11"></button>
-            </div>
+    </div>
+    <div id="pinPad">
+        <div id="pinDisplay">PIN EINGEBEN</div><br>
+        <div id="buttonGrid">
+            <button type="button" class="pinButton" onclick="pinPad(this.value)" value="1"></button>
+            <button type="button" class="pinButton" onclick="pinPad(this.value)" value="2"></button>
+            <button type="button" class="pinButton" onclick="pinPad(this.value)" value="3"></button><br>
+            <button type="button" class="pinButton" onclick="pinPad(this.value)" value="4"></button>
+            <button type="button" class="pinButton" onclick="pinPad(this.value)" value="5"></button>
+            <button type="button" class="pinButton" onclick="pinPad(this.value)" value="6"></button><br>
+            <button type="button" class="pinButton" onclick="pinPad(this.value)" value="7"></button>
+            <button type="button" class="pinButton" onclick="pinPad(this.value)" value="8"></button>
+            <button type="button" class="pinButton" onclick="pinPad(this.value)" value="9"></button><br>
+            <button type="button" class="pinButton" onclick="pinPad(this.value)" value="10"></button>
+            <button type="button" class="pinButton" onclick="pinPad(this.value)" value="0"></button>
+            <button type="button" class="pinButton" onclick="pinPad(this.value)" value="11"></button>
         </div>
         <div id="compHack">
             <div id="pinDisplayCH">key lock:</div>
@@ -119,22 +115,26 @@
         </div>
     </div>
     <div id="world"></div>
-    <script src="js/three.min.js"></script> //Three muss zuerst!
-    <script src="js/lib/controls/firstPerson.js"></script> //FirstPerson muss vor interactions
-    <script src="js/lib/controls/interaction.js"></script> //Interaction muss vor create_segments
-    <script src="js/lib/create_segments.js"></script> //create_segments muss vor game!
-    <script src="js/lib/util/doSynchronousLoop.js"></script>
-    <script src="js/lib/fileLoader.js"></script>
-    <script src="js/lib/controls/Player.js"></script>
-    <script src="js/lib/controls/PointerLockControls.js"></script>
-    <script src="js/lib/audio/audioLoader.js"></script>
-    <script src="js/lib/audio/interactionSounds.js"></script>
-    <script src="js/lib/fire/VolumetricFire.js"></script>
-    <script src="js/lib/smoke/smoke.js"></script>
-    <script src="js/lib/fire/firePlacement.js"></script>
-    <script src="js/lib/stats/stats.min.js"></script>
-    <script src="js/lib/xml_loader/xml_loader.js"></script>
-    <script src="js/game.js"></script> //game muss am besten zuletzt!
+    <script src="/build/js/three.min.js"></script>
+    <!-- first person vor interactions -->
+    <script src="/build/js/lib/controls/firstPerson.js"></script>
+    <!-- interaction muss vor create_segments -->
+    <script src="/build/js/lib/controls/interaction.js"></script>
+    <!-- create_segments muss vor game! -->
+    <script src="/build/js/lib/create_segments.js"></script>
+    <script src="/build/js/lib/util/doSynchronousLoop.js"></script>
+    <script src="/build/js/lib/fileLoader.js"></script>
+    <script src="/build/js/lib/controls/Player.js"></script>
+    <script src="/build/js/lib/controls/PointerLockControls.js"></script>
+    <script src="/build/js/lib/audio/audioLoader.js"></script>
+    <script src="/build/js/lib/audio/interactionSounds.js"></script>
+    <script src="/build/js/lib/fire/VolumetricFire.js"></script>
+    <script src="/build/js/lib/smoke/smoke.js"></script>
+    <script src="/build/js/lib/fire/firePlacement.js"></script>
+    <script src="/build/js/lib/stats/stats.min.js"></script>
+    <script src="/build/js/lib/xml_loader/xml_loader.js"></script>
+    <!-- game muss am besten zuletzt -->
+    <script src="/build/js/game.js"></script> 
 
 </body>
 

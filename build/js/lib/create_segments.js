@@ -5,11 +5,21 @@
 // -Dass der nicht immer 2 Türen in nen Doppelt genutzten Türrahmen packt
 // -Dass er all das was ich so manuell eingebe aus der levels.xml liest
 
+<<<<<<< HEAD
 
 //consts (change iff you know what you're doing! :P) 
 var ROOMSXML = "rooms.xml"
 var OBJECTSXML = "objects.xml"
 var LEVELSXML = "levels.xml"
+=======
+//consts (change iff you know what you're doing! :P)
+var JSONPATH = "/avz_model/building_parts/";
+var OBJECTPATH = "/avz_model/materials/objects/";
+var TEXTUREPATH = "jsons/textures/"
+var ROOMSXML = "/build/rooms.xml"
+var OBJECTSXML = "/build/objects.xml"
+var LEVELSXML = "/build/levels.xml"
+>>>>>>> eb14f76c2a26d0b3ec7708384579d107f5fcd2d3
 var SKALIERUNGSFAKTOR = 30;
 var HOLZTURBREITE = SKALIERUNGSFAKTOR*0.88;
 var GLASTURBREITE = SKALIERUNGSFAKTOR*1.2;
@@ -503,7 +513,17 @@ var fires = [];       //Hier stehen alle Feuer drin.
 		xhttp.send();
 	}
 
+<<<<<<< HEAD
 	
+=======
+
+	function createFire(x, z, y, sx, sy, sz, s) {
+		VolumetricFire.texturePath = '/build/levels/materials/textures/';
+		addFire(x, y, z, sx*SKALIERUNGSFAKTOR, sy*SKALIERUNGSFAKTOR, sz*SKALIERUNGSFAKTOR, 20);
+	}
+
+
+>>>>>>> eb14f76c2a26d0b3ec7708384579d107f5fcd2d3
 //adds a ROOM's mesh to the scene (needs to be changed when we stop loading from jsons directly and instead from the pre-loading-thingy.)
 	function addmesh(filename, segmentindex) {
 		var h = filename.split("/"); //TODO: den fileloader so umschreiben dass er damit klar kommt

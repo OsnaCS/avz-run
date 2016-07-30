@@ -27,7 +27,7 @@ function createAudio(complete) {
 // creates the sound with specific options
 function createSound(filename, distance, rolloff, loop, volume, complete) {
     var sound = new THREE.PositionalAudio(audioListener);
-    audioLoader.load('sounds/' + filename + '.mp3', function(buffer) {
+    audioLoader.load('/build/sounds/' + filename + '.mp3', function(buffer) {
         sound.setBuffer(buffer);
         sound.setRefDistance(distance);
         sound.setRolloffFactor(rolloff);
