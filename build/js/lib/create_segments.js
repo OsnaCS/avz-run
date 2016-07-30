@@ -342,9 +342,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 
 	function addLight(x, y, z, kind, normal, intensity, color, visiblewidth){
 		var light = new THREE.PointLight( parseInt(color), intensity, visiblewidth*SKALIERUNGSFAKTOR ); 
-		light.position.set(x, y-20, z); 
-		scene.add(light);
-	}
+		light.position.set(x, y, z); 
 
 
 //puts the right kind of door where it fits.
@@ -592,9 +590,9 @@ var fires = [];       //Hier stehen alle Feuer drin.
 		//scene.remove(mesh); braucht nicht, da das von interactible-this.delFromScene() gemacht wird.
 	}
 
-
-
 	
+	
+
 	
 	
 //buggy functions which may not even be needed	
@@ -619,7 +617,8 @@ var fires = [];       //Hier stehen alle Feuer drin.
 		else if (room1doorvec[0] + room2doorvec[0] + room1doorvec[1] + room2doorvec[1] == 2) {rotation = parseInt(segments[INDEX1].rot)+1}
 		else {rotation = parseInt(segments[INDEX1].rot)+3};
 		//1 und 3 könnten vertauscht sein
-
+		
+		
 		var door1x = parseFloat(room1door[2].slice(1,room1door[2].indexOf(',')));
 		var door1y = parseFloat(room1door[2].slice(room1door[2].indexOf(',')+1,room1door[2].indexOf(')')));
 		door1x = door1x*SKALIERUNGSFAKTOR;
@@ -638,7 +637,49 @@ var fires = [];       //Hier stehen alle Feuer drin.
 		//remove me
 		document.getElementById('posx').value = door1x;
 		document.getElementById('posy').value = door1y;
+		for (j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
+			var tmp = door1x;
+			door1x = -door1y;
+			door1y = tmp;
+		}
+		var xz = changexzaccordingtorot(segments[INDEX1].orx, segments[INDEX1].ory, segments[INDEX1].rot);
 
+		door1x = Math.round(door1x + parseInt(segments[INDEX1].transx)+xz[0]);
+		door1y = Math.round(door1y + parseInt(segments[INDEX1].transy)+xz[1]);
+
+		//remove me
+		document.getElementById('posx').value = door1x;
+		document.getElementById('posy').value = door1y;
+
+
+		//so. würden wir jetzt den anderen raum an door1x, door1y packen, hätte es dort seinen mittelpunkt.
+		//Aber, es soll ja dort nicht seinen Mittelpunkt haben, sondern dort soll room2door liegen.
+		//für rechts unten heißt das, erst die koordinaten von mittelpunkt zu tür addieren, und dann drehen. Voila.
+
+		var xz2 = doorpos2middlepos(rotation, segments[INDEX2], room2door)
+
+		finalx = door1x + xz2[0];
+		finaly = door1y + xz2[1];
+
+		segments[INDEX2].transx = Math.round(finalx);
+		segments[INDEX2].transy = Math.round(finaly);
+		segments[INDEX2].rot = rotation;
+
+	}	
+
+	//daaas hier ist die funktion die von der direkt hierdrüber ^ gecallt wird, und diese hier will noch nicht wirklich. Maan denkfehler do.
+	function doorpos2middlepos(rotation,segment,door){
+
+		//gegeben: Position wo später die Tür sein soll. gesucht: Position wo der MP hinsoll.
+		//von door zu MP ist einfach -die koordinaten der tür
+
+		alert(door[2]+"    "+rotation);
+
+		var door2x = parseFloat(door[2].slice(1,door[2].indexOf(',')));
+		var door2y = parseFloat(door[2].slice(door[2].indexOf(',')+1,door[2].indexOf(')')));
+
+		door2x = door2x*SKALIERUNGSFAKTOR*-1;
+		door2y = door2y*SKALIERUNGSFAKTOR*-1;
 
 		//so. würden wir jetzt den anderen raum an door1x, door1y packen, hätte es dort seinen mittelpunkt.
 		//Aber, es soll ja dort nicht seinen Mittelpunkt haben, sondern dort soll room2door liegen.
