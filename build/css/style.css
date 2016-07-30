@@ -170,7 +170,7 @@ hr {
 #loadingBlocker {
     width: 100%;
     height: 100%;
-    background-image: url(../bilder/avz.jpg);
+    background-image: url(../bilder/avz.gif);
     background-size: cover;
     position: absolute;
 }
