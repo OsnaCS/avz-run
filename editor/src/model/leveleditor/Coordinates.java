@@ -1,6 +1,7 @@
 package model.leveleditor;
 
-import java.awt.Point;
+import model.Matrix;
+import model.drawables.Point;
 
 public class Coordinates {
 	
@@ -13,8 +14,11 @@ public class Coordinates {
 	private double posy;
 	
 	// Winkel, um den der Ursprüngliche Punkt gedreht wurde
-	// in Bogenmaß
-	private int angle;
+	// in Bogenmaß, maximal 2*Pi
+	private double angle;
+	
+	// Faktor, um den skaliert wird
+	private int factor;
 	
 	/**
 	 * Konstruktor für einen zweidimesionalen Punkt
@@ -29,6 +33,8 @@ public class Coordinates {
 		this.posy = y;
 		
 		this.angle = 0;
+		
+		this.factor = 10;
 	}
 	
 	/**
@@ -36,8 +42,22 @@ public class Coordinates {
 	 * @param factor Faktor, um den skaliert wird
 	 * @return int-Koordinaten
 	 */
-	public Point getScaledIntCoordinates(int factor) {
-		return null;
+	public Point getScaledIntCoordinates() {
+		// Basis Trafo der Koordinatensysteme
+		int x = (int) ((factor * this.posx) + 0.5);
+		int y = (int) ((factor * this.posy) + 0.5);
+				
+		return new Point(x,y);
+	}
+	
+	/**
+	 * Nimmt einen Punkt mit int-Koordinaten und setzt damit die Position neu
+	 * @param point Neue Position
+	 */
+	public void setScaledIntCoordinates(Point point) {
+		
+		
+		
 	}
 	
 	/**
@@ -45,12 +65,41 @@ public class Coordinates {
 	 * @param angle Winkel, un den rotiert wird
 	 * @param point Punkt, um den Rotiert wird
 	 */
-	public void rotation(int angle, Coordinates point){
+	public void rotation(double angle, Coordinates point){
+		
+		double[][] translate = {{1, 0, -point.getPosx()}, 
+				{0, 1, -point.getPosy()},{0,0,1}};
+		
+		Matrix translateTo = new Matrix(translate);
+		
+		translate[0][2] = point.getPosx();
+		translate[1][3] = point.getPosy();
+		
+		Matrix translateFrom = new Matrix(translate);
+		
+		double[][] rotate = {{Math.cos(angle), -Math.sin(angle), 0}, 
+				{Math.sin(angle), Math.cos(angle), 0},{0,0,1}};
+		
+		Matrix rotation = new Matrix(rotate);
+		
+		double[][] arrPoint = {{this.posx}, 
+				{this.posy},{1}};
+		
+		Matrix matPoint = new Matrix(arrPoint);
+		
+		matPoint = translateTo.multiply(matPoint);
+		matPoint = rotation.multiply(matPoint);
+		matPoint = translateFrom.multiply(matPoint);
+		
+		this.posx = matPoint.getValue(0, 0);
+		this.posy = matPoint.getValue(1, 0);
+		
+		this.angle = this.angle + angle % 2 * Math.PI;
 		
 	}
 	
 	/**
-	 * Führt eine Translation zu einem Punkt aus
+	 * Führt eine Translation um den 
 	 * @param point Punkt zu den translatiert werden soll
 	 */
 	public void translateTo(Coordinates point) {
@@ -71,14 +120,21 @@ public class Coordinates {
 	 * @param point Punkt, der addiert wird
 	 * @return Summe der Punkte
 	 */
+	public Coordinates addCoordinats(Coordinates point) {
+		return null;
+	}
+	
+	public static Coordinates basisChangeDoubleInt() {
+		return null;
+	}
+	
+	public static Coordinates basisChangeIntDouble() {
+		return null;
+	}
 	
 	/*********************************************************/
 	/***************** GETTER und SETTER *********************/
 	/*********************************************************/
-	
-	public Coordinates addCoordinats(Coordinates point) {
-		return null;
-	}
 
 	public double getPosx() {
 		return posx;
@@ -96,7 +152,7 @@ public class Coordinates {
 		this.posy = posy;
 	}
 
-	public int getAngle() {
+	public double getAngle() {
 		return angle;
 	}
 
