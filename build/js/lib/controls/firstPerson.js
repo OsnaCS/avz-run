@@ -139,7 +139,6 @@ function initPointerLock() {
             $(".GUI").show();
 
             playername = $("#nickname").val();
-            console.log(playername);
             $(".showNickname").html(playername);
             loop();
 
