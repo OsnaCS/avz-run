@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -152,7 +153,7 @@ public class XMLhandler {
 		return room;
 
 	}
-	public Level createLevelFromXML(String file){
+	public Level createLevelFromXML(String file) throws FileNotFoundException{
 		
 		
 		Document doc=null;
@@ -179,9 +180,64 @@ public class XMLhandler {
 		clean(node);
 		NodeList nodelist;
 		nodelist = node.getChildNodes().item(0).getChildNodes();
+//		System.out.println(nodelist.getLength());
 		
+		Level level =new Level();
+		LinkedList<Way>[] list = new LinkedList[nodelist.getLength()];
+		Room[] fathers = new Room[nodelist.getLength()];
+		for(int i=0; i < nodelist.getLength();i++){
+			Node tmpNode = nodelist.item(i);
+
+			if(tmpNode.getNodeName()=="room"){
+				//System.out.println(tmpNode.getAttributes().getNamedItem("type").getNodeValue());
+				String name=tmpNode.getAttributes().getNamedItem("name").getNodeValue();
+				double x=Double.parseDouble(tmpNode.getAttributes().getNamedItem("x").getNodeValue());
+				double y=Double.parseDouble(tmpNode.getAttributes().getNamedItem("y").getNodeValue());
+				double rota=Double.parseDouble(tmpNode.getAttributes().getNamedItem("rota").getNodeValue());
+				int index=Integer.parseInt((tmpNode.getAttributes().getNamedItem("index").getNodeValue()));
+				System.out.println(name);
+				Room tmp = this.createRoomFromXML(name);
+				double xa= tmp.getcA().getX()+x;
+				double ya= tmp.getcA().getY()+y;
+				double xe= tmp.getcE().getPosx() +x;
+				double ye= tmp.getcE().getPosy()+y;
+				list[index]=new LinkedList<Way>();
+			
+				Room room = new Room(name,xa,ya,xe,ye,new Point((int)x,(int)y),list[index]);
+				room.getCenter().setAngle((int)rota);
+				fathers[index]= room;
+				level.addRoom(room);
+				System.out.println(level.getRoomNr());
+				
+			
+			}
+		}
 		
-		return null;
+		for(int j=0; j < nodelist.getLength();j++){
+			Node tmpNode = nodelist.item(j);
+
+			if(tmpNode.getNodeName()=="door"){
+				//System.out.println(tmpNode.getAttributes().getNamedItem("type").getNodeValue());
+				String type=tmpNode.getAttributes().getNamedItem("type").getNodeValue();
+				double x=Double.parseDouble(tmpNode.getAttributes().getNamedItem("x").getNodeValue());
+				double y=Double.parseDouble(tmpNode.getAttributes().getNamedItem("y").getNodeValue());
+				double normx=Double.parseDouble(tmpNode.getAttributes().getNamedItem("normx").getNodeValue());
+				double normy=Double.parseDouble(tmpNode.getAttributes().getNamedItem("normy").getNodeValue());
+				int father=Integer.parseInt((tmpNode.getAttributes().getNamedItem("father").getNodeValue()));
+				Coordinates c =new Coordinates(x,y);
+				Coordinates n =new Coordinates(normx,normy);
+				Room fatherRoom =fathers[father];
+				Way way = new Way(type,c,n,fatherRoom);
+				list[father].add(way);
+				level.addWay(way);
+				
+			
+			}
+		}
+
+		
+		//this.toXML(level);
+		return level;
 	}
 
 	public String toXML(Level level) {
@@ -218,6 +274,8 @@ public class XMLhandler {
 		// shorten way
 		// staff.setAttribute("id", "1");
 		LinkedList<Room> roomlist = level.getRooms();
+		HashMap<String,Integer> map = new HashMap<String,Integer>();
+		int i =0;
 		while (!roomlist.isEmpty()) {
 			// firstname elements
 			Room currentRoom = roomlist.poll();
@@ -241,6 +299,14 @@ public class XMLhandler {
 			Attr rota = doc.createAttribute("rotation");
 			rota.setValue(new Double(currentRoom.getCenter().getAngle()).toString());
 			room.setAttributeNode(rota);
+			
+			// Add Room to Hashmap
+			map.put(currentRoom.getName(), i);
+			i++;
+			
+			Attr index = doc.createAttribute("index");
+			index.setValue(new Integer(map.get(currentRoom.getName())).toString());
+			room.setAttributeNode(index);
 
 		}
 		LinkedList<Way> doorlist = level.getWays();
@@ -273,6 +339,13 @@ public class XMLhandler {
 			Attr normy = doc.createAttribute("normy");
 			normy.setValue(new Double(currentWay.getNormal().getPosy()).toString());
 			door.setAttributeNode(normy);
+			
+			//Get Father ID
+			int id =map.get(currentWay.getFather().getName());
+			Attr father = doc.createAttribute("father");
+			father.setValue(new Integer(id).toString());
+			door.setAttributeNode(father);
+			
 		}
 		// write the content into xml file
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -294,7 +367,7 @@ public class XMLhandler {
 		// Output to console for testing
 		// result = new StreamResult(System.out);
 		Writer writer = new StringWriter();
-		// System.out.println((StringWriter)/result.getWriter().toString());
+		
 		StreamResult result = new StreamResult(writer);
 
 		try {
@@ -304,6 +377,7 @@ public class XMLhandler {
 			e.printStackTrace();
 		}
 
+		System.out.println(writer.toString());
 		return writer.toString();
 
 	}
