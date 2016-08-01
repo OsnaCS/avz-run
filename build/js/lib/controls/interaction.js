@@ -226,7 +226,7 @@ function dFire(){
 
 // Attach this function to the fire
 function extinguish() {
-	if(this.type == TYPE_FIRE/* && selectedItem.name == newItemList[12]*/){
+	if(this.type == TYPE_FIRE && selectedItem.name == newItemList[12]){
         // activeObject must be saved so that the dFire function is not influence
         // be new activeObject selected during the delay
         tempActObj = activeObject;
