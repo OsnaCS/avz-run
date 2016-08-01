@@ -14,7 +14,7 @@ public class Coordinates {
 	private double posy;
 	
 	// Winkel, um den der Ursprüngliche Punkt gedreht wurde
-	// in Gradmaß, maximal 90°
+	// in Gradmaß, maximal 360°
 	private int angle;
 	
 	// Faktor, um den skaliert wird
@@ -67,8 +67,27 @@ public class Coordinates {
 	 */
 	public void setScaledIntCoordinates(Point point) {
 		
+		double x = point.x / factor;
+		double y = point.y / factor;
 		
+		this.posx = x;
+		this.posy = y;
 		
+	}
+	
+	/**
+	 * Umrechnung von Punkt zu Vektor
+	 * @param c Punkt, der Vektor werden soll
+	 * @return berechneter Vektor
+	 */
+	public Coordinates getVector(Coordinates c) {
+		
+		Coordinates v = new Coordinates(0, 0);
+		
+		v.setPosx(c.getX());
+		v.setPosy(c.getY());
+		
+		return v;
 	}
 	
 	/**
@@ -124,11 +143,29 @@ public class Coordinates {
 	 */
 	public double distanceTo(Coordinates point) {
 		
-//		double newX = this 
-//		
-//		double distance = Math.sqrt()
+		double newX = Math.pow(this.posx - point.getPosx(), 2); 
+		double newY = Math.pow(this.posy - point.getPosy(), 2); 
 		
-		return 0.0;
+		double distance = Math.sqrt(newX + newY);
+		
+		return distance;
+	}
+	
+	/**
+	 * Invertiert die aktuellen Coordinates und gibt sie in neuen Coordinates zurück
+	 * @return invertierte Coordinates 
+	 */
+	public Coordinates getInvert() {
+		
+		double newX = -1 * this.x; 
+		double newY = -1 * this.y;
+		
+		double newPosx = -1 * this.posx;
+		double newPosy = -1 * this.posy;
+		
+		double angle = (this.angle + 180) % 360;
+		
+		return null;
 	}
 	
 	/**
@@ -140,6 +177,12 @@ public class Coordinates {
 		return null;
 	}
 	
+	/**
+	 * Gibt die Koordinaten, die bzgl des Double-Koordinatensystems gegeben sind,
+	 * in Koordinaten bzgl des Int-Koordinatensystem um
+	 * @param c unzurechnende Koordinaten
+	 * @return umgerechnete Koordinaten
+	 */
 	public static Point basisChangeDoubleInt(Coordinates c) {
 		
 		int width = 800;
@@ -151,6 +194,12 @@ public class Coordinates {
 		return new Point(newX, newY);
 	}
 	
+	/**
+	 * Gibt die Koordinaten, die bzgl des Int-Koordinatensystems gegeben sind,
+	 * in Koordinaten bzgl des Double-Koordinatensystem um
+	 * @param c unzurechnende Koordinaten
+	 * @return umgerechnete Koordinaten
+	 */
 	public static Coordinates basisChangeIntDouble(Point p) {
 		
 		int width = 800;
@@ -203,12 +252,12 @@ public class Coordinates {
 		return y;
 	}
 
-	public int getFactor() {
+	public static int getFactor() {
 		return factor;
 	}
 
-	public void setFactor(int factor) {
-		this.factor = factor;
+	public static void setFactor(int factorNew) {
+		factor = factorNew;
 	}
 
 }
