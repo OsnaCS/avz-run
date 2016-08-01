@@ -93,7 +93,7 @@ function addFire(x, y, z, width, height, depth, spacing) {
     box.mesh.position.z = z;
 
     scene.add(box.mesh);
-    terrain.push(box);
+    modifyOctree(box);
 
     fire_collision_box_list.push(box);
 
