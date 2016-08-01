@@ -71,6 +71,7 @@ var octreeObjects = [];
 
 function init(event) {
 
+
 	CreateSegment("groundlevel",scene);
 
     octree = new THREE.Octree( {
@@ -88,6 +89,7 @@ function init(event) {
         // helps insert objects that lie over more than one node
         overlapPct: 0.15
     } );
+
     // set up the scene, the camera and the renderer
     function scene (){
         createScene(audio);
@@ -169,6 +171,24 @@ function createScene(complete) {
     var camPos = new THREE.Vector3(0, PLAYERHEIGHT + PLAYERHEIGHT * 0.4, 0);
     controls = new THREE.PointerLockControls(camera, camPos);
     scene.add(controls.getObject());
+
+    // sky box
+    // files are named by directions
+    var sky_directions  = ["right", "left", "top", "bottom", "back", "front"];
+    var sky_array = [];
+
+    // make texture array
+    for (var i = 0; i < 6; i++) {
+        sky_array.push( new THREE.MeshBasicMaterial({
+            map: THREE.ImageUtils.loadTexture( "../avz_model/materials/textures/sky/sky_" + sky_directions[i] + ".jpg" ),
+            side: THREE.BackSide,
+        }));
+    }
+
+    var skyGeom = new THREE.BoxGeometry(2000,2000,2000);
+    var skyMat = new THREE.MeshFaceMaterial( sky_array );
+    var skyMesh = new THREE.Mesh(skyGeom,skyMat);
+    scene.add(skyMesh);
 
     // Create the renderer
     renderer = new THREE.WebGLRenderer({

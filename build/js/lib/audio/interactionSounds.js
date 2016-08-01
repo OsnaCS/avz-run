@@ -1,7 +1,7 @@
 var hbreathing_playing = false;
 
 function extinguisherSound(){
-    extSound.play();
+    extinguisher_Sound.play();
 }
 
 function doorSound(){
@@ -54,7 +54,7 @@ function pickUpSound(){
 }
 
 // sound when out of breath after running
-function outOfBreath(){
+function outOfBreathSound(){
     outOfBreath_Sound.play();
 }
 

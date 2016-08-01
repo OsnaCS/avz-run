@@ -354,63 +354,64 @@ var fires = [];       //Hier stehen alle Feuer drin.
 //puts the right kind of door where it fits.
 //TODO: da immer Türrahmen an Türrahmen pappt, packt der immer 2 Türen rein. Da sollte er noch gucken dass er nur falls es ein Flur ist eine Tür rein packt.
 //...da ist tatsächlich flur eine binäre relation, denn der circle_walled ist relativ zum büro Flur, aber relativ zum center Nicht!!!
-	function door_in_doors(callback) {
-		for (INDEX1 = 0; INDEX1<segments.length; INDEX1++){
-			for (i = 0; i <segments[INDEX1].doors.length; i++) {
-				room1door = segments[INDEX1].doors[i];
-				room1pos = [segments[INDEX1].transx, segments[INDEX1].transy];
 
-				if (room1door[1] == "floor") {return;} //floor-türen enthalten schlicht keine tür.
+function door_in_doors(callback) {
+	for (INDEX1 = 0; INDEX1<segments.length; INDEX1++){
+		for (i = 0; i <segments[INDEX1].doors.length; i++) {
+			room1door = segments[INDEX1].doors[i];
+			room1pos = [segments[INDEX1].transx, segments[INDEX1].transy];
 
-				var vector = room1door[3];
-				rotate = vec2dir([parseFloat(vector.slice(1,vector.indexOf(','))),parseFloat(vector.slice(vector.indexOf(',')+1,vector.indexOf(')')))]);
+			if (room1door[1] == "floor") {return;} //floor-türen enthalten schlicht keine tür.
 
-				var changex;
-				if (room1door[1] === "norm") {changex = HOLZTURBREITE;}
-				else if (room1door[1] === "glass") {changex = GLASTURBREITE; }
-				var changey = 0;
-				for (j = 0; j <parseInt(rotate); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
-					var tmp = changex;
-					changex = -changey;
-					changey = tmp;
-				}
-				if ((parseInt(segments[INDEX1].rot) == 3) || (parseInt(segments[INDEX1].rot) == 1)) {changey = -changey; changex = -changex};
+			var vector = room1door[3];
+			rotate = vec2dir([parseFloat(vector.slice(1,vector.indexOf(','))),parseFloat(vector.slice(vector.indexOf(',')+1,vector.indexOf(')')))]);
 
-				var door1x = parseFloat(room1door[2].slice(1,room1door[2].indexOf(',')));
-				var door1y = parseFloat(room1door[2].slice(room1door[2].indexOf(',')+1,room1door[2].indexOf(')')));
-				door1x = door1x*SKALIERUNGSFAKTOR+changex;
-				door1y = door1y*SKALIERUNGSFAKTOR*-1+changey;
-
-				for (j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
-					var tmp = door1x;
-					door1x = -door1y;
-					door1y = tmp;
-				}
-				var xz = changexzaccordingtorot(segments[INDEX1].orx, segments[INDEX1].ory, segments[INDEX1].rot);
-
-				door1x = door1x + parseInt(segments[INDEX1].transx)+xz[0];
-				door1y = door1y + parseInt(segments[INDEX1].transy)+xz[1];
-
-				var doorkind = (room1door[1] === "norm") ? "holztur" : "glastur";
-
-				var act = "";
-				switch(room1door[4]) {
-					case "openable": act = "open"; break;
-					case "open": act = "openopened"; rotate -= 1; break;
-					case "transponderopenable": act = "openTransponderDoor"; break;
-					case "axtopenable": act = "damageDoor"; break;
-					case "codeopenable": act = "openLockedDoor"; break;
-				}
-				if (godmode) {act = "openopened"; rotate -= 1;};
-
-				//TODO: Transponderopenable und codeopenable funktioniert nicht!!
-
-				addObjectViaName(doorkind, "door", door1x, door1y, 0, DOORSKALIERUNG, rotate-segments[INDEX1].rot, act)
-				if (doorkind == "glastur") {addObjectViaName("glastuerrahmen", "static", door1x, door1y, 0, DOORSKALIERUNG, (act==="openopened")?rotate-segments[INDEX1].rot+1:rotate-segments[INDEX1].rot, "")  }
+			var changex;
+			if (room1door[1] === "norm") {changex = HOLZTURBREITE;}
+			else if (room1door[1] === "glass") {changex = GLASTURBREITE; }
+			var changey = 0;
+			for (j = 0; j <parseInt(rotate); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
+				var tmp = changex;
+				changex = -changey;
+				changey = tmp;
 			}
+			if ((parseInt(segments[INDEX1].rot) == 3) || (parseInt(segments[INDEX1].rot) == 1)) {changey = -changey; changex = -changex};
+
+			var door1x = parseFloat(room1door[2].slice(1,room1door[2].indexOf(',')));
+			var door1y = parseFloat(room1door[2].slice(room1door[2].indexOf(',')+1,room1door[2].indexOf(')')));
+			door1x = door1x*SKALIERUNGSFAKTOR+changex;
+			door1y = door1y*SKALIERUNGSFAKTOR*-1+changey;
+
+			for (j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
+				var tmp = door1x;
+				door1x = -door1y;
+				door1y = tmp;
+			}
+			var xz = changexzaccordingtorot(segments[INDEX1].orx, segments[INDEX1].ory, segments[INDEX1].rot);
+
+			door1x = door1x + parseInt(segments[INDEX1].transx)+xz[0];
+			door1y = door1y + parseInt(segments[INDEX1].transy)+xz[1];
+
+			var doorkind = (room1door[1] === "norm") ? "holztur" : "glastur";
+
+			var act = "";
+			switch(room1door[4]) {
+				case "openable": act = "open"; break;
+				case "open": act = "openopened"; rotate -= 1; break;
+				case "transponderopenable": act = "openTransponderDoor"; break;
+				case "axtopenable": act = "damageDoor"; break;
+				case "codeopenable": act = "openLockedDoor"; break;
+			}
+			if (godmode) {act = "openopened"; rotate -= 1;};
+
+			//TODO: Transponderopenable und codeopenable funktioniert nicht!!
+
+			addObjectViaName(doorkind, "door", door1x, door1y, 0, DOORSKALIERUNG, rotate-segments[INDEX1].rot, act)
+			if (doorkind == "glastur") {addObjectViaName("glastuerrahmen", "static", door1x, door1y, 0, DOORSKALIERUNG, (act==="openopened")?rotate-segments[INDEX1].rot+1:rotate-segments[INDEX1].rot, "")  }
 		}
-		callback();
 	}
+	callback();
+}
 
 
 	//TODO: diese Funktionen. In synchron. Am besten per globalen Variablen (...dafür checken die Funktionen vorher ob die Variablen != "")
