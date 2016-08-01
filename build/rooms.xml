@@ -84,10 +84,12 @@
 			<door type="glass" index="flur" position="(11, -6.28)" normal="(1, 0)"/>
         </doors>
         <spawns>
-			<spawn  index="feuerloescher" position="(14.3, 3, 1)" object="feuerloescher" normaltowall="(0, 1, 0)"/>
-			<spawn  index="axt" position="(-7, -23.5, 1.1)" object="axt" normaltowall="(0, -1, 0)"/>
-			<spawn  index="sponge" position="(28.5, 1.9, 0.9)" object="sponge" normaltowall="(0, 1, 0)"/>
-			<spawn  index="transponder" position="(4.98, -9.5, 1.6)" object="transponder" normaltowall="(0, 1, 0)"/>
+			<spawn  index="feuerloescher" position="(14.3, 3, 1)" object="loscher" normaltowall="(0, 1) scale="1" oninteract="pickUpItem"/>
+			<spawn  index="axt" position="(-7, -23.5, 1.1)" object="axt" normaltowall="(0, -1) scale="1" oninteract="pickUpItem"/>/>
+			<spawn  index="sponge" position="(28.5, 1.9, 0.9)" object="schwamm" normaltowall="(0, 1) scale="1" oninteract="pickUpItem"/>/>
+			<spawn  index="transponder" position="(4.98, -9.5, 1.6)" object="transponder" normaltowall="(0, 1) scale="1" oninteract="pickUpItem"/>/>
+
+			
         </spawns>
         <fires>
 			<fire index="cip" position="(-7.92, -15.35, 0)" size="(1,1,1)" val="6"/>
@@ -217,7 +219,7 @@
 		   <spawn index="stuhl2" position="(1, -1.2, 0.9)" object="ohp" normaltowall="(1,0)" scale="2"/>
 		   <spawn index="stuhl2" position="(-2, -2, 0)" object="muelleimer" normaltowall="(1,0)" scale="2"/>
 		   <spawn index="stuhl2" position="(1, -2.5, 0)" object="stuhl" normaltowall="(0,-1)" scale="2"/>
-		   
+		   <spawn index="loscher" position="(1, -3.5, 0)" object="loscher" normaltowall="(0,-1)" scale="1" oninteract="pickUpItem"/>
 		   <spawn index="stuhl2" position="(0, 15, 0.3)" object="axt" normaltowall="(1,0)" scale="2.5" oninteract="pickUpItem"/>
 		   
 		
