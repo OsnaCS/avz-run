@@ -70,7 +70,7 @@ var octreeObjects = [];
 function init(event) {
 
 
-	CreateSegment("groundlevel",scene);
+	CreateSegment("lectureroom1",scene);
 
     octree = new THREE.Octree( {
         // uncomment below to see the octree (may kill the fps)
