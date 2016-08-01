@@ -197,7 +197,10 @@ public class Way extends DrawableObject {
 	}
 	
 
-	
+	public String toString(){
+		return getType() + " Pos:" + getPos().getPosx() + "/" + getPos().getPosy() + " Normal: " + getNormal().getPosx() +
+				"/" + getNormal().getPosy() + " " + getFather().getName();
+	}
 	
 	
 }
