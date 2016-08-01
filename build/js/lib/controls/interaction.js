@@ -23,7 +23,7 @@ var TYPE_EXIT = 2;
 var TYPE_TRIGGER = 3;
 var FADE_TIME = 1200;
 
-
+var special_html_input = false;
 
 document.addEventListener( 'click', onMouseClick, false );
 
@@ -272,35 +272,28 @@ function enterPin() {
 
     pin_pos = 0;
 
-
-    // get object out of focus
-    scene.remove(outlineMesh);
-    outlineMesh = null;
-    activeObject = null;
+    console.log('hey');
 
     // pause interaction loop
-    menu = true;
+    special_html_input = true;
 
     // show pin pad and make default pause screen invisible
     $("#pinPad").css("z-index", 20);
-    $("#blocker").css("z-index", 0);
     $("#pinPad").show();
 
     // exit pointerLock so player can use cursor
     document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
-    console.log(document.exitPointerLock);
     document.exitPointerLock();
-
 }
 
 // return to game from pin pad
 function exitPinPad() {
 
+    console.log('bye');
     // start loop again
-    menu = false;
+    //menu = false;
 
     // hide pin pad, reset blocker
-    $("#blocker").css("z-index", 20);
     $("#pinPad").css("z-index", 0);
     $("#pinPad").hide();
 
@@ -312,9 +305,13 @@ function exitPinPad() {
     if (lockOpen) correctSound();
     else failedSound();
 
+
+    controls.enabled = true;
+    special_html_input = false;
     // reset delta
     prevTime = performance.now();
 
+    var element = document.getElementById('world');
     //ask browser to lock the pointer again
     element.requestPointerLock();
 

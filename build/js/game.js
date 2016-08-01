@@ -71,7 +71,7 @@ var HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at
 
 function init(event) {
 
-	CreateSegment("groundlevel",
+	CreateSegment("lectureroom1",
 
     // set up the scene, the camera and the renderer
     function scene (){
@@ -227,9 +227,7 @@ function loop() {
             stats.end();
         }
     }
-    // } else {
-    //     requestAnimationFrame(loop);
-    // }
+
 };
 
 

@@ -101,6 +101,14 @@ function initPointerLock() {
                 $(".gui").show();
                 $("#blocker").hide();
 
+            } else if (special_html_input == true) {
+
+                controls.enabled = false;
+
+                scene.remove(outlineMesh);
+                outlineMesh = null;
+                activeObject = null;
+
             } else {
 
                 controls.enabled = false;
@@ -108,6 +116,7 @@ function initPointerLock() {
                 if (player.health > 0) {
                    $("#blocker").show();
                 }
+
                 menu = true;
                 $('.gui').hide();
             }
