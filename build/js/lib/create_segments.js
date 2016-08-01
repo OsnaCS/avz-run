@@ -13,6 +13,7 @@ var LEVELSXML = "levels.xml"
 var SKALIERUNGSFAKTOR = 20;
 var HOLZTURBREITE = SKALIERUNGSFAKTOR*0.88;
 var GLASTURBREITE = SKALIERUNGSFAKTOR*1.2;
+var KLOTUERBREITE = SKALIERUNGSFAKTOR*1;
 var DOORSKALIERUNG = 1.1;
 var FIRETEXTUREPATH = './levels/materials/textures/';
 
@@ -369,6 +370,7 @@ function door_in_doors(callback) {
 			var changex;
 			if (room1door[1] === "norm") {changex = HOLZTURBREITE;}
 			else if (room1door[1] === "glass") {changex = GLASTURBREITE; }
+			else if (room1door[1] === "klotuer") {changex = KLOTUERBREITE; }
 			var changey = 0;
 			for (j = 0; j <parseInt(rotate); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
 				var tmp = changex;
@@ -392,7 +394,14 @@ function door_in_doors(callback) {
 			door1x = door1x + parseInt(segments[INDEX1].transx)+xz[0];
 			door1y = door1y + parseInt(segments[INDEX1].transy)+xz[1];
 
-			var doorkind = (room1door[1] === "norm") ? "holztur" : "glastur";
+			
+			var doorkind ="";
+			switch(room1door[1]){
+				case "norm": doorkind = "holztur"; break;
+				case "glass": doorkind = "glastur"; break;
+				case "klotuer": doorkind = "klotur"; break;
+			}
+			
 
 			var act = "";
 			switch(room1door[4]) {

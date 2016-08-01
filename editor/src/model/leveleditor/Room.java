@@ -88,10 +88,23 @@ public class Room extends DrawableObject {
     @Override
     public void paint(Graphics g) {
 
+        //in ursprung verschieben
+        //skalieren
+        //zurückschieben
+
+        Coordinates originalCenter = new Coordinates(cC);
+        setCenter(new Coordinates(0,0));
+
         //zeichenkoordinaten erstellen
-        Point a, e;
-        a = cA.getScaledIntCoordinates();
-        e = cE.getScaledIntCoordinates();
+        Point a, e, c;
+        a = cA.basisChangeDoubleInt();
+        e = cE.basisChangeDoubleInt();
+        c = originalCenter.basisChangeDoubleInt();
+
+        a.x+=c.x;
+        a.y+=c.y;
+        e.x+=c.x;
+        e.y+=c.y;
 
         //rechteck zeichnen
         Point ur = new Point(e.x, a.y);
@@ -106,6 +119,9 @@ public class Room extends DrawableObject {
         for (Way roomway : waylist){
             roomway.paint(g);
         }
+
+        //center zurücksetzen für korrektes speichern
+        setCenter(originalCenter);
     }
 
     public String getName() {
@@ -133,7 +149,7 @@ public class Room extends DrawableObject {
     }
 
     public void setCenter(Point center){
-        Coordinates newC = Coordinates.basisChangeIntDouble(center);
+        Coordinates newC = cC.basisChangeIntDouble(center);
         this.cC = newC;
     }
 

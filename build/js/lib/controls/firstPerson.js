@@ -1,5 +1,6 @@
 // GODMODE (zum testen, man kann nicht fallen, hat unendlich leben, unendlich sprinten, alle türen sind offen, Nebel kommt langsamer)
 var godmode = true;
+
 var weaksystem = true;
 //
 
