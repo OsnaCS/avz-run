@@ -75,7 +75,7 @@ public class Way extends DrawableObject {
 	public Point fittingPos(){
 		//gets the Positions of way and the center of father
 		Point nowPos = pos.getScaledIntCoordinates();
-		Point papaPos = father.center.getScaledIntCoordinates();
+		Point papaPos = father.getCenter().getScaledIntCoordinates();
 		
 		//merges both to get the position in coordinate system relative
 		//to the father's center
@@ -97,7 +97,7 @@ public class Way extends DrawableObject {
 	public void paint(Graphics g){
 		
 		//updates normals
-		this.calcNormal(father.center.getAngle());
+		this.calcNormal(father.getCenter().getAngle());
 		
 		//gets the position of the way at the moment
 		Point a = this.fittingPos();
@@ -126,7 +126,7 @@ public class Way extends DrawableObject {
 			b.y = y;
 		}
 		
-		//draws line from current position to the stted Point by normal
+		//draws line from current position to the setted Point by normal
 		new Line(a, b).paint(g);
 		
 	}
