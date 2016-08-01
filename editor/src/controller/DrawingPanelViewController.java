@@ -174,6 +174,7 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 				this.changeMouseInputListenerTo(roomListener);
 
 			}
+		
 
 			/**
 			 * Convenience-Methode zum umsetzen des aktuellen MouseListeners an
@@ -213,7 +214,9 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		ActionListener save = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				
+				handler.writeXML(aktLevel, getFilename());
+				
 			}
 		};
 
@@ -221,6 +224,10 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		ActionListener undo = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+//				levels.removeLast();
+//				aktLevel = levels.getLast();
+//				refreshXML();
 
 			}
 		};
