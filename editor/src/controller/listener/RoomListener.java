@@ -34,11 +34,9 @@ public class RoomListener extends MouseInputAdapter{
 		this.room = room;
 	}
 
-	//TODO Kommentare updaten
 	/**
-	 * Merke die aktuelle Koordinate des Startpunktes oder, sofern schon
-	 * vorhanden, erzeuge mit Hilfe des neuen (End-)punkts ein neues Rectangle
-	 * und übergebe es dem Delegate.
+	 * Zeigt Raum um die Mausposition an. Setzt bzw rotiert diesen, wenn
+	 * schon einer angezeigt wird.
 	 */
 	public void mouseClicked(MouseEvent e) {
 
@@ -66,6 +64,8 @@ public class RoomListener extends MouseInputAdapter{
 	}
 
 	/**
+	 * Updated Center vom angefassten Raum.
+	 *
 	 * Übergebe mit Hilfe der aktuellen Mausposition ein DashedRectangle als
 	 * temporäres Objekt an das Delegate, sofern bereits ein Mittelpunkt
 	 * vorliegt.
@@ -78,6 +78,11 @@ public class RoomListener extends MouseInputAdapter{
 		}
 	}
 
+	/**
+	 * reset. yeah. megareset. uh. ultrareset.
+	 * ja also alles auf anfang.
+	 * @param e
+     */
 	public void mouseExited(MouseEvent e) {
 		delegate.clearTemporaryDrawableObject();
 		mousePos = null;
