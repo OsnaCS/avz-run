@@ -1,6 +1,7 @@
 package model.leveleditor;
 
 import model.drawables.DrawableObject;
+import model.drawables.Line;
 import model.drawables.Point;
 import sun.awt.image.ImageWatched;
 
@@ -87,9 +88,24 @@ public class Room extends DrawableObject {
     @Override
     public void paint(Graphics g) {
 
-        //paint this
-        // then
-        //for (way's){way.paint};
+        //zeichenkoordinaten erstellen
+        Point a, e;
+        a = cA.getScaledIntCoordinates();
+        e = cE.getScaledIntCoordinates();
+
+        //rechteck zeichnen
+        Point ur = new Point(e.x, a.y);
+        Point ll = new Point(a.x, e.y);
+
+        new Line(a, ur).paint(g);
+        new Line(ur, e).paint(g);
+        new Line(e, ll).paint(g);
+        new Line(ll, a).paint(g);
+
+        //wege zeichnen
+        for (Way roomway : waylist){
+            roomway.paint(g);
+        }
     }
 
     public String getName() {

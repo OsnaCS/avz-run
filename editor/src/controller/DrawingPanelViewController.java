@@ -47,7 +47,6 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 	// View
 	private DrawingPanelView drawingPanelView;
 	private JFrame frame;
-	//private Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 	private int height= 640;
 	private int width= 800;
 
@@ -56,26 +55,20 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 	private LinkedList<DrawableObject> drawableObjectsModel;
 	private DrawableObject temporaryObject;
 
-	// Files zum Zwischenspeichern
-	private File aktFile;
-	private File oldFiles;
-	private LinkedList<File> speicher = new LinkedList<File>();
-
 	// Dateiname
 	private String filename;
 
 	// Alle Räume, die im Level vorhanden sind
-	LinkedList<Room> roomlist = new LinkedList<Room>();
+	private LinkedList<Room> roomlist = new LinkedList<Room>();
 
 	// Speichert XML-Dateien
 	XMLhandler handler = new XMLhandler();
-
-	// Counter für Files
-	int i = 0;
-
-	private LinkedList<Way> ways;
+	
 	private RoomListener roomListener;
-	private DrawingPanelViewController controller = this;
+	
+	private Level aktLevel;
+	
+	DrawingPanelViewController controller = this;
 
 	/**
 	 * Der Konstruktor initialisiert die View und legt die Listener an.
@@ -84,15 +77,11 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 
 		this.filename = filename;
 
-		this.aktFile = new File("roomTemp0.xml");
-		this.oldFiles = null;
 
 		drawableObjectsModel = new LinkedList<DrawableObject>();
 		drawingPanelView = new DrawingPanelView(width, height, drawableObjectsModel);
-
-		this.ways = new LinkedList<Way>();
-		this.roomListener = new RoomListener(this, new Room(), ways);
-		this.ways = this.roomListener.getAllways();
+		
+		this.roomListener = new RoomListener(this);
 
 		this.drawingPanelView.addMouseListener(roomListener);
 
@@ -149,20 +138,11 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 					break;
 				}
 
-				Room room = null;
-				try {
-					room = handler.createRoomFromXML(selectedRoom);
-				} catch (FileNotFoundException e2) {
-					// TODO Auto-generated catch block
-					System.err.println("Room was not found");
-					e2.printStackTrace();
-				}
+				Room room =  handler.createRoomFromXML(selectedRoom);
 
-				LinkedList<Way> ways = getRoomListener().getAllways();
+				LinkedList<Way> allways = getRoomListener().getAllways();
 
-				RoomListener roomListener = new RoomListener(getController(), room, ways);
-
-				setRoomListener(roomListener);
+				RoomListener roomListener = new RoomListener(controller, room, allways);
 
 				this.changeMouseInputListenerTo(roomListener);
 
@@ -206,43 +186,7 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		ActionListener save = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				File result = new File(getFilename());
-				File akt = getAktFile();
-				File old = getOldFiles();
-				LinkedList<File> speicher = getSpeicher();
-
-				// aktuelles Element in "Enddatei" speichern
-				try {
-					BufferedReader in = new BufferedReader(new FileReader(akt));
-					BufferedWriter out = new BufferedWriter(new FileWriter(result));
-					String line;
-					while ((line = in.readLine()) != null) {
-						out.write(line);
-						out.write(System.lineSeparator());
-					}
-					in.close();
-					out.close();
-				} catch (FileNotFoundException e1) {
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-
-				// Hilfsfiles löschen
-				for (int i = 0; i < speicher.size(); i++) {
-					speicher.get(i).delete();
-				}
-				akt.delete();
-				setAktFile(null);
-				if (!(old == null)) {
-					old.delete();
-				}
-				setOldFiles(null);
-
-				// Programm beenden
-				frame.setVisible(false);
-				frame.dispose();
-				System.exit(0);
+				
 			}
 		};
 
@@ -408,146 +352,6 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		// Textfeld neu setzen
 		this.drawingPanelView.getXMLPanel().getTextField().setText(temp.toString());
 
-	}
-
-	/**
-	 * Macht den letzten Schritt rückgängig
-	 * 
-	 * @return neues aktuelles File oder null wenn aktuelles oder voheriges File
-	 *         nicht existieren
-	 */
-	public File undoFiles() {
-
-		if (this.aktFile.exists() && this.oldFiles.exists()) {
-			this.aktFile = this.oldFiles;
-			this.oldFiles = null;
-			return this.aktFile;
-
-		}
-		return null;
-	}
-
-	/* Getter and Setter */
-
-	public DrawingPanelView getDrawingPanelView() {
-		return drawingPanelView;
-	}
-
-	public void setDrawingPanelView(DrawingPanelView drawingPanelView) {
-		this.drawingPanelView = drawingPanelView;
-	}
-
-	public JFrame getFrame() {
-		return frame;
-	}
-
-	public void setFrame(JFrame frame) {
-		this.frame = frame;
-	}
-
-	public LinkedList<DrawableObject> getDrawableObjectsModel() {
-		return drawableObjectsModel;
-	}
-
-	public void setDrawableObjectsModel(LinkedList<DrawableObject> drawableObjectsModel) {
-		this.drawableObjectsModel = drawableObjectsModel;
-	}
-
-	public DrawableObject getTemporaryObject() {
-		return temporaryObject;
-	}
-
-	public void setTemporaryObject(DrawableObject temporaryObject) {
-		this.temporaryObject = temporaryObject;
-	}
-
-	public File getAktFile() {
-		return aktFile;
-	}
-
-	public void setAktFile(File aktFile) {
-		this.aktFile = aktFile;
-	}
-
-	public File getOldFiles() {
-		return oldFiles;
-	}
-
-	public void setOldFiles(File oldFiles) {
-		this.oldFiles = oldFiles;
-	}
-
-	public LinkedList<File> getSpeicher() {
-		return speicher;
-	}
-
-	public void setSpeicher(LinkedList<File> speicher) {
-		this.speicher = speicher;
-	}
-
-	public String getFilename() {
-		return filename;
-	}
-
-	public void setFilename(String filename) {
-		this.filename = filename;
-	}
-
-	public LinkedList<Room> getRoomlist() {
-		return roomlist;
-	}
-
-	public void setRoomlist(LinkedList<Room> roomlist) {
-		this.roomlist = roomlist;
-	}
-
-	public XMLhandler getHandler() {
-		return handler;
-	}
-
-	public void setHandler(XMLhandler handler) {
-		this.handler = handler;
-	}
-
-	public int getI() {
-		return i;
-	}
-
-	public void setI(int i) {
-		this.i = i;
-	}
-
-	public LinkedList<Way> getWays() {
-		return ways;
-	}
-
-	public void setWays(LinkedList<Way> ways) {
-		this.ways = ways;
-	}
-
-	public RoomListener getRoomListener() {
-		return roomListener;
-	}
-
-	public void setRoomListener(RoomListener roomListener) {
-		this.roomListener = roomListener;
-	}
-
-	public DrawingPanelViewController getController() {
-		return controller;
-	}
-
-	public void setController(DrawingPanelViewController controller) {
-		this.controller = controller;
-	}
-	
-
-	public int getHeight() {
-		return height;
-	}
-
-	public int getWidth() {
-		return width;
 	}
 
 }
