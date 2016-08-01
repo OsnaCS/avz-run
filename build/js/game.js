@@ -71,8 +71,8 @@ var HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at
 
 function init(event) {
 
-	CreateSegment("groundlevel", 
-	
+	CreateSegment("groundlevel",
+
     // set up the scene, the camera and the renderer
     function scene (){
         createScene(audio);
@@ -154,6 +154,24 @@ function createScene(complete) {
     var camPos = new THREE.Vector3(0, PLAYERHEIGHT + PLAYERHEIGHT * 0.4, 0);
     controls = new THREE.PointerLockControls(camera, camPos);
     scene.add(controls.getObject());
+
+    // sky box
+    // files are named by directions
+    var sky_directions  = ["right", "left", "top", "bottom", "back", "front"];
+    var sky_array = [];
+
+    // make texture array
+    for (var i = 0; i < 6; i++) {
+        sky_array.push( new THREE.MeshBasicMaterial({
+            map: THREE.ImageUtils.loadTexture( "../avz_model/materials/textures/sky/sky_" + sky_directions[i] + ".jpg" ),
+            side: THREE.BackSide,
+        }));
+    }
+
+    var skyGeom = new THREE.BoxGeometry(2000,2000,2000);
+    var skyMat = new THREE.MeshFaceMaterial( sky_array );
+    var skyMesh = new THREE.Mesh(skyGeom,skyMat);
+    scene.add(skyMesh);
 
     // Create the renderer
     renderer = new THREE.WebGLRenderer({
@@ -263,7 +281,7 @@ function createLights() {
     // // to activate the lights, just add them to the scene
     // scene.add(hemisphereLight);
     // scene.add(shadowLight);
-	
+
 }
 
 

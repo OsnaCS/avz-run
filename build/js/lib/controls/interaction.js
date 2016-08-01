@@ -142,7 +142,7 @@ function pickUpItem() {
 }
 
 function nix() {
-	
+
 }
 
 function destroy(){
@@ -182,7 +182,7 @@ function open() {
 
 function damageDoor() {
     if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
-		var j = -1; 
+		var j = -1;
 		for (i = 0; i < interact_obj.length; i++) {
 			if (interact_obj[i].interIt == this) {j = i; break;}
 		}
@@ -194,7 +194,7 @@ function damageDoor() {
 		} else {
 			alert("Something went terribly wrong.")
 		}
-        damageDoorSound(); 
+        damageDoorSound();
     }else{
         showThoughts("Wie könnte ich diese Tür wohl öffnen?",5000);
     }
@@ -202,7 +202,7 @@ function damageDoor() {
 
 function destroyDoor() {
     if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
-		var j = -1; 
+		var j = -1;
 		for (i = 0; i < interact_obj.length; i++) {
 			if (interact_obj[i].interIt == this) {j = i; break;}
 		}
@@ -216,7 +216,7 @@ function destroyDoor() {
 		} else {
 			alert("Something went terribly wrong.")
 		}
-        damageDoorSound(); 
+        damageDoorSound();
     }else{
         showThoughts("Das Loch ist noch nicht groß genug... wie könnte ich es wohl vergrößern?",5000);
     }
@@ -272,6 +272,7 @@ function enterPin() {
 
     pin_pos = 0;
 
+
     // get object out of focus
     scene.remove(outlineMesh);
     outlineMesh = null;
@@ -289,6 +290,7 @@ function enterPin() {
     document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
     console.log(document.exitPointerLock);
     document.exitPointerLock();
+
 }
 
 // return to game from pin pad
