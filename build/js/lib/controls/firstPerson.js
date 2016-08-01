@@ -56,7 +56,7 @@ var DUCK_DIFFERENCE = 2 * (PLAYERHEIGHT / 3); // player height when ducked
 
 var INVERT_XZ = new THREE.Vector3(-1, 1, -1);
 
-var MOVEMENT_SPEED = PLAYERHEIGHT* 24;
+var MOVEMENT_SPEED = PLAYERHEIGHT * 24;
 var DUCK_SPEED = 0.6; // speed at which player is crouching in relation to MOVEMENT_SPEED
 var RUN_SPEED = 2; // speed at which player is running -"-
 var JUMP_SPEED = MOVEMENT_SPEED * 0.7; // speed of jump upwards -"-
@@ -113,7 +113,7 @@ function initPointerLock() {
 
         var pointerlockerror = function(event) {
 
-             $("#blocker").hide();
+            $("#blocker").hide();
 
         };
 
@@ -189,11 +189,11 @@ function initControls() {
             case 49:
                 setActiveSlot(0);
                 break;
-            //inventory slot 2
+                //inventory slot 2
             case 50:
                 setActiveSlot(1);
                 break;
-            //inventory slot 3
+                //inventory slot 3
             case 51:
                 setActiveSlot(2);
                 break;
@@ -234,10 +234,10 @@ function initControls() {
             case 16: //RUN FOREST! (shift)
 
                 if (!ducked && !regenerate) {
-                    if(running == false) {
+                    if (running == false && (moveForward || moveLeft || moveBackward || moveRight)) {
                         adjustPlaybackRate(footsteps, 1.5);
+                        running = true;
                     }
-                    running = true;
                     speed_factor = RUN_SPEED;
                 }
 
@@ -317,10 +317,12 @@ function initControls() {
                 break;
 
 
-            case 16: // shift
-                adjustPlaybackRate(footsteps, 1, true);
-                speed_factor = 1;
-                running = false;
+            case 16: //
+                if (running == true) {
+                    adjustPlaybackRate(footsteps, 1, true);
+                    speed_factor = 1;
+                    running = false;
+                }
                 break;
 
             case 67: // c
@@ -366,7 +368,7 @@ function initControls() {
 }
 
 
-var firstTime = true;//we fall through the floor while spawning.. sick workaround
+var firstTime = true; //we fall through the floor while spawning.. sick workaround
 
 function controlLoop(controls) {
 
@@ -408,7 +410,7 @@ function controlLoop(controls) {
             intersectionsY[0].object.interact();
             removeTrigger(intersectionsY[0].object);
         } else {
-        //stop when hitting the floor
+            //stop when hitting the floor
             velocity.y = Math.max(0, velocity.y);
             firstTime = false;
         }
@@ -468,12 +470,12 @@ function controlLoop(controls) {
 
             //add positive value to y position while we are below threshold
             //change to negative when
-            if(controls.getObject().position.y > THRESH_RUN_UP) upMotion = -1;
-            if(controls.getObject().position.y< THRESH_RUN_DOWN) upMotion = 1;
+            if (controls.getObject().position.y > THRESH_RUN_UP) upMotion = -1;
+            if (controls.getObject().position.y < THRESH_RUN_DOWN) upMotion = 1;
             controls.getObject().position.y += upMotion * UPMOTION_RUN_SPEED;
-            sideMotion+= 0.1;
-            sideMotion= sideMotion%(2*Math.PI);
-            controls.getObject().position.x += 0.4*Math.sin(sideMotion);
+            sideMotion += 0.1;
+            sideMotion = sideMotion % (2 * Math.PI);
+            controls.getObject().position.x += 0.4 * Math.sin(sideMotion);
 
         } else {
             if (controls.getObject().position.y > THRESH_UP) upMotion = -1;
@@ -493,7 +495,7 @@ function controlLoop(controls) {
                 regenerate = true;
                 speed_factor = 1;
                 running = false;
-                $(".energy").css("box-shadow"," 0px 0px 20px 3px rgba(255, 82, 82, 0.6)");
+                $(".energy").css("box-shadow", " 0px 0px 20px 3px rgba(255, 82, 82, 0.6)");
             }
         } else {
             energy += delta * 10;
@@ -501,7 +503,7 @@ function controlLoop(controls) {
                 energy = STAMINA;
                 if (regenerate) {
                     regenerate = false;
-                    $(".energy").css("box-shadow","none");
+                    $(".energy").css("box-shadow", "none");
                 }
             }
         }
@@ -514,7 +516,7 @@ function controlLoop(controls) {
         velocity.y = 0;
         controls.getObject().position.y = PLAYERHEIGHT + PLAYERHEIGHT * 0.2;
     }
-    if (controls.getObject().position.y < -500){
+    if (controls.getObject().position.y < -500) {
         player.damage(10000);
     }
 
