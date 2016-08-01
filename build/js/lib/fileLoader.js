@@ -28,11 +28,12 @@ var FileLoader = function (callback) {
                 material.materials.forEach(function (e) {
                     if (e instanceof THREE.MeshPhongMaterial || e instanceof THREE.MeshLambertMaterial) {
                         e.side = THREE.FrontSide;
+						e.shininess = 6; //sorgt dafür dass die flächen weniger spiegeln
                     }
                 });
                 // Glättet die Objekte
                 geometry.mergeVertices();
-                // geometry.computeVertexNormals();
+                geometry.computeVertexNormals(); //macht flächen runder
 
                 loadedFiles[name] = new THREE.Mesh(geometry, material);
 
