@@ -80,7 +80,7 @@ var flashLight = new THREE.AmbientLight(0xFF0000);
 var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
 function initPointerLock() {
-    $(".GUI").hide();
+    $(".gui").hide();
 
     // maybe insert menu into following method
 
@@ -94,7 +94,7 @@ function initPointerLock() {
 
                 controls.enabled = true;
 
-                $(".GUI").show();
+                $(".gui").show();
                 $("#blocker").hide();
 
             } else {
@@ -136,7 +136,7 @@ function initPointerLock() {
             element.requestPointerLock();
             menu = false;
 
-            $(".GUI").show();
+            $(".gui").show();
 
             playername = $("#nickname").val();
             $(".showNickname").html(playername);
@@ -153,7 +153,7 @@ function initPointerLock() {
 
             menu = false;
 
-            $(".GUI").show();
+            $(".gui").show();
             prevTime = performance.now();
 
             element.requestPointerLock();
@@ -269,11 +269,11 @@ function initControls() {
                     if (pause) {
                         controls.enabled = false;
                         $("#blocker").show();
-                        $(".GUI").hide();
+                        $(".gui").hide();
                     } else {
                         controls.enabled = true;
                         $("#blocker").hide();
-                        $(".GUI").show();
+                        $(".gui").show();
                     }
                 }
                 break;
