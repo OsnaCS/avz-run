@@ -106,10 +106,6 @@ function addFire(x, y, z, width, height, depth, spacing) {
 
 }
 
-function addSmallFire(x, y, z) {
-    addFire(x, y, z, 1.5, 2, 1.5, 0.5);
-}
-
 // Call this function once after all the fires have been added to the scene
 function animateFire() {
 

@@ -3,6 +3,7 @@
 // provides general inilization of audio related stuff
 var audioListener, audioLoader, footsteps, atmosphere;
 var footstepsPlaying = false;
+var playFast;
 var extinguisher_Sound,door_Sound,doorLocked_Sound,button_Sound,correct_Sound,
 failed_Sound,success_Sound,pain_Sound,damageDoor_Sound,pickUp_Sound,
 outOfBreath_Sound,gameOver_Sound, hbreathing_Sound;
@@ -67,7 +68,7 @@ function createBasicSounds() {
     damageDoor_Sound =  createSound("door-brake",50,5,false,3);
     pickUp_Sound = createSound("pickup",50,5,false,2);
     camera.add(pickUp_Sound);
-    outOfBreath_Sound = createSound("run-breath",50,5,false,5);
+    outOfBreath_Sound = createSound("run-breath",50,5,false,2);
     camera.add(outOfBreath_Sound);
     gameOver_Sound = createSound("gameover",50,5,false,1);
     camera.add(gameOver_Sound);
@@ -94,9 +95,15 @@ function stopFootsteps(){
 }
 
 function adjustPlaybackRate(sound, playbackNew, active){
-    if(sound.isPlaying || active) {
+    if(sound.isPlaying || active || playFast == false) {
         sound.stop();
         sound.playbackRate = playbackNew;
         sound.play();
+    }
+    if(active){
+        playFast = false;
+    }
+    else {
+        playFast = true;
     }
 }

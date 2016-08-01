@@ -1,4 +1,4 @@
-var ACTIVE_DISTANCE =40;
+var ACTIVE_DISTANCE = PLAYERHEIGHT * 1.6;
 
 var interactionRayCaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, ACTIVE_DISTANCE); // front
 
@@ -138,12 +138,16 @@ function onMouseClick() {
 
 function pickUpItem() {
     player.pickUp(this);
-    pickUpSound();
+    //pickUpSound();
+}
+
+function nix() {
+	
 }
 
 function destroy(){
     if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[0]){
-        damageDoorSound();
+        //damageDoorSound();
         this.delFromScene();
         console.log('destroyed');
         player.delActItem();
@@ -152,59 +156,76 @@ function destroy(){
         console.log('nicht anwendbar');
     }
 }
-function open() {
-    //doorSound(); //TODO: das klappt nicht, sorry.
-    if(!this.open) {
+
+function openopened() {
+    doorSound(); //TODO: das klappt nicht, sorry.
+    if(this.open) {
         this.mesh.rotateY(Math.PI/2.0);
-        this.open = !this.open;
     }
     else {
         this.mesh.rotateY(-Math.PI/2.0);
-        this.open = !this.open;
     }
+    this.open = !this.open;
 }
 
-function damage_door() {
-    //check if axe is active item
-    if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[0]){
-        damaged_x = this.mesh.position.x;
-        damaged_y = this.mesh.position.y;
-        damaged_z = this.mesh.position.z;
-        var damaged_door = ['tuer_halbkaputt.json'];
 
-        damageDoorSound();
+function open() {
+    doorSound(); //TODO: das klappt nicht, sorry.
+    if(!this.open) {
+        this.mesh.rotateY(Math.PI/2.0);
+    }
+    else {
+        this.mesh.rotateY(-Math.PI/2.0);
+    }
+    this.open = !this.open;
+}
 
-        addItem((damaged_door[0]), damaged_x, damaged_y, damaged_z, 1, true, destroy_door);
-        this.delFromScene();
+function damageDoor() {
+    if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
+		var j = -1; 
+		for (i = 0; i < interact_obj.length; i++) {
+			if (interact_obj[i].interIt == this) {j = i; break;}
+		}
+		if (j > -1) {
+			var d = interact_obj[j];
+			addObjectViaName("halbbrokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "destroyDoor");
+			remove_interactible(j);
+			this.delFromScene();
+		} else {
+			alert("Something went terribly wrong.")
+		}
+        damageDoorSound(); 
     }else{
         showThoughts("Wie könnte ich diese Tür wohl öffnen?",5000);
     }
 }
 
-function destroy_door() {
-    //check if axe is active item
-    if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[0]){
-        // TODO:maybe message for player ("Die Tür ist kaputt, die Axt jetzt leider auch.")
-        damaged_x = this.mesh.position.x;
-        damaged_y = this.mesh.position.y;
-        damaged_z = this.mesh.position.z;
-        var destroyed_door = ['tuer_kaputt.json'];
-
-        damageDoorSound();
-
-        addItem((destroyed_door[0]), damaged_x, damaged_y, damaged_z, 1, false, 0);
-        this.delFromScene();
-        player.delActItem();
-
+function destroyDoor() {
+    if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
+		var j = -1; 
+		for (i = 0; i < interact_obj.length; i++) {
+			if (interact_obj[i].interIt == this) {j = i; break;}
+		}
+		if (j > -1) {
+			var d = interact_obj[j];
+			addObjectViaName("brokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "");
+			remove_interactible(j);
+			this.delFromScene();
+			player.delActItem();
+			showThoughts("Die Tür ist kaputt, die Axt jetzt leider auch.",3000);
+		} else {
+			alert("Something went terribly wrong.")
+		}
+        damageDoorSound(); 
     }else{
-        //Message for player? ("Das Loch ist noch nicht groß genug... wie könnte ich es wohl vergrößern?")
+        showThoughts("Das Loch ist noch nicht groß genug... wie könnte ich es wohl vergrößern?",5000);
     }
 
 }
 
 function openLockedDoor() {
 	if(lockOpen){
-        doorSound();
+        //doorSound();
 		if(!this.open) {
 	        this.mesh.rotateY(Math.PI/2.0);
 	        this.open = !this.open;
@@ -345,9 +366,8 @@ function pinPad(pinvalue) {
 
 function enterCH() {
 
-    if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[23]){
+    if(this.type == TYPE_INTERACTABLE ){ //&& selectedItem.name == "transponder"){ //TODO change
         pin_pos = 0;
-
         // get object out of focus
         scene.remove(outlineMesh);
         outlineMesh = null;
