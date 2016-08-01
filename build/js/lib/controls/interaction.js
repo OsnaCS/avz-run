@@ -69,7 +69,7 @@ function interactionLoop() {
     }
     //
     if(interactions.length>0 && interactions[0].object.type==TYPE_FIRE) {
-        console.log("interact");
+        //console.log("interact");
         //this might be changed..
         if(activeObject!=interactions[0].object) {
             scene.remove(outlineMesh);
