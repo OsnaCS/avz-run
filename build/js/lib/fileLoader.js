@@ -1,18 +1,12 @@
-//Audio-Variables
+var FileLoader = function (callback) {
 
-
-
-var FileLoader = function(callback) {
-
-
-    console.log("FileLoader running ...");
     var ready = false;
     var jsonLoader = new THREE.JSONLoader();
 
     // Pfad zu allen Dateien
     var files = [];
 
-    for (var i = 0;i<newItemList.length;i++) {
+    for (var i = 0; i < newItemList.length; i++) {
         files.push(newItemList[i]);
     }
 
@@ -23,13 +17,11 @@ var FileLoader = function(callback) {
     var filesSuccessfullyLoaded = 0;
 
     function loadJson(file, name) {
-        var jsonLoader = new THREE.JSONLoader();
         jsonLoader.load(file,
-            function (geometry,mat) {
+            function (geometry, mat) {
                 // on success:
 
-                console.log("got:"+name);
-                material = new THREE.MultiMaterial(mat)
+                material = new THREE.MultiMaterial(mat);
 
 
                 // Die Schleife ist dafür da, damit nur eine Seite der Objekte gerendert wird
@@ -42,25 +34,20 @@ var FileLoader = function(callback) {
                 geometry.mergeVertices();
                 // geometry.computeVertexNormals();
 
-
-
-                loadedFiles[name] = new THREE.Mesh(geometry,material);
+                loadedFiles[name] = new THREE.Mesh(geometry, material);
 
                 filesSuccessfullyLoaded += 1;
 
                 //checks if everything is loaded and hides loadbar and shows start button
-                if(filesSuccessfullyLoaded == files.length){
-                    ready=true;
+                if (filesSuccessfullyLoaded == files.length) {
+                    ready = true;
                     $("#loadingBlocker").hide();
                     $("#startInstructions").show();
                     callback();
-                    //$(".loading").css("display" , " none" );
-                    //$(".btn").css("display" , " inline-block" );
-
-                };
+                }
 
                 //updates loadingbar
-                $(".loading-bar").css("width" , ' '+ (filesSuccessfullyLoaded / file.length * 100) +'%');
+                $(".loading-bar").css("width", ' ' + (filesSuccessfullyLoaded / file.length * 100) + '%');
             }
         );
     }
@@ -70,8 +57,8 @@ var FileLoader = function(callback) {
     for (var i = 0; i < files.length; i++) {
         var file = files[i];
         var h = file.split("/");
-        var name = h[h.length-1].split(".")[0];
-        var type = h[h.length-1].split(".")[1];
+        var name = h[h.length - 1].split(".")[0];
+        var type = h[h.length - 1].split(".")[1];
 
         // abhängig vom Dateityp: korrekten Loader auswählen
         loadJson(file, name);
@@ -79,9 +66,9 @@ var FileLoader = function(callback) {
 
     //checks if everything is loaded after a set time periode
     setTimeout(
-        function(){
-            if(filesSuccessfullyLoaded != files.length){
-                ready=true;
+        function () {
+            if (filesSuccessfullyLoaded != files.length) {
+                ready = true;
                 alert("Warnung! Es sind noch nicht alle Dateien geladen worden.");
 
                 $("#loadingBlocker").hide();
@@ -89,12 +76,8 @@ var FileLoader = function(callback) {
                 callback();
             }
 
-        },3000
+        }, 3000
     );
-
-
-
-    //initialize Audio-files
 
     console.log("FileLoader done.");
 
@@ -105,6 +88,7 @@ var FileLoader = function(callback) {
         return true; //while objects.xml contains errors
 
     }
+
     // while(!ready) {
     //     console.log(ready);
     //     if(filesSuccessfullyLoaded == file.length) {
@@ -116,17 +100,16 @@ var FileLoader = function(callback) {
     return {
 
         isReady: isReady,
-        getAll: function() {
+        getAll: function () {
             // gibt alle geladenen Dateien zurück
             return isReady() ? loadedFiles : undefined;
         },
-        get: function(name) {
+        get: function (name) {
 
             var result = isReady() ? loadedFiles[name].clone() : undefined;
-            console.log(name);
 
             if (result == undefined) {
-                console.log("FileLoader could not find texture '"+name+"'");
+                console.log("FileLoader could not find texture '" + name + "'");
             }
             return result;
         }

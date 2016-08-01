@@ -14,11 +14,11 @@ public class Coordinates {
 	private double posy;
 	
 	// Winkel, um den der Ursprüngliche Punkt gedreht wurde
-	// in Bogenmaß, maximal 2*Pi
-	private double angle;
+	// in Gradmaß, maximal 90°
+	private int angle;
 	
 	// Faktor, um den skaliert wird
-	private int factor;
+	private static int factor = 10;
 	
 	/**
 	 * Konstruktor für einen zweidimesionalen Punkt
@@ -33,10 +33,21 @@ public class Coordinates {
 		this.posy = y;
 		
 		this.angle = 0;
-		
-		this.factor = 10;
 	}
 	
+	/**
+	 * Copy-Konstruktor
+	 */
+	public Coordinates(Coordinates toCopy) {
+		
+		this.x = toCopy.getX();
+		this.posx = toCopy.getPosx();
+		
+		this.y = toCopy.getPosy();
+		this.posy = toCopy.getPosy();
+		
+		this.angle = toCopy.getAngle();
+	}
 	/**
 	 * Gibt die aktuellen Koordinaten umgerechnet in int und skaliert zurück
 	 * @param factor Faktor, um den skaliert wird
@@ -65,7 +76,7 @@ public class Coordinates {
 	 * @param angle Winkel, un den rotiert wird
 	 * @param point Punkt, um den Rotiert wird
 	 */
-	public void rotation(double angle, Coordinates point){
+	public void rotation(int angle, Coordinates point){
 		
 		double[][] translate = {{1, 0, -point.getPosx()}, 
 				{0, 1, -point.getPosy()},{0,0,1}};
@@ -94,7 +105,7 @@ public class Coordinates {
 		this.posx = matPoint.getValue(0, 0);
 		this.posy = matPoint.getValue(1, 0);
 		
-		this.angle = this.angle + angle % 2 * Math.PI;
+		this.angle = this.angle + angle % 360;
 		
 	}
 	
@@ -102,7 +113,7 @@ public class Coordinates {
 	 * Führt eine Translation um den 
 	 * @param point Punkt zu den translatiert werden soll
 	 */
-	public void translateTo(Coordinates point) {
+	public void translate(Coordinates point) {
 		
 	}
 	
@@ -112,6 +123,11 @@ public class Coordinates {
 	 * @return Distanz
 	 */
 	public double distanceTo(Coordinates point) {
+		
+//		double newX = this 
+//		
+//		double distance = Math.sqrt()
+		
 		return 0.0;
 	}
 	
@@ -124,12 +140,26 @@ public class Coordinates {
 		return null;
 	}
 	
-	public static Coordinates basisChangeDoubleInt() {
-		return null;
+	public static Point basisChangeDoubleInt(Coordinates c) {
+		
+		int width = 800;
+		int heigth = 640;
+		
+		int newX = c.getScaledIntCoordinates().x - (width / 2);
+		int newY = c.getScaledIntCoordinates().y - (heigth / 2);
+		
+		return new Point(newX, newY);
 	}
 	
-	public static Coordinates basisChangeIntDouble() {
-		return null;
+	public static Coordinates basisChangeIntDouble(Point p) {
+		
+		int width = 800;
+		int heigth = 640;
+		
+		double newX = (p.x / factor) + (width / 2);
+		double newY = (p.y / factor) + (heigth / 2);
+		
+		return new Coordinates(newX, newY);
 	}
 	
 	/*********************************************************/
@@ -151,8 +181,13 @@ public class Coordinates {
 	public void setPosy(double posy) {
 		this.posy = posy;
 	}
+	
+	public void setPos(Coordinates pos) {
+		this.posx = pos.getPosx();
+		this.posy = pos.getPosy();
+	}
 
-	public double getAngle() {
+	public int getAngle() {
 		return angle;
 	}
 
@@ -166,6 +201,14 @@ public class Coordinates {
 
 	public double getY() {
 		return y;
+	}
+
+	public int getFactor() {
+		return factor;
+	}
+
+	public void setFactor(int factor) {
+		this.factor = factor;
 	}
 
 }
