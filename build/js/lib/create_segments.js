@@ -13,6 +13,7 @@ var LEVELSXML = "levels.xml"
 var SKALIERUNGSFAKTOR = 20;
 var HOLZTURBREITE = SKALIERUNGSFAKTOR*0.88;
 var GLASTURBREITE = SKALIERUNGSFAKTOR*1.2;
+var KLOTUERBREITE = SKALIERUNGSFAKTOR*1;
 var DOORSKALIERUNG = 1.1;
 var FIRETEXTUREPATH = './levels/materials/textures/';
 
@@ -129,14 +130,56 @@ var fires = [];       //Hier stehen alle Feuer drin.
 			if (curroom[i].getAttribute("name") === whichroom) {
 				var curdoor = curroom[i].getElementsByTagName("spawn");
 				for (j = 0; j < curdoor.length; j++) {
-					var cudo = [];
-					cudo.push(curdoor[j].getAttribute("index"));
-					cudo.push(curdoor[j].getAttribute("position"));
-					cudo.push(curdoor[j].getAttribute("object"));
-					cudo.push(curdoor[j].getAttribute("normaltowall"));
-					cudo.push(curdoor[j].getAttribute("scale"));
-					if (curdoor[j].getAttribute("oninteract") != "") { cudo.push(curdoor[j].getAttribute("oninteract")); } else {cudo.push(""); }
-					SpawnArr.push(cudo);
+					var first = 0; var second = 0; var third = 0;
+					if (curdoor[j].getAttribute("position").indexOf("to") > 0) {
+						parts = curdoor[j].getAttribute("position").split("(")[1].split(")")[0].split(",");
+						var x = []; var y = []; var z = [];
+						for (k = 0; k < parts.length; k++) {
+							if (parts[k].indexOf("to") > 0) {
+								first = parseFloat(parts[k].split(" to ")[0]);
+								second = parseFloat(parts[k].split(" to ")[1].split(" step ")[0]); 
+								third = parseFloat(parts[k].split(" to ")[1].split(" step ")[1]); 
+								for (l = first; l <= second; l+= third) {
+									switch(k){
+										case 0: x.push(l); break;
+										case 1: y.push(l); break;
+										case 2: z.push(l); break;
+									}
+								}
+							} else {
+								switch(k){
+									case 0: x.push(parts[k]); break;
+									case 1: y.push(parts[k]); break;
+									case 2: z.push(parts[k]); break;
+								}								
+							}
+						}
+						var p = 0;
+						for (m = 0; m < x.length; m++) {
+							for (n = 0; n < y.length; n++) {
+								for (o = 0; o < z.length; o++) {
+									var cudo = [];
+									cudo.push(curdoor[j].getAttribute("index")+""+p);
+									cudo.push("("+x[m]+","+y[n]+","+z[o]+")");
+									cudo.push(curdoor[j].getAttribute("object"));
+									cudo.push(curdoor[j].getAttribute("normaltowall"));
+									cudo.push(curdoor[j].getAttribute("scale"));
+									if (curdoor[j].getAttribute("oninteract") != "") { cudo.push(curdoor[j].getAttribute("oninteract")); } else {cudo.push(""); }
+									SpawnArr.push(cudo);	
+									p++;
+								}
+							}
+						}
+					} else {
+						var cudo = [];
+						cudo.push(curdoor[j].getAttribute("index"));
+						cudo.push(curdoor[j].getAttribute("position"));
+						cudo.push(curdoor[j].getAttribute("object"));
+						cudo.push(curdoor[j].getAttribute("normaltowall"));
+						cudo.push(curdoor[j].getAttribute("scale"));
+						if (curdoor[j].getAttribute("oninteract") != "") { cudo.push(curdoor[j].getAttribute("oninteract")); } else {cudo.push(""); }
+						SpawnArr.push(cudo);
+					}
 				}
 			}
 		}
@@ -369,6 +412,7 @@ function door_in_doors(callback) {
 			var changex;
 			if (room1door[1] === "norm") {changex = HOLZTURBREITE;}
 			else if (room1door[1] === "glass") {changex = GLASTURBREITE; }
+			else if (room1door[1] === "klotuer") {changex = KLOTUERBREITE; }
 			var changey = 0;
 			for (j = 0; j <parseInt(rotate); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
 				var tmp = changex;
@@ -392,7 +436,14 @@ function door_in_doors(callback) {
 			door1x = door1x + parseInt(segments[INDEX1].transx)+xz[0];
 			door1y = door1y + parseInt(segments[INDEX1].transy)+xz[1];
 
-			var doorkind = (room1door[1] === "norm") ? "holztur" : "glastur";
+			
+			var doorkind ="";
+			switch(room1door[1]){
+				case "norm": doorkind = "holztur"; break;
+				case "glass": doorkind = "glastur"; break;
+				case "klotuer": doorkind = "klotur"; break;
+			}
+			
 
 			var act = "";
 			switch(room1door[4]) {

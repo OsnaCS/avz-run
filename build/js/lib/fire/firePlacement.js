@@ -76,7 +76,11 @@ function addFire(x, y, z, width, height, depth, spacing) {
     fire_mesh_list.push(fmesh);
 
     // Collision Box
-    fireGeom = new THREE.BoxGeometry(fireWidth, fireHeight, fireDepth);
+    if (fireHeight < (PLAYERHEIGHT * 2)){
+        fireGeom = new THREE.BoxGeometry(fireWidth, PLAYERHEIGHT * 2, fireDepth);
+    }else{
+        fireGeom = new THREE.BoxGeometry(fireWidth, fireHeight, fireDepth);
+    }
     var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
     var fireMesh = new THREE.Mesh(fireGeom, mat);
 
@@ -86,7 +90,7 @@ function addFire(x, y, z, width, height, depth, spacing) {
         playSound(firecracking);
     });
 
-    var box = new GameObject(fireMesh, extinguish, TYPE_FIRE);
+    var box = new GameObject(fireMesh, extinguish, TYPE_FIRE, "fire");
 
     box.mesh.position.x = x;
     box.mesh.position.y = y;
