@@ -44,7 +44,7 @@ public class RoomListener extends MouseInputAdapter{
 
 		if (mousePos == null){
 			mousePos = new Point(e.getX(), e.getY());
-			Room.setCenter(mousePos);
+			room.setCenter(mousePos);
 			//TODO Delegate setzen (nice to have)
 		} else {
 
@@ -73,7 +73,7 @@ public class RoomListener extends MouseInputAdapter{
 	public void mouseMoved(MouseEvent e) {
 		if (mousePos != null) {
 			mousePos = new Point(e.getX(), e.getY());
-			Room.setCenter(mousePos);
+			room.setCenter(mousePos);
 			//TODO Delegate setzen (nice to have)
 		}
 	}
