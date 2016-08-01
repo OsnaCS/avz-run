@@ -1,7 +1,5 @@
 package model.leveleditor;
 
-import java.awt.Toolkit;
-
 import model.Matrix;
 import model.drawables.Point;
 
@@ -16,11 +14,11 @@ public class Coordinates {
 	private double posy;
 	
 	// Winkel, um den der Ursprüngliche Punkt gedreht wurde
-	// in Gradmaß, maximal 2*Pi
+	// in Gradmaß, maximal 360°
 	private int angle;
 	
 	// Faktor, um den skaliert wird
-	private int factor;
+	private static int factor = 10;
 	
 	/**
 	 * Konstruktor für einen zweidimesionalen Punkt
@@ -35,10 +33,21 @@ public class Coordinates {
 		this.posy = y;
 		
 		this.angle = 0;
-		
-		this.factor = 10;
 	}
 	
+	/**
+	 * Copy-Konstruktor
+	 */
+	public Coordinates(Coordinates toCopy) {
+		
+		this.x = toCopy.getX();
+		this.posx = toCopy.getPosx();
+		
+		this.y = toCopy.getPosy();
+		this.posy = toCopy.getPosy();
+		
+		this.angle = toCopy.getAngle();
+	}
 	/**
 	 * Gibt die aktuellen Koordinaten umgerechnet in int und skaliert zurück
 	 * @param factor Faktor, um den skaliert wird
@@ -58,8 +67,27 @@ public class Coordinates {
 	 */
 	public void setScaledIntCoordinates(Point point) {
 		
+		double x = point.x / factor;
+		double y = point.y / factor;
 		
+		this.posx = x;
+		this.posy = y;
 		
+	}
+	
+	/**
+	 * Umrechnung von Punkt zu Vektor
+	 * @param c Punkt, der Vektor werden soll
+	 * @return berechneter Vektor
+	 */
+	public Coordinates getVector(Coordinates c) {
+		
+		Coordinates v = new Coordinates(0, 0);
+		
+		v.setPosx(c.getX());
+		v.setPosy(c.getY());
+		
+		return v;
 	}
 	
 	/**
@@ -115,9 +143,29 @@ public class Coordinates {
 	 */
 	public double distanceTo(Coordinates point) {
 		
+		double newX = Math.pow(this.posx - point.getPosx(), 2); 
+		double newY = Math.pow(this.posy - point.getPosy(), 2); 
 		
+		double distance = Math.sqrt(newX + newY);
 		
-		return 0.0;
+		return distance;
+	}
+	
+	/**
+	 * Invertiert die aktuellen Coordinates und gibt sie in neuen Coordinates zurück
+	 * @return invertierte Coordinates 
+	 */
+	public Coordinates getInvert() {
+		
+		double newX = -1 * this.x; 
+		double newY = -1 * this.y;
+		
+		double newPosx = -1 * this.posx;
+		double newPosy = -1 * this.posy;
+		
+		double angle = (this.angle + 180) % 360;
+		
+		return null;
 	}
 	
 	/**
@@ -129,18 +177,30 @@ public class Coordinates {
 		return null;
 	}
 	
-	public Point basisChangeDoubleInt(Coordinates c) {
+	/**
+	 * Gibt die Koordinaten, die bzgl des Double-Koordinatensystems gegeben sind,
+	 * in Koordinaten bzgl des Int-Koordinatensystem um
+	 * @param c unzurechnende Koordinaten
+	 * @return umgerechnete Koordinaten
+	 */
+	public static Point basisChangeDoubleInt(Coordinates c) {
 		
 		int width = 800;
 		int heigth = 640;
 		
-		int newX = (int) ((c.getX() * factor) - (width / 2) + 0.5);
-		int newY = (int) ((c.getY() * factor) - (heigth / 2) + 0.5);
+		int newX = c.getScaledIntCoordinates().x - (width / 2);
+		int newY = c.getScaledIntCoordinates().y - (heigth / 2);
 		
 		return new Point(newX, newY);
 	}
 	
-	public Coordinates basisChangeIntDouble(Point p) {
+	/**
+	 * Gibt die Koordinaten, die bzgl des Int-Koordinatensystems gegeben sind,
+	 * in Koordinaten bzgl des Double-Koordinatensystem um
+	 * @param c unzurechnende Koordinaten
+	 * @return umgerechnete Koordinaten
+	 */
+	public static Coordinates basisChangeIntDouble(Point p) {
 		
 		int width = 800;
 		int heigth = 640;
@@ -190,6 +250,14 @@ public class Coordinates {
 
 	public double getY() {
 		return y;
+	}
+
+	public static int getFactor() {
+		return factor;
+	}
+
+	public static void setFactor(int factorNew) {
+		factor = factorNew;
 	}
 
 }
