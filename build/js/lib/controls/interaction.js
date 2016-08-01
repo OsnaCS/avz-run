@@ -141,6 +141,10 @@ function pickUpItem() {
     //pickUpSound();
 }
 
+function nix() {
+	
+}
+
 function destroy(){
     if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[0]){
         //damageDoorSound();
