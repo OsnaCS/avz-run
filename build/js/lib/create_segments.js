@@ -224,7 +224,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 //"these functions" end.
 
 //puts the objects in its spawn-location  //TODO: normaltowall ist nicht die normale zur wand, sondern die normale blender-normale :/
-	function objects_in_spawns() {
+	function objects_in_spawns(callback) {
 		for (INDEX1 = 0; INDEX1<segments.length; INDEX1++){
 			for (i = 0; i <segments[INDEX1].spawns.length; i++) {
 				tospawn = segments[INDEX1].spawns[i];
@@ -257,10 +257,11 @@ var fires = [];       //Hier stehen alle Feuer drin.
 				addObjectViaName(tospawn[2], what, spawnx, spawny, spawnz, tospawn[4], rotate, tospawn[5]); //4: scale | 5: oninteract/""
 			}
 		}
+		callback();
 	}
 
 //puts the fires where they belong
-	function set_fires() {
+	function set_fires(callback) {
 		for (INDEX1 = 0; INDEX1<segments.length; INDEX1++){
 
 			var fire = segments[INDEX1].fires;
@@ -293,6 +294,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 			}
 		}
 		animateFire();
+		callback();
 	}
 
 	function createFire(x, z, y, sx, sy, sz, s) {
@@ -303,7 +305,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 	}
 
 //puts the lights where they belong
-	function turn_on_lights() {
+	function turn_on_lights(callback) {
 		for (INDEX1 = 0; INDEX1<segments.length; INDEX1++){
 
 			var light = segments[INDEX1].lights;
@@ -338,6 +340,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 				addLight(spawnx, spawnz, spawny, light[i][1], light[i][5], light[i][6], light[i][7], light[i][8]);
 			}
 		}
+		callback();
 	}
 
 	function addLight(x, y, z, kind, normal, intensity, color, visiblewidth){
@@ -351,7 +354,8 @@ var fires = [];       //Hier stehen alle Feuer drin.
 //puts the right kind of door where it fits.
 //TODO: da immer Türrahmen an Türrahmen pappt, packt der immer 2 Türen rein. Da sollte er noch gucken dass er nur falls es ein Flur ist eine Tür rein packt.
 //...da ist tatsächlich flur eine binäre relation, denn der circle_walled ist relativ zum büro Flur, aber relativ zum center Nicht!!!
-	function door_in_doors() {
+
+function door_in_doors(callback) {
 	for (INDEX1 = 0; INDEX1<segments.length; INDEX1++){
 		for (i = 0; i <segments[INDEX1].doors.length; i++) {
 			room1door = segments[INDEX1].doors[i];
@@ -406,6 +410,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 			if (doorkind == "glastur") {addObjectViaName("glastuerrahmen", "static", door1x, door1y, 0, DOORSKALIERUNG, (act==="openopened")?rotate-segments[INDEX1].rot+1:rotate-segments[INDEX1].rot, "")  }
 		}
 	}
+	callback();
 }
 
 
@@ -549,20 +554,23 @@ var fires = [];       //Hier stehen alle Feuer drin.
 	}
 
 //löscht erst alle objekte aus der Szene, bevor es dann alle neu hinzufügt.
-	function PutSegments(){
+	function PutSegments(callback){
 		empty_scene();
 		for (i = 0; i <segments.length; i++) {
-			addtoscene(applytransrot(segments[i]));
+			addtoscene(applytransrot(segments[i]),null);
+
 		}
+	callback();
 	}
 
 //diese Funktion ist nötig, da in der scene_items SÄTMLICHE meshes der Räume stehen (ihre referenz), welche gerade angezeigt sind. Dadurch kann man sich alle auflisten lassen, verändern & löschen nach Bedarf.
 	function addtoscene(mesh, intItem){
 		scene.add(mesh);
 		if (intItem == null) {
-			terrain.push(mesh);
+
+			modifyOctree( mesh, true );
 		} else {
-			terrain.push(intItem);
+			modifyOctree( intItem, true );
 		}
 
 		scene_items.push(mesh);

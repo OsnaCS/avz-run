@@ -63,15 +63,32 @@ var fogInterval;
 var HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at final density you lose this much health
 
 
-
-
+var octree;
+var octreeObjects = [];
     //loads all Objects before creating
 
 
 
 function init(event) {
 
-	CreateSegment("groundlevel",
+
+	CreateSegment("groundlevel",scene);
+
+    octree = new THREE.Octree( {
+        // uncomment below to see the octree (may kill the fps)
+        //scene: scene,
+        // when undeferred = true, objects are inserted immediately
+        // instead of being deferred until next octree.update() call
+        // this may decrease performance as it forces a matrix update
+        undeferred: false,
+        // set the max depth of tree
+        depthMax: Infinity,
+        // max number of objects before nodes split or merge
+        objectsThreshold: 8,
+        // percent between 0 and 1 that nodes will overlap each other
+        // helps insert objects that lie over more than one node
+        overlapPct: 0.15
+    } );
 
     // set up the scene, the camera and the renderer
     function scene (){
@@ -85,11 +102,12 @@ function init(event) {
 
                 createRoom(controls);
                 function controls() {
+
                     // add the objects and lights - replace those functions as you please
                     initControls(startLoop);
 
                     function startLoop () {
-                        renderer.render(scene, camera);
+                        // renderer.render(scene, camera);
     					// start a loop that will update the objects' positions
     					// and render the scene on each frame
     					loop();
@@ -98,7 +116,6 @@ function init(event) {
             }
         }
     }
-    );
 }
 
 // Stats
@@ -207,7 +224,7 @@ function createScene(complete) {
 
 
 function loop() {
-
+    console.log(octreeObjects);
 
     if (!menu && !pause) {
         if (player.health <= 0) {
@@ -224,6 +241,7 @@ function loop() {
             interactionLoop();
 
             renderer.render(scene, camera);
+            octree.update();
             stats.end();
         }
     }
@@ -287,13 +305,25 @@ function createLights() {
 
 function createRoom(callback) {
 
-	PutSegments();
-	door_in_doors();
-	objects_in_spawns();
-	set_fires();
-	turn_on_lights();
-	callback();
+	PutSegments(doors);
+    function doors () {
+	    door_in_doors(objects);
+        function objects() {
+	        objects_in_spawns(fires);
+            function fires() {
+                set_fires(lights);
+                function lights () {
 
+                    for (var i = 0;i<terrain.length;i++) {
+                        terrain[i].mesh == undefined ?  modifyOctree( terrain[i], true ) : modifyOctree( terrain[i].mesh, true );
+
+
+                    }
+	                turn_on_lights(callback);
+                }
+            }
+        }
+    }
 }
 
 
@@ -376,7 +406,7 @@ function addTrigger (xPos, zPos, action) {
     trigger.mesh.position.z = zPos;
     trigger.mesh.position.y = 0;
     scene.add(trigger.mesh);
-    terrain.push(trigger);
+    modifyOctree(trigger,true);
 
 }
 
@@ -388,4 +418,54 @@ function removeTrigger(trigger) {
         }
 
     }
+}
+
+
+
+function modifyOctree( mesh , useFaces) {
+
+
+
+        // create new object
+
+
+
+        // give new object a random position, rotation, and scale
+
+        if (mesh.mesh==undefined) {
+            octree.add( mesh, { useFaces: useFaces } );
+        } else {
+            octree.add( mesh.mesh, { useFaces: useFaces } );
+        }
+
+        // add new object to octree and scene
+        // NOTE: octree object insertion is deferred until after the next render cycle
+
+
+        // scene.add( mesh );
+
+        // store object
+
+        octreeObjects.push( mesh );
+
+        /*
+
+        // octree details to console
+
+        console.log( ' ============================================================================================================');
+        console.log( ' OCTREE: ', octree );
+        console.log( ' ... depth ', octree.depth, ' vs depth end?', octree.depthEnd() );
+        console.log( ' ... num nodes: ', octree.nodeCountEnd() );
+        console.log( ' ... total objects: ', octree.objectCountEnd(), ' vs tree objects length: ', octree.objects.length );
+        console.log( ' ============================================================================================================');
+        console.log( ' ');
+
+        // print full octree structure to console
+
+        octree.toConsole();
+
+        */
+
+
+
 }
