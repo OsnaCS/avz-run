@@ -28,7 +28,7 @@ var FileLoader = function(callback) {
             function (geometry,mat) {
                 // on success:
 
-                console.log("got:"+name);
+                // console.log("got:"+name);
                 material = new THREE.MultiMaterial(mat)
 
 
@@ -96,7 +96,7 @@ var FileLoader = function(callback) {
 
     //initialize Audio-files
 
-    console.log("FileLoader done.");
+    // console.log("FileLoader done.");
 
     function isReady() {
         // gibt true zurück, wenn alle Files geladen wurden filesSuccessfullyLoaded == files.length
@@ -122,12 +122,9 @@ var FileLoader = function(callback) {
         },
         get: function(name) {
 
-            var result = isReady() ? loadedFiles[name].clone() : undefined;
-            console.log(name);
+            var result =loadedFiles[name].clone();
 
-            if (result == undefined) {
-                console.log("FileLoader could not find texture '"+name+"'");
-            }
+
             return result;
         }
     }

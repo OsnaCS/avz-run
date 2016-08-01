@@ -68,7 +68,7 @@ function addFire(x, y, z, width, height, depth, spacing) {
     }
     pointlight.position.set(x, y + (fireHeight / 2) , z);
     scene.add(pointlight);
-    console.log(pointlight);
+    // console.log(pointlight);
 
     // Firemesh
     var fmesh = fire.mesh.clone();
@@ -94,7 +94,7 @@ function addFire(x, y, z, width, height, depth, spacing) {
     box.mesh.position.z = z;
 
     scene.add(box.mesh);
-    terrain.push(box);
+    modifyOctree(box);
 
     fire_collision_box_list.push(box);
 
