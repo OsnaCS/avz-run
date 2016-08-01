@@ -414,13 +414,13 @@ hr {
 /* Transponder */
 
 #compHack {
-    background-image: url('../../avz_model/materials/textures/transponder_hack.png');
+    background-image: url('../../avz_model/materials/objects/computer/computer_hack/transponder_hack.png');
     background-size: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     background-repeat: no-repeat;
     margin-left: auto;
     margin-right: auto;
-    width: 1084px;
+    width: 800px;
     height: 800px;
     position: relative;
     display: none;
@@ -430,8 +430,8 @@ hr {
 
 #pinDisplayCH {
     position: relative;
-    top: 302px;
-    left: 295px;
+    top: 303px;
+    left: 219px;
     font-family: 'VT323', monospace;
     font-size: 19;
     color: red;
@@ -439,13 +439,13 @@ hr {
 
 #buttonGridCH {
     position: relative;
-    left: 320px;
-    top: 367px;
+    left: 238px;
+    top: 374px;
 }
 
 .hackButton {
     position: relative;
-    width: 39px;
+    width: 28px;
     height: 20px;
     padding: 0px;
     margin-left: 0px;

@@ -309,7 +309,7 @@ function exitPinPad() {
 
     // hide pin pad
     $("#pinPad").css("z-index", 0);
-    $("#pinPad").css("display","none");
+    $("#pinPad").hide();
 
     // determine if entered code was correct
     if (CORRECT_PIN[0] == pin[0] && CORRECT_PIN[1] == pin[1] && CORRECT_PIN[2] == pin[2] && CORRECT_PIN[3] == pin[3]) lockOpen = true;
@@ -374,7 +374,6 @@ function enterCH() {
         special_html_input = true;
 
         $("#compHack").css("z-index", 20);
-        $("#compHack").css("display","block");
         $("#compHack").show();
 
         document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
@@ -392,7 +391,7 @@ function enterCH() {
 function exitCH() {
 
     $("#compHack").css("z-index", 0);
-    $("#compHack").hide();
+    $("#compHack").css("display","none");
 
 
     // determine if entered code was correct
@@ -404,7 +403,6 @@ function exitCH() {
         failedSound();
         selectedItem.activeTransponder = false;
     }
-
 
    backToGame();
 }
@@ -433,8 +431,8 @@ function compHack(hackButtonValue) {
             default:
 
                 if (ch_pos<2) {
-                    transponder_config[pin_pos] = hackButtonValue;
-                    pin_pos++;
+                    transponder_config[ch_pos] = hackButtonValue;
+                    ch_pos++;
                     document.getElementById("pinDisplayCH").innerHTML = "key lock: " + transponder_config.join("");
                 }
                 break;
