@@ -81,7 +81,7 @@ function addFire(x, y, z, width, height, depth, spacing) {
     var fireMesh = new THREE.Mesh(fireGeom, mat);
 
     // create fire sound
-    var firecracking = createSound("firecracking", 50, 5, true, 3, function() {
+    var firecracking = createPositionalSound("firecracking", 50, 5, true, 3, function() {
         fireMesh.add(firecracking);
         playSound(firecracking);
     });
@@ -93,7 +93,7 @@ function addFire(x, y, z, width, height, depth, spacing) {
     box.mesh.position.z = z;
 
     scene.add(box.mesh);
-    terrain.push(box);
+    modifyOctree(box);
 
     fire_collision_box_list.push(box);
 
