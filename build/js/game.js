@@ -224,7 +224,7 @@ function createScene(complete) {
 
 
 function loop() {
-    console.log(octreeObjects);
+    //console.log(octreeObjects);
 
     if (!menu && !pause) {
         if (player.health <= 0) {
