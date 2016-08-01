@@ -12,10 +12,10 @@ import java.awt.geom.Point2D;
 
 public class Way extends DrawableObject {
 	
-	Coordinates pos;
-	Coordinates normal;
-	Room father;
-	String type;
+	private Coordinates pos;
+	private Coordinates normal;
+	private Room father;
+	private String type;
 	
 	int maxDistance = 10;
 	
@@ -75,7 +75,7 @@ public class Way extends DrawableObject {
 	public Point fittingPos(){
 		//gets the Positions of way and the center of father
 		Point nowPos = pos.getScaledIntCoordinates();
-		Point papaPos = father.center.getScaledIntCoordinates();
+		Point papaPos = father.getCenter().getScaledIntCoordinates();
 		
 		//merges both to get the position in coordinate system relative
 		//to the father's center
@@ -97,7 +97,7 @@ public class Way extends DrawableObject {
 	public void paint(Graphics g){
 		
 		//updates normals
-		this.calcNormal(father.center.getAngle());
+		this.calcNormal(father.getCenter().getAngle());
 		
 		//gets the position of the way at the moment
 		Point a = this.fittingPos();
@@ -126,14 +126,58 @@ public class Way extends DrawableObject {
 			b.y = y;
 		}
 		
-		//draws line from current position to the stted Point by normal
+		//draws line from current position to the setted Point by normal
 		new Line(a, b).paint(g);
 		
 	}
+
 	
-	public String getType(){
+	/*
+	 * ####### Getter and Setter #####	
+	 */
+	
+	public Coordinates getPos() {
+		return pos;
+	}
+
+	public void setPos(Coordinates pos) {
+		this.pos = pos;
+	}
+
+	public Coordinates getNormal() {
+		return normal;
+	}
+
+	public void setNormal(Coordinates normal) {
+		this.normal = normal;
+	}
+
+	public Room getFather() {
+		return father;
+	}
+
+	public void setFather(Room father) {
+		this.father = father;
+	}
+
+	public String getType() {
 		return type;
 	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public int getMaxDistance() {
+		return maxDistance;
+	}
+
+	public void setMaxDistance(int maxDistance) {
+		this.maxDistance = maxDistance;
+	}
+	
+
+	
 	
 	
 }
