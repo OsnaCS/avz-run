@@ -343,8 +343,8 @@ var fires = [];       //Hier stehen alle Feuer drin.
 	function addLight(x, y, z, kind, normal, intensity, color, visiblewidth){
 		var light = new THREE.PointLight( parseInt(color), intensity, visiblewidth*SKALIERUNGSFAKTOR ); 
 		light.position.set(x, y, z); 
+		scene.add(light);
 	}
-
 
 //puts the right kind of door where it fits.
 //TODO: da immer Türrahmen an Türrahmen pappt, packt der immer 2 Türen rein. Da sollte er noch gucken dass er nur falls es ein Flur ist eine Tür rein packt.
