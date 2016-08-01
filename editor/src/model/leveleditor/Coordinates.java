@@ -83,7 +83,6 @@ public class Coordinates {
 	
 	/**
 	 * Umrechnung von Punkt zu Vektor
-	 * @param c Punkt, der Vektor werden soll
 	 * @return berechneter Vektor
 	 */
 	public Coordinates getVector() {
