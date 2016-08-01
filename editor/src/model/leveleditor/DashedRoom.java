@@ -8,7 +8,7 @@ import java.util.LinkedList;
 public class DashedRoom extends Room {
 
     public DashedRoom(String name, double xmin, double ymin, double xmax, double ymax, LinkedList<Way> waylist) {
-        super(name, xmin, ymin, xmax, ymax, waylist);
+        super(name, xmin, ymin, xmax, ymax, null, null);
     }
 
 }

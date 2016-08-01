@@ -290,7 +290,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 				spawnx = spawnx + parseInt(segments[INDEX1].transx)+xz[0];
 				spawny = spawny + parseInt(segments[INDEX1].transy)+xz[1];
 
-				createFire(spawnx, spawny, spawnz, sizex, sizez, sizey, fire[i][3]); //ja, ist richtig so mit x,y,z
+				createFire(spawnx, spawny, spawnz, sizex, sizez, sizey, (weaksystem)?fire[i][3]*20:fire[i][3]); //ja, ist richtig so mit x,y,z
 
 			}
 		}
@@ -485,7 +485,8 @@ function door_in_doors(callback) {
 		} else {
 			if ((responsefunct != "") && (responsefunct != null)) {
 				var functPtr = eval(responsefunct);
-				var intItem = new GameObject(mesh, functPtr, TYPE_INTERACTABLE, objectpfad);
+				intItem = new GameObject(mesh, functPtr, TYPE_INTERACTABLE, objectpfad);
+				if (intItem == undefined) intItem = null;
 				var segment = {filename:objectpfad, name: name, interIt: intItem, x: posx, y: posy, z: posz, skale: scale, rot: rotate, funct: responsefunct, msh: mesh};
 				interact_obj.push(segment);
 			} else {

@@ -272,7 +272,7 @@
 		   <spawn index="stuhl2" position="(1, -1.2, 0.9)" object="ohp" normaltowall="(1,0)" scale="2"/>
 		   <spawn index="stuhl2" position="(-2, -2, 0)" object="muelleimer" normaltowall="(1,0)" scale="2"/>
 		   <spawn index="stuhl2" position="(1, -2.5, 0)" object="stuhl" normaltowall="(0,-1)" scale="2"/>
-
+		   <spawn index="loscher" position="(1, -3.5, 0)" object="loscher" normaltowall="(0,-1)" scale="1" oninteract="pickUpItem"/>
 		   <spawn index="stuhl2" position="(0, 15, 0.3)" object="axt" normaltowall="(1,0)" scale="2.5" oninteract="pickUpItem"/>
 
 
