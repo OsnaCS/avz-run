@@ -34,7 +34,7 @@ var FileLoader = function (callback) {
                 });
                 // Glättet die Objekte
                 geometry.mergeVertices();
-                geometry.computeVertexNormals(); //macht flächen runder
+                if (!weaksystem) geometry.computeVertexNormals(); //macht flächen runder
 
                 loadedFiles[name] = new THREE.Mesh(geometry, material);
 
