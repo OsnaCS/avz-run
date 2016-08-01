@@ -6,7 +6,7 @@
 // -Dass er all das was ich so manuell eingebe aus der levels.xml liest
 
 
-//consts (change iff you know what you're doing! :P) 
+//consts (change iff you know what you're doing! :P)
 var ROOMSXML = "rooms.xml"
 var OBJECTSXML = "objects.xml"
 var LEVELSXML = "levels.xml"
@@ -30,11 +30,11 @@ var fires = [];       //Hier stehen alle Feuer drin.
 //this function takes as input the name of a room, and adds to the "segments"-array the object containing its info + mesh (no return value due to asynchrony)
 //the callback-function WAS ORIGINALLY MEANT TO BE nothing, fitdoor or the one loading the info from the levels.xml
 //now, it loads all the other stuff (lights, audios, etc.)
-	function CreateSegment(forwhichroom, callback) { 
+	function CreateSegment(forwhichroom, callback) {
 		var currseg = {filename:"", doors:[], spawns:[], lights:[], fires:[], xmin:0, ymin:0, xmax:0, ymax:0, orx:0, ory:0, orz: 0, transx:0, transy:0, rot:0, rauch: 0, applied:false};
 		if (typeof callback !== 'function')
 		{
-			currseg.transx = 0;  
+			currseg.transx = 0;
 			currseg.transy = 0;
 			currseg.rot = 0;
 		}
@@ -45,12 +45,12 @@ var fires = [];       //Hier stehen alle Feuer drin.
 			loadStuff(forwhichroom,segments.length-1);
 		}
 	}
-	
-	function CreateSegment(forwhichroom, callback, x, y, rot) { 
+
+	function CreateSegment(forwhichroom, callback, x, y, rot) {
 		var currseg = {filename:"", doors:[], spawns:[], lights:[], fires:[], xmin:0, ymin:0, xmax:0, ymax:0, orx:0, ory:0, orz: 0, transx:0, transy:0, rot:0, rauch: 0, applied:false};
 		if (typeof callback !== 'function')
 		{
-			currseg.transx = x;  
+			currseg.transx = x;
 			currseg.transy = y;
 			currseg.rot = rot;
 		}
@@ -60,14 +60,14 @@ var fires = [];       //Hier stehen alle Feuer drin.
 		} else {
 			loadStuff(forwhichroom,segments.length-1);
 		}
-	}	
+	}
 
 //this function will be done as soon as the leveldesign group is done.
 	function getTransRotFromXML(){
 		//gets called as callback from createsegment. (REALLY?)
 		//returns [x,y,rot]
 	}
-	
+
 //loads everything needed from the rooms.xml file (and then calls the followup-functions)
 	function loadStuff(whichroom, segmentindex, callback) {
 
@@ -189,7 +189,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 		}
 		segments[segmentindex].fires = FireArr;
 		callback();
-	}	
+	}
 
 	function getCoords(xml, segmentindex, whichroom,callback) {
 		var xmlDoc = xml.responseXML;
@@ -209,7 +209,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 		}
 		callback();
 	}
-	
+
 	function getFileName(xml, segmentindex, whichroom,callback) {
 		var xmlDoc = xml.responseXML;
 		var curroom = xmlDoc.getElementsByTagName("room");
@@ -300,7 +300,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 		var fireseg = {x:x, y:y, z:z, sx:sx*SKALIERUNGSFAKTOR, sy:sy*SKALIERUNGSFAKTOR, sz:sz*SKALIERUNGSFAKTOR, val:s}; //TODO: kann ich auch das mesh des feuers adden?
 		fires.push(fireseg);
 		addFire(x, y, z, sx*SKALIERUNGSFAKTOR, sy*SKALIERUNGSFAKTOR, sz*SKALIERUNGSFAKTOR, s);
-	}	
+	}
 
 //puts the lights where they belong
 	function turn_on_lights() {
@@ -335,14 +335,15 @@ var fires = [];       //Hier stehen alle Feuer drin.
 
 				//TODO: Lampen auch noch zu einem lampen-segment hinzufügen!!
 				addObjectViaName(light[i][2], "lamp", spawnx, spawny, spawnz, light[i][3], rotate, "");
-				addLight(spawnx, spawnz, spawny, light[i][1], light[i][5], light[i][6], light[i][7], light[i][8]);  
+				addLight(spawnx, spawnz, spawny, light[i][1], light[i][5], light[i][6], light[i][7], light[i][8]);
 			}
 		}
 	}
 
 	function addLight(x, y, z, kind, normal, intensity, color, visiblewidth){
-		var light = new THREE.PointLight( parseInt(color), intensity, visiblewidth*SKALIERUNGSFAKTOR ); 
-		light.position.set(x, y, z); 
+		var light = new THREE.PointLight( parseInt(color), intensity, visiblewidth*SKALIERUNGSFAKTOR );
+		light.position.set(x, y, z);
+		scene.add(light);
 	}
 
 
@@ -356,10 +357,10 @@ var fires = [];       //Hier stehen alle Feuer drin.
 			room1pos = [segments[INDEX1].transx, segments[INDEX1].transy];
 
 			if (room1door[1] == "floor") {return;} //floor-türen enthalten schlicht keine tür.
-			
+
 			var vector = room1door[3];
 			rotate = vec2dir([parseFloat(vector.slice(1,vector.indexOf(','))),parseFloat(vector.slice(vector.indexOf(',')+1,vector.indexOf(')')))]);
-	
+
 			var changex;
 			if (room1door[1] === "norm") {changex = HOLZTURBREITE;}
 			else if (room1door[1] === "glass") {changex = GLASTURBREITE; }
@@ -385,9 +386,9 @@ var fires = [];       //Hier stehen alle Feuer drin.
 
 			door1x = door1x + parseInt(segments[INDEX1].transx)+xz[0];
 			door1y = door1y + parseInt(segments[INDEX1].transy)+xz[1];
-			
-			var doorkind = (room1door[1] === "norm") ? "holztur" : "glastur"; 
-			
+
+			var doorkind = (room1door[1] === "norm") ? "holztur" : "glastur";
+
 			var act = "";
 			switch(room1door[4]) {
 				case "openable": act = "open"; break;
@@ -397,35 +398,35 @@ var fires = [];       //Hier stehen alle Feuer drin.
 				case "codeopenable": act = "openLockedDoor"; break;
 			}
 			if (godmode) {act = "openopened"; rotate -= 1;};
-			
+
 			//TODO: Transponderopenable und codeopenable funktioniert nicht!!
-			
-			addObjectViaName(doorkind, "door", door1x, door1y, 0, DOORSKALIERUNG, rotate-segments[INDEX1].rot, act)  
+
+			addObjectViaName(doorkind, "door", door1x, door1y, 0, DOORSKALIERUNG, rotate-segments[INDEX1].rot, act)
 			if (doorkind == "glastur") {addObjectViaName("glastuerrahmen", "static", door1x, door1y, 0, DOORSKALIERUNG, (act==="openopened")?rotate-segments[INDEX1].rot+1:rotate-segments[INDEX1].rot, "")  }
 		}
 	}
 }
-	
-	
+
+
 	//TODO: diese Funktionen. In synchron. Am besten per globalen Variablen (...dafür checken die Funktionen vorher ob die Variablen != "")
 	function objectFilenameToName(filename){
 		var tName = filename.split("/");
 		tName = tName[tName.length-1].split(".")[0];  //TODO: bei einigen Objekten ist der Name ungleich dem Filenamen! Das hier ist nur die Notlösung!
 		return tName;
 	}
-	
+
 	function objectNameToFilename(name){
-		
+
 	}
-	
+
 	function roomFilenameToName(filename){
 		var tName = filename.split("/");
-		tName = tName[tName.length-1].split(".")[0];	//TODO: bei einigen Objekten ist der Name ungleich dem Filenamen! Das hier ist nur die Notlösung!	
+		tName = tName[tName.length-1].split(".")[0];	//TODO: bei einigen Objekten ist der Name ungleich dem Filenamen! Das hier ist nur die Notlösung!
 		return tName;
 	}
-	
+
 	function roomNameToFilename(name){
-		
+
 	}
 
 
@@ -463,9 +464,9 @@ var fires = [];       //Hier stehen alle Feuer drin.
 		mesh.position.z = Math.round(posy); //IN BLENDER SIND Y UND Z ACHSE VERTAUSCHT
 		mesh.position.y = Math.round(posz);
 		mesh.rotation.y = 0.5*Math.PI*(4-rotate);
-		
+
 		if (name === "lamp") {
-			//TODO: adde ein passendes segment für ne Lampe 
+			//TODO: adde ein passendes segment für ne Lampe
 		} else {
 			if ((responsefunct != "") && (responsefunct != null)) {
 				var functPtr = eval(responsefunct);
@@ -504,7 +505,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 		xhttp.send();
 	}
 
-	
+
 //adds a ROOM's mesh to the scene (needs to be changed when we stop loading from jsons directly and instead from the pre-loading-thingy.)
 	function addmesh(filename, segmentindex) {
 		var h = filename.split("/"); //TODO: den fileloader so umschreiben dass er damit klar kommt
@@ -581,7 +582,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 		interact_obj = [];
 	  }
 	}
-	
+
 	function remove_interactible(segmentIndex){
 		mesh = interact_obj[segmentIndex].msh;
 		intObj = interact_obj[segmentIndex].interIt;
@@ -591,13 +592,13 @@ var fires = [];       //Hier stehen alle Feuer drin.
 		//scene.remove(mesh); braucht nicht, da das von interactible-this.delFromScene() gemacht wird.
 	}
 
-	
-	
 
-	
-	
-//buggy functions which may not even be needed	
-	
+
+
+
+
+//buggy functions which may not even be needed
+
 
 //diese Funktion klatscht einen Raum an einen anderen, wobei man angibt welche tür (index innerhalb des segments) welchen raums (index der segments), an welche tür welchen raum geklatscht wird.
 //TODO: erstmal klappt das hier noch nicht (er packt immer den MITTELPUNKT des zweiten Raums an den Türahmen des ersten), und zweitens noch die 4 indizes als Parameter übergeben
@@ -618,8 +619,8 @@ var fires = [];       //Hier stehen alle Feuer drin.
 		else if (room1doorvec[0] + room2doorvec[0] + room1doorvec[1] + room2doorvec[1] == 2) {rotation = parseInt(segments[INDEX1].rot)+1}
 		else {rotation = parseInt(segments[INDEX1].rot)+3};
 		//1 und 3 könnten vertauscht sein
-		
-		
+
+
 		var door1x = parseFloat(room1door[2].slice(1,room1door[2].indexOf(',')));
 		var door1y = parseFloat(room1door[2].slice(room1door[2].indexOf(',')+1,room1door[2].indexOf(')')));
 		door1x = door1x*SKALIERUNGSFAKTOR;
@@ -666,7 +667,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 		segments[INDEX2].transy = Math.round(finaly);
 		segments[INDEX2].rot = rotation;
 
-	}	
+	}
 
 	//daaas hier ist die funktion die von der direkt hierdrüber ^ gecallt wird, und diese hier will noch nicht wirklich. Maan denkfehler do.
 	function doorpos2middlepos(rotation,segment,door){
@@ -695,7 +696,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 		segments[INDEX2].transy = Math.round(finaly);
 		segments[INDEX2].rot = rotation;
 
-	}	
+	}
 
 	//daaas hier ist die funktion die von der direkt hierdrüber ^ gecallt wird, und diese hier will noch nicht wirklich. Maan denkfehler do.
 	function doorpos2middlepos(rotation,segment,door){
@@ -722,6 +723,3 @@ var fires = [];       //Hier stehen alle Feuer drin.
 
 		return [door2x,door2y];
 	}
-
-	
-	

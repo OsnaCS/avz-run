@@ -378,7 +378,7 @@ function controlLoop(controls) {
     // determines stepwidth
     time = performance.now();
     delta = (time - prevTime) / 1000;
-
+    if(delta>0.5) delta=0.1;
     velocity.x -= velocity.x * 10.0 * delta;
     velocity.z -= velocity.z * 10.0 * delta;
 
