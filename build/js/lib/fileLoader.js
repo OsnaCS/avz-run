@@ -116,7 +116,9 @@ var FileLoader = function (callback) {
             return isReady() ? loadedFiles : undefined;
         },
         get: function (name) {
-
+            if(loadedFiles[name] === undefined){
+                console.log(name + " is undefined")
+            }
             var result =loadedFiles[name].clone();
 
             return result;

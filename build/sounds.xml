@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sounds soundpath="sounds/">
+<sounds soundpath="/build/sounds/">
         <sound name="atmosphere.mp3"/>
         <sound name="breath.mp3"/>
         <sound name="button.mp3"/>
