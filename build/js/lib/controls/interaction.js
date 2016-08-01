@@ -142,11 +142,11 @@ function pickUpItem() {
 }
 
 function nix() {
-	
+
 }
 
 function destroy(){
-    if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[0]){
+    if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
         //damageDoorSound();
         this.delFromScene();
         console.log('destroyed');
@@ -182,7 +182,7 @@ function open() {
 
 function damageDoor() {
     if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
-		var j = -1; 
+		var j = -1;
 		for (i = 0; i < interact_obj.length; i++) {
 			if (interact_obj[i].interIt == this) {j = i; break;}
 		}
@@ -194,7 +194,7 @@ function damageDoor() {
 		} else {
 			alert("Something went terribly wrong.")
 		}
-        damageDoorSound(); 
+        damageDoorSound();
     }else{
         showThoughts("Wie könnte ich diese Tür wohl öffnen?",5000);
     }
@@ -202,7 +202,7 @@ function damageDoor() {
 
 function destroyDoor() {
     if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
-		var j = -1; 
+		var j = -1;
 		for (i = 0; i < interact_obj.length; i++) {
 			if (interact_obj[i].interIt == this) {j = i; break;}
 		}
@@ -216,7 +216,7 @@ function destroyDoor() {
 		} else {
 			alert("Something went terribly wrong.")
 		}
-        damageDoorSound(); 
+        damageDoorSound();
     }else{
         showThoughts("Das Loch ist noch nicht groß genug... wie könnte ich es wohl vergrößern?",5000);
     }
@@ -247,7 +247,7 @@ function dFire(){
 
 // Attach this function to the fire
 function extinguish() {
-	if(this.type == TYPE_FIRE && selectedItem.name == newItemList[12]){
+	if(this.type == TYPE_FIRE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "loscher")){
         // activeObject must be saved so that the dFire function is not influence
         // be new activeObject selected during the delay
         tempActObj = activeObject;
@@ -455,10 +455,10 @@ function compHack(hackButtonValue) {
 
 // Attach this function to the sink
 function coverMouth(){
-    if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[31]){
+    if(this.type == TYPE_INTERACTABLE&& (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "lappen")){
         startHeavyBreathing();
         HEALTH_PER_SECOND = HEALTH_PER_SECOND / 2;
-        addItem((newItemList[31]), playerPos[1], playerPos[2] + 10, playerPos[3], 2, 270, true, pickUpItem);
+        //addItem((newItemList[31]), playerPos[1], playerPos[2] + 10, playerPos[3], 2, 270, true, pickUpItem);
         console.log('covered mouth');
         player.delActItem();
     }else{
@@ -545,11 +545,12 @@ function extinguisherAnimation(){
     var spread = 0.3;
 
     for (var i = 0; i < particlenum; i++) {
-        //particle = new THREE.Vector3( THREE.Math.randFloat(px, px + ((fx -px) / particlenum) * i),THREE.Math.randFloat(py, py + ((fy -py) / particlenum) * i), THREE.Math.randFloat(pz, pz + ((fz -pz) / particlenum) * i));
         a = THREE.Math.randFloat(-spread, spread);
         b = THREE.Math.randFloat(-spread, spread);
         c = THREE.Math.randFloat(-spread, spread);
-        particle = new THREE.Vector3(px + ((fx -px) / particlenum) * i + (a * i), py + ((fy -py) / particlenum) * i + (b * i), pz + ((fz -pz) / particlenum) * i + (c * i));
+        particle = new THREE.Vector3(px + ((fx -px) / particlenum) * i + (a * i),
+                                     py + ((fy -py) / particlenum) * i + (b * i),
+                                     pz + ((fz -pz) / particlenum) * i + (c * i));
         particles.vertices.push(particle);
     }
 
@@ -624,10 +625,6 @@ function extinguisherAnimation(){
         depthWrite: false,
         fog: true
     });
-
-
-    //var particleMaterial = new THREE.ParticleBasicMaterial({ map: particleTexture, transparent: true, size: 5 });
-    //var particleMaterial = new THREE.ParticleBasicMaterial({ color: 0xeeeeee, size: 2 });
 
     var particleSystem = new THREE.Points(particles, material);
 
