@@ -3,6 +3,12 @@ package model.leveleditor;
 import model.Matrix;
 import model.drawables.Point;
 
+//TODO Kommentar
+/**
+ * 
+ * @author lhembrock
+ *
+ */
 public class Coordinates {
 	
 	// Ursprüngliche Position des Punktes
@@ -80,12 +86,12 @@ public class Coordinates {
 	 * @param c Punkt, der Vektor werden soll
 	 * @return berechneter Vektor
 	 */
-	public Coordinates getVector(Coordinates c) {
+	public Coordinates getVector() {
 		
 		Coordinates v = new Coordinates(0, 0);
 		
-		v.setPosx(c.getX());
-		v.setPosy(c.getY());
+		v.setPosx(getX());
+		v.setPosy(getY());
 		
 		return v;
 	}
