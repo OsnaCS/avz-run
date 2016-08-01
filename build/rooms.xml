@@ -495,12 +495,63 @@
 		</lights>
 		<spawns>
 			<spawn index="1" position="(0.5, -8, 0)" object="eimer" normaltowall="(0,1)" scale="2"/>
-		  	<spawn index="2" position="(3, -4, 0)" object="tisch" normaltowall="(0,1)" scale="1"/>
+		  	<spawn index="2" position="(3, -6, 0)" object="tisch" normaltowall="(1,0)" scale="1"/>
 		  	<spawn index="3" position="(6, -1, 0.3)" object="pflanze" normaltowall="(1,0)" scale="3"/>
-		  	<spawn index="4" position="(5, -7, 0)" object="stuhl" normaltowall="(1,0)" scale="1"/>
-		  	<spawn index="5" position="(3, -4, 1)" object="klo_small" normaltowall="(1,0)" scale="0.3"/>
+		  	<spawn index="4" position="(3, -7, 0)" object="stuhl" normaltowall="(0, -1)" scale="2"/>
+		  	<spawn index="5" position="(3, -6, 1)" object="computer" normaltowall="(0, -1)" scale="0.8" oninteract="pickUpItem"/>
 		</spawns>
+			<fires>
+			<fire index="1" position="(6, -7.5, 0)" size="(2,2,2)" val="6"/>
+		</fires>
 	</room>
+
+		<!-- DAS HIER IST KOMPLETT FINAL -->
+	<room name="buero_msg" filename="buero_und_blackboard.json">
+		<origin x="0" y="0"/>
+		<size xmin="-8.94993" xmax="11.00008" ymin="-28.19999" ymax="13.50002"/>
+		<doors>
+		   <door type="norm" index="1" position="(1.88, 0)" normal="(0, 1)" scale="1.25"/>
+		</doors>
+		<lights>
+			<light index="1" kind="pointlight" objectname="deckenlicht" position="(3.5, -4.5, 5)" normal="(0,1,0)" intensity="0.7" color="0xFFFFFF" />
+		</lights>
+		<spawns>
+			<spawn index="1" position="(0.5, -8, 0)" object="eimer" normaltowall="(0,1)" scale="2"/>
+		  	<spawn index="2" position="(3, -6, 0)" object="tisch" normaltowall="(1,0)" scale="1"/>
+		  	<spawn index="3" position="(6, -1, 0.3)" object="pflanze" normaltowall="(1,0)" scale="3"/>
+		  	<spawn index="4" position="(3, -7, 0)" object="stuhl" normaltowall="(0, -1)" scale="2"/>
+		  	<spawn index="5" position="(3, -6, 1)" object="computer_message" normaltowall="(0, -1)" scale="0.8" oninteract="pickUpItem"/>
+		</spawns>
+			<fires>
+			<fire index="1" position="(6, -7.5, 0)" size="(2,2,2)" val="6"/>
+		</fires>
+	</room>
+
+		<!-- DAS HIER IST KOMPLETT FINAL -->
+	<room name="toilet" filename="buero_empty.json">
+		<origin x="0" y="0"/>
+		<size xmin="-8.94993" xmax="11.00008" ymin="-28.19999" ymax="13.50002"/>
+		<doors>
+		   <door type="norm" index="1" position="(1.88, 0)" normal="(0, 1)" scale="1.25"/>
+		</doors>
+		<lights>
+			<light index="1" kind="pointlight" objectname="deckenlicht" position="(3.5, -4.5, 5)" normal="(0,1,0)" intensity="0.7" color="0xFFFFFF" />
+		</lights>
+		<spawns>
+			<spawn index="1" position="(0.5, -8, 0)" object="klo_und_tuer" normaltowall="(0,1)" scale="1" oninteract="pickUpItem"/>
+		  	<spawn index="2" position="(3, -6, 0)" object="tisch" normaltowall="(1,0)" scale="1"/>
+		  	<spawn index="3" position="(6, -1, 0.3)" object="pflanze" normaltowall="(1,0)" scale="3"/>
+		  	<spawn index="4" position="(3, -7, 0)" object="stuhl" normaltowall="(0, -1)" scale="2"/>
+		  	<spawn index="5" position="(3, -6, 1)" object="computer" normaltowall="(0, -1)" scale="0.8" oninteract="pickUpItem"/>
+		</spawns>
+			<fires>
+			<fire index="1" position="(6, -7.5, 0)" size="(2,2,2)" val="6"/>
+		</fires>
+	</room>
+
+
+
+	
 
 	
 	<!-- das hier ist komplett falsch -->
