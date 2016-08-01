@@ -11,7 +11,9 @@ import java.awt.Graphics;
 
 
 
-
+/*
+ * Created by Tom Krümmel
+ */
 
 public class Way extends DrawableObject {
 	
