@@ -71,8 +71,8 @@ var HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at
 
 function init(event) {
 
-	CreateSegment("groundlevel", 
-	
+    CreateSegment("groundlevel",
+
     // set up the scene, the camera and the renderer
     function scene (){
         createScene(audio);
@@ -90,9 +90,9 @@ function init(event) {
 
                     function startLoop () {
                         renderer.render(scene, camera);
-    					// start a loop that will update the objects' positions
-    					// and render the scene on each frame
-    					loop();
+                        // start a loop that will update the objects' positions
+                        // and render the scene on each frame
+                        loop();
                     }
                 }
             }
@@ -263,37 +263,37 @@ function createLights() {
     // // to activate the lights, just add them to the scene
     // scene.add(hemisphereLight);
     // scene.add(shadowLight);
-	
+
 }
 
 
 function createRoom(callback) {
 
-	PutSegments();
-	door_in_doors();
-	objects_in_spawns();
-	set_fires();
-	turn_on_lights();
-	callback();
+    PutSegments();
+    door_in_doors();
+    objects_in_spawns();
+    set_fires();
+    turn_on_lights();
+    callback();
 
 }
 
 
 //debug-stuff, deleteme
 function ShowSegments() {
-	var text = "";
-	for (i = 0; i <segments.length; i++) {
-		text += printmost(segments[i])+"<br>";  //JSON.stringify(segments[i])
-	}
-	alert(text);
+    var text = "";
+    for (i = 0; i <segments.length; i++) {
+        text += printmost(segments[i])+"<br>";  //JSON.stringify(segments[i])
+    }
+    alert(text);
 }
 function printmost(obj) {
-	var output = '';
-	for (var property in obj) {
-	  if (property != 'mesh')
-		{ output += property + ': ' + obj[property]+'; '; }
-	}
-	return output;
+    var output = '';
+    for (var property in obj) {
+      if (property != 'mesh')
+        { output += property + ': ' + obj[property]+'; '; }
+    }
+    return output;
 }
 //debugstuffdeleteme ende
 
@@ -302,11 +302,11 @@ function createItems(callback){
 
      // // addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
 
-	 // // addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name)
-	 // // TYPE_INTERACTABLE; TYPE_TRIGGER; TYPE_FIRE; TYPE_EXIT;
-	 // // intfunction = damage_door, destroy_door, pickUpItem, destroy, open, openLockedDoor, extinguish
+     // // addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name)
+     // // TYPE_INTERACTABLE; TYPE_TRIGGER; TYPE_FIRE; TYPE_EXIT;
+     // // intfunction = damage_door, destroy_door, pickUpItem, destroy, open, openLockedDoor, extinguish
 
-	 // //wände/terrain/statics, interactibles(auch feuer und türen), triggerevents(auch feuer), licher (auch feuer),
+     // //wände/terrain/statics, interactibles(auch feuer und türen), triggerevents(auch feuer), licher (auch feuer),
 
       // addItem((newItemList[0]), -50, 10, 10, 10, true, pickUpItem, newItemList[0]);
       // addItem((newItemList[1]), 20, 5, 10, 1, true, destroy, newItemList[1]);
@@ -330,7 +330,7 @@ function createItems(callback){
 // Add Object with given Path to given coordinates
 function addItemLogic(mesh, interact_type, intfunction, file){
 
-	// alert("Ich habe eine Daseinsberechtigung");
+    // alert("Ich habe eine Daseinsberechtigung");
 
     // if(interact_type){
         // var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, file);

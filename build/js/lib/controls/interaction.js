@@ -182,18 +182,18 @@ function open() {
 
 function damageDoor() {
     if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
-		var j = -1;
-		for (i = 0; i < interact_obj.length; i++) {
-			if (interact_obj[i].interIt == this) {j = i; break;}
-		}
-		if (j > -1) {
-			var d = interact_obj[j];
-			addObjectViaName("halbbrokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "destroyDoor");
-			remove_interactible(j);
-			this.delFromScene();
-		} else {
-			alert("Something went terribly wrong.")
-		}
+        var j = -1;
+        for (i = 0; i < interact_obj.length; i++) {
+            if (interact_obj[i].interIt == this) {j = i; break;}
+        }
+        if (j > -1) {
+            var d = interact_obj[j];
+            addObjectViaName("halbbrokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "destroyDoor");
+            remove_interactible(j);
+            this.delFromScene();
+        } else {
+            alert("Something went terribly wrong.")
+        }
         damageDoorSound();
     }else{
         showThoughts("Wie könnte ich diese Tür wohl öffnen?",5000);
@@ -202,20 +202,20 @@ function damageDoor() {
 
 function destroyDoor() {
     if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
-		var j = -1;
-		for (i = 0; i < interact_obj.length; i++) {
-			if (interact_obj[i].interIt == this) {j = i; break;}
-		}
-		if (j > -1) {
-			var d = interact_obj[j];
-			addObjectViaName("brokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "");
-			remove_interactible(j);
-			this.delFromScene();
-			player.delActItem();
-			showThoughts("Die Tür ist kaputt, die Axt jetzt leider auch.",3000);
-		} else {
-			alert("Something went terribly wrong.")
-		}
+        var j = -1;
+        for (i = 0; i < interact_obj.length; i++) {
+            if (interact_obj[i].interIt == this) {j = i; break;}
+        }
+        if (j > -1) {
+            var d = interact_obj[j];
+            addObjectViaName("brokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "");
+            remove_interactible(j);
+            this.delFromScene();
+            player.delActItem();
+            showThoughts("Die Tür ist kaputt, die Axt jetzt leider auch.",3000);
+        } else {
+            alert("Something went terribly wrong.")
+        }
         damageDoorSound();
     }else{
         showThoughts("Das Loch ist noch nicht groß genug... wie könnte ich es wohl vergrößern?",5000);
@@ -224,16 +224,16 @@ function destroyDoor() {
 }
 
 function openLockedDoor() {
-	if(lockOpen){
+    if(lockOpen){
         //doorSound();
-		if(!this.open) {
-	        this.mesh.rotateY(Math.PI/2.0);
-	        this.open = !this.open;
-	    }
-	    else {
-	        this.mesh.rotateY(-Math.PI/2.0);
-	        this.open = !this.open;
-	    }
+        if(!this.open) {
+            this.mesh.rotateY(Math.PI/2.0);
+            this.open = !this.open;
+        }
+        else {
+            this.mesh.rotateY(-Math.PI/2.0);
+            this.open = !this.open;
+        }
     }
 
 }
@@ -247,7 +247,7 @@ function dFire(){
 
 // Attach this function to the fire
 function extinguish() {
-	if(this.type == TYPE_FIRE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "loscher")){
+    if(this.type == TYPE_FIRE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "loscher")){
         // activeObject must be saved so that the dFire function is not influence
         // be new activeObject selected during the delay
         tempActObj = activeObject;
@@ -256,8 +256,8 @@ function extinguish() {
         extinguisherSound();
 
         setTimeout(dFire, 1000);
-    	console.log('extinguished');
-    	player.delActItem();
+        console.log('extinguished');
+        player.delActItem();
     }
     else{
         console.log('nicht anwendbar');
