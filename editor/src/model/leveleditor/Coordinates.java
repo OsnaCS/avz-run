@@ -216,16 +216,15 @@ public class Coordinates {
 	/**
 	 * Gibt die Koordinaten, die bzgl des Double-Koordinatensystems gegeben sind,
 	 * in Koordinaten bzgl des Int-Koordinatensystem um
-	 * @param c unzurechnende Koordinaten
 	 * @return umgerechnete Koordinaten
 	 */
-	public static Point basisChangeDoubleInt(Coordinates c) {
+	public Point basisChangeDoubleInt() {
 		
 		int width = 800;
 		int heigth = 640;
 		
-		int newX = c.getScaledIntCoordinates().x - (width / 2);
-		int newY = c.getScaledIntCoordinates().y - (heigth / 2);
+		int newX = this.getScaledIntCoordinates().x - (width / 2);
+		int newY = this.getScaledIntCoordinates().y - (heigth / 2);
 		
 		return new Point(newX, newY);
 	}

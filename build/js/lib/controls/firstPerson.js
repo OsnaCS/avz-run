@@ -1,5 +1,6 @@
 // GODMODE (zum testen, man kann nicht fallen, hat unendlich leben, unendlich sprinten, alle türen sind offen, Nebel kommt langsamer)
 var godmode = true;
+
 var weaksystem = true;
 //
 
@@ -375,11 +376,13 @@ function initControls(callback) {
 }
 
 var intersectionsY = null;
+var intersectionsYpos = null;
 var intersectionsXpos = null;
 var intersectionsZpos = null;
 var intersectionsXneg = null;
 var intersectionsZneg = null;
 
+var gameObj;
 
 var firstTime = true; //we fall through the floor while spawning.. sick workaround
 
@@ -434,15 +437,15 @@ function controlLoop(controls) {
 
     // // forbid player to move farther if there are obstacles in the respective directions
     if (intersectionsY.length > 0) {
-
+        gameObj = getGameObject(intersectionsY[0].object);
         //collision with fire!
-        if (intersectionsY[0].object.type == TYPE_FIRE) {
+        if (gameObj.type == TYPE_FIRE) {
             fireAction();
 
-        } else if (intersectionsY[0].object.type == TYPE_TRIGGER) {
+        } else if (gameObj.type == TYPE_TRIGGER) {
             //collision with trigger
-            intersectionsY[0].object.interact();
-            removeTrigger(intersectionsY[0].object);
+            gameObj.interact();
+            removeTrigger(gameObj);
         } else {
             //stop when hitting the floor
             velocity.y = Math.max(0, velocity.y);
@@ -451,44 +454,50 @@ function controlLoop(controls) {
     }
 
     if (intersectionsZpos.length > 0) {
-        if (intersectionsZpos[0].object.type == TYPE_FIRE) {
+        // console.log(intersectionsZpos[0].object);
+        gameObj = getGameObject(intersectionsZpos[0].object);
+
+        if (gameObj.type == TYPE_FIRE) {
             fireAction();
-        } else if (intersectionsZpos[0].object.type == TYPE_TRIGGER) {
-            intersectionsZpos[0].object.interact();
-            removeTrigger(intersectionsZpos[0].object);
+        } else if (gameObj.type == TYPE_TRIGGER) {
+            gameObj.interact();
+            removeTrigger(gameObj);
         } else {
             velocity.z = Math.min(0, velocity.z);
         }
     }
 
     if (intersectionsZneg.length > 0) {
-        if (intersectionsZneg[0].object.type == TYPE_FIRE) {
+        gameObj = getGameObject(intersectionsZneg[0].object);
+        if (gameObj.type == TYPE_FIRE) {
             fireAction();
-        } else if (intersectionsZneg[0].object.type == TYPE_TRIGGER) {
-            intersectionsZneg[0].object.interact();
-            removeTrigger(intersectionsZneg[0].object);
+        } else if (gameObj.type == TYPE_TRIGGER) {
+            gameObj.interact();
+            removeTrigger(gameObj);
         } else {
             velocity.z = Math.max(0, velocity.z);
         }
     }
 
     if (intersectionsXpos.length > 0) {
-        if (intersectionsXpos[0].object.type == TYPE_FIRE) {
+        gameObj = getGameObject(intersectionsXpos[0].object);
+        if (gameObj.type == TYPE_FIRE) {
             fireAction();
-        } else if (intersectionsXpos[0].object.type == TYPE_TRIGGER) {
-            intersectionsXpos[0].object.interact();
-            removeTrigger(intersectionsXpos[0].object);
+        } else if (gameObj.type == TYPE_TRIGGER) {
+            gameObj.interact();
+            removeTrigger(gameObj);
         } else {
             velocity.x = Math.min(0, velocity.x);
         }
     }
 
     if (intersectionsXneg.length > 0) {
-        if (intersectionsXneg[0].object.type == TYPE_FIRE) {
+        gameObj = getGameObject(intersectionsXneg[0].object);
+        if (gameObj.type == TYPE_FIRE) {
             fireAction();
-        } else if (intersectionsXneg[0].object.type == TYPE_TRIGGER) {
-            intersectionsXneg[0].object.interact();
-            removeTrigger(intersectionsXneg[0].object);
+        } else if (gameObj.type == TYPE_TRIGGER) {
+            gameObj.interact();
+            removeTrigger(gameObj);
         } else {
             velocity.x = Math.max(0, velocity.x);
         }
@@ -580,7 +589,8 @@ function controlLoop(controls) {
 //if we are blocked upwards while ducking and try to stand up..
 function handleStandup() {
     if (standupRequest) {
-        var intersectionsYpos = raycasterYpos.intersectObjects(terrain);
+        octreeObjectsYpos = octree.search( raycasterYpos.ray.origin, raycasterYpos.ray.far, true, raycasterYpos.ray.direction );
+        intersectionsYpos = raycasterYpos.intersectOctreeObjects( octreeObjectsYpos );
 
         // stands up as soon as there are no more objects above
         if (intersectionsYpos.length == 0) {
