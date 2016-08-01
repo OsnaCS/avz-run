@@ -139,7 +139,7 @@ function createScene(callback) {
 
     // Create the scene
     scene = new THREE.Scene();
-    console.log(scene);
+    //console.log(scene);
 
     scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
 
