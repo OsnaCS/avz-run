@@ -13,7 +13,7 @@ var SKALIERUNGSFAKTOR = 20;
 var HOLZTURBREITE = SKALIERUNGSFAKTOR*0.88;
 var GLASTURBREITE = SKALIERUNGSFAKTOR*1.2;
 var DOORSKALIERUNG = 1.1;
-var FIRETEXTUREPATH = './levels/materials/textures/';
+var FIRETEXTUREPATH = '/build/levels/materials/textures/';
 
 
 //global vars
