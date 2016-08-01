@@ -105,8 +105,12 @@ public class Room extends DrawableObject {
             //skalieren
             //zurückschieben
 
+    	
+    	
         Coordinates originalCenter = new Coordinates(cC);
         setCenter(new Coordinates(0,0));
+        
+        
 
         //zeichenkoordinaten erstellen
         Point a, e, c;
@@ -114,10 +118,10 @@ public class Room extends DrawableObject {
         e = cE.basisChangeDoubleInt();
         c = originalCenter.basisChangeDoubleInt();
 
-        a.x+=c.x;
-        a.y+=c.y;
-        e.x+=c.x;
-        e.y+=c.y;
+//        a.x+=c.x;
+//        a.y+=c.y;
+//        e.x+=c.x;
+//        e.y+=c.y;
 
         //rechteck zeichnen
         Point ur = new Point(e.x, a.y);

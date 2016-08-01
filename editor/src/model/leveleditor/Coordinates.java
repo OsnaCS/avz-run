@@ -223,8 +223,8 @@ public class Coordinates {
 		int width = 800;
 		int heigth = 640;
 		
-		int newX = this.getScaledIntCoordinates().x - (width / 2);
-		int newY = this.getScaledIntCoordinates().y - (heigth / 2);
+		int newX = this.getScaledIntCoordinates().x + (width / 2);
+		int newY = this.getScaledIntCoordinates().y + (heigth / 2);
 		
 		return new Point(newX, newY);
 	}

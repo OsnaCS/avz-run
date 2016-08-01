@@ -79,7 +79,7 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		} catch (FileNotFoundException e3) {
 			e3.printStackTrace();
 		}
-		temp.setCenter(new Coordinates(0, 0));
+		//temp.setCenter(new Coordinates(20,20));
 
 		drawableObjectsModel = new LinkedList<DrawableObject>();
 		this.drawableObjectsModel.add(temp);
