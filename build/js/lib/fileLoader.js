@@ -21,6 +21,7 @@ var FileLoader = function (callback) {
             function (geometry, mat) {
                 // on success:
 
+
                 material = new THREE.MultiMaterial(mat);
 
 
@@ -33,7 +34,7 @@ var FileLoader = function (callback) {
                 });
                 // Glättet die Objekte
                 geometry.mergeVertices();
-                geometry.computeVertexNormals(); //macht flächen runder
+                if (!weaksystem) geometry.computeVertexNormals(); //macht flächen runder
 
                 loadedFiles[name] = new THREE.Mesh(geometry, material);
 
@@ -44,6 +45,7 @@ var FileLoader = function (callback) {
                     ready = true;
                     $("#loadingBlocker").hide();
                     $("#startInstructions").show();
+                    console.log("FileLoader done.");
                     callback();
                 }
 
@@ -74,13 +76,21 @@ var FileLoader = function (callback) {
 
                 $("#loadingBlocker").hide();
                 $("#startInstructions").show();
+                console.log("FileLoader done.");
                 callback();
             }
 
         }, 3000
     );
 
-    console.log("FileLoader done.");
+
+
+    //initialize Audio-files
+
+    // console.log("FileLoader done.");
+
+
+
 
     function isReady() {
         // gibt true zurück, wenn alle Files geladen wurden filesSuccessfullyLoaded == files.length
@@ -107,11 +117,9 @@ var FileLoader = function (callback) {
         },
         get: function (name) {
 
-            var result = isReady() ? loadedFiles[name].clone() : undefined;
 
-            if (result == undefined) {
-                console.log("FileLoader could not find texture '" + name + "'");
-            }
+            var result =loadedFiles[name].clone();
+
             return result;
         }
     }
