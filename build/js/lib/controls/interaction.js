@@ -10,6 +10,8 @@ var lockOpen = false; // pin pad boolean
 
 var outlineMesh=null;
 
+var extinguisherParticleSystem;
+
 // pin pad variables.... may not be stored here?
 var pin = new Array(4);
 var transponder_config = new Array(2);
@@ -645,12 +647,12 @@ function extinguisherAnimation(){
         fog: true
     });
 
-    var particleSystem = new THREE.Points(particles, material);
+    extinguisherParticleSystem = new THREE.Points(particles, material);
 
-    scene.add(particleSystem);
+    scene.add(extinguisherParticleSystem);
 
     function deleteExtinguisherParticles(){
-        scene.remove(particleSystem);
+        scene.remove(extinguisherParticleSystem);
     }
 
     setTimeout(deleteExtinguisherParticles, 1000);
