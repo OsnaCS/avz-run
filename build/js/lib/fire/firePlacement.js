@@ -68,7 +68,6 @@ function addFire(x, y, z, width, height, depth, spacing) {
     }
     pointlight.position.set(x, y + (fireHeight / 2) , z);
     scene.add(pointlight);
-    console.log(pointlight);
 
     // Firemesh
     var fmesh = fire.mesh.clone();
@@ -105,10 +104,6 @@ function addFire(x, y, z, width, height, depth, spacing) {
     smoke_list.push(smoke);
     smoke_and_light_count++;
 
-}
-
-function addSmallFire(x, y, z) {
-    addFire(x, y, z, 1.5, 2, 1.5, 0.5);
 }
 
 // Call this function once after all the fires have been added to the scene

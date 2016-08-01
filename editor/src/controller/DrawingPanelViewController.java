@@ -47,9 +47,9 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 	// View
 	private DrawingPanelView drawingPanelView;
 	private JFrame frame;
-	private Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-	private int height= dim.height;
-	private int width=dim.width;
+	//private Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+	private int height= 640;
+	private int width= 800;
 
 
 	// Model
