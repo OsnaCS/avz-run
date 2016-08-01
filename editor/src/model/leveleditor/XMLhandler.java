@@ -29,9 +29,8 @@ import java.io.Writer;
 import java.util.LinkedList;
 
 /**
- * Created by Thomas Dautzenberg on 26/07/2016.
- * Exctended by Andreas Schroeder
- * Consulted by Tom Kruemmel 
+ * Created by Thomas Dautzenberg on 26/07/2016. Exctended by Andreas Schroeder
+ * Consulted by Tom Kruemmel
  */
 public class XMLhandler {
 
@@ -153,13 +152,10 @@ public class XMLhandler {
 
 	}
 
-	
-
-	public String toXML(LinkedList<Room> roomlist)
-			 {
+	public String toXML(Level level) {
 
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder=null;
+		DocumentBuilder docBuilder = null;
 		try {
 			docBuilder = docFactory.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
@@ -189,6 +185,7 @@ public class XMLhandler {
 
 		// shorten way
 		// staff.setAttribute("id", "1");
+		LinkedList<Room> roomlist = level.getRooms();
 		while (!roomlist.isEmpty()) {
 			// firstname elements
 			Room currentRoom = roomlist.poll();
@@ -214,34 +211,41 @@ public class XMLhandler {
 			room.setAttributeNode(rota);
 
 		}
-		int i = 0;
-		while (i == 0) {
-			i++;
+		LinkedList<Way> doorlist = level.getWays();
+		while (!doorlist.isEmpty()) {
+			// firstname elements
+			Way currentWay = doorlist.poll();
+
 			Element door = doc.createElement("door");
 			door.appendChild(doc.createTextNode("door"));
 			rooms.appendChild(door);
 
-//			// set attribute to staff element
-//			Attr roomName = doc.createAttribute("name");
-//			roomName.setValue(currentRoom.getName());
-//			room.setAttributeNode(roomName);
-//
-//			Attr x = doc.createAttribute("x");
-//			x.setValue(new Double(currentRoom.getcC().getPosx()).toString());
-//			room.setAttributeNode(x);
-//
-//			Attr y = doc.createAttribute("y");
-//			y.setValue(new Double(currentRoom.getcC().getPosy()).toString());
-//			room.setAttributeNode(y);
-//
-//			Attr rota = doc.createAttribute("rotation");
-//			rota.setValue(new Double(currentRoom.getcC().getAngle()).toString());
-//			room.setAttributeNode(rota);
+			// set attribute to staff element <door type="wood" x="-10" y="7"
+			// normx="0" normy="11"/>
+			Attr type = doc.createAttribute("type");
+			type.setValue(currentWay.getType());
+			door.setAttributeNode(type);
+
+			Attr x = doc.createAttribute("x");
+			x.setValue(new Double(currentWay.getPos().getPosx()).toString());
+			door.setAttributeNode(x);
+
+			Attr y = doc.createAttribute("y");
+			y.setValue(new Double(currentWay.getPos().getPosy()).toString());
+			door.setAttributeNode(y);
+
+			Attr normx = doc.createAttribute("normx");
+			normx.setValue(new Double(currentWay.getNormal().getPosx()).toString());
+			door.setAttributeNode(normx);
+			
+			Attr normy = doc.createAttribute("normy");
+			normy.setValue(new Double(currentWay.getNormal().getPosy()).toString());
+			door.setAttributeNode(normy);
 		}
 		// write the content into xml file
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
-		Transformer transformer=null;
-		try  {
+		Transformer transformer = null;
+		try {
 			transformer = transformerFactory.newTransformer();
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
@@ -252,13 +256,13 @@ public class XMLhandler {
 		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 		DOMSource source = new DOMSource(doc);
-		
-		//StreamResult result = new StreamResult(f);
+
+		// StreamResult result = new StreamResult(f);
 
 		// Output to console for testing
 		// result = new StreamResult(System.out);
 		Writer writer = new StringWriter();
-		//System.out.println((StringWriter)/result.getWriter().toString());
+		// System.out.println((StringWriter)/result.getWriter().toString());
 		StreamResult result = new StreamResult(writer);
 
 		try {
@@ -270,17 +274,16 @@ public class XMLhandler {
 
 		return writer.toString();
 
-
 	}
-	
-	public File writeXML(LinkedList<Room> roomlist, String filename){
+
+	public File writeXML(LinkedList<Room> roomlist, String filename) {
 		File f = new File(filename);
-		try(PrintWriter writer =new PrintWriter(f)) {
+		try (PrintWriter writer = new PrintWriter(f)) {
 			writer.println(toXML(roomlist));
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			
+
 			e.printStackTrace();
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
@@ -288,12 +291,12 @@ public class XMLhandler {
 		} catch (TransformerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}finally{
+		} finally {
 			System.err.println("Error Saving XML-File");
 		}
-		
+
 		return f;
-		
+
 	}
 
 	public static void clean(Node node) {
