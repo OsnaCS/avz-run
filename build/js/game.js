@@ -71,7 +71,7 @@ var HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at
 
 function init(event) {
 
-	CreateSegment("groundlevel", 
+	CreateSegment("circle_with_lecture", 
 	
     // set up the scene, the camera and the renderer
     function scene (){
