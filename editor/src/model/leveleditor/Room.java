@@ -29,8 +29,7 @@ public class Room extends DrawableObject {
 
     }
 
-
-    public LinkedList<Way> compareWays(LinkedList<Way> allways){
+    public boolean compareWays(LinkedList<Way> allways){
 
         boolean added = false;
         LinkedList<Way> cutways = new LinkedList<>(allways);
@@ -54,7 +53,9 @@ public class Room extends DrawableObject {
             }
         }
 
-        return cutways;
+        setWaylist(cutways);
+
+        return added;
     }
 
     /**
@@ -109,6 +110,10 @@ public class Room extends DrawableObject {
 
     public LinkedList<Way> getWaylist() {
         return waylist;
+    }
+
+    public void setWaylist(LinkedList<Way> waylist) {
+        this.waylist = waylist;
     }
 
     public void setCenter(Point center){
