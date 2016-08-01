@@ -70,7 +70,7 @@ function createBasicSounds() {
     camera.add(pickUp_Sound);
     outOfBreath_Sound = createSound("run-breath",50,5,false,2);
     camera.add(outOfBreath_Sound);
-    gameOver_Sound = createSound("gameover",50,5,false,5);
+    gameOver_Sound = createSound("gameover",50,5,false,1);
     camera.add(gameOver_Sound);
     hbreathing_Sound = createSound("breath", 10, 1, true, 0.2);
     camera.add(hbreathing_Sound);
