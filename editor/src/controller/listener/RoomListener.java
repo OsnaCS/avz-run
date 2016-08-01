@@ -1,19 +1,12 @@
 package controller.listener;
 
 import controller.DrawableObjectProcessing;
-import model.drawables.DashedRectangle;
 import model.drawables.Point;
-import model.drawables.Rectangle;
-import model.leveleditor.DashedRoom;
 import model.leveleditor.Level;
 import model.leveleditor.Room;
-import model.leveleditor.Way;
 
-import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.event.MouseEvent;
-
-import java.util.LinkedList;
 
 import static javax.swing.SwingUtilities.isLeftMouseButton;
 import static javax.swing.SwingUtilities.isRightMouseButton;
@@ -47,7 +40,8 @@ public class RoomListener extends MouseInputAdapter {
 	}
 
 	/**
-	 * Methode to Handle mouseclicks
+	 * Methode to Handle mouseclicks shows room around Mouseposition.
+	 * Rotates Room if already showed
 	 * 
 	 * @param e
 	 *            The Mouseevent, which trigger actions
@@ -85,9 +79,13 @@ public class RoomListener extends MouseInputAdapter {
 
 
 	/**
-	 * Handle Reaction if Mouse is Moved
-	 * 
-	 * @param e	The Event
+
+	 * Updated Center vom angefassten Raum.
+	 *
+	 * Übergebe mit Hilfe der aktuellen Mausposition ein DashedRectangle als
+	 * temporäres Objekt an das Delegate, sofern bereits ein Mittelpunkt
+	 * vorliegt.
+* @param e	The Event
 	 */
 	public void mouseMoved(MouseEvent e) {
 		// If mousePos was'nt set yet
@@ -101,10 +99,10 @@ public class RoomListener extends MouseInputAdapter {
 	}
 
 	/**
-	 * Handles Reaction if mouse is exited
-	 * 
+	 * reset. yeah. megareset. uh. ultrareset.
+	 * ja also alles auf anfang.
 	 * @param e The MouseEvent
-	 */
+     */
 	public void mouseExited(MouseEvent e) {
 		delegate.clearTemporaryDrawableObject();
 		mousePos = null;
