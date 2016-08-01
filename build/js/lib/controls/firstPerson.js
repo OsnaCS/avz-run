@@ -1,5 +1,5 @@
 // GODMODE (zum testen, man kann nicht fallen, hat unendlich leben, unendlich sprinten, alle türen sind offen, Nebel kommt langsamer)
-var godmode = true;
+var godmode = false;
 //
 
 // Controls camera via WASD/Mouse, enables player to jump, run and crouch
@@ -106,7 +106,7 @@ function initPointerLock() {
                 controls.enabled = false;
 
                 if (player.health > 0) {
-                    $("#blocker").show();
+                   $("#blocker").show();
                 }
                 menu = true;
                 $('.gui').hide();
@@ -181,7 +181,7 @@ function initPointerLock() {
     }
 }
 //CALL THIS IN YOUR INIT BLOCK
-function initControls() {
+function initControls(callback) {
     initPointerLock();
     var onKeyDown = function(event) {
 
@@ -351,13 +351,15 @@ function initControls() {
 
     raycasterYpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, PLAYERHEIGHT * 0.8); // above
 
-    raycasterXpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, PLAYERHEIGHT * 1.28); // right
+    raycasterXpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, PLAYERHEIGHT * 1.28); // right PLAYERHEIGHT * 1.28
 
     raycasterZpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, PLAYERHEIGHT * 1.28); // behind
 
     raycasterXneg = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, PLAYERHEIGHT * 1.28); // left
 
     raycasterZneg = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, PLAYERHEIGHT * 1.28); // front
+
+
 
     playerGround = new THREE.Vector3();
 
@@ -366,8 +368,14 @@ function initControls() {
     rayDirectionZpos = new THREE.Vector3();
     rayDirectionZneg = new THREE.Vector3();
 
-
+    callback();
 }
+
+var intersectionsY = null;
+var intersectionsXpos = null;
+var intersectionsZpos = null;
+var intersectionsXneg = null;
+var intersectionsZneg = null;
 
 
 var firstTime = true; //we fall through the floor while spawning.. sick workaround
@@ -379,7 +387,7 @@ function controlLoop(controls) {
     // determines stepwidth
     time = performance.now();
     delta = (time - prevTime) / 1000;
-
+    if(delta>0.5) delta=0.1;
     velocity.x -= velocity.x * 10.0 * delta;
     velocity.z -= velocity.z * 10.0 * delta;
 
@@ -392,15 +400,36 @@ function controlLoop(controls) {
     if (moveRight) velocity.x += MOVEMENT_SPEED * speed_factor * delta;
 
 
-    // determine intersections of rays with objects that were added to terrain
-    var intersectionsY = raycasterY.intersectObjects(terrain);
-    var intersectionsXpos = raycasterXpos.intersectObjects(terrain);
-    var intersectionsZpos = raycasterZpos.intersectObjects(terrain);
-    var intersectionsXneg = raycasterXneg.intersectObjects(terrain);
-    var intersectionsZneg = raycasterZneg.intersectObjects(terrain);
+
+    octreeObjectsY = octree.search( raycasterY.ray.origin, raycasterY.ray.far, true, raycasterY.ray.direction );
+    intersectionsY = raycasterY.intersectOctreeObjects( octreeObjectsY);
+
+    octreeObjectsXpos = octree.search( raycasterXpos.ray.origin, raycasterXpos.ray.far, true, raycasterXpos.ray.direction );
+    intersectionsXpos = raycasterXpos.intersectOctreeObjects( octreeObjectsXpos );
+
+    octreeObjectsZpos = octree.search( raycasterZpos.ray.origin, raycasterZpos.ray.far, true, raycasterZpos.ray.direction );
+    intersectionsZpos = raycasterZpos.intersectOctreeObjects( octreeObjectsZpos );
+
+    octreeObjectsXneg = octree.search( raycasterXneg.ray.origin, raycasterXneg.ray.far, true, raycasterXneg.ray.direction );
+    intersectionsXneg = raycasterXneg.intersectOctreeObjects( octreeObjectsXneg );
+
+    octreeObjectsZneg = octree.search( raycasterZneg.ray.origin, raycasterZneg.ray.far, true, raycasterZneg.ray.direction );
+    intersectionsZneg = raycasterZneg.intersectOctreeObjects( octreeObjectsZneg );
 
 
-    // forbid player to move farther if there are obstacles in the respective directions
+
+
+
+
+    // //determine intersections of rays with objects that were added to terrain
+    // intersectionsY = raycasterY.intersectObjects(terrain);
+    // intersectionsXpos = raycasterXpos.intersectObjects(terrain);
+    // intersectionsZpos = raycasterZpos.intersectObjects(terrain);
+    // intersectionsXneg = raycasterXneg.intersectObjects(terrain);
+    // intersectionsZneg = raycasterZneg.intersectObjects(terrain);
+
+
+    // // forbid player to move farther if there are obstacles in the respective directions
     if (intersectionsY.length > 0) {
 
         //collision with fire!

@@ -21,6 +21,7 @@ var FileLoader = function (callback) {
             function (geometry, mat) {
                 // on success:
 
+
                 material = new THREE.MultiMaterial(mat);
 
 
@@ -28,11 +29,12 @@ var FileLoader = function (callback) {
                 material.materials.forEach(function (e) {
                     if (e instanceof THREE.MeshPhongMaterial || e instanceof THREE.MeshLambertMaterial) {
                         e.side = THREE.FrontSide;
+						e.shininess = 6; //sorgt dafür dass die flächen weniger spiegeln
                     }
                 });
                 // Glättet die Objekte
                 geometry.mergeVertices();
-                // geometry.computeVertexNormals();
+                geometry.computeVertexNormals(); //macht flächen runder
 
                 loadedFiles[name] = new THREE.Mesh(geometry, material);
 
@@ -43,6 +45,7 @@ var FileLoader = function (callback) {
                     ready = true;
                     $("#loadingBlocker").hide();
                     $("#startInstructions").show();
+                    console.log("FileLoader done.");
                     callback();
                 }
 
@@ -73,13 +76,21 @@ var FileLoader = function (callback) {
 
                 $("#loadingBlocker").hide();
                 $("#startInstructions").show();
+                console.log("FileLoader done.");
                 callback();
             }
 
         }, 3000
     );
 
-    console.log("FileLoader done.");
+
+
+    //initialize Audio-files
+
+    // console.log("FileLoader done.");
+
+
+
 
     function isReady() {
         // gibt true zurück, wenn alle Files geladen wurden filesSuccessfullyLoaded == files.length
@@ -104,12 +115,10 @@ var FileLoader = function (callback) {
             // gibt alle geladenen Dateien zurück
             return isReady() ? loadedFiles : undefined;
         },
-        get: function(name) {
-            var result = isReady() ? loadedFiles[name].clone() : undefined;
+        get: function (name) {
 
-            if (result == undefined) {
-                console.log("FileLoader could not find texture '" + name + "'");
-            }
+            var result =loadedFiles[name].clone();
+
             return result;
         }
     }
