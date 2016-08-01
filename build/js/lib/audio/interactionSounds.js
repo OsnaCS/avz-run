@@ -54,7 +54,7 @@ function pickUpSound(){
 }
 
 // sound when out of breath after running
-function outOfBreath(){
+function outOfBreathSound(){
     outOfBreath_Sound.play();
 }
 

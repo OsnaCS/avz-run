@@ -234,7 +234,9 @@ function initControls() {
             case 16: //RUN FOREST! (shift)
 
                 if (!ducked && !regenerate) {
-                    adjustPlaybackRate(footsteps, 1.5, true);
+                    if(running == false) {
+                        adjustPlaybackRate(footsteps, 1.5);
+                    }
                     running = true;
                     speed_factor = RUN_SPEED;
                 }
@@ -486,7 +488,8 @@ function controlLoop(controls) {
         if (running) {
             energy -= delta * 30;
             if (energy <= 0) {
-                outOfBreath();
+                adjustPlaybackRate(footsteps, 1, true);
+                outOfBreathSound();
                 regenerate = true;
                 speed_factor = 1;
                 running = false;
