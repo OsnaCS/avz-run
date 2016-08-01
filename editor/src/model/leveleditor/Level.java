@@ -47,8 +47,22 @@ public class Level {
         allways.remove(toDelete);
     }
 
-    public void clear(){
-        allrooms.clear();
+    public void clearWays() {
         allways.clear();
+    }
+
+    public void clearRooms() {
+        allrooms.clear();
+    }
+
+    public void setWays(LinkedList<Way> wayList) {
+        clearWays();
+        this.allways = wayList;
+
+    }
+
+    public void clear(){
+        clearRooms();
+        clearWays();
     }
 }
