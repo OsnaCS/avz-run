@@ -28,7 +28,7 @@ function createAudio(complete) {
 // creates audio
 function createSound(filename, loop, volume, complete) {
     var sound = new THREE.Audio(audioListener);
-    audioLoader.load('sounds/' + filename + '.mp3', function(buffer) {
+    audioLoader.load('/build/sounds/' + filename + '.mp3', function(buffer) {
         sound.setBuffer(buffer);
         sound.setLoop(loop);
         sound.setVolume(volume);
@@ -68,7 +68,7 @@ function createBasicSounds() {
     atmosphere = createSound("atmosphere", true, 0.2, function(){
         atmosphere.play();
     });
-    console.log(footsteps);
+    //console.log(footsteps);
 
     extinguisher_Sound = createSound("extinguisher", false, 7);
     door_Sound =  createSound("door-open", false, 20);
