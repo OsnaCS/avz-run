@@ -171,9 +171,7 @@ public class XMLhandler {
 		
 		//Initialize XML-Reading
 		Document doc=null;
-		DocumentBuilderFactory fac;
 		DocumentBuilder build;
-		fac = DocumentBuilderFactory.newInstance();
 		build = null;
 		try {
 			build = factory.newDocumentBuilder();
@@ -198,6 +196,7 @@ public class XMLhandler {
 		Level level =new Level();
 		
 		// Create Waylist for every Room
+		@SuppressWarnings("unchecked")
 		LinkedList<Way>[] list = new LinkedList[nodelist.getLength()];
 		
 		// create Fatherrooms for the way
@@ -279,7 +278,8 @@ public class XMLhandler {
 				level.addWay(way);
 			}
 		}
-		this.toXML(level);
+		// for testing
+		//this.toXML(level);
 		return level;
 	}
 
@@ -321,7 +321,7 @@ public class XMLhandler {
 		rootElement.appendChild(fires);
 
 		//List with all Rooms
-		// TODO: The name is not a good KEY, serveral rooms could have same name;
+		
 		LinkedList<Room> roomlist = level.getRooms();
 		// Hashmap
 		HashMap<Room,Integer> map = new HashMap<Room,Integer>();
@@ -406,7 +406,7 @@ public class XMLhandler {
 		try {
 			transformer = transformerFactory.newTransformer();
 		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
+		
 			e.printStackTrace();
 		}
 		// Makes the XML Output beautiful
@@ -437,15 +437,21 @@ public class XMLhandler {
 	 */
 	public File writeXML(Level level, String filename) {
 		File f = new File(filename);
+		if(!f.exists()) {
+		    try {
+				f.createNewFile();
+			} catch (IOException e) {
+
+				e.printStackTrace();
+			}
+		} 
 		try (PrintWriter writer = new PrintWriter(f)) {
 			writer.println(toXML(level));
 
 		} catch (IOException e) {
 			
-
-			e.printStackTrace();
-		} finally {
 			System.err.println("Error Saving XML-File");
+			e.printStackTrace();
 		}
 
 		return f;
