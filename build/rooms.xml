@@ -119,6 +119,10 @@
 			<light index="klo_small" kind="pointlight" objectname="kleinlicht" position="(7.71, -14.13, 5)" normal="(0,0,-1)" intensity="0.2" color="0xFFFFFF" />
         </lights>
 	</room>
+<<<<<<< HEAD
+=======
+		
+>>>>>>> 5ce5d7d59cf57130e0dc76c3553d59a0f492e2de
     <!-- positon spieler spawn: (10.5, 4.8, 3) -->
 	<!-- triggerevent cip positon : (-8.5, -11.5, 0) -->
 	<!-- triggerevent bigfire positon coordinaten: (13.25, -6.5, 0) -->
