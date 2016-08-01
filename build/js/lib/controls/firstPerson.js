@@ -106,7 +106,7 @@ function initPointerLock() {
                 controls.enabled = false;
 
                 if (player.health > 0) {
-                    $("#blocker").show();
+                   $("#blocker").show();
                 }
                 menu = true;
                 $('.gui').hide();

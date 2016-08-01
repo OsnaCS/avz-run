@@ -272,6 +272,7 @@ function enterPin() {
 
     pin_pos = 0;
 
+
     // get object out of focus
     scene.remove(outlineMesh);
     outlineMesh = null;
@@ -289,6 +290,7 @@ function enterPin() {
     document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
     console.log(document.exitPointerLock);
     document.exitPointerLock();
+
 }
 
 // return to game from pin pad
