@@ -7,9 +7,9 @@
 
 
 //consts (change iff you know what you're doing! :P)
-var ROOMSXML = "rooms.xml"
-var OBJECTSXML = "objects.xml"
-var LEVELSXML = "levels.xml"
+var ROOMSXML = "/build/rooms.xml"
+var OBJECTSXML = "/build/objects.xml"
+var LEVELSXML = "/build/levels.xml"
 var SKALIERUNGSFAKTOR = 20;
 var HOLZTURBREITE = SKALIERUNGSFAKTOR*0.88;
 var GLASTURBREITE = SKALIERUNGSFAKTOR*1.2;
