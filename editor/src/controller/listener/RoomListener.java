@@ -1,6 +1,7 @@
 package controller.listener;
 
 import controller.DrawableObjectProcessing;
+import controller.DrawingPanelViewController;
 import model.drawables.DashedRectangle;
 import model.drawables.Point;
 import model.drawables.Rectangle;
@@ -24,12 +25,12 @@ import static javax.swing.SwingUtilities.isRightMouseButton;
 public class RoomListener extends MouseInputAdapter{
 
 	private Point mousePos;
-	private DrawableObjectProcessing delegate;
+	private DrawingPanelViewController delegate;
 	private Level level;
 	private Room room;
 
 	public RoomListener(DrawableObjectProcessing delegate, Room room, Level level) {
-		this.delegate = delegate;
+		this.delegate = (DrawingPanelViewController) delegate;
 		this.level = level;
 		this.room = room;
 	}
@@ -60,7 +61,10 @@ public class RoomListener extends MouseInputAdapter{
 				room.rotate();
 				//TODO Delegate setzen (nice to have)
 			}
+			
+			this.delegate.refreshXML();
 		}
+		
 
 
 	}
