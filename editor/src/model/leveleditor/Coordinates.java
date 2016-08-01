@@ -1,5 +1,7 @@
 package model.leveleditor;
 
+import java.awt.Toolkit;
+
 import model.Matrix;
 import model.drawables.Point;
 
@@ -14,8 +16,8 @@ public class Coordinates {
 	private double posy;
 	
 	// Winkel, um den der Ursprüngliche Punkt gedreht wurde
-	// in Bogenmaß, maximal 2*Pi
-	private double angle;
+	// in Gradmaß, maximal 2*Pi
+	private int angle;
 	
 	// Faktor, um den skaliert wird
 	private int factor;
@@ -65,7 +67,7 @@ public class Coordinates {
 	 * @param angle Winkel, un den rotiert wird
 	 * @param point Punkt, um den Rotiert wird
 	 */
-	public void rotation(double angle, Coordinates point){
+	public void rotation(int angle, Coordinates point){
 		
 		double[][] translate = {{1, 0, -point.getPosx()}, 
 				{0, 1, -point.getPosy()},{0,0,1}};
@@ -94,7 +96,7 @@ public class Coordinates {
 		this.posx = matPoint.getValue(0, 0);
 		this.posy = matPoint.getValue(1, 0);
 		
-		this.angle = this.angle + angle % 2 * Math.PI;
+		this.angle = this.angle + angle % 360;
 		
 	}
 	
@@ -102,7 +104,7 @@ public class Coordinates {
 	 * Führt eine Translation um den 
 	 * @param point Punkt zu den translatiert werden soll
 	 */
-	public void translateTo(Coordinates point) {
+	public void translate(Coordinates point) {
 		
 	}
 	
@@ -112,6 +114,9 @@ public class Coordinates {
 	 * @return Distanz
 	 */
 	public double distanceTo(Coordinates point) {
+		
+		
+		
 		return 0.0;
 	}
 	
@@ -124,12 +129,26 @@ public class Coordinates {
 		return null;
 	}
 	
-	public static Coordinates basisChangeDoubleInt() {
-		return null;
+	public Point basisChangeDoubleInt(Coordinates c) {
+		
+		int width = 800;
+		int heigth = 640;
+		
+		int newX = (int) ((c.getX() * factor) - (width / 2) + 0.5);
+		int newY = (int) ((c.getY() * factor) - (heigth / 2) + 0.5);
+		
+		return new Point(newX, newY);
 	}
 	
-	public static Coordinates basisChangeIntDouble() {
-		return null;
+	public Coordinates basisChangeIntDouble(Point p) {
+		
+		int width = 800;
+		int heigth = 640;
+		
+		double newX = (p.x / factor) + (width / 2);
+		double newY = (p.y / factor) + (heigth / 2);
+		
+		return new Coordinates(newX, newY);
 	}
 	
 	/*********************************************************/
@@ -151,8 +170,13 @@ public class Coordinates {
 	public void setPosy(double posy) {
 		this.posy = posy;
 	}
+	
+	public void setPos(Coordinates pos) {
+		this.posx = pos.getPosx();
+		this.posy = pos.getPosy();
+	}
 
-	public double getAngle() {
+	public int getAngle() {
 		return angle;
 	}
 
