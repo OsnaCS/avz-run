@@ -1,7 +1,5 @@
 package model.leveleditor;
 
-import java.awt.Toolkit;
-
 import model.Matrix;
 import model.drawables.Point;
 
@@ -16,11 +14,11 @@ public class Coordinates {
 	private double posy;
 	
 	// Winkel, um den der Ursprüngliche Punkt gedreht wurde
-	// in Gradmaß, maximal 2*Pi
+	// in Gradmaß, maximal 90°
 	private int angle;
 	
 	// Faktor, um den skaliert wird
-	private int factor;
+	private static int factor = 10;
 	
 	/**
 	 * Konstruktor für einen zweidimesionalen Punkt
@@ -35,10 +33,21 @@ public class Coordinates {
 		this.posy = y;
 		
 		this.angle = 0;
-		
-		this.factor = 10;
 	}
 	
+	/**
+	 * Copy-Konstruktor
+	 */
+	public Coordinates(Coordinates toCopy) {
+		
+		this.x = toCopy.getX();
+		this.posx = toCopy.getPosx();
+		
+		this.y = toCopy.getPosy();
+		this.posy = toCopy.getPosy();
+		
+		this.angle = toCopy.getAngle();
+	}
 	/**
 	 * Gibt die aktuellen Koordinaten umgerechnet in int und skaliert zurück
 	 * @param factor Faktor, um den skaliert wird
@@ -115,7 +124,9 @@ public class Coordinates {
 	 */
 	public double distanceTo(Coordinates point) {
 		
-		
+//		double newX = this 
+//		
+//		double distance = Math.sqrt()
 		
 		return 0.0;
 	}
@@ -129,18 +140,18 @@ public class Coordinates {
 		return null;
 	}
 	
-	public Point basisChangeDoubleInt(Coordinates c) {
+	public static Point basisChangeDoubleInt(Coordinates c) {
 		
 		int width = 800;
 		int heigth = 640;
 		
-		int newX = (int) ((c.getX() * factor) - (width / 2) + 0.5);
-		int newY = (int) ((c.getY() * factor) - (heigth / 2) + 0.5);
+		int newX = c.getScaledIntCoordinates().x - (width / 2);
+		int newY = c.getScaledIntCoordinates().y - (heigth / 2);
 		
 		return new Point(newX, newY);
 	}
 	
-	public Coordinates basisChangeIntDouble(Point p) {
+	public static Coordinates basisChangeIntDouble(Point p) {
 		
 		int width = 800;
 		int heigth = 640;
@@ -190,6 +201,14 @@ public class Coordinates {
 
 	public double getY() {
 		return y;
+	}
+
+	public int getFactor() {
+		return factor;
+	}
+
+	public void setFactor(int factor) {
+		this.factor = factor;
 	}
 
 }
