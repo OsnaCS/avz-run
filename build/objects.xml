@@ -43,6 +43,7 @@
 		<object path="schutt2/schutt2.json" name="schutt2" scale ="1"/>
 		<object path="steckdose.json" name="steckdose" scale="1" />
 		<object path="glastuerrahmen.json" name="glastuerrahmen" scale="1" />
+		<object path="buerostuhl.json" name="buerostuhl" scale="1" />
 	</static>
 
 	<door>
