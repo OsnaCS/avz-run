@@ -134,6 +134,20 @@ public class Coordinates {
 	 */
 	public void translate(Coordinates point) {
 		
+		double[][] translate = {{1, 0, point.getPosx()}, 
+				{0, 1, point.getPosy()},{0,0,1}};
+		
+		Matrix translateTo = new Matrix(translate);
+		
+		double[][] arrPoint = {{this.posx}, 
+				{this.posy},{1}};
+		
+		Matrix matPoint = new Matrix(arrPoint);
+		
+		matPoint = translateTo.multiply(matPoint);
+		
+		this.posx = matPoint.getValue(0, 0);
+		this.posy = matPoint.getValue(1, 0);
 	}
 	
 	/**
@@ -163,18 +177,35 @@ public class Coordinates {
 		double newPosx = -1 * this.posx;
 		double newPosy = -1 * this.posy;
 		
-		double angle = (this.angle + 180) % 360;
+		int angle = (this.angle + 180) % 360;
 		
-		return null;
+		Coordinates v = new Coordinates(newX, newY);
+		
+		v.setPosx(newPosx);
+		v.setPosy(newPosy);
+		
+		v.setAngle(angle);
+		
+		return v;
 	}
 	
 	/**
-	 * Addiert einen Punkt auf den aktuellen Punkt
+	 * Addiert einen Punkt auf den aktuellen Punkt 
+	 * Nur bzgl Pos, x&y werden jeweils auf 0 gesetzt
 	 * @param point Punkt, der addiert wird
 	 * @return Summe der Punkte
 	 */
 	public Coordinates addCoordinats(Coordinates point) {
-		return null;
+		
+		double newPosX = this.posx + point.getPosx();
+		double newPosY = this.posy + point.getPosy();
+		
+		Coordinates v = new Coordinates(0, 0);
+		
+		v.setPosx(newPosX);
+		v.setPosy(newPosY);
+		
+		return v;
 	}
 	
 	/**
