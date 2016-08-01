@@ -68,7 +68,6 @@ function addFire(x, y, z, width, height, depth, spacing) {
     }
     pointlight.position.set(x, y + (fireHeight / 2) , z);
     scene.add(pointlight);
-    console.log(pointlight);
 
     // Firemesh
     var fmesh = fire.mesh.clone();

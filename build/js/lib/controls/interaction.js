@@ -231,7 +231,7 @@ function extinguish() {
         // be new activeObject selected during the delay
         tempActObj = activeObject;
 
-    //    extinguisherAnimation();
+        extinguisherAnimation();
         extinguisherSound();
 
         setTimeout(dFire, 1000);
@@ -504,11 +504,12 @@ function hideThoughts() {
 
 
 
-/*
+
 function extinguisherAnimation(){
     var particles = new THREE.Geometry;
     var particle;
-    var particlenum = 100;
+    var particlenum = 50;
+    var texLoader = new THREE.TextureLoader();
 
     // Player position
     var px = controls.getObject().position.x;
@@ -520,15 +521,95 @@ function extinguisherAnimation(){
     var fy = tempActObj.mesh.position.y;
     var fz = tempActObj.mesh.position.z;
 
+    var a,b,c;
+    var spread = 0.3;
+
     for (var i = 0; i < particlenum; i++) {
         //particle = new THREE.Vector3( THREE.Math.randFloat(px, px + ((fx -px) / particlenum) * i),THREE.Math.randFloat(py, py + ((fy -py) / particlenum) * i), THREE.Math.randFloat(pz, pz + ((fz -pz) / particlenum) * i));
-        particle = new THREE.Vector3(px + ((fx -px) / particlenum) * i, py + ((fy -py) / particlenum) * i, pz + ((fz -pz) / particlenum) * i);
+        a = THREE.Math.randFloat(-spread, spread);
+        b = THREE.Math.randFloat(-spread, spread);
+        c = THREE.Math.randFloat(-spread, spread);
+        particle = new THREE.Vector3(px + ((fx -px) / particlenum) * i + (a * i), py + ((fy -py) / particlenum) * i + (b * i), pz + ((fz -pz) / particlenum) * i + (c * i));
         particles.vertices.push(particle);
     }
 
-    var particleMaterial = new THREE.ParticleBasicMaterial({ color: 0xeeeeee, size: 2 });
+    // Vertex Shader
+    var vertexShader = [
+        'attribute float shift;',
+        'uniform float time;',
+        'uniform float size;',
+        'uniform float lifetime;',
+        'uniform float projection;',
+        'varying float progress;',
+        'float cubicOut( float t ) {',
+        'float f = t - 1.0;',
+        'return f * f * f + 1.0;',
+        '}',
+        'void main() {',
+        'progress = fract(time * 2. / lifetime + shift);',
+        'float eased = cubicOut(progress);',
+        'vec3 pos = vec3(position.x, position.y + eased, position.z);',
+        'gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.);',
+        'gl_PointSize = (projection * size) / gl_Position.w;',
+        '}',
+    ].join('\n');
 
-    var particleSystem = new THREE.ParticleSystem(particles, particleMaterial);
+    // Fragment Shader
+    var fragmentShader = [
+        'uniform sampler2D texture;',
+        'uniform vec3 fogColor;',
+        'uniform float fogDensity;',
+        'varying float progress;',
+        'void main() {',
+        'vec3 color = vec3( 1. );',
+
+        // fog support
+        'float depth = (gl_FragCoord.z / gl_FragCoord.w)+10.0;',
+        'depth = depth * fogDensity * 3.0;',
+        'gl_FragColor = texture2D( texture, gl_PointCoord ) * vec4( color, .3 * ( 1. - progress ))/depth;',
+        '}',
+    ].join('\n');
+
+    var texture = texLoader.load('./levels/materials/textures/smoke2.png');
+    var uniforms = {
+        time: {
+            type: 'f',
+            value: 0
+        },
+        size: {
+            type: 'f',
+            value: 70
+        },
+        texture: {
+            type: 't',
+            value: texture
+        },
+        lifetime: {
+            type: 'f',
+            value: 10
+        },
+        projection: {
+            type: 'f',
+            value: Math.abs(HEIGHT / (2 * Math.tan(THREE.Math.degToRad(camera.fov))))
+        },
+        fogColor: {type: "c", value: scene.fog.color},
+        fogDensity: {type: "f", value: scene.fog.density},
+    };
+    var material = new THREE.ShaderMaterial({
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader,
+        uniforms: uniforms,
+        blending: THREE.AdditiveBlending,
+        transparent: true,
+        depthWrite: false,
+        fog: true
+    });
+
+
+    //var particleMaterial = new THREE.ParticleBasicMaterial({ map: particleTexture, transparent: true, size: 5 });
+    //var particleMaterial = new THREE.ParticleBasicMaterial({ color: 0xeeeeee, size: 2 });
+
+    var particleSystem = new THREE.Points(particles, material);
 
     scene.add(particleSystem);
 
@@ -538,4 +619,3 @@ function extinguisherAnimation(){
 
     setTimeout(deleteExtinguisherParticles, 1000);
 }
-*/
