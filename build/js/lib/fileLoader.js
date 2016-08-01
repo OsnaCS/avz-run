@@ -80,7 +80,7 @@ var FileLoader = function (callback) {
                 callback();
             }
 
-        }, 7000
+        }, 10000
     );
 
 
