@@ -91,7 +91,7 @@
 			<spawn  index="feuerloescher" position="(14.3, 3, 1)" object="loscher" normaltowall="(0, 1)" scale="1" oninteract="pickUpItem"/>
 			<spawn  index="axt" position="(-7, -23.5, 1.1)" object="axt" normaltowall="(0, -1)" scale="1" oninteract="pickUpItem"/>
 			<spawn  index="sponge" position="(28.5, 1.9, 0.9)" object="schwamm" normaltowall="(0, 1)" scale="1" oninteract="pickUpItem"/>
-			<spawn  index="transponder" position="(4.98, -9.5, 1.6)" object="transponder" normaltowall="(0, 1)" scale="1" oninteract="pickUpItem"/>
+			<spawn  index="transponder" position="(4.5, -8.3, 1.08)" object="transponder" normaltowall="(0, 1)" scale="1" oninteract="pickUpItem"/>
         </spawns>
         <fires>
 			<fire index="cip" position="(-7.92, -15.35, 0)" size="(1,1,1)" val="6"/>
@@ -213,8 +213,10 @@
 			<fire index="1" position="(7.5, -7, 0)" size="(3,3,3)" val="6"/>			
         </fires>
 		<spawns>
-			 
+			 <spawn index="1" position="(1.03, 0.3, 2.5)" object="wand_kaputt" normaltowall="(0,1)" scale="2.38"/>
 			 <spawn index="2" position="(-1, 16, 0)" object="schutt2" normaltowall="(1,0)" scale="1.5"/>
+			 <spawn index="3" position="(3.5, -3.8, 0)" object="tisch" normaltowall="(0,1)" scale="1"/>
+			 <spawn index="4" position="(-1, -3.8, 0)" object="tisch" normaltowall="(0,1)" scale="1"/>
 		</spawns>
 	</room>
 
