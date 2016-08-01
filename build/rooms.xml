@@ -104,22 +104,21 @@
 			<fire index="klo" position="(8.03, -13.84, 0)" size="(1,1,1)" val="6"/>
         </fires>
         <lights>
-			<light index="cip_front" kind="pointlight" objectname="deckenlicht" position="(-15.04, -15.22, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
-			<light index="cip_back" kind="pointlight" objectname="deckenlicht" position="(-15.09, -21.69 , 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
-			<light index="cip_small_front" kind="pointlight" objectname="kleinlicht" position="(-8.11, -15.11, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
-			<light index="cip_small_back" kind="pointlight" objectname="kleinlicht" position="(-8.11 , -22, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
-			<light index="lobby_pfoertner" kind="pointlight" objectname="deckenlicht" position="(-0.29, -3.3, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
-			<light index="lobby_aufzug" kind="pointlight" objectname="deckenlicht" position="(-0.29, 4.04, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
-			<light index="flur_front" kind="pointlight" objectname="deckenlicht" position="(15.74, -6, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
-			<light index="flur_back" kind="pointlight" objectname="deckenlicht" position="(26.87, -6, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
-			<light index="hs1_front" kind="pointlight" objectname="deckenlicht" position="(13.17, 6.23, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
-			<light index="hs1_back" kind="pointlight" objectname="deckenlicht" position="(18.87, 6.23, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
-			<light index="hs2_front" kind="pointlight" objectname="deckenlicht" position="(26.87, 2.97, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
-			<light index="hs2_back" kind="pointlight" objectname="deckenlicht" position="(26.87, 9.05, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
-			<light index="klo_small" kind="pointlight" objectname="kleinlicht" position="(7.71, -14.13, 5)" normal="(0,0,-1)" intensity="0.7" color="0xFFFFFF" />
+			<light index="cip_front" kind="pointlight" objectname="deckenlicht" position="(-15.04, -15.22, 5)" normal="(0,0,-1)" intensity="0.2" color="0xFFFFFF" />
+			<light index="cip_back" kind="pointlight" objectname="deckenlicht" position="(-15.09, -21.69 , 5)" normal="(0,0,-1)" intensity="0.2" color="0xFFFFFF" />
+			<light index="cip_small_front" kind="pointlight" objectname="kleinlicht" position="(-8.11, -15.11, 5)" normal="(0,0,-1)" intensity="0.2" color="0xFFFFFF" />
+			<light index="cip_small_back" kind="pointlight" objectname="kleinlicht" position="(-8.11 , -22, 5)" normal="(0,0,-1)" intensity="0.2" color="0xFFFFFF" />
+			<light index="lobby_pfoertner" kind="pointlight" objectname="deckenlicht" position="(-0.29, -3.3, 5)" normal="(0,0,-1)" intensity="0.2" color="0xFFFFFF" />
+			<light index="lobby_aufzug" kind="pointlight" objectname="deckenlicht" position="(-0.29, 4.04, 5)" normal="(0,0,-1)" intensity="0.2" color="0xFFFFFF" />
+			<light index="flur_front" kind="pointlight" objectname="deckenlicht" position="(15.74, -6, 5)" normal="(0,0,-1)" intensity="0.2" color="0xFFFFFF" />
+			<light index="flur_back" kind="pointlight" objectname="deckenlicht" position="(26.87, -6, 5)" normal="(0,0,-1)" intensity="0.2" color="0xFFFFFF" />
+			<light index="hs1_front" kind="pointlight" objectname="deckenlicht" position="(13.17, 6.23, 5)" normal="(0,0,-1)" intensity="0.2" color="0xFFFFFF" />
+			<light index="hs1_back" kind="pointlight" objectname="deckenlicht" position="(18.87, 6.23, 5)" normal="(0,0,-1)" intensity="0.2" color="0xFFFFFF" />
+			<light index="hs2_front" kind="pointlight" objectname="deckenlicht" position="(26.87, 2.97, 5)" normal="(0,0,-1)" intensity="0.2" color="0xFFFFFF" />
+			<light index="hs2_back" kind="pointlight" objectname="deckenlicht" position="(26.87, 9.05, 5)" normal="(0,0,-1)" intensity="0.2" color="0xFFFFFF" />
+			<light index="klo_small" kind="pointlight" objectname="kleinlicht" position="(7.71, -14.13, 5)" normal="(0,0,-1)" intensity="0.2" color="0xFFFFFF" />
         </lights>
 	</room>
-		
     <!-- positon spieler spawn: (10.5, 4.8, 3) -->
 	<!-- triggerevent cip positon : (-8.5, -11.5, 0) -->
 	<!-- triggerevent bigfire positon coordinaten: (13.25, -6.5, 0) -->
