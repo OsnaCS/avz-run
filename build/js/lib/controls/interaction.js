@@ -31,7 +31,10 @@ function interactionLoop() {
 
     //this gets called once per loop. shoots a ray in viewdirection
     interactionRayCaster.set(controls.getObject().position, controls.getDirection());
-    interactions = interactionRayCaster.intersectObjects(terrain);
+    octreeInteractions = octree.search( interactionRayCaster.ray.origin, interactionRayCaster.ray.far, true, interactionRayCaster.ray.direction );
+    interactions = interactionRayCaster.intersectOctreeObjects( octreeInteractions);
+
+
 
     //if it intersects something which is interactable we call its interaction function
     if(interactions.length>0 && interactions[0].object.type==TYPE_INTERACTABLE) {
