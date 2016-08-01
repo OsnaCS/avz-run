@@ -11,7 +11,9 @@ import java.awt.Graphics;
 
 
 
-
+/*
+ * Created by Tom Krümmel
+ */
 
 public class Way extends DrawableObject {
 	
@@ -195,7 +197,10 @@ public class Way extends DrawableObject {
 	}
 	
 
-	
+	public String toString(){
+		return getType() + " Pos:" + getPos().getPosx() + "/" + getPos().getPosy() + " Normal: " + getNormal().getPosx() +
+				"/" + getNormal().getPosy() + " " + getFather().getName();
+	}
 	
 	
 }

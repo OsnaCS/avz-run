@@ -130,14 +130,56 @@ var fires = [];       //Hier stehen alle Feuer drin.
 			if (curroom[i].getAttribute("name") === whichroom) {
 				var curdoor = curroom[i].getElementsByTagName("spawn");
 				for (j = 0; j < curdoor.length; j++) {
-					var cudo = [];
-					cudo.push(curdoor[j].getAttribute("index"));
-					cudo.push(curdoor[j].getAttribute("position"));
-					cudo.push(curdoor[j].getAttribute("object"));
-					cudo.push(curdoor[j].getAttribute("normaltowall"));
-					cudo.push(curdoor[j].getAttribute("scale"));
-					if (curdoor[j].getAttribute("oninteract") != "") { cudo.push(curdoor[j].getAttribute("oninteract")); } else {cudo.push(""); }
-					SpawnArr.push(cudo);
+					var first = 0; var second = 0; var third = 0;
+					if (curdoor[j].getAttribute("position").indexOf("to") > 0) {
+						parts = curdoor[j].getAttribute("position").split("(")[1].split(")")[0].split(",");
+						var x = []; var y = []; var z = [];
+						for (k = 0; k < parts.length; k++) {
+							if (parts[k].indexOf("to") > 0) {
+								first = parseFloat(parts[k].split(" to ")[0]);
+								second = parseFloat(parts[k].split(" to ")[1].split(" step ")[0]); 
+								third = parseFloat(parts[k].split(" to ")[1].split(" step ")[1]); 
+								for (l = first; l <= second; l+= third) {
+									switch(k){
+										case 0: x.push(l); break;
+										case 1: y.push(l); break;
+										case 2: z.push(l); break;
+									}
+								}
+							} else {
+								switch(k){
+									case 0: x.push(parts[k]); break;
+									case 1: y.push(parts[k]); break;
+									case 2: z.push(parts[k]); break;
+								}								
+							}
+						}
+						var p = 0;
+						for (m = 0; m < x.length; m++) {
+							for (n = 0; n < y.length; n++) {
+								for (o = 0; o < z.length; o++) {
+									var cudo = [];
+									cudo.push(curdoor[j].getAttribute("index")+""+p);
+									cudo.push("("+x[m]+","+y[n]+","+z[o]+")");
+									cudo.push(curdoor[j].getAttribute("object"));
+									cudo.push(curdoor[j].getAttribute("normaltowall"));
+									cudo.push(curdoor[j].getAttribute("scale"));
+									if (curdoor[j].getAttribute("oninteract") != "") { cudo.push(curdoor[j].getAttribute("oninteract")); } else {cudo.push(""); }
+									SpawnArr.push(cudo);	
+									p++;
+								}
+							}
+						}
+					} else {
+						var cudo = [];
+						cudo.push(curdoor[j].getAttribute("index"));
+						cudo.push(curdoor[j].getAttribute("position"));
+						cudo.push(curdoor[j].getAttribute("object"));
+						cudo.push(curdoor[j].getAttribute("normaltowall"));
+						cudo.push(curdoor[j].getAttribute("scale"));
+						if (curdoor[j].getAttribute("oninteract") != "") { cudo.push(curdoor[j].getAttribute("oninteract")); } else {cudo.push(""); }
+						SpawnArr.push(cudo);
+					}
 				}
 			}
 		}
@@ -302,7 +344,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 		VolumetricFire.texturePath = FIRETEXTUREPATH;
 		var fireseg = {x:x, y:y, z:z, sx:sx*SKALIERUNGSFAKTOR, sy:sy*SKALIERUNGSFAKTOR, sz:sz*SKALIERUNGSFAKTOR, val:s}; //TODO: kann ich auch das mesh des feuers adden?
 		fires.push(fireseg);
-		addFire(x, y, z, sx*SKALIERUNGSFAKTOR, sy*SKALIERUNGSFAKTOR, sz*SKALIERUNGSFAKTOR, s);
+		addFire(x, y, z, sx*SKALIERUNGSFAKTOR, sy*SKALIERUNGSFAKTOR, sz*SKALIERUNGSFAKTOR, s*SKALIERUNGSFAKTOR);
 	}
 
 //puts the lights where they belong

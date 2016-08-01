@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<level>
+  <rooms>
+    <room name="lectureroom1" rotation="0.0" x="0.0" y="0.0">room</room>
+    <room name="lectureroom1" rotation="0.0" x="0.0" y="0.0">room</room>
+    <door>door</door>
+  </rooms>
+  <spawns/>
+  <lights/>
+  <fires/>
+</level>
+
