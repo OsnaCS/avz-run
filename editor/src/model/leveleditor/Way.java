@@ -12,10 +12,10 @@ import java.awt.geom.Point2D;
 
 public class Way extends DrawableObject {
 	
-	Coordinates pos;
-	Coordinates normal;
-	Room father;
-	String type;
+	private Coordinates pos;
+	private Coordinates normal;
+	private Room father;
+	private String type;
 	
 	int maxDistance = 10;
 	
@@ -130,10 +130,54 @@ public class Way extends DrawableObject {
 		new Line(a, b).paint(g);
 		
 	}
+
 	
-	public String getType(){
+	/*
+	 * ####### Getter and Setter #####	
+	 */
+	
+	public Coordinates getPos() {
+		return pos;
+	}
+
+	public void setPos(Coordinates pos) {
+		this.pos = pos;
+	}
+
+	public Coordinates getNormal() {
+		return normal;
+	}
+
+	public void setNormal(Coordinates normal) {
+		this.normal = normal;
+	}
+
+	public Room getFather() {
+		return father;
+	}
+
+	public void setFather(Room father) {
+		this.father = father;
+	}
+
+	public String getType() {
 		return type;
 	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public int getMaxDistance() {
+		return maxDistance;
+	}
+
+	public void setMaxDistance(int maxDistance) {
+		this.maxDistance = maxDistance;
+	}
+	
+
+	
 	
 	
 }
