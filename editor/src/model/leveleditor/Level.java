@@ -1,14 +1,11 @@
 package model.leveleditor;
-
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import java.util.LinkedList;
+
 
 /**
  * Created by Barbara on 29/07/16.
  */
-public class Level implements NodeList {
+public class Level {
 
     private LinkedList<Room> allrooms;
     private LinkedList<Way> allways;
@@ -18,21 +15,40 @@ public class Level implements NodeList {
         allways = new LinkedList<Way>();
     }
 
-    @Override
-    public Node item(int index) {
-        return null;
+    public LinkedList<Room> getRooms() {
+        return allrooms;
     }
 
-    @Override
-    public int getLength() {
+    public LinkedList<Way> getWays() {
+        return allways;
+    }
+
+    public int getRoomNr() {
         return allrooms.size();
     }
 
-    public void addRoom(Room newRoom){
-
+    public int getWayNr() {
+        return allways.size();
     }
 
-    public String toXML() {
-        return null;
+    public void addRoom(Room newRoom){
+        allrooms.add(newRoom);
+    }
+
+    public void deleteRoom(Room toDelete){
+        allrooms.remove(toDelete);
+    }
+
+    public void addWay(Way newWay){
+        allways.add(newWay);
+    }
+
+    public void deleteWay(Way toDelete){
+        allways.remove(toDelete);
+    }
+
+    public void clear(){
+        allrooms.clear();
+        allways.clear();
     }
 }
