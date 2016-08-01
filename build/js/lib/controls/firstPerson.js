@@ -1,7 +1,7 @@
 // GODMODE (zum testen, man kann nicht fallen, hat unendlich leben, unendlich sprinten, alle türen sind offen, Nebel kommt langsamer)
 var godmode = true;
 
-var weaksystem = false;
+var weaksystem = true;
 //
 
 // Controls camera via WASD/Mouse, enables player to jump, run and crouch

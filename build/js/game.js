@@ -72,7 +72,7 @@ var octreeObjects = [];
 function init(event) {
 
 
-	CreateSegment("circle_walled_robolab",scene);
+	CreateSegment("groundlevel",scene);
 
     octree = new THREE.Octree( {
         // uncomment below to see the octree (may kill the fps)
