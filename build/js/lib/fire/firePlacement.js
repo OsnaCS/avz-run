@@ -81,7 +81,7 @@ function addFire(x, y, z, width, height, depth, spacing) {
     var fireMesh = new THREE.Mesh(fireGeom, mat);
 
     // create fire sound
-    var firecracking = createSound("firecracking", 50, 5, true, 3, function() {
+    var firecracking = createPositionalSound("firecracking", 50, 5, true, 3, function() {
         fireMesh.add(firecracking);
         playSound(firecracking);
     });
