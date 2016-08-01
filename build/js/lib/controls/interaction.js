@@ -31,7 +31,10 @@ function interactionLoop() {
 
     //this gets called once per loop. shoots a ray in viewdirection
     interactionRayCaster.set(controls.getObject().position, controls.getDirection());
-    interactions = interactionRayCaster.intersectObjects(terrain);
+    octreeInteractions = octree.search( interactionRayCaster.ray.origin, interactionRayCaster.ray.far, true, interactionRayCaster.ray.direction );
+    interactions = interactionRayCaster.intersectOctreeObjects( octreeInteractions);
+
+
 
     //if it intersects something which is interactable we call its interaction function
     if(interactions.length>0 && interactions[0].object.type==TYPE_INTERACTABLE) {
@@ -142,11 +145,11 @@ function pickUpItem() {
 }
 
 function nix() {
-	
+
 }
 
 function destroy(){
-    if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[0]){
+    if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
         //damageDoorSound();
         this.delFromScene();
         console.log('destroyed');
@@ -182,7 +185,7 @@ function open() {
 
 function damageDoor() {
     if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
-		var j = -1; 
+		var j = -1;
 		for (i = 0; i < interact_obj.length; i++) {
 			if (interact_obj[i].interIt == this) {j = i; break;}
 		}
@@ -194,7 +197,7 @@ function damageDoor() {
 		} else {
 			alert("Something went terribly wrong.")
 		}
-        damageDoorSound(); 
+        damageDoorSound();
     }else{
         showThoughts("Wie könnte ich diese Tür wohl öffnen?",5000);
     }
@@ -202,7 +205,7 @@ function damageDoor() {
 
 function destroyDoor() {
     if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
-		var j = -1; 
+		var j = -1;
 		for (i = 0; i < interact_obj.length; i++) {
 			if (interact_obj[i].interIt == this) {j = i; break;}
 		}
@@ -216,7 +219,7 @@ function destroyDoor() {
 		} else {
 			alert("Something went terribly wrong.")
 		}
-        damageDoorSound(); 
+        damageDoorSound();
     }else{
         showThoughts("Das Loch ist noch nicht groß genug... wie könnte ich es wohl vergrößern?",5000);
     }
@@ -247,12 +250,12 @@ function dFire(){
 
 // Attach this function to the fire
 function extinguish() {
-	if(this.type == TYPE_FIRE && selectedItem.name == newItemList[12]){
+	if(this.type == TYPE_FIRE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "loscher")){
         // activeObject must be saved so that the dFire function is not influence
         // be new activeObject selected during the delay
         tempActObj = activeObject;
 
-      //  extinguisherAnimation();
+        extinguisherAnimation();
         extinguisherSound();
 
         setTimeout(dFire, 1000);
@@ -272,6 +275,7 @@ function enterPin() {
 
     pin_pos = 0;
 
+
     // get object out of focus
     scene.remove(outlineMesh);
     outlineMesh = null;
@@ -289,6 +293,7 @@ function enterPin() {
     document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
     console.log(document.exitPointerLock);
     document.exitPointerLock();
+
 }
 
 // return to game from pin pad
@@ -455,10 +460,10 @@ function compHack(hackButtonValue) {
 
 // Attach this function to the sink
 function coverMouth(){
-    if(this.type == TYPE_INTERACTABLE && selectedItem.name == newItemList[31]){
+    if(this.type == TYPE_INTERACTABLE&& (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "lappen")){
         startHeavyBreathing();
         HEALTH_PER_SECOND = HEALTH_PER_SECOND / 2;
-        addItem((newItemList[31]), playerPos[1], playerPos[2] + 10, playerPos[3], 2, 270, true, pickUpItem);
+        //addItem((newItemList[31]), playerPos[1], playerPos[2] + 10, playerPos[3], 2, 270, true, pickUpItem);
         console.log('covered mouth');
         player.delActItem();
     }else{
@@ -524,25 +529,109 @@ function hideThoughts() {
 
 
 
-/*
+
 function extinguisherAnimation(){
     var particles = new THREE.Geometry;
     var particle;
-    var particlenum = 40;
+    var particlenum = 50;
+    var texLoader = new THREE.TextureLoader();
 
+    // Player position
     var px = controls.getObject().position.x;
-    var py = controls.getObject().position.y;
+    var py = controls.getObject().position.y - 3;
     var pz = controls.getObject().position.z;
 
+    // Fire position
+    var fx = tempActObj.mesh.position.x;
+    var fy = tempActObj.mesh.position.y;
+    var fz = tempActObj.mesh.position.z;
+
+    var a,b,c;
+    var spread = 0.3;
 
     for (var i = 0; i < particlenum; i++) {
-        particle = new THREE.Vector3( THREE.Math.randFloat(px, (tempActObj/particlenum) * i).mesh.position.x),THREE.Math.randFloat(py, tempActObj.mesh.position.y), THREE.Math.randFloat(pz, tempActObj.mesh.position.z));
+        a = THREE.Math.randFloat(-spread, spread);
+        b = THREE.Math.randFloat(-spread, spread);
+        c = THREE.Math.randFloat(-spread, spread);
+        particle = new THREE.Vector3(px + ((fx -px) / particlenum) * i + (a * i),
+                                     py + ((fy -py) / particlenum) * i + (b * i),
+                                     pz + ((fz -pz) / particlenum) * i + (c * i));
         particles.vertices.push(particle);
     }
 
-    var particleMaterial = new THREE.ParticleBasicMaterial({ color: 0xeeeeee, size: 2 });
+    // Vertex Shader
+    var vertexShader = [
+        'attribute float shift;',
+        'uniform float time;',
+        'uniform float size;',
+        'uniform float lifetime;',
+        'uniform float projection;',
+        'varying float progress;',
+        'float cubicOut( float t ) {',
+        'float f = t - 1.0;',
+        'return f * f * f + 1.0;',
+        '}',
+        'void main() {',
+        'progress = fract(time * 2. / lifetime + shift);',
+        'float eased = cubicOut(progress);',
+        'vec3 pos = vec3(position.x, position.y + eased, position.z);',
+        'gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.);',
+        'gl_PointSize = (projection * size) / gl_Position.w;',
+        '}',
+    ].join('\n');
 
-    var particleSystem = new THREE.ParticleSystem(particles, particleMaterial);
+    // Fragment Shader
+    var fragmentShader = [
+        'uniform sampler2D texture;',
+        'uniform vec3 fogColor;',
+        'uniform float fogDensity;',
+        'varying float progress;',
+        'void main() {',
+        'vec3 color = vec3( 1. );',
+
+        // fog support
+        'float depth = (gl_FragCoord.z / gl_FragCoord.w)+10.0;',
+        'depth = depth * fogDensity * 3.0;',
+        'gl_FragColor = texture2D( texture, gl_PointCoord ) * vec4( color, .3 * ( 1. - progress ))/depth;',
+        '}',
+    ].join('\n');
+
+    var texture = texLoader.load('./levels/materials/textures/smoke2.png');
+    var uniforms = {
+        time: {
+            type: 'f',
+            value: 0
+        },
+        size: {
+            type: 'f',
+            value: 70
+        },
+        texture: {
+            type: 't',
+            value: texture
+        },
+        lifetime: {
+            type: 'f',
+            value: 10
+        },
+        projection: {
+            type: 'f',
+            value: Math.abs(HEIGHT / (2 * Math.tan(THREE.Math.degToRad(camera.fov))))
+        },
+        fogColor: {type: "c", value: scene.fog.color},
+        fogDensity: {type: "f", value: scene.fog.density},
+    };
+    var material = new THREE.ShaderMaterial({
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader,
+        uniforms: uniforms,
+        blending: THREE.AdditiveBlending,
+        transparent: true,
+        depthWrite: false,
+        fog: true
+    });
+
+    var particleSystem = new THREE.Points(particles, material);
 
     scene.add(particleSystem);
 
@@ -552,4 +641,3 @@ function extinguisherAnimation(){
 
     setTimeout(deleteExtinguisherParticles, 1000);
 }
-*/

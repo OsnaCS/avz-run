@@ -3,6 +3,12 @@ package model.leveleditor;
 import model.Matrix;
 import model.drawables.Point;
 
+//TODO Kommentar
+/**
+ * 
+ * @author lhembrock
+ *
+ */
 public class Coordinates {
 	
 	// Ursprüngliche Position des Punktes
@@ -14,7 +20,7 @@ public class Coordinates {
 	private double posy;
 	
 	// Winkel, um den der Ursprüngliche Punkt gedreht wurde
-	// in Gradmaß, maximal 90°
+	// in Gradmaß, maximal 360°
 	private int angle;
 	
 	// Faktor, um den skaliert wird
@@ -67,8 +73,26 @@ public class Coordinates {
 	 */
 	public void setScaledIntCoordinates(Point point) {
 		
+		double x = point.x / factor;
+		double y = point.y / factor;
 		
+		this.posx = x;
+		this.posy = y;
 		
+	}
+	
+	/**
+	 * Umrechnung von Punkt zu Vektor
+	 * @return berechneter Vektor
+	 */
+	public Coordinates getVector() {
+		
+		Coordinates v = new Coordinates(0, 0);
+		
+		v.setPosx(getX());
+		v.setPosy(getY());
+		
+		return v;
 	}
 	
 	/**
@@ -115,6 +139,20 @@ public class Coordinates {
 	 */
 	public void translate(Coordinates point) {
 		
+		double[][] translate = {{1, 0, point.getPosx()}, 
+				{0, 1, point.getPosy()},{0,0,1}};
+		
+		Matrix translateTo = new Matrix(translate);
+		
+		double[][] arrPoint = {{this.posx}, 
+				{this.posy},{1}};
+		
+		Matrix matPoint = new Matrix(arrPoint);
+		
+		matPoint = translateTo.multiply(matPoint);
+		
+		this.posx = matPoint.getValue(0, 0);
+		this.posy = matPoint.getValue(1, 0);
 	}
 	
 	/**
@@ -124,22 +162,63 @@ public class Coordinates {
 	 */
 	public double distanceTo(Coordinates point) {
 		
-//		double newX = this 
-//		
-//		double distance = Math.sqrt()
+		double newX = Math.pow(this.posx - point.getPosx(), 2); 
+		double newY = Math.pow(this.posy - point.getPosy(), 2); 
 		
-		return 0.0;
+		double distance = Math.sqrt(newX + newY);
+		
+		return distance;
 	}
 	
 	/**
-	 * Addiert einen Punkt auf den aktuellen Punkt
+	 * Invertiert die aktuellen Coordinates und gibt sie in neuen Coordinates zurück
+	 * @return invertierte Coordinates 
+	 */
+	public Coordinates getInvert() {
+		
+		double newX = -1 * this.x; 
+		double newY = -1 * this.y;
+		
+		double newPosx = -1 * this.posx;
+		double newPosy = -1 * this.posy;
+		
+		int angle = (this.angle + 180) % 360;
+		
+		Coordinates v = new Coordinates(newX, newY);
+		
+		v.setPosx(newPosx);
+		v.setPosy(newPosy);
+		
+		v.setAngle(angle);
+		
+		return v;
+	}
+	
+	/**
+	 * Addiert einen Punkt auf den aktuellen Punkt 
+	 * Nur bzgl Pos, x&y werden jeweils auf 0 gesetzt
 	 * @param point Punkt, der addiert wird
 	 * @return Summe der Punkte
 	 */
 	public Coordinates addCoordinats(Coordinates point) {
-		return null;
+		
+		double newPosX = this.posx + point.getPosx();
+		double newPosY = this.posy + point.getPosy();
+		
+		Coordinates v = new Coordinates(0, 0);
+		
+		v.setPosx(newPosX);
+		v.setPosy(newPosY);
+		
+		return v;
 	}
 	
+	/**
+	 * Gibt die Koordinaten, die bzgl des Double-Koordinatensystems gegeben sind,
+	 * in Koordinaten bzgl des Int-Koordinatensystem um
+	 * @param c unzurechnende Koordinaten
+	 * @return umgerechnete Koordinaten
+	 */
 	public static Point basisChangeDoubleInt(Coordinates c) {
 		
 		int width = 800;
@@ -151,6 +230,12 @@ public class Coordinates {
 		return new Point(newX, newY);
 	}
 	
+	/**
+	 * Gibt die Koordinaten, die bzgl des Int-Koordinatensystems gegeben sind,
+	 * in Koordinaten bzgl des Double-Koordinatensystem um
+	 * @param c unzurechnende Koordinaten
+	 * @return umgerechnete Koordinaten
+	 */
 	public static Coordinates basisChangeIntDouble(Point p) {
 		
 		int width = 800;
@@ -203,12 +288,12 @@ public class Coordinates {
 		return y;
 	}
 
-	public int getFactor() {
+	public static int getFactor() {
 		return factor;
 	}
 
-	public void setFactor(int factor) {
-		this.factor = factor;
+	public static void setFactor(int factorNew) {
+		factor = factorNew;
 	}
 
 }
