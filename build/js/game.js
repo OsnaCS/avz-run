@@ -72,6 +72,8 @@ var octreeObjects = [];
 function init(event) {
 
 
+    //CreateSegment("lectureroom1",scene);
+
 	CreateSegment("groundlevel",scene);
 
     octree = new THREE.Octree( {
@@ -89,6 +91,7 @@ function init(event) {
         // helps insert objects that lie over more than one node
         overlapPct: 0.15
     } );
+
 
     // set up the scene, the camera and the renderer
     function scene (){
@@ -177,10 +180,11 @@ function createScene(complete) {
     var sky_directions  = ["right", "left", "top", "bottom", "back", "front"];
     var sky_array = [];
 
+    sky_loader = new THREE.TextureLoader();
     // make texture array
     for (var i = 0; i < 6; i++) {
         sky_array.push( new THREE.MeshBasicMaterial({
-            map: THREE.ImageUtils.loadTexture( "../avz_model/materials/textures/sky/sky_" + sky_directions[i] + ".jpg" ),
+            map: sky_loader.load( "../avz_model/materials/textures/sky/sky_" + sky_directions[i] + ".jpg" ),
             side: THREE.BackSide,
         }));
     }
@@ -237,17 +241,15 @@ function loop() {
             scene.fog.density = myfog;
 
             // YOU NEED TO CALL THIS (srycaps)
-            controlLoop(controls);
-            interactionLoop();
+            if (!special_html_input) controlLoop(controls);
+            if (!special_html_input) interactionLoop();
 
             renderer.render(scene, camera);
             octree.update();
             stats.end();
         }
     }
-    // } else {
-    //     requestAnimationFrame(loop);
-    // }
+
 };
 
 

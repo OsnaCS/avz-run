@@ -1,5 +1,6 @@
 // GODMODE (zum testen, man kann nicht fallen, hat unendlich leben, unendlich sprinten, alle türen sind offen, Nebel kommt langsamer)
-var godmode = true;
+
+var godmode = false;
 
 var weaksystem = true;
 //
@@ -103,13 +104,20 @@ function initPointerLock() {
                 $(".gui").show();
                 $("#blocker").hide();
 
-            } else {
+            } else if (special_html_input) {
 
+                scene.remove(outlineMesh);
+                outlineMesh = null;
+                activeObject = null;
+                controls.enabled = false;
+
+            } else {
                 controls.enabled = false;
 
                 if (player.health > 0) {
                    $("#blocker").show();
                 }
+
                 menu = true;
                 $('.gui').hide();
             }
@@ -502,6 +510,7 @@ function controlLoop(controls) {
             velocity.x = Math.max(0, velocity.x);
         }
     }
+
     controls.getObject().translateX(velocity.x * delta);
     controls.getObject().translateY(velocity.y * delta);
     controls.getObject().translateZ(velocity.z * delta);
@@ -529,7 +538,6 @@ function controlLoop(controls) {
 
     // player can get exhausted/regenerate energy
     if (!menu) {
-
         if (running) {
             energy -= delta * 30;
             if (energy <= 0) {
