@@ -222,14 +222,13 @@ function createScene(complete) {
     // we have to update the camera and the renderer size
     window.addEventListener('resize', handleWindowResize, false);
 
-    enterPin();
     scene.fog = new THREE.FogExp2(0x424242, 0.005);
     complete();
 }
 
 
 function loop() {
-    console.log(octreeObjects);
+    //console.log(octreeObjects);
 
     if (!menu && !pause) {
         if (player.health <= 0) {
@@ -238,7 +237,7 @@ function loop() {
         } else {
 
             stats.begin();
-            requestAnimationFrame(loop);
+            if (!special_html_input) requestAnimationFrame(loop);
             scene.fog.density = myfog;
 
             // YOU NEED TO CALL THIS (srycaps)

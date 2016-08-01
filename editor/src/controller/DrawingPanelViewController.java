@@ -26,6 +26,7 @@ import controller.listener.RoomListener;
 import model.drawables.DrawableObject;
 import model.drawables.Point;
 import model.leveleditor.DashedRoom;
+import model.leveleditor.Level;
 import model.leveleditor.Room;
 import model.leveleditor.Way;
 import model.leveleditor.XMLhandler;
@@ -47,9 +48,8 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 	// View
 	private DrawingPanelView drawingPanelView;
 	private JFrame frame;
-	private int height= 640;
-	private int width= 800;
-
+	private int height = 640;
+	private int width = 800;
 
 	// Model
 	private LinkedList<DrawableObject> drawableObjectsModel;
@@ -59,15 +59,17 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 	private String filename;
 
 	// Alle Räume, die im Level vorhanden sind
-	private LinkedList<Room> roomlist = new LinkedList<Room>();
+	LinkedList<Room> allRooms = new LinkedList<Room>();
+	LinkedList<Way> allWays = new LinkedList<Way>();
 
 	// Speichert XML-Dateien
-	XMLhandler handler = new XMLhandler();
-	
+	XMLhandler handler = new XMLhandler("xml_map_editor.xml");
+
 	private RoomListener roomListener;
-	
-	private Level aktLevel;
-	
+
+	Level aktLevel;
+	LinkedList<Level> levels;
+
 	DrawingPanelViewController controller = this;
 
 	/**
@@ -76,12 +78,19 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 	public DrawingPanelViewController(String filename, JFrame frame) {
 
 		this.filename = filename;
-
+		
+		levels = new LinkedList<Level>();
+		aktLevel = null;
 
 		drawableObjectsModel = new LinkedList<DrawableObject>();
+		try {
+			this.drawableObjectsModel.add(handler.createRoomFromXML("center"));
+		} catch (FileNotFoundException e2) {
+			e2.printStackTrace();
+		}
 		drawingPanelView = new DrawingPanelView(width, height, drawableObjectsModel);
-		
-		this.roomListener = new RoomListener(this);
+
+		this.roomListener = null;
 
 		this.drawingPanelView.addMouseListener(roomListener);
 
@@ -100,7 +109,15 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 			public void actionPerformed(ActionEvent e) {
 				// Das Model leeren und die View neu zeichnen
 				drawableObjectsModel.clear();
+				try {
+					drawableObjectsModel.add(handler.createRoomFromXML("center"));
+				} catch (FileNotFoundException e2) {
+					e2.printStackTrace();
+				}
 				drawingPanelView.getDrawingPanel().repaint();
+				levels = new LinkedList<Level>();
+				aktLevel = null;
+				allRooms = new LinkedList<Room>();
 			}
 		};
 
@@ -138,11 +155,15 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 					break;
 				}
 
-				Room room =  handler.createRoomFromXML(selectedRoom);
+				Room room = null;
+				try {
+					room = handler.createRoomFromXML(selectedRoom);
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 
-				LinkedList<Way> allways = getRoomListener().getAllways();
-
-				RoomListener roomListener = new RoomListener(controller, room, allways);
+				RoomListener roomListener = new RoomListener(controller, room, getAktLevel());
 
 				this.changeMouseInputListenerTo(roomListener);
 
@@ -186,7 +207,7 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		ActionListener save = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 			}
 		};
 
@@ -195,11 +216,6 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				// letzen Schritt rückgängig machen
-				File f = undoFiles();
-
-				// XML-Anzeige neu laden
-				refreshXML(f);
 			}
 		};
 
@@ -223,30 +239,6 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		drawableObjectsModel.add(drawableObject);
 		drawingPanelView.getDrawingPanel().repaint();
 
-		// keine Dashed-Rooms speichern
-		if (!(drawableObject instanceof DashedRoom)) {
-			this.roomlist.add((Room) drawableObject);
-
-			// Hilfsfile anlegen
-			File newFile = null;
-			try {
-				String s = "roomTemp" + i + ".xml";
-				newFile = handler.writeXML(roomlist, s);
-				i++;
-				speicher.add(newFile);
-			} catch (ParserConfigurationException | TransformerException e) {
-				e.printStackTrace();
-			}
-
-			// aktuelles File neu setzen
-			this.oldFiles = this.aktFile;
-			this.aktFile = newFile;
-
-			// XML-Anzeige neu laden
-			refreshXML(this.aktFile);
-
-		}
-
 	}
 
 	/**
@@ -258,27 +250,6 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		drawableObjectsModel.remove(temporaryObject);
 		drawingPanelView.getDrawingPanel().repaint();
 		temporaryObject = null;
-
-		if (!speicher.isEmpty()) {
-			speicher.removeLast();
-		}
-
-		String s = "roomTemp" + i + ".xml";
-
-		File help = new File(s);
-		if (help.exists()) {
-			help.delete();
-		}
-
-		if (i > 0) {
-			i--;
-		}
-
-		try {
-			this.aktFile.createNewFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
 	}
 
@@ -306,52 +277,117 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 
 		// keine Dashed-Rooms speichern
 		if (!(drawableObject instanceof DashedRoom)) {
-			this.roomlist.add((Room) drawableObject);
-
-			// Hilfsfile anlegen
-			File newFile = null;
-			try {
-				String s = "roomTemp" + i + ".xml";
-				newFile = handler.writeXML(roomlist, s);
-				i++;
-				speicher.add(newFile);
-			} catch (ParserConfigurationException | TransformerException e) {
-				e.printStackTrace();
-			}
-
-			// aktuelles File neu setzen
-			this.oldFiles = this.aktFile;
-			this.aktFile = newFile;
-
-			// XML-Anzeige neu laden
-			refreshXML(this.aktFile);
+			this.allRooms.add((Room) drawableObject);
 		}
+		
+		
 	}
 
 	/**
 	 * Setzt die XML-Anzeige neu
-	 * 
-	 * @param f
-	 *            aktuelles File, das in der Anzeige angezeigt wird
 	 */
-	public void refreshXML(File f) {
+	public void refreshXML() {
 
-		// Aus XML-Datei auslesen
-		StringBuilder temp = new StringBuilder();
-		String zeile = null;
-		BufferedReader in = null;
-		try {
-			in = new BufferedReader(new FileReader(f));
-			while ((zeile = in.readLine()) != null) {
-				temp.append(zeile);
-				temp.append(System.lineSeparator());
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		// Textfeld neu setzen
-		this.drawingPanelView.getXMLPanel().getTextField().setText(temp.toString());
+		String text = handler.toXML(aktLevel);
+		
+		this.drawingPanelView.getXMLPanel().getTextField().setText(text);
 
+	}
+
+	public DrawingPanelView getDrawingPanelView() {
+		return drawingPanelView;
+	}
+
+	public void setDrawingPanelView(DrawingPanelView drawingPanelView) {
+		this.drawingPanelView = drawingPanelView;
+	}
+
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public LinkedList<DrawableObject> getDrawableObjectsModel() {
+		return drawableObjectsModel;
+	}
+
+	public void setDrawableObjectsModel(LinkedList<DrawableObject> drawableObjectsModel) {
+		this.drawableObjectsModel = drawableObjectsModel;
+	}
+
+	public DrawableObject getTemporaryObject() {
+		return temporaryObject;
+	}
+
+	public void setTemporaryObject(DrawableObject temporaryObject) {
+		this.temporaryObject = temporaryObject;
+	}
+
+	public String getFilename() {
+		return filename;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
+	public LinkedList<Room> getRoomlist() {
+		return allRooms;
+	}
+
+	public void setRoomlist(LinkedList<Room> roomlist) {
+		this.allRooms = roomlist;
+	}
+
+	public XMLhandler getHandler() {
+		return handler;
+	}
+
+	public void setHandler(XMLhandler handler) {
+		this.handler = handler;
+	}
+
+	public RoomListener getRoomListener() {
+		return roomListener;
+	}
+
+	public void setRoomListener(RoomListener roomListener) {
+		this.roomListener = roomListener;
+	}
+
+	public Level getAktLevel() {
+		return aktLevel;
+	}
+
+	public void setAktLevel(Level aktLevel) {
+		this.aktLevel = aktLevel;
+	}
+
+	public DrawingPanelViewController getController() {
+		return controller;
+	}
+
+	public void setController(DrawingPanelViewController controller) {
+		this.controller = controller;
 	}
 
 }

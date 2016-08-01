@@ -14,6 +14,7 @@ var outlineMesh=null;
 var pin = new Array(4);
 var transponder_config = new Array(2);
 var pin_pos = 0;
+var ch_pos = 0;
 
 var CORRECT_PIN = ['0','0','4','2'];
 var CORRECT_TRANSPONDER = ['4','3'];
@@ -25,6 +26,9 @@ var FADE_TIME = 1200;
 
 var special_html_input = false;
 
+var interObj;
+
+
 document.addEventListener( 'click', onMouseClick, false );
 
 function interactionLoop() {
@@ -34,29 +38,30 @@ function interactionLoop() {
     octreeInteractions = octree.search( interactionRayCaster.ray.origin, interactionRayCaster.ray.far, true, interactionRayCaster.ray.direction );
     interactions = interactionRayCaster.intersectOctreeObjects( octreeInteractions);
 
-
-
     //if it intersects something which is interactable we call its interaction function
-    if(interactions.length>0 && interactions[0].object.type==TYPE_INTERACTABLE) {
+    if(interactions.length>0) {
+        interObj= getGameObject(interactions[0].object);
+        if( interObj.type==TYPE_INTERACTABLE) {
 
-        if(activeObject!=interactions[0].object) {
-            scene.remove(outlineMesh);
-            outlineMesh=null;
-            activeObject= interactions[0].object;
-            //if we switch objects we change the outline
+            if(activeObject!=interObj) {
+                scene.remove(outlineMesh);
+                outlineMesh=null;
+                activeObject= interObj;
+                //if we switch objects we change the outline
 
-        } else {
-            //if we find an interactable object we outline it
-            activeObject= interactions[0].object;
-            if(outlineMesh==null) {
-                outlineMesh = activeObject.mesh.clone();
-                outlineMesh.material = outlineMaterial;
-                outlineMesh.position.copy(activeObject.mesh.position);
-                outlineMesh.is_ob = true;
-                scene.add(outlineMesh);
+            } else {
+                //if we find an interactable object we outline it
+                activeObject= interObj;
+                if(outlineMesh==null) {
+                    outlineMesh = activeObject.mesh.clone();
+                    outlineMesh.material = outlineMaterial;
+                    outlineMesh.position.copy(activeObject.mesh.position);
+                    outlineMesh.is_ob = true;
+                    scene.add(outlineMesh);
+                }
+
+
             }
-
-
         }
     } else {
         //remove outline mesh if there are no interactive items found
@@ -67,31 +72,37 @@ function interactionLoop() {
         }
     }
             //reaching the exit
-    if (interactions.length>0 && interactions[0].object.type==TYPE_EXIT) {
+    if (interactions.length>0) {
+        interObj = getGameObject(interactions[0].object);
+        if(interObj.type==TYPE_EXIT){
         // nextLevel(); TODO: implement somewhere
+        }
     }
     //
-    if(interactions.length>0 && interactions[0].object.type==TYPE_FIRE) {
-        console.log("interact");
-        //this might be changed..
-        if(activeObject!=interactions[0].object) {
-            scene.remove(outlineMesh);
-            outlineMesh=null;
-            activeObject= interactions[0].object;
+    if(interactions.length>0) {
+        interObj = getGameObject(interactions[0].object);
+        if(interactions[0].object.type==TYPE_FIRE) {
+            console.log("interact");
+            //this might be changed..
+            if(activeObject!=interObj) {
+                scene.remove(outlineMesh);
+                outlineMesh=null;
+                activeObject= interObj;
 
 
-        } else {
+            } else {
 
-            activeObject= interactions[0].object;
-            if(outlineMesh==null) {
-                outlineMesh = activeObject.mesh.clone();
-                outlineMesh.material = outlineMaterial;
-                outlineMesh.position.copy(activeObject.mesh.position);
-                outlineMesh.is_ob = true;
-                scene.add(outlineMesh);
+                activeObject= interObj;
+                if(outlineMesh==null) {
+                    outlineMesh = activeObject.mesh.clone();
+                    outlineMesh.material = outlineMaterial;
+                    outlineMesh.position.copy(activeObject.mesh.position);
+                    outlineMesh.is_ob = true;
+                    scene.add(outlineMesh);
+                }
+
+
             }
-
-
         }
     }
 
@@ -131,6 +142,13 @@ GameObject = function(mesh, interaction, type, name) {
 
     }
 
+}
+
+function getGameObject(mesh){
+    for (var i = 0;i<octreeObjects.length;i++) {
+        if( octreeObjects[i].mesh != undefined &&octreeObjects[i].mesh == mesh) return octreeObjects[i];
+    }
+    return mesh;
 }
 
 function onMouseClick() {
@@ -273,16 +291,13 @@ function extinguish() {
 // open pin pad image and its HTML
 function enterPin() {
 
-    pin_pos = 0;
-
-    console.log('hey');
-
     // pause interaction loop
     special_html_input = true;
 
     // show pin pad and make default pause screen invisible
-    $("#pinPad").css("z-index", 20);
     $("#pinPad").show();
+    $("#pinPad").css("z-index", 20);
+
 
     // exit pointerLock so player can use cursor
     document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
@@ -292,13 +307,9 @@ function enterPin() {
 // return to game from pin pad
 function exitPinPad() {
 
-    console.log('bye');
-    // start loop again
-    //menu = false;
-
-    // hide pin pad, reset blocker
+    // hide pin pad
     $("#pinPad").css("z-index", 0);
-    $("#pinPad").hide();
+    $("#pinPad").css("display","none");
 
     // determine if entered code was correct
     if (CORRECT_PIN[0] == pin[0] && CORRECT_PIN[1] == pin[1] && CORRECT_PIN[2] == pin[2] && CORRECT_PIN[3] == pin[3]) lockOpen = true;
@@ -341,8 +352,6 @@ function pinPad(pinvalue) {
 
             default:
 
-
-
                 if (pin_pos<4) { // unless 4 digits have already been entered
                     pin[pin_pos] = pinvalue; // set current digit to entered number
                     pin_pos++;
@@ -361,13 +370,8 @@ function pinPad(pinvalue) {
 function enterCH() {
 
     if(this.type == TYPE_INTERACTABLE ){ //&& selectedItem.name == "transponder"){ //TODO change
-        pin_pos = 0;
-        // get object out of focus
-        scene.remove(outlineMesh);
-        outlineMesh = null;
-        activeObject = null;
 
-        menu = true;
+        special_html_input = true;
 
         $("#compHack").css("z-index", 20);
         $("#compHack").css("display","block");
@@ -387,12 +391,9 @@ function enterCH() {
 
 function exitCH() {
 
-    $("#blocker").css("z-index", 20);
     $("#compHack").css("z-index", 0);
     $("#compHack").hide();
 
-    // Ask the browser to lock the pointer
-    menu = false;
 
     // determine if entered code was correct
     if (CORRECT_TRANSPONDER[0] == transponder_config[0] && CORRECT_TRANSPONDER[1] == transponder_config[1]){
@@ -420,7 +421,7 @@ function compHack(hackButtonValue) {
 
                 transponder_config[0] = null;
                 transponder_config[1] = null;
-                pin_pos = 0;
+                ch_pos = 0;
                 document.getElementById("pinDisplayCH").innerHTML = "key lock:";
                 break;
 
@@ -431,7 +432,7 @@ function compHack(hackButtonValue) {
 
             default:
 
-                if (pin_pos<2) {
+                if (ch_pos<2) {
                     transponder_config[pin_pos] = hackButtonValue;
                     pin_pos++;
                     document.getElementById("pinDisplayCH").innerHTML = "key lock: " + transponder_config.join("");
@@ -446,11 +447,19 @@ function backToGame() {
     prevTime = performance.now();
 
     var element = document.getElementById('world');
+
     //ask browser to lock the pointer again
     element.requestPointerLock();
 
     controls.enabled = true;
     special_html_input = false;
+
+
+    loop();
+
+    scene.remove(outlineMesh);
+    outlineMesh = null;
+    activeObject = null;
 }
 
 
