@@ -31,7 +31,10 @@ function interactionLoop() {
 
     //this gets called once per loop. shoots a ray in viewdirection
     interactionRayCaster.set(controls.getObject().position, controls.getDirection());
-    interactions = interactionRayCaster.intersectObjects(terrain);
+    octreeInteractions = octree.search( interactionRayCaster.ray.origin, interactionRayCaster.ray.far, true, interactionRayCaster.ray.direction );
+    interactions = interactionRayCaster.intersectOctreeObjects( octreeInteractions);
+
+
 
     //if it intersects something which is interactable we call its interaction function
     if(interactions.length>0 && interactions[0].object.type==TYPE_INTERACTABLE) {
@@ -305,15 +308,7 @@ function exitPinPad() {
     if (lockOpen) correctSound();
     else failedSound();
 
-
-    controls.enabled = true;
-    special_html_input = false;
-    // reset delta
-    prevTime = performance.now();
-
-    var element = document.getElementById('world');
-    //ask browser to lock the pointer again
-    element.requestPointerLock();
+    backToGame();
 
 }
 
@@ -410,10 +405,7 @@ function exitCH() {
     }
 
 
-    // reset delta
-    prevTime = performance.now();
-
-    element.requestPointerLock();
+   backToGame();
 }
 
 function compHack(hackButtonValue) {
@@ -449,7 +441,17 @@ function compHack(hackButtonValue) {
         }
 }
 
+function backToGame() {
+    // reset delta
+    prevTime = performance.now();
 
+    var element = document.getElementById('world');
+    //ask browser to lock the pointer again
+    element.requestPointerLock();
+
+    controls.enabled = true;
+    special_html_input = false;
+}
 
 
 // Attach this function to the sink

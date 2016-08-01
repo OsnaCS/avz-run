@@ -7,7 +7,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import java.awt.Point;
+import model.drawables.Point;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -29,7 +29,8 @@ import java.io.Writer;
 import java.util.LinkedList;
 
 /**
- * Created by Thomas Dautzenberg on 26/07/2016. Exctended by Andreas Schroeder
+ * Created by Thomas Dautzenberg on 26/07/2016. 
+ * Extended by Andreas Schroeder
  * Consulted by Tom Kruemmel
  */
 public class XMLhandler {
@@ -151,6 +152,37 @@ public class XMLhandler {
 		return room;
 
 	}
+	public Level createLevelFromXML(String file){
+		
+		
+		Document doc=null;
+		DocumentBuilderFactory fac;
+		DocumentBuilder build;
+		
+		fac = DocumentBuilderFactory.newInstance();
+		build = null;
+		try {
+			build = factory.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			doc = build.parse(new File(file));
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		Node node = doc.getDocumentElement();
+		clean(node);
+		NodeList nodelist;
+		nodelist = node.getChildNodes().item(0).getChildNodes();
+		
+		
+		return null;
+	}
 
 	public String toXML(Level level) {
 
@@ -199,15 +231,15 @@ public class XMLhandler {
 			room.setAttributeNode(roomName);
 
 			Attr x = doc.createAttribute("x");
-			x.setValue(new Double(currentRoom.getcC().getPosx()).toString());
+			x.setValue(new Double(currentRoom.getCenter().getPosx()).toString());
 			room.setAttributeNode(x);
 
 			Attr y = doc.createAttribute("y");
-			y.setValue(new Double(currentRoom.getcC().getPosy()).toString());
+			y.setValue(new Double(currentRoom.getCenter().getPosy()).toString());
 			room.setAttributeNode(y);
 
 			Attr rota = doc.createAttribute("rotation");
-			rota.setValue(new Double(currentRoom.getcC().getAngle()).toString());
+			rota.setValue(new Double(currentRoom.getCenter().getAngle()).toString());
 			room.setAttributeNode(rota);
 
 		}
@@ -276,20 +308,14 @@ public class XMLhandler {
 
 	}
 
-	public File writeXML(LinkedList<Room> roomlist, String filename) {
+	public File writeXML(Level level, String filename) {
 		File f = new File(filename);
 		try (PrintWriter writer = new PrintWriter(f)) {
-			writer.println(toXML(roomlist));
+			writer.println(toXML(level));
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			System.err.println("Error Saving XML-File");
