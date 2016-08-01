@@ -82,7 +82,7 @@ function init(event) {
         // this may decrease performance as it forces a matrix update
         undeferred: false,
         // set the max depth of tree
-        depthMax: Infinity,
+        depthMax: 20,
         // max number of objects before nodes split or merge
         objectsThreshold: 8,
         // percent between 0 and 1 that nodes will overlap each other
@@ -412,6 +412,7 @@ function addTrigger (xPos, zPos, action) {
 
 function removeTrigger(trigger) {
     scene.remove(trigger.mesh);
+    octree.remove(trigger.mesh);
     for (var i =0;i < terrain.length;i++) {
         if(terrain[i]==trigger) {
             terrain.splice(i,1);
