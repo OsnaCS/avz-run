@@ -90,7 +90,6 @@ function init(event) {
         overlapPct: 0.15
     } );
 
->>>>>>> 31ead5f8482719cf5ba4208b0890502748080254
     // set up the scene, the camera and the renderer
     function scene (){
         createScene(audio);
