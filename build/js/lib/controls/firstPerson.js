@@ -1,3 +1,7 @@
+// GODMODE (zum testen, man kann nicht fallen, hat unendlich leben, unendlich sprinten, alle türen sind offen, Nebel kommt langsamer)
+var godmode = true;
+//
+
 // Controls camera via WASD/Mouse, enables player to jump, run and crouch
 
 // ---- NOTES FOR USAGE----
@@ -70,7 +74,7 @@ var UPMOTION_RUN_SPEED = (THRESH_RUN_UP - THRESH_RUN_DOWN) * 0.128;
 var UPMOTION_SPEED = (THRESH_UP - THRESH_DOWN) * 0.07;
 
 // for energy bar
-var STAMINA = 100;
+var STAMINA = 100; if (godmode) {STAMINA = 1000000}
 var energy = STAMINA;
 
 var flashCooldown = 0;
@@ -512,7 +516,7 @@ function controlLoop(controls) {
 
 
     // stop gravity at ground level as collision detection sometimes fails for floor
-    if (firstTime && controls.getObject().position.y < PLAYERHEIGHT) {
+    if ((firstTime || godmode) && controls.getObject().position.y < PLAYERHEIGHT) {
         velocity.y = 0;
         controls.getObject().position.y = PLAYERHEIGHT + PLAYERHEIGHT * 0.2;
     }

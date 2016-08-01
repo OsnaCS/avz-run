@@ -55,12 +55,12 @@ var menu = true;
 var pause = false;
 
 //variable used for increasing fog  //TODO: wie schnell der fog kommt sollte raum/level-abhängig sein
-var MAX_FOG = 0.015;
+var MAX_FOG = 0.015; if (godmode) {MAY_FOG = 0.005};
 var myfog=0.002;
-var fogTime=60;
+var fogTime=60; if (godmode) {fogTime = 1200};
 var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
-var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much health
+var HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at final density you lose this much health
 
 
 
@@ -71,7 +71,7 @@ var HEALTH_PER_SECOND = 10; // if fog is at final density you lose this much hea
 
 function init(event) {
 
-	CreateSegment("lectureroom1", 
+	CreateSegment("groundlevel", 
 	
     // set up the scene, the camera and the renderer
     function scene (){
