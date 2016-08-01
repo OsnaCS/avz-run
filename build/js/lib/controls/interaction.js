@@ -77,25 +77,25 @@ function interactionLoop() {
     //
     if(interactions.length>0) {
         interObj = getGameObject(interactions[0].object);
-        if(interactions[0].object.type==TYPE_FIRE) {
-            console.log("interact");
+        if(interObj.type==TYPE_FIRE) {
+            //console.log("interact");
             //this might be changed..
             if(activeObject!=interObj) {
-                scene.remove(outlineMesh);
-                outlineMesh=null;
+                //scene.remove(outlineMesh);
+                //outlineMesh=null;
                 activeObject= interObj;
 
 
             } else {
 
                 activeObject= interObj;
-                if(outlineMesh==null) {
+                /*if(outlineMesh==null) {
                     outlineMesh = activeObject.mesh.clone();
                     outlineMesh.material = outlineMaterial;
                     outlineMesh.position.copy(activeObject.mesh.position);
                     outlineMesh.is_ob = true;
                     scene.add(outlineMesh);
-                }
+                }*/
 
 
             }
@@ -155,7 +155,7 @@ function onMouseClick() {
 
 function pickUpItem() {
     player.pickUp(this);
-    //pickUpSound();
+    pickUpSound();
 }
 
 function nix() {
@@ -164,7 +164,7 @@ function nix() {
 
 function destroy(){
     if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
-        //damageDoorSound();
+        damageDoorSound();
         this.delFromScene();
         console.log('destroyed');
         player.delActItem();
@@ -242,7 +242,7 @@ function destroyDoor() {
 
 function openLockedDoor() {
 	if(lockOpen){
-        //doorSound();
+        doorSound();
 		if(!this.open) {
 	        this.mesh.rotateY(Math.PI/2.0);
 	        this.open = !this.open;
@@ -264,7 +264,7 @@ function dFire(){
 
 // Attach this function to the fire
 function extinguish() {
-	if(this.type == TYPE_FIRE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "loscher")){
+	if(this.type == TYPE_FIRE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "feuerloescher")){
         // activeObject must be saved so that the dFire function is not influence
         // be new activeObject selected during the delay
         tempActObj = activeObject;
