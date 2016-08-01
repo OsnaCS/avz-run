@@ -41,7 +41,7 @@
 		<object path="glastuerrahmen.json" name="glastuerrahmen" scale="1" />
 	</static>
 	<door>
-		<object name="klotur" path="tuer_klo.json" interaction="0" scale ="1"/>
+		<object name="klotur" path="tuer_klo.json" interaction="2" scale ="1.35"/>
 		<object name="glastur" path="tueren/glastuer.json" interaction="1" scale ="1"/>
 		<object name="holztur" path="tueren/holztuer.json" interaction="1" scale ="1"/>
 		<object name="halbbrokentur" path="tueren/tuer_halbkaputt.json" interaction="0" scale ="1"/>
