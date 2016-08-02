@@ -10,6 +10,8 @@ var lockOpen = false; // pin pad boolean
 
 var outlineMesh = null;
 
+var extinguisherParticleSystem;
+
 // pin pad variables.... may not be stored here?
 var pin = new Array(4);
 var transponder_config = new Array(2);
@@ -139,7 +141,7 @@ GameObject = function(mesh, interaction, type, name) {
     this.type = type;
     this.mesh = mesh;
     this.interact = interaction;
-
+http://127.0.0.1:8000
 
     this.name=name;
 
@@ -317,8 +319,8 @@ function extinguish() {
         extinguisherSound();
 
         setTimeout(dFire, 1000);
-    	console.log('extinguished');
-    	player.delActItem();
+        console.log('extinguished');
+        player.delActItem();
     }
     else{
         console.log('nicht anwendbar');
@@ -516,6 +518,7 @@ function openTransponderDoor(){
             doorSound();
 			var d = getSegmentFromIntItem(this);
 			var kind = "glastur"
+
 			if (objectFilenameToName(d.filename) == "holztuer") kind = "holztur";
 			addObjectViaName(kind, "door", d.x, d.y, d.z, d.skale, d.rot-1, "openopened", d.stretchx);
 			remove_interactible(d);
@@ -572,7 +575,11 @@ function hideThoughts() {
     showInterval = clearInterval();
 }
 
-
+function success() {
+    console.log("YEY");
+    $("#endScreen").fadeIn(5000);
+    $(".GUI").fadeOut(5000);
+}
 
 
 function extinguisherAnimation(){
@@ -676,12 +683,12 @@ function extinguisherAnimation(){
         fog: true
     });
 
-    var particleSystem = new THREE.Points(particles, material);
+    extinguisherParticleSystem = new THREE.Points(particles, material);
 
-    scene.add(particleSystem);
+    scene.add(extinguisherParticleSystem);
 
     function deleteExtinguisherParticles(){
-        scene.remove(particleSystem);
+        scene.remove(extinguisherParticleSystem);
     }
 
     setTimeout(deleteExtinguisherParticles, 1000);

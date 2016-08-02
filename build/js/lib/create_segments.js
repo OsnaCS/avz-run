@@ -193,7 +193,7 @@ var allrooms = []; listallrooms(); //same as line above.
 		}
 		segments[segmentindex].spawns = SpawnArr;
 		callback();
-	}  
+	}
 
 	function getLights(xml, segmentindex, whichroom,callback) {
 		var LightArr = [];
@@ -260,7 +260,7 @@ var allrooms = []; listallrooms(); //same as line above.
 		}
 		callback();
 	}
-	
+
 	function getTriggers(xml, segmentindex, whichroom, callback) {
 		var TriggerArr = [];
 		var xmlDoc = xml.responseXML;
@@ -269,7 +269,7 @@ var allrooms = []; listallrooms(); //same as line above.
 			if (curroom[i].getAttribute("name") === whichroom) {
 				var curdoor = curroom[i].getElementsByTagName("trigger");
 				for (var j = 0; j < curdoor.length; j++) {
-					var cudo = [];  
+					var cudo = [];
 					cudo.push(curdoor[j].getAttribute("index"));
 					cudo.push(curdoor[j].getAttribute("xpos"));
 					cudo.push(curdoor[j].getAttribute("ypos"));
@@ -283,12 +283,12 @@ var allrooms = []; listallrooms(); //same as line above.
 			}
 		}
 		segments[segmentindex].triggers = TriggerArr;
-		callback();	
-		
+		callback();
+
 	}
-	
-	
-	
+
+
+
 
 	function getFileName(xml, segmentindex, whichroom,callback) {
 		var xmlDoc = xml.responseXML;
@@ -354,7 +354,7 @@ var allrooms = []; listallrooms(); //same as line above.
 				var sizex = parseFloat(fire[i][2].slice(1,fire[i][2].indexOf(',')));
 				var sizey = parseFloat(fire[i][2].slice(fire[i][2].indexOf(',')+1,fire[i][2].lastIndexOf(',')));
 				var sizez = parseFloat(fire[i][2].slice(fire[i][2].lastIndexOf(',')+1,fire[i][2].indexOf(')')));
-				
+
 				spawnx = spawnx*SKALIERUNGSFAKTOR;
 				spawny = spawny*SKALIERUNGSFAKTOR*-1;
 				spawnz = spawnz*SKALIERUNGSFAKTOR;
@@ -364,7 +364,7 @@ var allrooms = []; listallrooms(); //same as line above.
 					spawnx = -spawny;
 					spawny = tmp;
 				}
-				
+
 				var xz = changexzaccordingtorot(segments[INDEX1].orx, segments[INDEX1].ory, segments[INDEX1].rot);
 				spawnx = spawnx + parseInt(segments[INDEX1].transx)+xz[0];
 				spawny = spawny + parseInt(segments[INDEX1].transy)+xz[1];
@@ -381,7 +381,7 @@ var allrooms = []; listallrooms(); //same as line above.
 		VolumetricFire.texturePath = FIRETEXTUREPATH;
 		var fireseg = {x:x, y:y, z:z, sx:sx*SKALIERUNGSFAKTOR, sy:sy*SKALIERUNGSFAKTOR, sz:sz*SKALIERUNGSFAKTOR, val:s*SKALIERUNGSFAKTOR}; //TODO: kann ich auch das mesh des feuers adden?
 		fires.push(fireseg);
-		if (sz == 1) {y -= 1*SKALIERUNGSFAKTOR; }
+
 		addFire(x, y, z, sx*SKALIERUNGSFAKTOR, sy*SKALIERUNGSFAKTOR, sz*SKALIERUNGSFAKTOR, s*SKALIERUNGSFAKTOR);
 	}
 
@@ -437,7 +437,7 @@ var allrooms = []; listallrooms(); //same as line above.
 		// [index,xpos,ypos,functionname,fparam1,fparam2]
 		for (var INDEX1 = 0; INDEX1<segments.length; INDEX1++){
 			for (var i = 0; i <segments[INDEX1].triggers.length; i++) {
-				
+
 				tospawn = segments[INDEX1].triggers[i];
 				room1pos = [segments[INDEX1].transx, segments[INDEX1].transy];
 
@@ -454,7 +454,7 @@ var allrooms = []; listallrooms(); //same as line above.
 					spawnx = -spawny;
 					spawny = tmp;
 				}
-				
+
 				var xz = changexzaccordingtorot(segments[INDEX1].orx, segments[INDEX1].ory, segments[INDEX1].rot);
 				spawnx = spawnx + parseInt(segments[INDEX1].transx)+xz[0];
 				spawny = spawny + parseInt(segments[INDEX1].transy)+xz[1];
@@ -469,11 +469,11 @@ var allrooms = []; listallrooms(); //same as line above.
 						else addTrigger(spawnx, spawny, size, partial(functPtr, fparam1, fparam2), tospawn[4], fparam1, fparam2, tospawn[7], tospawn[0], false)
 			}
 		}
-		callback();		
-		
+		callback();
+
 	}
-	
-	
+
+
 //puts the right kind of door where it fits.
 function door_in_doors(callback) {
 	for (var INDEX1 = 0; INDEX1<segments.length; INDEX1++){

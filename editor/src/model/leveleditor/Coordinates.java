@@ -119,8 +119,8 @@ public class Coordinates {
 	 */
 	public Coordinates getVector() {
 		
-		Coordinates v = new Coordinates(0, 0);
-		
+		Coordinates v = new Coordinates(getPosx(), getPosy());
+
 		v.setPosx(getX());
 		v.setPosy(getY());
 		
@@ -160,10 +160,8 @@ public class Coordinates {
 		
 		this.posx = matPoint.getValue(0, 0);
 		this.posy = matPoint.getValue(1, 0);
-		System.out.println("Rot: " + this.posx + ", " + this.posy);
 		
 		this.angle = (this.angle + angle) % 360;
-		
 	}
 	
 	/**
@@ -265,7 +263,7 @@ public class Coordinates {
 	/**
 	 * Gibt die Koordinaten, die bzgl des Int-Koordinatensystems gegeben sind,
 	 * in Koordinaten bzgl des Double-Koordinatensystem um
-	 * @param c unzurechnende Koordinaten
+	 * @param p unzurechnungsfähige Koordinaten
 	 * @return umgerechnete Koordinaten
 	 */
 	public Coordinates basisChangeIntDouble(Point p) {
@@ -273,10 +271,14 @@ public class Coordinates {
 		int width = 800;
 		int heigth = 640;
 		
-		double newX = (p.x / factor) + (width / 2);
-		double newY = (p.y / factor) + (heigth / 2);
+		double newX = (p.x / factor) - (width / 2);
+		double newY = (p.y / factor) - (heigth / 2);
 		
 		return new Coordinates(newX, newY);
+	}
+	
+	public String toString() {
+		return "Koordinaten: " + this.getPosx() + ", " + this.getPosy();
 	}
 	
 	/*********************************************************/
