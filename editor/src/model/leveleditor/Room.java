@@ -3,7 +3,6 @@ package model.leveleditor;
 import model.drawables.DrawableObject;
 import model.drawables.Line;
 import model.drawables.Point;
-import sun.awt.image.ImageWatched;
 
 
 import java.awt.*;
@@ -14,9 +13,9 @@ import java.util.LinkedList;
  */
 public class Room extends DrawableObject {
 
-     Coordinates cA, cE, cC;
-     LinkedList<Way> waylist;
-     String name;
+     private Coordinates cA, cE, cC;
+     private LinkedList<Way> waylist;
+     private String name;
 
     public Room(String name, double ax, double ay, double ex, double ey, Point center, LinkedList<Way> waylist){
 
@@ -24,10 +23,28 @@ public class Room extends DrawableObject {
 
         this.cA = new Coordinates(ax, ay);
         this.cE = new Coordinates(ex, ey);
-        this.cC = new Coordinates(center.x, center.y);
+
+        this.cC = new Coordinates(0,0);
+
+        cC = cC.basisChangeIntDouble(center);
 
         this.waylist = waylist;
 
+    }
+    
+    public Room(Room room){
+    	this.name=room.name;
+    	 this.cA = new Coordinates(room.getcA());
+
+         this.cE = new Coordinates(room.getcE());
+
+         this.cC = new Coordinates(room.getCenter());
+
+    	 this.waylist=new LinkedList<Way>();
+    	 for(int i=0; i<room.waylist.size();i++){
+    		 this.waylist.add(new Way(room.waylist.get(i), this));
+    	 }
+         this.waylist = waylist;
     }
 
     /**
@@ -62,10 +79,15 @@ public class Room extends DrawableObject {
             }
         }
 
-        setWaylist(cutways);
+        this.setWaylist(ownways);
 
-        //return added;
-        return true;
+        allways.clear();
+        allways.addAll(cutways);
+
+        //setWaylist(cutways);
+
+        return added;
+        //return true;
     }
 
     /**
@@ -93,9 +115,13 @@ public class Room extends DrawableObject {
 
     //Rotiert um angle°
     public void rotate(int angle){
-        cA.rotation(90, cC);
-        cE.rotation(90, cC);
-        cC.rotation(90, cC);
+
+        cA.rotation(angle, cC);
+
+        cE.rotation(angle, cC);
+
+        cC.rotation(angle, cC);
+        
     }
 
 
@@ -111,11 +137,12 @@ public class Room extends DrawableObject {
         
     	g.setColor(Color.BLACK);
     	
-        int cX = (int) (cC.getPosx() + 0.5);
-        int cY = (int) (cC.getPosy() + 0.5);
-    	Point c = new Point(cX, cY);
+//        int cX = (int) (cC.getPosx() + 0.5);
+//        int cY = (int) (cC.getPosy() + 0.5);
+//    	Point c = new Point(cX, cY);
         Point a = cA.getScaledIntCoordinates(cC);
         Point e = cE.getScaledIntCoordinates(cC);
+        
         
 
         //zeichenkoordinaten erstellen
@@ -124,10 +151,10 @@ public class Room extends DrawableObject {
 //        e = cE.basisChangeDoubleInt();
 //        c = originalCenter.basisChangeDoubleInt();
 //
-        a.x+=c.x;
-        a.y+=c.y;
-        e.x+=c.x;
-        e.y+=c.y;
+//        a.x+=c.x;
+//        a.y+=c.y;
+//        e.x+=c.x;
+//        e.y+=c.y;
 
         //rechteck zeichnen
         Point ur = new Point(e.x, a.y);
@@ -172,14 +199,17 @@ public class Room extends DrawableObject {
     }
 
     public void setCenter(Point center){
-    	Coordinates newC = cC.basisChangeIntDouble(center);
-        this.cC = newC;
+    	Coordinates newC = new Coordinates(center.x, center.y);
+        setCenter(newC);
     }
 
     public void setCenter(Coordinates cC) {
         this.cC = cC;
         this.cA.setPos(cC.addCoordinats(cA.getVector()));
         this.cE.setPos(cC.addCoordinats(cE.getVector()));
+        for(int i=0; i< waylist.size();i++){
+        	waylist.get(i).getPos().setPos(cC.addCoordinats(waylist.get(i).getPos().getVector()));
+        }
     }
 
 }

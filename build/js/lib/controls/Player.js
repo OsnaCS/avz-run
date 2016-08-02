@@ -83,7 +83,7 @@ Player = function() {
 
         // player can get exhausted/regenerate energy
         if (!menu) {
-            if (running) {
+            if (running && (moveForward || moveLeft || moveBackward || moveRight)) {
                 energy -= delta * 30;
                 if (energy <= 0) {
                     adjustPlaybackRate(footsteps, 1, true);
@@ -153,11 +153,12 @@ function setActiveSlot(slot)  {
 
 
 function addIcon(item,slot) {
-    var tName = item.name.split("/");
-    tName = tName[tName.length-1];
-    tName = tName.split(".")[0];
+	var tName = "";
+	for (var i = 0; i < allobjects.length; i++) {
+		if (allobjects[i].pfad == item.name) {tName = allobjects[i].icon; break;}
+	}
     console.log(tName);
-    $("#slot"+(slot+1)).append("<img id='"+tName+"' src='icons/"+tName+".png'/>" );
+    $("#slot"+(slot+1)).append("<img id='"+tName+"' src='icons/"+tName+"'/>" );
 }
 
 function removeIcon(slot) {

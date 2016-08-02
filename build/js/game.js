@@ -51,12 +51,13 @@ camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
 renderer, container, controls, audioLoader, startInstructions, buttonStart,
 instructions, blocker, button;
 
+
 var menu = true;
 var pause = false;
 
 //variable used for increasing fog  //TODO: wie schnell der fog kommt sollte raum/level-abhängig sein
-var MAX_FOG = 0.015; if (godmode) {MAY_FOG = 0.005};
-var myfog=0.002;
+var MAX_FOG = 0.015; if (godmode) {MAX_FOG = 0.005};
+var myfog=0.02; //var myfog=0.002;
 var fogTime=60; if (godmode) {fogTime = 1200};
 var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
@@ -72,8 +73,7 @@ function init(event) {
 
     clock = new THREE.Clock();
 
-    //CreateSegment("lectureroom1",scene);
-
+    //CreateSegment("groundlevel",scene);
     CreateSegment("robolab",scene);
 
     octree = new THREE.Octree( {
@@ -131,14 +131,17 @@ document.body.appendChild(stats.dom);
 //Create the Scene
 function createScene(complete) {
 
-	blocker = document.getElementById('blocker');
-	container = document.getElementById('world');
-	startInstructions = document.getElementById('startInstructions');
-	buttonStart = document.getElementById('buttonStart');
-	instructions = document.getElementById('instructions');
-	button = document.getElementById('button');
-	button2 = document.getElementById('button2');
-
+    blocker = document.getElementById('blocker');
+    container = document.getElementById('world');
+    startInstructions = document.getElementById('startInstructions');
+    mainMenu = document.getElementById('mainMenu');
+    infoScreen = document.getElementById('infoScreen');
+    buttonStart = document.getElementById('buttonStart');
+    buttonInfo = document.getElementById('buttonInfo');
+    buttonInfoBack = document.getElementById('buttonInfoBack');
+    instructions = document.getElementById('instructions');
+    button = document.getElementById('button');
+    button2 = document.getElementById('button2');
     // Get the width and the height of the screen,
     // use them to set up the aspect ratio of the camera
     // and the size of the renderer.
@@ -231,6 +234,7 @@ function createScene(complete) {
 var roboternum = 0;
 function loop() {
     //console.log(octreeObjects);
+	
 
     if (!menu && !pause) {
     	if (player.health <= 0) {
@@ -243,6 +247,10 @@ function loop() {
             delta = (time - prevTime) / 1000;
 
             stats.begin();
+
+            //setTimeout( function() {
+            //     requestAnimationFrame( loop );
+            // }, 1000 / 10 );
             requestAnimationFrame(loop);
 
             scene.fog.density = myfog;
@@ -288,8 +296,8 @@ function loop() {
                 stats.end();
             }
         }
+} 
 
-    };
 
 
     function handleWindowResize() {
@@ -347,38 +355,40 @@ function createLights() {
 function createRoom(callback) {
 
 	PutSegments(doors);
-	function doors () {
-		door_in_doors(objects);
-		function objects() {
-
-			objects_in_spawns(fires);
-			function fires() {
-				set_fires(lights);
-				function lights () {
-
-					turn_on_lights(callback);
-				}
-			}
-		}
-	}
+    function doors () {
+	    door_in_doors(objects);
+        function objects() {
+	        objects_in_spawns(fires);
+            function fires() {
+                set_fires(lights);
+                function lights () {
+	                turn_on_lights(triggers);
+                    scene.add(new THREE.AmbientLight(0xFFBFBF,0.3));
+					function triggers () {
+						addtriggers(callback);
+					}
+                }
+            }
+        }
+    }
 }
 
 
 //debug-stuff, deleteme
 function ShowSegments() {
-	var text = "";
-	for (i = 0; i <segments.length; i++) {
-		text += printmost(segments[i])+"<br>";  //JSON.stringify(segments[i])
-	}
-	alert(text);
+    var text = "";
+    for (i = 0; i <segments.length; i++) {
+        text += printmost(segments[i])+"<br>";  //JSON.stringify(segments[i])
+    }
+    alert(text);
 }
 function printmost(obj) {
-	var output = '';
-	for (var property in obj) {
-		if (property != 'mesh')
-			{ output += property + ': ' + obj[property]+'; '; }
-	}
-	return output;
+    var output = '';
+    for (var property in obj) {
+      if (property != 'mesh')
+        { output += property + ': ' + obj[property]+'; '; }
+    }
+    return output;
 }
 //debugstuffdeleteme ende
 
@@ -387,11 +397,11 @@ function createItems(callback){
 
      // // addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
 
-	 // // addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name)
-	 // // TYPE_INTERACTABLE; TYPE_TRIGGER; TYPE_FIRE; TYPE_EXIT;
-	 // // intfunction = damage_door, destroy_door, pickUpItem, destroy, open, openLockedDoor, extinguish
+     // // addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name)
+     // // TYPE_INTERACTABLE; TYPE_TRIGGER; TYPE_FIRE; TYPE_EXIT;
+     // // intfunction = damage_door, destroy_door, pickUpItem, destroy, open, openLockedDoor, extinguish
 
-	 // //wände/terrain/statics, interactibles(auch feuer und türen), triggerevents(auch feuer), licher (auch feuer),
+     // //wände/terrain/statics, interactibles(auch feuer und türen), triggerevents(auch feuer), licher (auch feuer),
 
       // addItem((newItemList[0]), -50, 10, 10, 10, true, pickUpItem, newItemList[0]);
       // addItem((newItemList[1]), 20, 5, 10, 1, true, destroy, newItemList[1]);
@@ -415,7 +425,7 @@ function createItems(callback){
 // Add Object with given Path to given coordinates
 function addItemLogic(mesh, interact_type, intfunction, file){
 
-	// alert("Ich habe eine Daseinsberechtigung");
+    // alert("Ich habe eine Daseinsberechtigung");
 
     // if(interact_type){
         // var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, file);
@@ -431,13 +441,21 @@ function addItemLogic(mesh, interact_type, intfunction, file){
 
 //adds a trigger at given position, performs action when walking over it and consumes it
 // ***** TO FADE IN THOUGHTS: look up partial, showThoughts, hideThoughts in interact! ******
-
-function addTrigger (xPos, zPos, action) {
-	var triggerGeom = new THREE.BoxGeometry(30,30,30);
-	var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, color:0xFFFFFF});
-	var triggerMesh = new THREE.Mesh(triggerGeom,mat);
-	var trigger = new GameObject(triggerMesh,action,TYPE_TRIGGER);
-
+function addTrigger (xPos, zPos, size, action, fname, fparam1, fparam2, enabledtrigger, index, nonewentry) {
+	var hohe = (size > PLAYERHEIGHT*3) ? size: PLAYERHEIGHT*3;
+    var triggerGeom = new THREE.BoxGeometry(size,hohe,size);
+    var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, color:0xFFFFFF});
+    var triggerMesh = new THREE.Mesh(triggerGeom,mat);
+    var trigger = new GameObject(triggerMesh,action,TYPE_TRIGGER);
+	
+	if (!nonewentry) {
+		var thisone = {ind: index, obj: trigger, xpos: xPos, zpos: zPos, siz: size, fname: fname, fparam1: fparam1, fparam2: fparam2, followup: enabledtrigger, enabled: true};
+		triggers.push(thisone);	
+	} else {
+		for (var i = 0; i < triggers.length; i++) {		
+			if (triggers[i].ind === index) triggers[i].obj = trigger;
+		}
+	}
 
 	trigger.mesh.position.x = xPos;
 	trigger.mesh.position.z = zPos;
@@ -447,16 +465,44 @@ function addTrigger (xPos, zPos, action) {
 
 }
 
-function removeTrigger(trigger) {
-	scene.remove(trigger.mesh);
-	octree.remove(trigger.mesh);
-	for (var i =0;i < terrain.length;i++) {
-		if(terrain[i]==trigger) {
-			terrain.splice(i,1);
-		}
 
+function disableTrigger(trigger) {
+	for (var i = 0; i < triggers.length; i++) {
+		if (triggers[i].obj === trigger) {
+			triggers[i].enabled = false;
+			console.log(triggers[i].fname+"-trigger disabled");
+			for (var j = 0; j < triggers.length; j++) {
+				if (triggers[j].ind === triggers[i].followup) {
+					enableTrigger(triggers[j].ind); 
+					break;
+				}
+			}
+		}
+	}
+    scene.remove(trigger.mesh);
+    octree.remove(trigger.mesh);
+    for (var i =0;i < terrain.length;i++) {
+        if(terrain[i]==trigger) {
+            terrain.splice(i,1);
+        }
 	}
 }
+
+function enableTrigger(index) {
+	for (var i = 0; i < triggers.length; i++) {
+		if (triggers[i].ind === index) {
+			triggers[i].enabled = true;
+			var functPtr = eval(triggers[i].fname);
+						
+			if (triggers[i].fparam1 === "") addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, functPtr, triggers[i].fname, "", "", triggers[i].followup, triggers[i].ind, true) 
+				else if (triggers[i].fparam2 === "") addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1), triggers[i].fname, triggers[i].fparam1, "", triggers[i].followup, triggers[i].ind, true)          
+					else addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1, triggers[i].fparam2), triggers[i].fname, triggers[i].fparam1, triggers[i].fparam2, triggers[i].followup, triggers[i].ind, true) 			
+			console.log(triggers[i].fname+"-trigger enabled");
+		}
+	}	
+}
+
+
 
 
 

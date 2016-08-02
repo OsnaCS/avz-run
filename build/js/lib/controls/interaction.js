@@ -10,6 +10,8 @@ var lockOpen = false; // pin pad boolean
 
 var outlineMesh = null;
 
+var extinguisherParticleSystem;
+
 // pin pad variables.... may not be stored here?
 var pin = new Array(4);
 var transponder_config = new Array(2);
@@ -30,13 +32,14 @@ var interObj;
 
 var viewDirection = new THREE.Vector3();
 document.addEventListener( 'click', onMouseClick, false );
-var i;
+var interIter;
+var interIter2;
 
 function interactionLoop() {
 
     //this gets called once per loop. shoots a ray in viewdirection
     interactionRayCaster.set(viewDirection.copy(controls.getObject().position), controls.getDirection().normalize());
-    octreeInteractions = octree.search( interactionRayCaster.ray.origin, interactionRayCaster.ray.far, true, interactionRayCaster.ray.direction );
+    octreeInteractions = octree.search( interactionRayCaster.ray.origin, interactionRayCaster.far, true, interactionRayCaster.ray.direction );
     interactions = interactionRayCaster.intersectOctreeObjects( octreeInteractions);
 
     //if(interactions.length>0) console.log(getGameObject(interactions[0].object));
@@ -45,8 +48,8 @@ function interactionLoop() {
 
     //if it intersects something which is interactable we call its interaction function
     if(interactions.length>0) {
-        for(i = 0; i<interactions.length;i++) {
-            interObj = getGameObject(interactions[i].object)
+        for(interIter = 0; interIter<interactions.length;interIter++) {
+            interObj = getGameObject(interactions[interIter].object)
             if (interObj instanceof GameObject) break;
         }
 
@@ -90,8 +93,8 @@ function interactionLoop() {
     }
             //reaching the exit
     if (interactions.length>0) {
-        for(i = 0; i<interactions.length;i++) {
-            interObj = getGameObject(interactions[i].object)
+        for(interIter2 = 0; interIter2<interactions.length;interIter2++) {
+            interObj = getGameObject(interactions[interIter2].object)
             if (interObj instanceof GameObject) break;
         }
         if(interObj.type==TYPE_EXIT){
@@ -138,7 +141,7 @@ GameObject = function(mesh, interaction, type, name) {
     this.type = type;
     this.mesh = mesh;
     this.interact = interaction;
-
+http://127.0.0.1:8000
 
     this.name=name;
 
@@ -218,9 +221,9 @@ function openopened() {
     }
     this.open = !this.open;
 
-    scene.remove(this.mesh);
     scene.remove(outlineMesh);
     outlineMesh = null;
+    activeObject = null;
 }
 
 
@@ -257,7 +260,7 @@ function getSegmentFromIntItem(intItem) {
 function damageDoor() {
     if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
 		var d = getSegmentFromIntItem(this);
-		addObjectViaName("halbbrokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "destroyDoor");
+		addObjectViaName("halbbrokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "destroyDoor", d.stretchx);
 		remove_interactible(d);
 		this.delFromScene();
         damageDoorSound();
@@ -269,7 +272,7 @@ function damageDoor() {
 function destroyDoor() {
     if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
 		var d = getSegmentFromIntItem(this);
-		addObjectViaName("brokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "");
+		addObjectViaName("brokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "", d.stretchx);
 		remove_interactible(d);
 		this.delFromScene();
 		player.delActItem();
@@ -316,8 +319,8 @@ function extinguish() {
         extinguisherSound();
 
         setTimeout(dFire, 1000);
-    	console.log('extinguished');
-    	player.delActItem();
+        console.log('extinguished');
+        player.delActItem();
     }
     else{
         console.log('nicht anwendbar');
@@ -514,7 +517,10 @@ function openTransponderDoor(){
     if(selectedItem != null && selectedItem.activeTransponder){
             doorSound();
 			var d = getSegmentFromIntItem(this);
-			addObjectViaName("holztur", "door", d.x, d.y, d.z, d.skale, d.rot-1, "openopened");
+			var kind = "glastur"
+
+			if (objectFilenameToName(d.filename) == "holztuer") kind = "holztur";
+			addObjectViaName(kind, "door", d.x, d.y, d.z, d.skale, d.rot-1, "openopened", d.stretchx);
 			remove_interactible(d);
 			this.delFromScene();
             // if(!this.open) {
@@ -569,7 +575,11 @@ function hideThoughts() {
     showInterval = clearInterval();
 }
 
-
+function success() {
+    console.log("YEY");
+    $("#endScreen").fadeIn(5000);
+    $(".GUI").fadeOut(5000);
+}
 
 
 function extinguisherAnimation(){
@@ -673,12 +683,12 @@ function extinguisherAnimation(){
         fog: true
     });
 
-    var particleSystem = new THREE.Points(particles, material);
+    extinguisherParticleSystem = new THREE.Points(particles, material);
 
-    scene.add(particleSystem);
+    scene.add(extinguisherParticleSystem);
 
     function deleteExtinguisherParticles(){
-        scene.remove(particleSystem);
+        scene.remove(extinguisherParticleSystem);
     }
 
     setTimeout(deleteExtinguisherParticles, 1000);

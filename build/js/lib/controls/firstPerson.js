@@ -1,6 +1,6 @@
 var godmode = false; // zum testen, man kann nicht fallen, hat unendlich leben, unendlich sprinten, alle türen sind offen, Nebel kommt langsamer
 var weaksystem = true; //when true, it disables smoothing and makes the fires worse.
-
+var muteSounds = false; // if true, no sound will be played
 
 // Controls camera via WASD/Mouse, enables player to jump, run and crouch
 
@@ -56,7 +56,7 @@ var PLAYERHEIGHT = 25;
 
 var PLAYERMASS = PLAYERHEIGHT * 6.8; // to simulate gravity
 
-var DUCK_DIFFERENCE = 2 * (PLAYERHEIGHT / 3); // player height when ducked
+var DUCK_DIFFERENCE = 19 * (PLAYERHEIGHT / 20); // player height when ducked
 
 var INVERT_XZ = new THREE.Vector3(-1, 1, -1);
 
@@ -66,12 +66,12 @@ var RUN_SPEED = 2; // speed at which player is running -"-
 var JUMP_SPEED = MOVEMENT_SPEED * 0.7; // speed of jump upwards -"-
 
 // for shake animation while moving
-var THRESH_RUN_UP = PLAYERHEIGHT * 1.56;
-var THRESH_RUN_DOWN = PLAYERHEIGHT * 1.28;
-var THRESH_UP = PLAYERHEIGHT * 1.52;
-var THRESH_DOWN = PLAYERHEIGHT * 1.32;
-var UPMOTION_RUN_SPEED = (THRESH_RUN_UP - THRESH_RUN_DOWN) * 0.128;
-var UPMOTION_SPEED = (THRESH_UP - THRESH_DOWN) * 0.07;
+var THRESH_RUN_UP = PLAYERHEIGHT * 1.52;
+var THRESH_RUN_DOWN = PLAYERHEIGHT * 1.32;
+var THRESH_UP = PLAYERHEIGHT * 1.48;
+var THRESH_DOWN = PLAYERHEIGHT * 1.36;
+var UPMOTION_RUN_SPEED = (THRESH_RUN_UP - THRESH_RUN_DOWN) * 0.13;
+var UPMOTION_SPEED = (THRESH_UP - THRESH_DOWN) * 0.08;
 
 // for energy bar
 var STAMINA = 100; if (godmode) {STAMINA = 1000000}
@@ -153,6 +153,16 @@ function initPointerLock() {
             $(".showNickname").html(playername);
             loop();
 
+        }, false);
+
+        buttonInfo.addEventListener('click', function(event) {
+            mainMenu.style.display = 'none';
+            infoScreen.style.display = 'block';
+        }, false);
+
+        buttonInfoBack.addEventListener('click', function(event) {
+            infoScreen.style.display = 'none';
+            mainMenu.style.display = 'block';
         }, false);
 
         button.addEventListener('click', function(event) {
@@ -245,7 +255,7 @@ function initControls(callback) {
             case 16: //RUN FOREST! (shift)
 
                 if (!ducked && !regenerate) {
-                    if (running == false && (moveForward || moveLeft || moveBackward || moveRight)) {
+                    if (running == false) {
                         adjustPlaybackRate(footsteps, 1.5);
                         running = true;
                     }
@@ -361,13 +371,13 @@ function initControls(callback) {
 
     raycasterYpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, PLAYERHEIGHT * 0.8); // above
 
-    raycasterXpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, PLAYERHEIGHT * 1.28); // right PLAYERHEIGHT * 1.28
+    raycasterXpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, Math.sqrt(PLAYERHEIGHT*PLAYERHEIGHT+900) ); // right PLAYERHEIGHT * 1.28
 
-    raycasterZpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, PLAYERHEIGHT * 1.28); // behind
+    raycasterZpos = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, Math.sqrt(PLAYERHEIGHT*PLAYERHEIGHT+900)); // behind
 
-    raycasterXneg = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, PLAYERHEIGHT * 1.28); // left
+    raycasterXneg = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, Math.sqrt(PLAYERHEIGHT*PLAYERHEIGHT+900)); // left
 
-    raycasterZneg = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, PLAYERHEIGHT * 1.28); // front
+    raycasterZneg = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, Math.sqrt(PLAYERHEIGHT*PLAYERHEIGHT+900)); // front
 
 
 
@@ -392,13 +402,30 @@ var gameObj;
 
 var firstTime = true; //we fall through the floor while spawning.. sick workaround
 
+var moveX;
+var moveY;
+var moveZ;
+
 function controlLoop(controls) {
 
     setRays();
 
-    if(delta>0.5) delta=0.1;
-    velocity.x -= velocity.x * 10.0 * delta;
-    velocity.z -= velocity.z * 10.0 * delta;
+    // determines stepwidth
+    time = performance.now();
+    delta = (time - prevTime) / 1000;
+    if(delta>0.24) delta=0.1;
+    if(Math.abs(velocity.z)<Math.abs(velocity.z * 10.0 * delta)) {
+        velocity.z=0;
+    } else {
+        velocity.z -= velocity.z * 10.0 * delta;
+    }
+    if(Math.abs(velocity.x)<Math.abs(velocity.x * 10.0 * delta)) {
+        velocity.x=0;
+    } else {
+        velocity.x -= velocity.x * 10.0 * delta;
+    }
+    // velocity.x=0;
+    // velocity.z=0;
 
     // gravity
     velocity.y -= 9.8 * PLAYERMASS * delta;
@@ -410,24 +437,20 @@ function controlLoop(controls) {
 
 
 
-    octreeObjectsY = octree.search( raycasterY.ray.origin, raycasterY.ray.far, true, raycasterY.ray.direction );
+    octreeObjectsY = octree.search( raycasterY.ray.origin, raycasterY.far, true, raycasterY.ray.direction );
     intersectionsY = raycasterY.intersectOctreeObjects( octreeObjectsY);
 
-    octreeObjectsXpos = octree.search( raycasterXpos.ray.origin, raycasterXpos.ray.far, true, raycasterXpos.ray.direction );
+    octreeObjectsXpos = octree.search( raycasterXpos.ray.origin, raycasterXpos.far, true, raycasterXpos.ray.direction );
     intersectionsXpos = raycasterXpos.intersectOctreeObjects( octreeObjectsXpos );
 
-    octreeObjectsZpos = octree.search( raycasterZpos.ray.origin, raycasterZpos.ray.far, true, raycasterZpos.ray.direction );
+    octreeObjectsZpos = octree.search( raycasterZpos.ray.origin, raycasterZpos.far, true, raycasterZpos.ray.direction );
     intersectionsZpos = raycasterZpos.intersectOctreeObjects( octreeObjectsZpos );
 
-    octreeObjectsXneg = octree.search( raycasterXneg.ray.origin, raycasterXneg.ray.far, true, raycasterXneg.ray.direction );
+    octreeObjectsXneg = octree.search( raycasterXneg.ray.origin, raycasterXneg.far, true, raycasterXneg.ray.direction );
     intersectionsXneg = raycasterXneg.intersectOctreeObjects( octreeObjectsXneg );
 
-    octreeObjectsZneg = octree.search( raycasterZneg.ray.origin, raycasterZneg.ray.far, true, raycasterZneg.ray.direction );
+    octreeObjectsZneg = octree.search( raycasterZneg.ray.origin, raycasterZneg.far, true, raycasterZneg.ray.direction );
     intersectionsZneg = raycasterZneg.intersectOctreeObjects( octreeObjectsZneg );
-
-
-
-
 
 
     // //determine intersections of rays with objects that were added to terrain
@@ -448,7 +471,7 @@ function controlLoop(controls) {
         } else if (gameObj.type == TYPE_TRIGGER) {
             //collision with trigger
             gameObj.interact();
-            removeTrigger(gameObj);
+            disableTrigger(gameObj);
         } else {
             //stop when hitting the floor
             velocity.y = Math.max(0, velocity.y);
@@ -464,7 +487,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (gameObj.type == TYPE_TRIGGER) {
             gameObj.interact();
-            removeTrigger(gameObj);
+            disableTrigger(gameObj);
         } else {
             velocity.z = Math.min(0, velocity.z);
         }
@@ -476,7 +499,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (gameObj.type == TYPE_TRIGGER) {
             gameObj.interact();
-            removeTrigger(gameObj);
+            disableTrigger(gameObj);
         } else {
             velocity.z = Math.max(0, velocity.z);
         }
@@ -488,7 +511,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (gameObj.type == TYPE_TRIGGER) {
             gameObj.interact();
-            removeTrigger(gameObj);
+            disableTrigger(gameObj);
         } else {
             velocity.x = Math.min(0, velocity.x);
         }
@@ -500,11 +523,14 @@ function controlLoop(controls) {
             fireAction();
         } else if (gameObj.type == TYPE_TRIGGER) {
             gameObj.interact();
-            removeTrigger(gameObj);
+            disableTrigger(gameObj);
         } else {
             velocity.x = Math.max(0, velocity.x);
         }
     }
+    velocity.x = Math.abs(velocity.x * delta) >30 ? Math.sign(velocity.x)*29 : velocity.x ;
+    if(velocity.y<0) velocity.y = Math.abs(velocity.y * delta) >raycasterY.far ? -1*(raycasterY.far-1) : velocity.y;
+    velocity.z = Math.abs(velocity.z * delta) > 30 ? Math.sign(velocity.z)*29: velocity.z ;
 
     controls.getObject().translateX(velocity.x * delta);
     controls.getObject().translateY(velocity.y * delta);
@@ -566,7 +592,7 @@ function controlLoop(controls) {
 //if we are blocked upwards while ducking and try to stand up..
 function handleStandup() {
     if (standupRequest) {
-        octreeObjectsYpos = octree.search( raycasterYpos.ray.origin, raycasterYpos.ray.far, true, raycasterYpos.ray.direction );
+        octreeObjectsYpos = octree.search( raycasterYpos.ray.origin, raycasterYpos.far, true, raycasterYpos.ray.direction );
         intersectionsYpos = raycasterYpos.intersectOctreeObjects( octreeObjectsYpos );
 
         // stands up as soon as there are no more objects above
@@ -576,10 +602,10 @@ function handleStandup() {
             controls.getObject().position.y += DUCK_DIFFERENCE;
             ducked = false;
             speed_factor = 1;
-            raycasterXpos.far = PLAYERHEIGHT * 1.28;
-            raycasterXneg.far = PLAYERHEIGHT * 1.28;
-            raycasterZpos.far = PLAYERHEIGHT * 1.28;
-            raycasterZneg.far = PLAYERHEIGHT * 1.28;
+            raycasterXpos.far = Math.sqrt(PLAYERHEIGHT*PLAYERHEIGHT+900);
+            raycasterXneg.far = Math.sqrt(PLAYERHEIGHT*PLAYERHEIGHT+900);
+            raycasterZpos.far = Math.sqrt(PLAYERHEIGHT*PLAYERHEIGHT+900);
+            raycasterZneg.far = Math.sqrt(PLAYERHEIGHT*PLAYERHEIGHT+900);
             standupRequest = false;
         }
 
@@ -599,8 +625,8 @@ function setRays() {
     if (!ducked) {
 
         // x and z axis transformed according to player's rotation
-        playerX = controls.getObject().getWorldDirection().applyAxisAngle(new THREE.Vector3(0, 1, 0), (Math.PI) / 2).normalize().multiplyScalar(10);
-        playerZ = controls.getObject().getWorldDirection().normalize().multiplyScalar(10);
+        playerX = controls.getObject().getWorldDirection().applyAxisAngle(new THREE.Vector3(0, 1, 0), (Math.PI) / 2).normalize().multiplyScalar(30);
+        playerZ = controls.getObject().getWorldDirection().normalize().multiplyScalar(30);
         // mirror the X and Y vectors for opposing directions
         playerXneg = new THREE.Vector3();
         playerZneg = new THREE.Vector3();
