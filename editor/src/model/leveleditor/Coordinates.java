@@ -67,6 +67,38 @@ public class Coordinates {
 		return new Point(x,y);
 	}
 	
+	public Point getScaledIntCoordinates(Coordinates p) {
+		// Basis Trafo der Koordinatensysteme
+		double[][] translate = {{1, 0, -p.getPosx()}, 
+				{0, 1, -p.getPosy()},{0,0,1}};
+		
+		Matrix translateTo = new Matrix(translate);
+		
+		translate[0][2] = p.getPosx();
+		translate[1][3] = p.getPosy();
+		
+		Matrix translateFrom = new Matrix(translate);
+		
+		double[][] scale = {{5, 0, 0}, 
+				{0, 5, 0},{0,0,1}};
+		
+		Matrix scaling = new Matrix(scale);
+		
+		double[][] arrPoint = {{this.posx}, 
+				{this.posy},{1}};
+		
+		Matrix matPoint = new Matrix(arrPoint);
+		
+		matPoint = translateTo.multiply(matPoint);
+		matPoint = scaling.multiply(matPoint);
+		matPoint = translateFrom.multiply(matPoint);
+		
+		
+		Point point = new Point((int)matPoint.getValue(0, 0),(int) matPoint.getValue(1, 0));
+		return point;
+	}
+	
+	
 	/**
 	 * Nimmt einen Punkt mit int-Koordinaten und setzt damit die Position neu
 	 * @param point Neue Position

@@ -14,6 +14,7 @@ var outlineMesh=null;
 var pin = new Array(4);
 var transponder_config = new Array(2);
 var pin_pos = 0;
+var ch_pos = 0;
 
 var CORRECT_PIN = ['0','0','4','2'];
 var CORRECT_TRANSPONDER = ['4','3'];
@@ -23,7 +24,10 @@ var TYPE_EXIT = 2;
 var TYPE_TRIGGER = 3;
 var FADE_TIME = 1200;
 
+var special_html_input = false;
+
 var interObj;
+
 
 document.addEventListener( 'click', onMouseClick, false );
 
@@ -287,37 +291,23 @@ function extinguish() {
 // open pin pad image and its HTML
 function enterPin() {
 
-    pin_pos = 0;
-
-
-    // get object out of focus
-    scene.remove(outlineMesh);
-    outlineMesh = null;
-    activeObject = null;
-
     // pause interaction loop
-    menu = true;
+    special_html_input = true;
 
     // show pin pad and make default pause screen invisible
-    $("#pinPad").css("z-index", 20);
-    $("#blocker").css("z-index", 0);
     $("#pinPad").show();
+    $("#pinPad").css("z-index", 20);
+
 
     // exit pointerLock so player can use cursor
     document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
-    console.log(document.exitPointerLock);
     document.exitPointerLock();
-
 }
 
 // return to game from pin pad
 function exitPinPad() {
 
-    // start loop again
-    menu = false;
-
-    // hide pin pad, reset blocker
-    $("#blocker").css("z-index", 20);
+    // hide pin pad
     $("#pinPad").css("z-index", 0);
     $("#pinPad").hide();
 
@@ -329,11 +319,7 @@ function exitPinPad() {
     if (lockOpen) correctSound();
     else failedSound();
 
-    // reset delta
-    prevTime = performance.now();
-
-    //ask browser to lock the pointer again
-    element.requestPointerLock();
+    backToGame();
 
 }
 
@@ -366,8 +352,6 @@ function pinPad(pinvalue) {
 
             default:
 
-
-
                 if (pin_pos<4) { // unless 4 digits have already been entered
                     pin[pin_pos] = pinvalue; // set current digit to entered number
                     pin_pos++;
@@ -385,17 +369,11 @@ function pinPad(pinvalue) {
 
 function enterCH() {
 
-    if(this.type == TYPE_INTERACTABLE ){ //&& selectedItem.name == "transponder"){ //TODO change
-        pin_pos = 0;
-        // get object out of focus
-        scene.remove(outlineMesh);
-        outlineMesh = null;
-        activeObject = null;
+    if(this.type == TYPE_INTERACTABLE && selectedItem != null && (objectFilenameToName(selectedItem.name) == "transponder")){ //&& selectedItem.name == "transponder"){ //TODO change
 
-        menu = true;
+        special_html_input = true;
 
         $("#compHack").css("z-index", 20);
-        $("#compHack").css("display","block");
         $("#compHack").show();
 
         document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
@@ -412,12 +390,9 @@ function enterCH() {
 
 function exitCH() {
 
-    $("#blocker").css("z-index", 20);
     $("#compHack").css("z-index", 0);
-    $("#compHack").hide();
+    $("#compHack").css("display","none");
 
-    // Ask the browser to lock the pointer
-    menu = false;
 
     // determine if entered code was correct
     if (CORRECT_TRANSPONDER[0] == transponder_config[0] && CORRECT_TRANSPONDER[1] == transponder_config[1]){
@@ -429,11 +404,7 @@ function exitCH() {
         selectedItem.activeTransponder = false;
     }
 
-
-    // reset delta
-    prevTime = performance.now();
-
-    element.requestPointerLock();
+   backToGame();
 }
 
 function compHack(hackButtonValue) {
@@ -448,7 +419,7 @@ function compHack(hackButtonValue) {
 
                 transponder_config[0] = null;
                 transponder_config[1] = null;
-                pin_pos = 0;
+                ch_pos = 0;
                 document.getElementById("pinDisplayCH").innerHTML = "key lock:";
                 break;
 
@@ -459,9 +430,9 @@ function compHack(hackButtonValue) {
 
             default:
 
-                if (pin_pos<2) {
-                    transponder_config[pin_pos] = hackButtonValue;
-                    pin_pos++;
+                if (ch_pos<2) {
+                    transponder_config[ch_pos] = hackButtonValue;
+                    ch_pos++;
                     document.getElementById("pinDisplayCH").innerHTML = "key lock: " + transponder_config.join("");
                 }
                 break;
@@ -469,12 +440,30 @@ function compHack(hackButtonValue) {
         }
 }
 
+function backToGame() {
+    // reset delta
+    prevTime = performance.now();
 
+    var element = document.getElementById('world');
+
+    //ask browser to lock the pointer again
+    element.requestPointerLock();
+
+    controls.enabled = true;
+    special_html_input = false;
+
+
+    loop();
+
+    scene.remove(outlineMesh);
+    outlineMesh = null;
+    activeObject = null;
+}
 
 
 // Attach this function to the sink
 function coverMouth(){
-    if(this.type == TYPE_INTERACTABLE&& (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "lappen")){
+    if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "lappen")){
         startHeavyBreathing();
         HEALTH_PER_SECOND = HEALTH_PER_SECOND / 2;
         //addItem((newItemList[31]), playerPos[1], playerPos[2] + 10, playerPos[3], 2, 270, true, pickUpItem);
