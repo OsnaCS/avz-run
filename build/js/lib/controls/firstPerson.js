@@ -1,7 +1,6 @@
-// GODMODE (zum testen, man kann nicht fallen, hat unendlich leben, unendlich sprinten, alle türen sind offen, Nebel kommt langsamer)
-var godmode = true;
-var weaksystem = true;
-//
+var godmode = false; // zum testen, man kann nicht fallen, hat unendlich leben, unendlich sprinten, alle türen sind offen, Nebel kommt langsamer
+var weaksystem = false; //when true, it disables smoothing and makes the fires worse.
+
 
 // Controls camera via WASD/Mouse, enables player to jump, run and crouch
 
@@ -102,13 +101,20 @@ function initPointerLock() {
                 $(".gui").show();
                 $("#blocker").hide();
 
-            } else {
+            } else if (special_html_input) {
 
+                scene.remove(outlineMesh);
+                outlineMesh = null;
+                activeObject = null;
+                controls.enabled = false;
+
+            } else {
                 controls.enabled = false;
 
                 if (player.health > 0) {
                    $("#blocker").show();
                 }
+
                 menu = true;
                 $('.gui').hide();
             }
@@ -253,15 +259,16 @@ function initControls(callback) {
 
                 if (!ducked && !running) {
                     ducked = true;
-                    PLAYERHEIGHT -= DUCK_DIFFERENCE;
+
                     speed_factor = DUCK_SPEED;
 
                     // change far plane of collision rays (as they
                     // are now parallel to XZ plane)
-                    raycasterXpos.far = PLAYERHEIGHT * 0.12;
-                    raycasterXneg.far = PLAYERHEIGHT * 0.12;
-                    raycasterZpos.far = PLAYERHEIGHT * 0.12;
-                    raycasterZneg.far = PLAYERHEIGHT * 0.12;
+                    raycasterXpos.far = PLAYERHEIGHT * 0.5;
+                    raycasterXneg.far = PLAYERHEIGHT * 0.5;
+                    raycasterZpos.far = PLAYERHEIGHT * 0.5;
+                    raycasterZneg.far = PLAYERHEIGHT * 0.5;
+                    PLAYERHEIGHT -= DUCK_DIFFERENCE;
                 }
 
                 break;
@@ -501,6 +508,7 @@ function controlLoop(controls) {
             velocity.x = Math.max(0, velocity.x);
         }
     }
+
     controls.getObject().translateX(velocity.x * delta);
     controls.getObject().translateY(velocity.y * delta);
     controls.getObject().translateZ(velocity.z * delta);
@@ -528,7 +536,6 @@ function controlLoop(controls) {
 
     // player can get exhausted/regenerate energy
     if (!menu) {
-
         if (running) {
             energy -= delta * 30;
             if (energy <= 0) {
@@ -598,10 +605,10 @@ function handleStandup() {
             controls.getObject().position.y += DUCK_DIFFERENCE;
             ducked = false;
             speed_factor = 1;
-            raycasterXpos.far = PLAYERHEIGHT * 1.8;
-            raycasterXneg.far = PLAYERHEIGHT * 1.8;
-            raycasterZpos.far = PLAYERHEIGHT * 1.8;
-            raycasterZneg.far = PLAYERHEIGHT * 1.8;
+            raycasterXpos.far = PLAYERHEIGHT * 1.28;
+            raycasterXneg.far = PLAYERHEIGHT * 1.28;
+            raycasterZpos.far = PLAYERHEIGHT * 1.28;
+            raycasterZneg.far = PLAYERHEIGHT * 1.28;
             standupRequest = false;
         }
 

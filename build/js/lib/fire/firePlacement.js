@@ -152,7 +152,7 @@ function delFire(fireColBox) {
     }else{
 
         fireColBox.delFromScene();
-
+        octree.remove(fireColBox.mesh);
         scene.remove(pointlight_list[index]);
         scene.remove(smoke_list[index]);
         scene.remove(fire_mesh_list[index]);

@@ -5,10 +5,15 @@ import model.drawables.DrawableObject;
 import model.drawables.Line;
 import model.drawables.*;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 
 
+
+/*
+ * Created by Tom Krümmel
+ */
 
 public class Way extends DrawableObject {
 	
@@ -125,10 +130,25 @@ public class Way extends DrawableObject {
 			b.x = a.x;
 			b.y = y;
 		}
+
+		Color c = Color.BLACK;
+		// decides by type of door its color
+		if (type == "glas") {
+			//Cyan for glassdoor
+			c = Color.CYAN;
+		} else if (type == "corridor") {
+			//Yellow for corridor
+			c = Color.YELLOW;
+		} else {
+			//selects green for wooden door
+			c = Color.GREEN;
+		}
 		
-		//draws line from current position to the setted Point by normal
+		//sets selected color
+		g.setColor(c);
+		
+		// draws line from current position to the setted Point by normal
 		new Line(a, b).paint(g);
-		
 	}
 
 	
@@ -177,7 +197,10 @@ public class Way extends DrawableObject {
 	}
 	
 
-	
+	public String toString(){
+		return getType() + " Pos:" + getPos().getPosx() + "/" + getPos().getPosy() + " Normal: " + getNormal().getPosx() +
+				"/" + getNormal().getPosy() + " " + getFather().getName();
+	}
 	
 	
 }

@@ -33,6 +33,11 @@ Player = function() {
             item_count++;
 
             // delete object representation from scene
+            if(game_obj.mesh==undefined){
+                octree.remove(game_obj);
+            } else {
+                octree.remove(game_obj.mesh);
+            }
             game_obj.delFromScene();
 
         } else {
