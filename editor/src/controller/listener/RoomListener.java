@@ -61,7 +61,7 @@ public class RoomListener extends MouseInputAdapter {
 
 			// Reaction for leftmouseclick
 			if (isLeftMouseButton(e)) {
-				// Compate ways with all not checked or cleared Level-ways
+				// Compare ways with all not checked or cleared Level-ways
 				if (room.compareWays(level.getWays())) {
 					// Add room
 					level.addRoom(room);
