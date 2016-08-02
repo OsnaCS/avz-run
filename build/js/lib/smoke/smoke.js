@@ -47,6 +47,7 @@ function loadSmokeTexture(){
 function addSmoke(x, y, z) {
     if(!textureWasLoaded){
         loadSmokeTexture();
+        textureWasLoaded = true;
     }
 
     var smoke,
