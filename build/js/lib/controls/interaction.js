@@ -138,7 +138,7 @@ GameObject = function(mesh, interaction, type, name) {
     this.type = type;
     this.mesh = mesh;
     this.interact = interaction;
-
+http://127.0.0.1:8000
 
     this.name=name;
 
@@ -515,7 +515,7 @@ function openTransponderDoor(){
             doorSound();
 			var d = getSegmentFromIntItem(this);
 			var kind = "glastur"
-			if (ObjectFilenameToName(d.filename) == "holztuer") kind = holztur;
+			if (objectFilenameToName(d.filename) == "holztuer") kind = holztur;
 			addObjectViaName(kind, "door", d.x, d.y, d.z, d.skale, d.rot-1, "openopened");
 			remove_interactible(d);
 			this.delFromScene();

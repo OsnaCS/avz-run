@@ -55,10 +55,10 @@
 
         </spawns>
         <fires>
-			<fire index="cip" position="(-7.92, -15.35, 0)" size="(1,1,1)" val="6"/>
-			<fire index="cip" position="(-10.66, -17.84, 0)" size="(1,1,1)" val="6"/>
-			<fire index="cip" position="(-10.88, -21.41, 0)" size="(1,1,1)" val="6"/>
-			<fire index="cip" position="(-7.85, -21.97, 0)" size="(1,1,1)" val="6"/>
+			<fire index="cip" position="(-7.92, -15.35, 1)" size="(1,1,1)" val="6"/>
+			<fire index="cip" position="(-10.66, -17.84, 1)" size="(1,1,1)" val="6"/>
+			<fire index="cip" position="(-10.88, -21.41, 0)" size="(2,2,2)" val="6"/>
+			<fire index="cip" position="(-7.85, -21.97, 1)" size="(2,2,2)" val="6"/>
 			<fire index="lobby" position="(-8.24, 8.96, 0)" size="(1,1,1)" val="6"/>
 			<fire index="exit" position="(30, -6, 0)" size="(1,4,3)" val="6"/>
 			<fire index="lobby" position="(1.45, 1.79, 0)" size="(1,1,1)" val="6"/>
@@ -85,6 +85,7 @@
         </lights>
 		<triggers>
 			<trigger index="exit" xpos="30" ypos="-6" size="2" functionname="showThoughts" fparam1="ICH LEBE!!!!" fparam2="5000" />
+			<trigger index="cip" xpos="-9" ypos="-11" size="2" functionname="showThoughts" fparam1="Der Rauch ist zu dicht, ich kann kaum atmen. Vielleicht finde ich etwas, das ich mir vor den Mund halten kann." fparam2="5000" />
 		</triggers>
 	</room>
 

@@ -56,7 +56,7 @@ var PLAYERHEIGHT = 25;
 
 var PLAYERMASS = PLAYERHEIGHT * 6.8; // to simulate gravity
 
-var DUCK_DIFFERENCE = 2 * (PLAYERHEIGHT / 3); // player height when ducked
+var DUCK_DIFFERENCE = 19 * (PLAYERHEIGHT / 20); // player height when ducked
 
 var INVERT_XZ = new THREE.Vector3(-1, 1, -1);
 
