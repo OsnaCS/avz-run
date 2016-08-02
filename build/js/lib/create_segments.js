@@ -25,8 +25,10 @@ var static_obj = [];  //hier stehen alle StaticSegments drin. StaticSegment = Ob
 var interact_obj = [];//hier stehen alle interactibleSegments drin. Das sind alle PickupItems, Türen ungleich closedDoor, und sonstwie interactibles.
 var lamps = [];	//noch sinnlos!  //Hier stehen alle LightSegments drin. Diese bestehen aus dem mesh der Lampe (+position etc) sowie der Lichtquelle als three.light!
 var fires = [];       //Hier stehen alle Feuer drin.
+var triggers = [];	  //Hier stehen alle Triggers drin.
 var allobjects = [];  listallobjects();  //hierdrin stehen alle MÖGLICHEN objects (..damit man sie nicht mehr aus der xml auslesen kann, asynchronität undso.)
 var allrooms = []; listallrooms(); //same as line above.
+
 
 //functions
 
@@ -34,7 +36,7 @@ var allrooms = []; listallrooms(); //same as line above.
 //the callback-function WAS ORIGINALLY MEANT TO BE nothing, fitdoor or the one loading the info from the levels.xml
 //now, it loads all the other stuff (lights, audios, etc.)
 	function CreateSegment(forwhichroom, callback) {
-		var currseg = {filename:"", doors:[], spawns:[], lights:[], fires:[], xmin:0, ymin:0, xmax:0, ymax:0, orx:0, ory:0, orz: 0, transx:0, transy:0, rot:0, rauch: 0, applied:false};
+		var currseg = {filename:"", doors:[], spawns:[], lights:[], fires:[], triggers: [], xmin:0, ymin:0, xmax:0, ymax:0, orx:0, ory:0, orz: 0, transx:0, transy:0, rot:0, rauch: 0, applied:false};
 		if (typeof callback !== 'function')
 		{
 			currseg.transx = 0;
@@ -50,7 +52,7 @@ var allrooms = []; listallrooms(); //same as line above.
 	}
 
 	function CreateSegment(forwhichroom, callback, x, y, rot) {
-		var currseg = {filename:"", doors:[], spawns:[], lights:[], fires:[], xmin:0, ymin:0, xmax:0, ymax:0, orx:0, ory:0, orz: 0, transx:0, transy:0, rot:0, rauch: 0, applied:false};
+		var currseg = {filename:"", doors:[], spawns:[], lights:[], fires:[], triggers: [], xmin:0, ymin:0, xmax:0, ymax:0, orx:0, ory:0, orz: 0, transx:0, transy:0, rot:0, rauch: 0, applied:false};
 		if (typeof callback !== 'function')
 		{
 			currseg.transx = x;
@@ -86,9 +88,12 @@ var allrooms = []; listallrooms(); //same as line above.
 					function fires () {
 						getFires(xhttp,segmentindex,whichroom,coords);
 						function coords() {
-							getCoords(xhttp,segmentindex,whichroom,fileName);
-							function fileName() {
-								getFileName(xhttp,segmentindex,whichroom,callback); //this function calls, when done, the function to create and add the mesh.
+							getCoords(xhttp,segmentindex,whichroom,triggers);
+							function triggers() {
+								getTriggers(xhttp,segmentindex,whichroom,fileName);
+								function fileName() {
+									getFileName(xhttp,segmentindex,whichroom,callback); //this function calls, when done, the function to create and add the mesh.
+								}
 							}
 					// typeof callback === 'function' && callback(); //if there is a callback specified, run it.
 						}
@@ -140,8 +145,8 @@ var allrooms = []; listallrooms(); //same as line above.
 						for (k = 0; k < parts.length; k++) {
 							if (parts[k].indexOf("to") > 0) {
 								first = parseFloat(parts[k].split(" to ")[0]);
-								second = parseFloat(parts[k].split(" to ")[1].split(" step ")[0]); 
-								third = parseFloat(parts[k].split(" to ")[1].split(" step ")[1]); 
+								second = parseFloat(parts[k].split(" to ")[1].split(" step ")[0]);
+								third = parseFloat(parts[k].split(" to ")[1].split(" step ")[1]);
 								for (l = first; l <= second; l+= third) {
 									switch(k){
 										case 0: x.push(l); break;
@@ -154,7 +159,7 @@ var allrooms = []; listallrooms(); //same as line above.
 									case 0: x.push(parts[k]); break;
 									case 1: y.push(parts[k]); break;
 									case 2: z.push(parts[k]); break;
-								}								
+								}
 							}
 						}
 						var p = 0;
@@ -168,7 +173,7 @@ var allrooms = []; listallrooms(); //same as line above.
 									cudo.push(curdoor[j].getAttribute("normaltowall"));
 									cudo.push((curdoor[j].getAttribute("scale") !== null) ? curdoor[j].getAttribute("scale") : 1);
 									cudo.push((curdoor[j].getAttribute("oninteract") !== "") ? curdoor[j].getAttribute("oninteract") : "");
-									SpawnArr.push(cudo);	
+									SpawnArr.push(cudo);
 									p++;
 								}
 							}
@@ -255,6 +260,34 @@ var allrooms = []; listallrooms(); //same as line above.
 		}
 		callback();
 	}
+	
+	function getTriggers(xml, segmentindex, whichroom, callback) {
+		var TriggerArr = [];
+		var xmlDoc = xml.responseXML;
+		var curroom = xmlDoc.getElementsByTagName("room");
+		for (i = 0; i <curroom.length; i++) {
+			if (curroom[i].getAttribute("name") === whichroom) {
+				var curdoor = curroom[i].getElementsByTagName("trigger");
+				for (j = 0; j < curdoor.length; j++) {
+					var cudo = [];  
+					cudo.push(curdoor[j].getAttribute("index"));
+					cudo.push(curdoor[j].getAttribute("xpos"));
+					cudo.push(curdoor[j].getAttribute("ypos"));
+					cudo.push(curdoor[j].getAttribute("size"));
+					cudo.push((curdoor[j].getAttribute("functionname") !== null) ? curdoor[j].getAttribute("functionname") : "showThoughts");
+					cudo.push((curdoor[j].getAttribute("fparam1") !== null) ? curdoor[j].getAttribute("fparam1") : "");
+					cudo.push((curdoor[j].getAttribute("fparam2") !== null) ? curdoor[j].getAttribute("fparam2") : "");
+					TriggerArr.push(cudo);
+				}
+			}
+		}
+		segments[segmentindex].triggers = TriggerArr;
+		callback();	
+		
+	}
+	
+	
+	
 
 	function getFileName(xml, segmentindex, whichroom,callback) {
 		var xmlDoc = xml.responseXML;
@@ -345,9 +378,9 @@ var allrooms = []; listallrooms(); //same as line above.
 
 	function createFire(x, z, y, sx, sy, sz, s) {
 		VolumetricFire.texturePath = FIRETEXTUREPATH;
-		var fireseg = {x:x, y:y, z:z, sx:sx*SKALIERUNGSFAKTOR, sy:sy*SKALIERUNGSFAKTOR, sz:sz*SKALIERUNGSFAKTOR, val:s}; //TODO: kann ich auch das mesh des feuers adden?
+		var fireseg = {x:x, y:y, z:z, sx:sx*SKALIERUNGSFAKTOR, sy:sy*SKALIERUNGSFAKTOR, sz:sz*SKALIERUNGSFAKTOR, val:s*SKALIERUNGSFAKTOR}; //TODO: kann ich auch das mesh des feuers adden?
 		fires.push(fireseg);
-		addFire(x, y, z, sx*SKALIERUNGSFAKTOR, sy*SKALIERUNGSFAKTOR, sz*SKALIERUNGSFAKTOR, s);
+		addFire(x, y, z, sx*SKALIERUNGSFAKTOR, sy*SKALIERUNGSFAKTOR, sz*SKALIERUNGSFAKTOR, s*SKALIERUNGSFAKTOR);
 	}
 
 //puts the lights where they belong
@@ -397,10 +430,50 @@ var allrooms = []; listallrooms(); //same as line above.
 		scene.add(light);
 	}
 
-//puts the right kind of door where it fits.
-//TODO: da immer Türrahmen an Türrahmen pappt, packt der immer 2 Türen rein. Da sollte er noch gucken dass er nur falls es ein Flur ist eine Tür rein packt.
-//...da ist tatsächlich flur eine binäre relation, denn der circle_walled ist relativ zum büro Flur, aber relativ zum center Nicht!!!
+	function addtriggers(callback) {
+		// addTrigger(0,-50,partial(showThoughts, "Hello World",5000));
+		// [index,xpos,ypos,functionname,fparam1,fparam2]
+		for (INDEX1 = 0; INDEX1<segments.length; INDEX1++){
+			for (i = 0; i <segments[INDEX1].triggers.length; i++) {
+				
+				tospawn = segments[INDEX1].triggers[i];
+				room1pos = [segments[INDEX1].transx, segments[INDEX1].transy];
 
+				var spawnx = tospawn[1];
+				var spawny = tospawn[2];
+				var spawnz = 0
+
+				spawnx = spawnx*SKALIERUNGSFAKTOR;
+				spawny = spawny*SKALIERUNGSFAKTOR*-1;
+				spawnz = spawnz*SKALIERUNGSFAKTOR;
+
+				for (j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
+					var tmp = spawnx;
+					spawnx = -spawny;
+					spawny = tmp;
+				}
+				
+				var xz = changexzaccordingtorot(segments[INDEX1].orx, segments[INDEX1].ory, segments[INDEX1].rot);
+				spawnx = spawnx + parseInt(segments[INDEX1].transx)+xz[0];
+				spawny = spawny + parseInt(segments[INDEX1].transy)+xz[1];
+
+				var size = tospawn[3]*SKALIERUNGSFAKTOR;
+				var functPtr = eval(tospawn[4]);
+				var fparam1 = tospawn[5];
+				var fparam2 = tospawn[6];
+				
+				
+				if (fparam1 === "") addTrigger(spawnx, spawny, size, functPtr) 
+					else if (fparam2 === "") addTrigger(spawnx, spawny, size, partial(functPtr, fparam1))
+						else addTrigger(spawnx, spawny, size, partial(functPtr, fparam1, fparam2))
+			}
+		}
+		callback();		
+		
+	}
+	
+	
+//puts the right kind of door where it fits.
 function door_in_doors(callback) {
 	for (INDEX1 = 0; INDEX1<segments.length; INDEX1++){
 		for (i = 0; i <segments[INDEX1].doors.length; i++) {
@@ -446,7 +519,7 @@ function door_in_doors(callback) {
 				case "glass": doorkind = "glastur"; break;
 				case "klotuer": doorkind = "klotur"; break;
 			}
-			
+
 			var act = "";
 			switch(room1door[4]) {
 				case "openable": act = "open"; break;
@@ -458,13 +531,13 @@ function door_in_doors(callback) {
 			if (godmode) {act = "openopened"; rotate -= 1;};
 
 			for (var j = 0; i < interact_obj.length; i++) {
-				if ((Math.abs(interact_obj[i].x - door1x) > 5) && (Math.abs(interact_obj[i].y - door1y) > 5)) 
+				if ((Math.abs(interact_obj[i].x - door1x) > 5) && (Math.abs(interact_obj[i].y - door1y) > 5))
 				{
 					return; //keine tür adden wo schon eine ist.
 				}
 			}
-			
-			
+
+
 			addObjectViaName(doorkind, "door", door1x, door1y, 0, DOORSKALIERUNG, rotate-segments[INDEX1].rot, act, room1door[5])
 			if (doorkind == "glastur") {addObjectViaName("glastuerrahmen", "static", door1x, door1y, 0, DOORSKALIERUNG, (act==="openopened")?rotate-segments[INDEX1].rot+1:rotate-segments[INDEX1].rot, "", room1door[5])  }
 		}
@@ -492,7 +565,7 @@ function door_in_doors(callback) {
 	function roomFilenameToName(filename){
 		// for (var i = 0; i < allrooms.length; i++) {
 			// if (allrooms[i].path === filename) return allrooms[i].name
-		// }		
+		// }
 		var tName = filename.split("/");
 		tName = tName[tName.length-1].split(".")[0];	//TODO: bei einigen Objekten ist der Name ungleich dem Filenamen! Das hier ist nur die Notlösung!
 		return tName;
@@ -527,8 +600,8 @@ function door_in_doors(callback) {
 		}
 		return xz;
 	}
-
-
+	
+	
 //adds an OBJECT's mesh to the scene (needs to be changed when we stop loading from jsons directly and instead from the pre-loading-thingy.)
 	function addobject(objectpfad, name, posx, posy, posz, scale, rotate, responsefunct, stretchx) {
 		var intItem = null;
