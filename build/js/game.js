@@ -332,6 +332,7 @@ function createRoom(callback) {
                 set_fires(lights);
                 function lights () {
 	                turn_on_lights(triggers);
+                    scene.add(new THREE.AmbientLight(0xFFBFBF,0.3));
 					function triggers () {
 						addtriggers(callback);
 					}

@@ -23,8 +23,8 @@
 		   <fire index="1" position="(9,0,0)" size="(1,1,2)" val="10" />
 		</fires>
 		<lights>
-		   <light index="1" kind="pointlight" objectname="deckenlicht" position="(9,3,5)" intensity="0.7" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="14"/>
-		   <light index="2" kind="pointlight" objectname="deckenlicht" position="(1,3,5)" intensity="0.7" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="14"/>
+<!-- 		   <light index="1" kind="pointlight" objectname="deckenlicht" position="(9,3,5)" intensity="0.7" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="14"/>
+		   <light index="2" kind="pointlight" objectname="deckenlicht" position="(1,3,5)" intensity="0.7" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="14"/> -->
 		</lights>
 		<triggers>
 			<trigger index="1" xpos="2" ypos="2" size="2" functionname="showThoughts" fparam1="Koordinaten 2,2 ungefähr erreicht." fparam2="5000" />
@@ -76,19 +76,20 @@
 			<fire index="klo" position="(8.03, -13.84, 0)" size="(1,1,1)" val="6"/>
         </fires>
         <lights>
-			<light index="cip_front" kind="pointlight" objectname="" position="(-15.04, -15.22, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
-			<light index="cip_back" kind="pointlight" objectname="" position="(-15.09, -21.69 , 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
-			<light index="cip_small_front" kind="pointlight" objectname="" position="(-8.11, -15.11, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
-			<light index="cip_small_back" kind="pointlight" objectname="" position="(-8.11 , -22, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
-			<light index="lobby_pfoertner" kind="pointlight" objectname="" position="(-0.29, -3.3, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
-			<light index="lobby_aufzug" kind="pointlight" objectname="" position="(-0.29, 4.04, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
-			<light index="flur_front" kind="pointlight" objectname="" position="(15.74, -6, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
-			<light index="flur_back" kind="pointlight" objectname="" position="(26.87, -6, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
-			<light index="hs1_front" kind="pointlight" objectname="" position="(13.17, 6.23, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
-			<light index="hs1_back" kind="pointlight" objectname="" position="(18.87, 6.23, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
-			<light index="hs2_front" kind="pointlight" objectname="" position="(26.87, 2.97, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
-			<light index="hs2_back" kind="pointlight" objectname="" position="(26.87, 9.05, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
-			<light index="klo_small" kind="pointlight" objectname="" position="(7.71, -14.13, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
+<!-- 			<light index="cip_front" kind="pointlight" objectname="deckenlicht" position="(-15.04, -15.22, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
+			<light index="cip_back" kind="pointlight" objectname="deckenlicht" position="(-15.09, -21.69 , 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
+			<light index="cip_small_front" kind="pointlight" objectname="kleinlicht" position="(-8.11, -15.11, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
+			<light index="cip_small_back" kind="pointlight" objectname="kleinlicht" position="(-8.11 , -22, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
+			<light index="lobby_pfoertner" kind="pointlight" objectname="deckenlicht" position="(-0.29, -3.3, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
+			<light index="lobby_aufzug" kind="pointlight" objectname="deckenlicht" position="(-0.29, 4.04, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
+			<light index="flur_front" kind="pointlight" objectname="deckenlicht" position="(15.74, -6, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
+			<light index="flur_back" kind="pointlight" objectname="deckenlicht" position="(26.87, -6, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
+			<light index="hs1_front" kind="pointlight" objectname="deckenlicht" position="(13.17, 6.23, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
+			<light index="hs1_back" kind="pointlight" objectname="deckenlicht" position="(18.87, 6.23, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
+			<light index="hs2_front" kind="pointlight" objectname="deckenlicht" position="(26.87, 2.97, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
+			<light index="hs2_back" kind="pointlight" objectname="deckenlicht" position="(26.87, 9.05, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
+			<light index="klo_small" kind="pointlight" objectname="kleinlicht" position="(7.71, -14.13, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/> -->
+
         </lights>
 		<triggers>
 			<trigger index="exit" xpos="30" ypos="-6" size="2" functionname="success"/>
@@ -133,10 +134,10 @@
 		<lights>
 			<light index="1" kind="pointlight" objectname="deckenlicht" position="(-6,12.5,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="33"/>
 			<light index="2" kind="pointlight" objectname="deckenlicht" position="(8,12.5,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="34"/>
-			<light index="3" kind="pointlight" objectname="deckenlicht" position="(-6,-1,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="34"/>
+	<!-- 		<light index="3" kind="pointlight" objectname="deckenlicht" position="(-6,-1,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="34"/>
 			<light index="4" kind="pointlight" objectname="deckenlicht" position="(8,-1,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="34"/>
 			<light index="5" kind="pointlight" objectname="deckenlicht" position="(1,20.5,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="34"/>
-			<light index="6" kind="pointlight" objectname="deckenlicht" position="(1,-9,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="34"/>
+			<light index="6" kind="pointlight" objectname="deckenlicht" position="(1,-9,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="34"/> -->
 		</lights>
 		<fires>
 			<fire index="1" position="(7.5, -7, 0)" size="(3,3,3)" val="6"/>
@@ -175,12 +176,12 @@
 		   <door type="norm" index="22" position="(-3.75, -1.85)" normal="(1, 0)" act="openable"/>
 		</doors>
 		<lights>
-			<light index="1" kind="pointlight" objectname="deckenlicht" position="(-6,12.5,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="33"/>
+<!-- 			<light index="1" kind="pointlight" objectname="deckenlicht" position="(-6,12.5,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="33"/>
 			<light index="2" kind="pointlight" objectname="deckenlicht" position="(8,12.5,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="34"/>
 			<light index="3" kind="pointlight" objectname="deckenlicht" position="(-6,-1,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="34"/>
 			<light index="4" kind="pointlight" objectname="deckenlicht" position="(8,-1,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="34"/>
 			<light index="5" kind="pointlight" objectname="deckenlicht" position="(1,20.5,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="34"/>
-			<light index="6" kind="pointlight" objectname="deckenlicht" position="(1,-9,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="34"/>
+			<light index="6" kind="pointlight" objectname="deckenlicht" position="(1,-9,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="34"/> -->
 		</lights>
 		<fires>
 			<fire index="1" position="(7.5, -7, 0)" size="(3,3,3)" val="6"/>
@@ -249,7 +250,7 @@
 		   <door type="norm" index="22" position="(-3.75, -1.85)" normal="(1, 0)" act="axtopenable"/>
 		</doors>
 		<lights>
-			<light index="1" kind="pointlight" objectname="deckenlicht" position="(-6,12.5,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="33"/>
+<!-- 			<light index="1" kind="pointlight" objectname="deckenlicht" position="(-6,12.5,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="33"/>
 			<light index="2" kind="pointlight" objectname="deckenlicht" position="(8,12.5,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="34"/>
 			<light index="3" kind="pointlight" objectname="deckenlicht" position="(-6,-1,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="34"/>
 			<light index="4" kind="pointlight" objectname="deckenlicht" position="(8,-1,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="34"/>
@@ -257,7 +258,7 @@
 			<light index="6" kind="pointlight" objectname="deckenlicht" position="(1,-9,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="34"/>
 			<light index="7" kind="pointlight" objectname="deckenlicht" position="(1,0,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(1,0)" visiblewidth="34"/>
 			<light index="8" kind="pointlight" objectname="deckenlicht" position="(1,5,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(1,0)" visiblewidth="34"/>
-			<light index="8" kind="pointlight" objectname="deckenlicht" position="(1,10,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(1,0)" visiblewidth="34"/>
+			<light index="8" kind="pointlight" objectname="deckenlicht" position="(1,10,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(1,0)" visiblewidth="34"/> -->
 		</lights>
 		<fires>
 			<fire index="1" position="(7.5, -7, 0)" size="(3,3,3)" val="6"/>
@@ -292,8 +293,8 @@
 			<door index="8" type="glass"  normal="(0,1)" position="(-11.77, 14)"/>
 		</doors>
 		<lights>
-			<light index="1" kind="pointlight" objectname="deckenlicht" position="(-0.29, -3.3, 5)" normal="(1,0,0)" objectscale="1" intensity="0.7" color="0xFFFFFF" />
-			<light index="2" kind="pointlight" objectname="deckenlicht" position="(-0.29, 4.04, 5)" normal="(1,0,0)" objectscale="1" intensity="0.7" color="0xFFFFFF" />
+<!-- 			<light index="1" kind="pointlight" objectname="deckenlicht" position="(-0.29, -3.3, 5)" normal="(1,0,0)" objectscale="1" intensity="0.7" color="0xFFFFFF" />
+			<light index="2" kind="pointlight" objectname="deckenlicht" position="(-0.29, 4.04, 5)" normal="(1,0,0)" objectscale="1" intensity="0.7" color="0xFFFFFF" /> -->
 		</lights>
 		<fires>
 			<fire index="1" position="(-3, 9, 0)" size="(1,1,1)" val="6"/>
@@ -324,10 +325,10 @@
 			<door index="12" type="norm"  normal="(-1,0)" position="(-0.5, -3.56)"/>
 		</doors>
 		<lights>
-			<light index="1" kind="pointlight" objectname="kleinlicht" position="(-2.5, -3.5, 5)" normal="(1,0,0)" objectscale="1" intensity="0.7" color="0xFFFFFF" />
+<!-- 			<light index="1" kind="pointlight" objectname="kleinlicht" position="(-2.5, -3.5, 5)" normal="(1,0,0)" objectscale="1" intensity="0.7" color="0xFFFFFF" />
 			<light index="2" kind="pointlight" objectname="kleinlicht" position="(1.7, 8, 5)" normal="(1,0,0)" objectscale="1" intensity="0.7" color="0xFFFFFF" />
 			<light index="3" kind="pointlight" objectname="deckenlicht" position="(1.5, -4.5, 5)" normal="(1,0,0)" objectscale="1" intensity="0.7" color="0xFFFFFF" />
-			<light index="4" kind="pointlight" objectname="deckenlicht" position="(-1, 4, 5)" normal="(0,1,0)" objectscale="1" intensity="0.7" color="0xFFFFFF" />
+			<light index="4" kind="pointlight" objectname="deckenlicht" position="(-1, 4, 5)" normal="(0,1,0)" objectscale="1" intensity="0.7" color="0xFFFFFF" /> -->
 		</lights>
 		<fires>
 			<fire index="1" position="(-3.5, 7.5, 0)" size="(1,1,1)" val="6"/>
@@ -406,7 +407,7 @@
 		   <door type="klotuer" index="1" position="(5.32, -11.1)" normal="(-1, 0)" scale="1" act="closed"/>
 		</doors>
 		<lights>
-			<light index="1" kind="pointlight" objectname="deckenlicht" position="(3.5, -4.5, 5)" normal="(0,1,0)" objectscale="1" intensity="0.7" color="0xFFFFFF" />
+			<!-- <light index="1" kind="pointlight" objectname="deckenlicht" position="(3.5, -4.5, 5)" normal="(0,1,0)" objectscale="1" intensity="0.7" color="0xFFFFFF" /> -->
 		</lights>
 		<spawns>
 			<spawn index="1" position="(6.3, -7.5, 0)" object="klo" normaltowall="(0,-1)" scale="1.5" oninteract="pickUpItem"/>
