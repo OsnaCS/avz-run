@@ -166,14 +166,14 @@ function delFire(fireColBox) {
         scene.remove(smoke_list[index]);
         scene.remove(fire_mesh_list[index]);
         fireColBox.mesh.children[0].stop();
-/*
+
         fire_collision_box_list.splice(index,1);
         pointlight_list.splice(index,1);
         smoke_list.splice(index,1);
         fire_mesh_list.splice(index,1);
 
         smoke_and_light_count--;
-*/
+
     }
 
 
