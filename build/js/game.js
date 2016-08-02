@@ -55,8 +55,8 @@ var menu = true;
 var pause = false;
 
 //variable used for increasing fog  //TODO: wie schnell der fog kommt sollte raum/level-abhängig sein
-var MAX_FOG = 0.015; if (godmode) {MAY_FOG = 0.005};
-var myfog=0.002;
+var MAX_FOG = 0.015; if (godmode) {MAX_FOG = 0.005};
+var myfog=0.02; //var myfog=0.002;
 var fogTime=60; if (godmode) {fogTime = 1200};
 var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 var fogInterval;
@@ -74,7 +74,7 @@ function init(event) {
 
     //CreateSegment("groundlevel",scene);
 
-	CreateSegment("groundlevel",scene);
+	CreateSegment("lectureroom1",scene);
 
     octree = new THREE.Octree( {
         // uncomment below to see the octree (may kill the fps)
@@ -233,6 +233,7 @@ function createScene(complete) {
 
 function loop() {
     //console.log(octreeObjects);
+	
 
     if (!menu && !pause) {
         if (player.health <= 0) {
@@ -264,7 +265,7 @@ function loop() {
             octree.update();
             stats.end();
         }
-    }
+    } 
 
 };
 
@@ -411,13 +412,21 @@ function addItemLogic(mesh, interact_type, intfunction, file){
 //adds a trigger at given position, performs action when walking over it and consumes it
 // ***** TO FADE IN THOUGHTS: look up partial, showThoughts, hideThoughts in interact! ******
 
-function addTrigger (xPos, zPos, size, action) {
-	var hohe = (size > PLAYERHEIGHT*1.1) ? size: PLAYERHEIGHT*1.1
+function addTrigger (xPos, zPos, size, action, fname, fparam1, fparam2, enabledtrigger, index, nonewentry) {
+	var hohe = (size > PLAYERHEIGHT*3) ? size: PLAYERHEIGHT*3;
     var triggerGeom = new THREE.BoxGeometry(size,hohe,size);
     var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, color:0xFFFFFF});
     var triggerMesh = new THREE.Mesh(triggerGeom,mat);
     var trigger = new GameObject(triggerMesh,action,TYPE_TRIGGER);
-
+	
+	if (!nonewentry) {
+		var thisone = {ind: index, obj: trigger, xpos: xPos, zpos: zPos, siz: size, fname: fname, fparam1: fparam1, fparam2: fparam2, followup: enabledtrigger, enabled: true};
+		triggers.push(thisone);	
+	} else {
+		for (var i = 0; i < triggers.length; i++) {		
+			if (triggers[i].ind === index) triggers[i].obj = trigger;
+		}
+	}
 
     trigger.mesh.position.x = xPos;
     trigger.mesh.position.z = zPos;
@@ -427,7 +436,19 @@ function addTrigger (xPos, zPos, size, action) {
 
 }
 
-function removeTrigger(trigger) {
+function disableTrigger(trigger) {
+	for (var i = 0; i < triggers.length; i++) {
+		if (triggers[i].obj === trigger) {
+			triggers[i].enabled = false;
+			console.log(triggers[i].fname+"-trigger disabled");
+			for (var j = 0; j < triggers.length; j++) {
+				if (triggers[j].ind === triggers[i].followup) {
+					enableTrigger(triggers[j].ind); 
+					break;
+				}
+			}
+		}
+	}
     scene.remove(trigger.mesh);
     octree.remove(trigger.mesh);
     for (var i =0;i < terrain.length;i++) {
@@ -437,6 +458,22 @@ function removeTrigger(trigger) {
 
     }
 }
+
+function enableTrigger(index) {
+	for (var i = 0; i < triggers.length; i++) {
+		if (triggers[i].ind === index) {
+			triggers[i].enabled = true;
+			var functPtr = eval(triggers[i].fname);
+						
+			if (triggers[i].fparam1 === "") addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, functPtr, triggers[i].fname, "", "", triggers[i].followup, triggers[i].ind, true) 
+				else if (triggers[i].fparam2 === "") addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1), triggers[i].fname, triggers[i].fparam1, "", triggers[i].followup, triggers[i].ind, true)          
+					else addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1, triggers[i].fparam2), triggers[i].fname, triggers[i].fparam1, triggers[i].fparam2, triggers[i].followup, triggers[i].ind, true) 			
+			console.log(triggers[i].fname+"-trigger enabled");
+		}
+	}	
+}
+
+
 
 
 
