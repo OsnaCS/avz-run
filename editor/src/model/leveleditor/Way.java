@@ -86,7 +86,7 @@ public class Way extends DrawableObject {
 		
 		//in case of switching to the sides, the absolute value of normals stays the same
 		//just x and y value change
-		if(rotation == Math.PI/2 || rotation == Math.PI * 1.5){
+		if(rotation == 90 || rotation == 270){
 			double tmp;
 			tmp = normal.getPosx();
 			normal.setPosx(normal.getPosy());
@@ -94,7 +94,7 @@ public class Way extends DrawableObject {
 		}
 		
 		//switching to horizontal lines switches algebraic sign of normal
-		if(rotation == Math.PI || rotation == Math.PI * 2){
+		if(rotation == 180){
 			double tmp;
 			tmp = - normal.getPosx();
 			normal.setPosx(- normal.getPosy());

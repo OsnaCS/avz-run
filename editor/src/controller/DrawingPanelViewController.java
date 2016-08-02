@@ -16,7 +16,6 @@ import controller.listener.RoomListener;
 import model.drawables.DrawableObject;
 import model.drawables.Point;
 import model.leveleditor.Coordinates;
-import model.leveleditor.DashedRoom;
 import model.leveleditor.Level;
 import model.leveleditor.Room;
 import model.leveleditor.Way;
