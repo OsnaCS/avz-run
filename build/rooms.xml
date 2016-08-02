@@ -93,7 +93,7 @@
 		<triggers>
 			<trigger index="exit" xpos="30" ypos="-6" size="2" functionname="success"/>
 			<trigger index="cip" xpos="-9" ypos="-11" size="2" functionname="showThoughts" fparam1="Der Rauch ist zu dicht, ich kann kaum atmen. Vielleicht finde ich etwas, das ich mir vor den Mund halten kann." fparam2="5000" />
-			<trigger index="exit_on_fire" xpos="20" ypos="-6" size="4" functionname="showThoughts" fparam1="Ach du schreck ... Ein großes wildes Feuer greift den Ausgang an. " fparam2="5000" />
+			<trigger index="exit_on_fire" xpos="20" ypos="-6" size="4" functionname="showThoughts" fparam1="Ach du Schreck ... Ein großes wildes Feuer greift den Ausgang an! Ich muss es löschen! " fparam2="5000" />
 		</triggers>
 	</room>
 
