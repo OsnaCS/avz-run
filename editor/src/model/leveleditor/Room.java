@@ -104,8 +104,6 @@ public class Room extends DrawableObject {
             //in ursprung verschieben
             //skalieren
             //zurückschieben
-
-    	
     	
         Coordinates originalCenter = new Coordinates(cC);
         setCenter(new Coordinates(0,0));

@@ -108,7 +108,7 @@ public class Coordinates {
 		Matrix translateTo = new Matrix(translate);
 		
 		translate[0][2] = point.getPosx();
-		translate[1][3] = point.getPosy();
+		translate[1][2] = point.getPosy();
 		
 		Matrix translateFrom = new Matrix(translate);
 		

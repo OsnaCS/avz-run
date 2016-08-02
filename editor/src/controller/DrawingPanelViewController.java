@@ -124,6 +124,7 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 				aktLevel = null;
 				allRooms = new LinkedList<Room>();
 				refreshXML();
+				System.out.println("Clear");
 			}
 		};
 
