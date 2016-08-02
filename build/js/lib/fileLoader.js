@@ -72,9 +72,10 @@ var FileLoader = function (callback) {
 
 
                 material = new THREE.MultiMaterial(mat);
-                // console.log(name + " :" +material.materials);
+
 
                 // Die Schleife ist dafür da, damit nur eine Seite der Objekte gerendert wird
+
       //           material.materials.forEach(function (e) {
       //               var basic = new THREE.MeshBasicMaterial();
       //               if (e instanceof THREE.MeshPhongMaterial || e instanceof THREE.MeshLambertMaterial) {
@@ -100,10 +101,9 @@ var FileLoader = function (callback) {
                         basic.reflectivity =  material.materials[i].reflectivity;
                         basic.shading = THREE.FlatShading;
                         material.materials[i]=basic;
+
                     }
                 }
-
-                console.log(material.materials);
                 // Glättet die Objekte
                 geometry.mergeVertices();
 

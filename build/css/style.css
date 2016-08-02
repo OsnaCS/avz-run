@@ -139,6 +139,25 @@ hr {
     position: absolute;
 }
 
+#endScreen {
+    width: 100%;
+    height: 100%;
+    background-color: #FFFFFF;
+    display: none;
+    position: absolute;
+}
+
+.endFont {
+    width: 100%;
+    height: 100%;
+    margin-top: 30%;
+    font-size: 100px;
+    font-weight: 30px;
+    text-align: center;
+    position: relative;
+}
+
+
 .form-control {
     font-weight: 300;
     text-align: center;

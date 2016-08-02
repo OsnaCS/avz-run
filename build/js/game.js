@@ -72,7 +72,7 @@ var octreeObjects = [];
 function init(event) {
 
 
-    //CreateSegment("lectureroom1",scene);
+    //CreateSegment("groundlevel",scene);
 
 	CreateSegment("groundlevel",scene);
 

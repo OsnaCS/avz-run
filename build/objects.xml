@@ -15,6 +15,7 @@
 		<object name="klo_und_tuer" path="klo_und_tuer.json" scale="1" icon="icon.jpg" smooth="1" />
 		<object name="computer" path="computer/computer.json" scale="1" icon="icon.jpg" smooth="1" />
 		<object name="computer_message" path="computer/computer_mit_nachricht.json" scale="1" icon="icon.jpg" smooth="1" />
+		<object name="computer_hack" path="computer/computer_hack/computer_hack.json" scale="1" icon="icon.jpg" smooth="1" />
 		<object name="tisch_pc" path="schreibtisch_und_pc.json" scale="1" icon="icon.jpg"  smooth="1" />
 		<object name="becken" path="waschbecken.json" scale="1" icon="icon.jpg" smooth="1" />
 		<object path="pinpad.json" name="pinpad" scale="0.2"  smooth="1" icon="icon.jpg" />
