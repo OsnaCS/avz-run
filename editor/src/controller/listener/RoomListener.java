@@ -62,11 +62,13 @@ public class RoomListener extends MouseInputAdapter {
 				// Compare ways with all not checked or cleared Level-ways
 				if (room.compareWays(level.getWays())) {
 					// Add room
-					level.addRoom(room);
-					level.setWays(room.getWaylist());
+					Room thisroom = new Room(room);
+
+					level.addRoom(thisroom);
+					level.setWays(thisroom.getWaylist());
 
 					delegate.clearTemporaryDrawableObject();
-					delegate.processDrawableObject(room);
+					delegate.processDrawableObject(thisroom);
 
 					this.delegate.refreshXML();
 				}
@@ -75,9 +77,11 @@ public class RoomListener extends MouseInputAdapter {
 				// Rotate Room
 				room.rotate();
 
+
 				DashedRoom r = new DashedRoom(this.room, mousePos);
 
 				delegate.setTemporaryObject(r);
+
 			}
 
 
