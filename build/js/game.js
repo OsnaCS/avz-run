@@ -324,11 +324,6 @@ function createRoom(callback) {
                 set_fires(lights);
                 function lights () {
 
-                    for (var i = 0;i<terrain.length;i++) {
-                        terrain[i].mesh == undefined ?  modifyOctree( terrain[i], true ) : modifyOctree( terrain[i].mesh, true );
-
-
-                    }
 	                turn_on_lights(callback);
                 }
             }

@@ -45,6 +45,7 @@
 		<object path="steckdose.json" name="steckdose" scale="1"  smooth="1" />
 		<object path="glastuerrahmen.json" name="glastuerrahmen" scale="1"  smooth="1" />
 		<object path="buerostuhl.json" name="buerostuhl" scale="1"  smooth="1" />
+		<object path="wc_code/wc_code.json" name="wc_code" scale="1"  smooth="0" />
 	</static>
 
 	<door>
