@@ -45,6 +45,10 @@ function addFire(x, y, z, width, height, depth, spacing) {
             if (fire_list[i]._width == width && fire_list[i]._height == height &&
                 fire_list[i]._depth == depth && fire_list[i]._sliceSpacing == spacing) {
                 fire = fire_list[i];
+                fireWidth = fire._width;
+                fireHeight = fire._height;
+                fireDepth = fire._depth;
+                sliceSpacing = fire._sliceSpacing;
                 exists = true;
                 break;
             }
@@ -81,7 +85,7 @@ function addFire(x, y, z, width, height, depth, spacing) {
     }else{
         fireGeom = new THREE.BoxGeometry(fireWidth, fireHeight, fireDepth);
     }
-    var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
+    var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 1, depthWrite: false })
     var fireMesh = new THREE.Mesh(fireGeom, mat);
 
     // create fire sound
@@ -156,14 +160,14 @@ function delFire(fireColBox) {
         scene.remove(smoke_list[index]);
         scene.remove(fire_mesh_list[index]);
         fireColBox.mesh.children[0].stop();
-
+/*
         fire_collision_box_list.splice(index,1);
         pointlight_list.splice(index,1);
         smoke_list.splice(index,1);
         fire_mesh_list.splice(index,1);
 
         smoke_and_light_count--;
-
+*/
     }
 
 
