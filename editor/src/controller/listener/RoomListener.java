@@ -1,7 +1,9 @@
 package controller.listener;
 
 import controller.DrawableObjectProcessing;
+import controller.DrawingPanelViewController;
 import model.drawables.Point;
+import model.leveleditor.DashedRoom;
 import model.leveleditor.Level;
 import model.leveleditor.Room;
 
@@ -19,7 +21,7 @@ import static javax.swing.SwingUtilities.isRightMouseButton;
 public class RoomListener extends MouseInputAdapter {
 
 	private Point mousePos;
-	private DrawableObjectProcessing delegate;
+	private DrawingPanelViewController delegate;
 	private Level level;
 	private Room room;
 
@@ -34,14 +36,14 @@ public class RoomListener extends MouseInputAdapter {
 	 *            The Level, which containts the room
 	 */
 	public RoomListener(DrawableObjectProcessing delegate, Room room, Level level) {
-		this.delegate = delegate;
+		this.delegate = (DrawingPanelViewController) delegate;
 		this.level = level;
 		this.room = room;
 	}
 
 	/**
-	 * Methode to Handle mouseclicks shows room around Mouseposition.
-	 * Rotates Room if already showed
+	 * Methode to Handle mouseclicks shows room around Mouseposition. Rotates
+	 * Room if already showed
 	 * 
 	 * @param e
 	 *            The Mouseevent, which trigger actions
@@ -52,40 +54,46 @@ public class RoomListener extends MouseInputAdapter {
 		if (mousePos == null) {
 			// Create new MousePos
 			mousePos = new Point(e.getX(), e.getY());
-
 			// Sets the new center from the room
 			room.setCenter(mousePos);
 		} else {
-
 			// Reaction for leftmouseclick
 			if (isLeftMouseButton(e)) {
-				// Compate ways with all not checked or cleared Level-ways
+				// Compare ways with all not checked or cleared Level-ways
 				if (room.compareWays(level.getWays())) {
 					// Add room
 					level.addRoom(room);
 					level.setWays(room.getWaylist());
+
 					delegate.clearTemporaryDrawableObject();
 					delegate.processDrawableObject(room);
+
+					this.delegate.refreshXML();
 				}
-			// Reaction of rightclick
+				// Reaction of rightclick
 			} else if (isRightMouseButton(e)) {
 				// Rotate Room
 				room.rotate();
-				// TODO Delegate setzen (nice to have)
-			}
-		}
 
+				DashedRoom r = new DashedRoom(this.room, mousePos);
+
+				delegate.setTemporaryObject(r);
+			}
+
+
+		}
 	}
 
-
 	/**
-
+	 * 
 	 * Updated Center vom angefassten Raum.
 	 *
 	 * Übergebe mit Hilfe der aktuellen Mausposition ein DashedRectangle als
 	 * temporäres Objekt an das Delegate, sofern bereits ein Mittelpunkt
 	 * vorliegt.
-* @param e	The Event
+	 * 
+	 * @param e
+	 *            The Event
 	 */
 	public void mouseMoved(MouseEvent e) {
 		// If mousePos was'nt set yet
@@ -95,14 +103,19 @@ public class RoomListener extends MouseInputAdapter {
 			// Set center
 			room.setCenter(mousePos);
 			// TODO Delegate setzen (nice to have)
+
+			DashedRoom r = new DashedRoom(this.room, mousePos);
+			// Temporäres Objekt neu zeichnen
+			delegate.setTemporaryDrawableObject(r);
 		}
 	}
 
 	/**
-	 * reset. yeah. megareset. uh. ultrareset.
-	 * ja also alles auf anfang.
-	 * @param e The MouseEvent
-     */
+	 * reset. yeah. megareset. uh. ultrareset. ja also alles auf anfang.
+	 * 
+	 * @param e
+	 *            The MouseEvent
+	 */
 	public void mouseExited(MouseEvent e) {
 		delegate.clearTemporaryDrawableObject();
 		mousePos = null;
@@ -110,6 +123,7 @@ public class RoomListener extends MouseInputAdapter {
 
 	/**
 	 * Getter for Level
+	 * 
 	 * @return returns the level
 	 */
 	public Level getLevel() {
@@ -118,7 +132,9 @@ public class RoomListener extends MouseInputAdapter {
 
 	/**
 	 * Sets new Levvel
-	 * @param level new Level
+	 * 
+	 * @param level
+	 *            new Level
 	 */
 	public void setLevel(Level level) {
 		this.level = level;

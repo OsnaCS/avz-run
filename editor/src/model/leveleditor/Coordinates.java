@@ -24,7 +24,7 @@ public class Coordinates {
 	private int angle;
 	
 	// Faktor, um den skaliert wird
-	private static int factor = 10;
+	private static int factor = 5;
 	
 	/**
 	 * Konstruktor für einen zweidimesionalen Punkt
@@ -54,33 +54,33 @@ public class Coordinates {
 		
 		this.angle = toCopy.getAngle();
 	}
-	/**
-	 * Gibt die aktuellen Koordinaten umgerechnet in int und skaliert zurück
-	 * @param factor Faktor, um den skaliert wird
-	 * @return int-Koordinaten
-	 */
-	public Point getScaledIntCoordinates() {
-		// Basis Trafo der Koordinatensysteme
-		int x = (int) ((factor * this.posx) + 0.5);
-		int y = (int) ((factor * this.posy) + 0.5);
-				
-		return new Point(x,y);
-	}
+//	/**
+//	 * Gibt die aktuellen Koordinaten umgerechnet in int und skaliert zurück
+//	 * @param factor Faktor, um den skaliert wird
+//	 * @return int-Koordinaten
+//	 */
+//	public Point getScaledIntCoordinates() {
+//		// Basis Trafo der Koordinatensysteme
+//		int x = (int) ((factor * this.posx) + 0.5);
+//		int y = (int) ((factor * this.posy) + 0.5);
+//				
+//		return new Point(x,y);
+//	}
 	
 	public Point getScaledIntCoordinates(Coordinates p) {
 		// Basis Trafo der Koordinatensysteme
-		double[][] translate = {{1, 0, -p.getPosx()}, 
+		double[][] translateHin = {{1, 0, -p.getPosx()}, 
 				{0, 1, -p.getPosy()},{0,0,1}};
 		
-		Matrix translateTo = new Matrix(translate);
+		Matrix translateTo = new Matrix(translateHin);
 		
-		translate[0][2] = p.getPosx();
-		translate[1][3] = p.getPosy();
+		double[][] translate = {{1, 0, p.getPosx()}, 
+				{0, 1, p.getPosy()},{0,0,1}};
 		
 		Matrix translateFrom = new Matrix(translate);
 		
-		double[][] scale = {{5, 0, 0}, 
-				{0, 5, 0},{0,0,1}};
+		double[][] scale = {{factor, 0, 0}, 
+				{0, factor, 0},{0,0,1}};
 		
 		Matrix scaling = new Matrix(scale);
 		
@@ -134,18 +134,18 @@ public class Coordinates {
 	 */
 	public void rotation(int angle, Coordinates point){
 		
-		double[][] translate = {{1, 0, -point.getPosx()}, 
+		double[][] translateHin = {{1, 0, -point.getPosx()}, 
 				{0, 1, -point.getPosy()},{0,0,1}};
 		
-		Matrix translateTo = new Matrix(translate);
+		Matrix translateTo = new Matrix(translateHin);
 		
-		translate[0][2] = point.getPosx();
-		translate[1][3] = point.getPosy();
+		double[][] translate = {{1, 0, point.getPosx()}, 
+				{0, 1, point.getPosy()},{0,0,1}};
 		
 		Matrix translateFrom = new Matrix(translate);
 		
-		double[][] rotate = {{Math.cos(angle), -Math.sin(angle), 0}, 
-				{Math.sin(angle), Math.cos(angle), 0},{0,0,1}};
+		double[][] rotate = {{0, -1, 0}, 
+				{1, 0, 0},{0,0,1}};
 		
 		Matrix rotation = new Matrix(rotate);
 		
@@ -154,14 +154,15 @@ public class Coordinates {
 		
 		Matrix matPoint = new Matrix(arrPoint);
 		
-		matPoint = translateTo.multiply(matPoint);
-		matPoint = rotation.multiply(matPoint);
-		matPoint = translateFrom.multiply(matPoint);
+		Matrix temp = translateFrom.multiply(rotation).multiply(translateTo);
+		
+		matPoint= temp.multiply(matPoint);
 		
 		this.posx = matPoint.getValue(0, 0);
 		this.posy = matPoint.getValue(1, 0);
+		System.out.println("Rot: " + this.posx + ", " + this.posy);
 		
-		this.angle = this.angle + angle % 360;
+		this.angle = (this.angle + angle) % 360;
 		
 	}
 	
@@ -250,13 +251,13 @@ public class Coordinates {
 	 * in Koordinaten bzgl des Int-Koordinatensystem um
 	 * @return umgerechnete Koordinaten
 	 */
-	public Point basisChangeDoubleInt() {
+	public Point basisChangeDoubleInt(Coordinates center) {
 		
 		int width = 800;
 		int heigth = 640;
 		
-		int newX = this.getScaledIntCoordinates().x - (width / 2);
-		int newY = this.getScaledIntCoordinates().y - (heigth / 2);
+		int newX = this.getScaledIntCoordinates(center).x + (width / 2);
+		int newY = this.getScaledIntCoordinates(center).y + (heigth / 2);
 		
 		return new Point(newX, newY);
 	}
@@ -267,7 +268,7 @@ public class Coordinates {
 	 * @param c unzurechnende Koordinaten
 	 * @return umgerechnete Koordinaten
 	 */
-	public static Coordinates basisChangeIntDouble(Point p) {
+	public Coordinates basisChangeIntDouble(Point p) {
 		
 		int width = 800;
 		int heigth = 640;

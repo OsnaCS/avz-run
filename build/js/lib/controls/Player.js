@@ -79,6 +79,33 @@ Player = function() {
         }
     }
 
+    this.updateEnergy = function() {
+
+        // player can get exhausted/regenerate energy
+        if (!menu) {
+            if (running && (moveForward || moveLeft || moveBackward || moveRight)) {
+                energy -= delta * 30;
+                if (energy <= 0) {
+                    adjustPlaybackRate(footsteps, 1, true);
+                    outOfBreathSound();
+                    regenerate = true;
+                    speed_factor = 1;
+                    running = false;
+                    $(".energy").css("box-shadow", " 0px 0px 20px 3px rgba(255, 82, 82, 0.6)");
+                }
+            } else {
+                energy += delta * 10;
+                if (energy >= STAMINA) {
+                    energy = STAMINA;
+                    if (regenerate) {
+                        regenerate = false;
+                        $(".energy").css("box-shadow", "none");
+                    }
+                }
+            }
+            $(".energy-bar").css("width", '' + energy + '%');
+        }
+    }
 
 }
 
@@ -126,9 +153,10 @@ function setActiveSlot(slot)  {
 
 
 function addIcon(item,slot) {
-    var tName = item.name.split("/");
-    tName = tName[tName.length-1];
-    tName = tName.split(".")[0];
+	var tName = "";
+	for (var i = 0; i < allobjects.length; i++) {
+		if (allobjects[i].pfad == item.name) {tName = allobjects[i].icon; break;}
+	}
     console.log(tName);
     $("#slot"+(slot+1)).append("<img id='"+tName+"' src='icons/"+tName+".png'/>" );
 }
