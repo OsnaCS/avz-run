@@ -45,6 +45,7 @@
 			<spawn  index="axt" position="(-7, -23.5, 1.1)" object="axt" normaltowall="(0, -1)" scale="1" oninteract="pickUpItem"/>
 			<spawn  index="sponge" position="(28.5, 1.9, 0.9)" object="schwamm" normaltowall="(0, 1)" scale="1" oninteract="pickUpItem"/>
 			<spawn  index="transponder" position="(4.5, -8.3, 1.08)" object="transponder" normaltowall="(0, 1)" scale="1" oninteract="pickUpItem"/>
+			<spawn  index="wc_code" position="(6.58, -15.09, 1.50)" object="wc_code" normaltowall="(-1, 0)" scale="1"/>
         </spawns>
         <fires>
 			<fire index="cip" position="(-7.92, -15.35, 0)" size="(1,1,1)" val="6"/>
