@@ -140,8 +140,8 @@ var allrooms = []; listallrooms(); //same as line above.
 						for (k = 0; k < parts.length; k++) {
 							if (parts[k].indexOf("to") > 0) {
 								first = parseFloat(parts[k].split(" to ")[0]);
-								second = parseFloat(parts[k].split(" to ")[1].split(" step ")[0]); 
-								third = parseFloat(parts[k].split(" to ")[1].split(" step ")[1]); 
+								second = parseFloat(parts[k].split(" to ")[1].split(" step ")[0]);
+								third = parseFloat(parts[k].split(" to ")[1].split(" step ")[1]);
 								for (l = first; l <= second; l+= third) {
 									switch(k){
 										case 0: x.push(l); break;
@@ -154,7 +154,7 @@ var allrooms = []; listallrooms(); //same as line above.
 									case 0: x.push(parts[k]); break;
 									case 1: y.push(parts[k]); break;
 									case 2: z.push(parts[k]); break;
-								}								
+								}
 							}
 						}
 						var p = 0;
@@ -168,7 +168,7 @@ var allrooms = []; listallrooms(); //same as line above.
 									cudo.push(curdoor[j].getAttribute("normaltowall"));
 									cudo.push((curdoor[j].getAttribute("scale") !== null) ? curdoor[j].getAttribute("scale") : 1);
 									cudo.push((curdoor[j].getAttribute("oninteract") !== "") ? curdoor[j].getAttribute("oninteract") : "");
-									SpawnArr.push(cudo);	
+									SpawnArr.push(cudo);
 									p++;
 								}
 							}
@@ -345,9 +345,9 @@ var allrooms = []; listallrooms(); //same as line above.
 
 	function createFire(x, z, y, sx, sy, sz, s) {
 		VolumetricFire.texturePath = FIRETEXTUREPATH;
-		var fireseg = {x:x, y:y, z:z, sx:sx*SKALIERUNGSFAKTOR, sy:sy*SKALIERUNGSFAKTOR, sz:sz*SKALIERUNGSFAKTOR, val:s}; //TODO: kann ich auch das mesh des feuers adden?
+		var fireseg = {x:x, y:y, z:z, sx:sx*SKALIERUNGSFAKTOR, sy:sy*SKALIERUNGSFAKTOR, sz:sz*SKALIERUNGSFAKTOR, val:s*SKALIERUNGSFAKTOR}; //TODO: kann ich auch das mesh des feuers adden?
 		fires.push(fireseg);
-		addFire(x, y, z, sx*SKALIERUNGSFAKTOR, sy*SKALIERUNGSFAKTOR, sz*SKALIERUNGSFAKTOR, s);
+		addFire(x, y, z, sx*SKALIERUNGSFAKTOR, sy*SKALIERUNGSFAKTOR, sz*SKALIERUNGSFAKTOR, s*SKALIERUNGSFAKTOR);
 	}
 
 //puts the lights where they belong
@@ -446,7 +446,7 @@ function door_in_doors(callback) {
 				case "glass": doorkind = "glastur"; break;
 				case "klotuer": doorkind = "klotur"; break;
 			}
-			
+
 			var act = "";
 			switch(room1door[4]) {
 				case "openable": act = "open"; break;
@@ -458,13 +458,13 @@ function door_in_doors(callback) {
 			if (godmode) {act = "openopened"; rotate -= 1;};
 
 			for (var j = 0; i < interact_obj.length; i++) {
-				if ((Math.abs(interact_obj[i].x - door1x) > 5) && (Math.abs(interact_obj[i].y - door1y) > 5)) 
+				if ((Math.abs(interact_obj[i].x - door1x) > 5) && (Math.abs(interact_obj[i].y - door1y) > 5))
 				{
 					return; //keine tür adden wo schon eine ist.
 				}
 			}
-			
-			
+
+
 			addObjectViaName(doorkind, "door", door1x, door1y, 0, DOORSKALIERUNG, rotate-segments[INDEX1].rot, act, room1door[5])
 			if (doorkind == "glastur") {addObjectViaName("glastuerrahmen", "static", door1x, door1y, 0, DOORSKALIERUNG, (act==="openopened")?rotate-segments[INDEX1].rot+1:rotate-segments[INDEX1].rot, "", room1door[5])  }
 		}
@@ -492,7 +492,7 @@ function door_in_doors(callback) {
 	function roomFilenameToName(filename){
 		// for (var i = 0; i < allrooms.length; i++) {
 			// if (allrooms[i].path === filename) return allrooms[i].name
-		// }		
+		// }
 		var tName = filename.split("/");
 		tName = tName[tName.length-1].split(".")[0];	//TODO: bei einigen Objekten ist der Name ungleich dem Filenamen! Das hier ist nur die Notlösung!
 		return tName;

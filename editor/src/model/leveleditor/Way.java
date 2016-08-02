@@ -78,7 +78,7 @@ public class Way extends DrawableObject {
 	 * creates a usable Position of Way for drawing
 	 */
 	public Point fittingPos(){
-		//gets the Positions of way and the center of father
+//		//gets the Positions of way and the center of father
 		Point nowPos = pos.getScaledIntCoordinates(father.cC);
 //		int papaPosX = (int) (father.getCenter().getPosx() +0.5);
 //		int papaPosY = (int) (father.getCenter().getPosy() +0.5);
@@ -92,10 +92,8 @@ public class Way extends DrawableObject {
 //		//creates Point out of it
 //		Point fitPos = new Point(x,y);
 //		
-//		returns point
-//		return fitPos;
+//		//returns point
 		return nowPos;
-		
 	}
 	
 	@Override
@@ -109,6 +107,7 @@ public class Way extends DrawableObject {
 		
 		//gets the position of the way at the moment
 		Point a = this.fittingPos();
+		
 		
 		//dummy
 		Point b = new Point (0, 0);
@@ -125,11 +124,11 @@ public class Way extends DrawableObject {
 			b.x = x;
 			b.y = a.y;
 		}else if(normal.getPosy() > 0){
-			int y = a.x + maxDistance;
+			int y = a.y + maxDistance;
 			b.x = a.x;
 			b.y = y;
 		}else{
-			int y = a.x - maxDistance;
+			int y = a.y - maxDistance;
 			b.x = a.x;
 			b.y = y;
 		}
@@ -151,6 +150,7 @@ public class Way extends DrawableObject {
 		g.setColor(c);
 		
 		// draws line from current position to the setted Point by normal
+		
 		new Line(a, b).paint(g);
 	}
 

@@ -94,6 +94,11 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		drawingPanelView = new DrawingPanelView(width, height, drawableObjectsModel);
 
 		// aktuellen Roomlistner erstellen und anhängen
+		this.aktLevel = new Level();
+		this.aktLevel.addRoom(temp);
+		for (int i =0; i <temp.getWaylist().size();i++){
+			this.aktLevel.addWay(temp.getWaylist().get(i));
+		}
 		this.roomListener = new RoomListener(this, temp, this.aktLevel);
 		this.drawingPanelView.addMouseListener(roomListener);
 		
