@@ -8,7 +8,7 @@ var activeObject;
 
 var lockOpen = false; // pin pad boolean
 
-var outlineMesh=null;
+var outlineMesh = null;
 
 // pin pad variables.... may not be stored here?
 var pin = new Array(4);
@@ -296,8 +296,6 @@ function enterPin() {
 
     // show pin pad and make default pause screen invisible
     $("#pinPad").show();
-    $("#pinPad").css("z-index", 20);
-
 
     // exit pointerLock so player can use cursor
     document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
@@ -307,17 +305,16 @@ function enterPin() {
 // return to game from pin pad
 function exitPinPad() {
 
-    // hide pin pad
-    $("#pinPad").css("z-index", 0);
     $("#pinPad").hide();
 
     // determine if entered code was correct
-    if (CORRECT_PIN[0] == pin[0] && CORRECT_PIN[1] == pin[1] && CORRECT_PIN[2] == pin[2] && CORRECT_PIN[3] == pin[3]) lockOpen = true;
-    else lockOpen = false;
-
-    // REPLACE WITH RESPECTIVE SOUND CALLS
-    if (lockOpen) correctSound();
-    else failedSound();
+    if (CORRECT_PIN[0] == pin[0] && CORRECT_PIN[1] == pin[1] && CORRECT_PIN[2] == pin[2] && CORRECT_PIN[3] == pin[3]) {
+        lockOpen = true;
+        correctSound();
+    } else {
+        lockOpen = false;
+        failedSound();
+    }
 
     backToGame();
 
@@ -369,11 +366,10 @@ function pinPad(pinvalue) {
 
 function enterCH() {
 
-    if(this.type == TYPE_INTERACTABLE && selectedItem != null && (objectFilenameToName(selectedItem.name) == "transponder")){ //&& selectedItem.name == "transponder"){ //TODO change
+    if(this.type == TYPE_INTERACTABLE && selectedItem != null && (objectFilenameToName(selectedItem.name) == "transponder")){
 
         special_html_input = true;
 
-        $("#compHack").css("z-index", 20);
         $("#compHack").show();
 
         document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
@@ -381,6 +377,7 @@ function enterCH() {
 
         document.exitPointerLock();
     } else {
+
         console.log(selectedItem.name);
         console.log('nicht anwendbar');
     }
@@ -390,9 +387,7 @@ function enterCH() {
 
 function exitCH() {
 
-    $("#compHack").css("z-index", 0);
-    $("#compHack").css("display","none");
-
+    $("#compHack").hide();
 
     // determine if entered code was correct
     if (CORRECT_TRANSPONDER[0] == transponder_config[0] && CORRECT_TRANSPONDER[1] == transponder_config[1]){
@@ -441,20 +436,19 @@ function compHack(hackButtonValue) {
 }
 
 function backToGame() {
+
     // reset delta
     prevTime = performance.now();
 
-    var element = document.getElementById('world');
-
     //ask browser to lock the pointer again
+    var element = document.getElementById('world');
     element.requestPointerLock();
 
+    // activate controls
     controls.enabled = true;
     special_html_input = false;
 
-
-    loop();
-
+    // remove focus from the object that was just used again
     scene.remove(outlineMesh);
     outlineMesh = null;
     activeObject = null;
