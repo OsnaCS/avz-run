@@ -93,8 +93,11 @@ public class Room extends DrawableObject {
 
     //Rotiert um angle°
     public void rotate(int angle){
+    	System.out.println("A");
         cA.rotation(90, cC);
+        System.out.println("E");
         cE.rotation(90, cC);
+        System.out.println("C");
         cC.rotation(90, cC);
     }
 

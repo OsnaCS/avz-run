@@ -74,6 +74,8 @@ public class RoomListener extends MouseInputAdapter {
 			} else if (isRightMouseButton(e)) {
 				// Rotate Room
 				room.rotate();
+				System.out.println(room.getcA().getAngle());
+				delegate.setTemporaryObject(room);
 				// TODO Delegate setzen (nice to have)
 			}
 
