@@ -101,7 +101,6 @@ public class RoomListener extends MouseInputAdapter {
 			mousePos = new Point(e.getX(), e.getY());
 			// Set center
 			room.setCenter(mousePos);
-			// TODO Delegate setzen (nice to have)
 
 			DashedRoom r = new DashedRoom(this.room, mousePos);
 			// Temporäres Objekt neu zeichnen
@@ -138,6 +137,10 @@ public class RoomListener extends MouseInputAdapter {
 	 */
 	public void setLevel(Level level) {
 		this.level = level;
+	}
+	
+	public String toString() {
+		return this.room.getName();
 	}
 
 }

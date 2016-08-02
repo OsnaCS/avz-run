@@ -142,13 +142,13 @@ public class Way extends DrawableObject {
 			b.x = a.x;
 			b.y = y;
 		}
-
+		System.out.println(type);
 		Color c = Color.BLACK;
 		// decides by type of door its color
-		if (type == "glas") {
+		if (type.equals("glass")) {
 			//Cyan for glassdoor
 			c = Color.CYAN;
-		} else if (type == "corridor") {
+		} else if (type.equals("floor")) {
 			//Yellow for corridor
 			c = Color.YELLOW;
 		} else {

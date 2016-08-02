@@ -3,7 +3,6 @@ package model.leveleditor;
 import model.drawables.DrawableObject;
 import model.drawables.Line;
 import model.drawables.Point;
-import sun.awt.image.ImageWatched;
 
 
 import java.awt.*;
@@ -177,8 +176,8 @@ public class Room extends DrawableObject {
     }
 
     public void setCenter(Point center){
-    	Coordinates newC = cC.basisChangeIntDouble(center);
-        this.cC = newC;
+    	Coordinates newC = new Coordinates(center.x, center.y);
+        setCenter(newC);
     }
 
     public void setCenter(Coordinates cC) {
