@@ -331,7 +331,7 @@ function createRoom(callback) {
             function fires() {
                 set_fires(lights);
                 function lights () {
-	                turn_on_lights(triggers); 
+	                turn_on_lights(triggers);
 					function triggers () {
 						addtriggers(callback);
 					}
@@ -344,19 +344,19 @@ function createRoom(callback) {
 
 //debug-stuff, deleteme
 function ShowSegments() {
-	var text = "";
-	for (i = 0; i <segments.length; i++) {
-		text += printmost(segments[i])+"<br>";  //JSON.stringify(segments[i])
-	}
-	alert(text);
+    var text = "";
+    for (i = 0; i <segments.length; i++) {
+        text += printmost(segments[i])+"<br>";  //JSON.stringify(segments[i])
+    }
+    alert(text);
 }
 function printmost(obj) {
-	var output = '';
-	for (var property in obj) {
-	  if (property != 'mesh')
-		{ output += property + ': ' + obj[property]+'; '; }
-	}
-	return output;
+    var output = '';
+    for (var property in obj) {
+      if (property != 'mesh')
+        { output += property + ': ' + obj[property]+'; '; }
+    }
+    return output;
 }
 //debugstuffdeleteme ende
 
@@ -365,11 +365,11 @@ function createItems(callback){
 
      // // addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
 
-	 // // addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name)
-	 // // TYPE_INTERACTABLE; TYPE_TRIGGER; TYPE_FIRE; TYPE_EXIT;
-	 // // intfunction = damage_door, destroy_door, pickUpItem, destroy, open, openLockedDoor, extinguish
+     // // addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name)
+     // // TYPE_INTERACTABLE; TYPE_TRIGGER; TYPE_FIRE; TYPE_EXIT;
+     // // intfunction = damage_door, destroy_door, pickUpItem, destroy, open, openLockedDoor, extinguish
 
-	 // //wände/terrain/statics, interactibles(auch feuer und türen), triggerevents(auch feuer), licher (auch feuer),
+     // //wände/terrain/statics, interactibles(auch feuer und türen), triggerevents(auch feuer), licher (auch feuer),
 
       // addItem((newItemList[0]), -50, 10, 10, 10, true, pickUpItem, newItemList[0]);
       // addItem((newItemList[1]), 20, 5, 10, 1, true, destroy, newItemList[1]);
@@ -393,7 +393,7 @@ function createItems(callback){
 // Add Object with given Path to given coordinates
 function addItemLogic(mesh, interact_type, intfunction, file){
 
-	// alert("Ich habe eine Daseinsberechtigung");
+    // alert("Ich habe eine Daseinsberechtigung");
 
     // if(interact_type){
         // var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, file);
