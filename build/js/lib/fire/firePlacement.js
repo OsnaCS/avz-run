@@ -117,6 +117,9 @@ function addFire(x, y, z, width, height, depth, spacing) {
 
 }
 
+var f_i;
+var f_j;
+
 // Call this function once after all the fires have been added to the scene
 function animateFire() {
 
@@ -125,16 +128,16 @@ function animateFire() {
      fireElapsed = clock.getElapsedTime();
 
     // update alle fire Objekte aus dem Array
-    for (i = 0; i < fire_count; i++) {
-        fire_list[i].update(fireElapsed);
+    for (f_i = 0; f_i < fire_count; f_i++) {
+        fire_list[f_i].update(fireElapsed);
     }
 
     // update alle smoke und pointlights
-    for (j = 0; j < smoke_and_light_count; j++) {
+    for (f_j = 0; f_j < smoke_and_light_count; f_j++) {
 
-        pointlight_list[j].intensity = Math.sin(fireElapsed * 30) * 0.25 + 3;
+        pointlight_list[f_j].intensity = Math.sin(fireElapsed * 30) * 0.25 + 3;
 
-        smoke_list[j].material.uniforms.time.value = clock.getElapsedTime();
+        smoke_list[f_j].material.uniforms.time.value = clock.getElapsedTime();
     }
 }
 
