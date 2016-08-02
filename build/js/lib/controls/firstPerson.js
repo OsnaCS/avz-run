@@ -1,6 +1,6 @@
 var godmode = false; // zum testen, man kann nicht fallen, hat unendlich leben, unendlich sprinten, alle türen sind offen, Nebel kommt langsamer
 var weaksystem = true; //when true, it disables smoothing and makes the fires worse.
-
+var muteSounds = false; // if true, no sound will be played
 
 // Controls camera via WASD/Mouse, enables player to jump, run and crouch
 
