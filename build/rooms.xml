@@ -198,13 +198,13 @@
 			 <spawn index="16" position="(-3, 10, 1)" object="ohp" normaltowall="(0,1)" scale="2"/>
 			 <spawn index="17" position="(-3, 11.5, 0.95)" object="roboter" normaltowall="(-1,0)" scale="0.4" oninteract=""/>
 
-			 <spawn index="18" position="(-1.8, 1.5, 0)" object="ziegel" normaltowall="(0,1)" scale="1.5"/> 
-			 <spawn index="19" position="(3, 0.5, 1)" object="ziegel" normaltowall="(0,-1)" scale="1"/> 
-			 <spawn index="20" position="(-3, 10, 0)" object="ziegel" normaltowall="(1,0)" scale="1"/> 
-			 <spawn index="21" position="(-1.5, 8, 0)" object="ziegel" normaltowall="(0,1)" scale="1"/> 
-			 <spawn index="22" position="(4, 15, 0)" object="ziegel" normaltowall="(0,-1)" scale="1"/> 
-			 <spawn index="23" position="(-3, 9, 1)" object="ziegel" normaltowall="(0,1)" scale="1"/> 
-			 <spawn index="2" position="(-3.95 ,4, 1.6)" object="pinpad" normaltowall="(0,-1)" scale="1" oninteract="enterPin"/> 
+			 <spawn index="18" position="(-1.8, 1.5, 0)" object="ziegel" normaltowall="(0,1)" scale="1.5"/>
+			 <spawn index="19" position="(3, 0.5, 1)" object="ziegel" normaltowall="(0,-1)" scale="1"/>
+			 <spawn index="20" position="(-3, 10, 0)" object="ziegel" normaltowall="(1,0)" scale="1"/>
+			 <spawn index="21" position="(-1.5, 8, 0)" object="ziegel" normaltowall="(0,1)" scale="1"/>
+			 <spawn index="22" position="(4, 15, 0)" object="ziegel" normaltowall="(0,-1)" scale="1"/>
+			 <spawn index="23" position="(-3, 9, 1)" object="ziegel" normaltowall="(0,1)" scale="1"/>
+			 <spawn index="2" position="(-3.95 ,4, 1.6)" object="pinpad" normaltowall="(0,-1)" scale="1" oninteract="enterPin"/>
 
 		</spawns>
 	</room>

@@ -62,11 +62,13 @@ public class RoomListener extends MouseInputAdapter {
 				// Compare ways with all not checked or cleared Level-ways
 				if (room.compareWays(level.getWays())) {
 					// Add room
-					level.addRoom(room);
-					level.setWays(room.getWaylist());
+					Room thisroom = new Room(room);
+
+					level.addRoom(thisroom);
+					level.setWays(thisroom.getWaylist());
 
 					delegate.clearTemporaryDrawableObject();
-					delegate.processDrawableObject(room);
+					delegate.processDrawableObject(thisroom);
 
 					this.delegate.refreshXML();
 				}
@@ -75,9 +77,11 @@ public class RoomListener extends MouseInputAdapter {
 				// Rotate Room
 				room.rotate();
 
+
 				DashedRoom r = new DashedRoom(this.room, mousePos);
 
 				delegate.setTemporaryObject(r);
+
 			}
 
 
@@ -97,13 +101,15 @@ public class RoomListener extends MouseInputAdapter {
 	 */
 	public void mouseMoved(MouseEvent e) {
 		// If mousePos was'nt set yet
-		if (mousePos != null) {
+		if (mousePos == null) {
+			System.out.println(mousePos);
 			// Set MousePos
+			mousePos = new Point(e.getX(), e.getY());
+		} else {
 			mousePos = new Point(e.getX(), e.getY());
 			// Set center
 			room.setCenter(mousePos);
-			// TODO Delegate setzen (nice to have)
-
+			
 			DashedRoom r = new DashedRoom(this.room, mousePos);
 			// Temporäres Objekt neu zeichnen
 			delegate.setTemporaryDrawableObject(r);
@@ -138,6 +144,10 @@ public class RoomListener extends MouseInputAdapter {
 	 */
 	public void setLevel(Level level) {
 		this.level = level;
+	}
+	
+	public String toString() {
+		return this.room.getName();
 	}
 
 }

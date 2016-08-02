@@ -13,47 +13,52 @@ import model.drawables.Point;
  */
 public class DashedRoom extends Room {
 
-    public DashedRoom(String name, double xmin, double ymin, double xmax, double ymax, LinkedList<Way> waylist) {
-        super(name, xmin, ymin, xmax, ymax, null, null);
-    }
-    
-    public DashedRoom(Room room, Point mousePos) {
-    	super(room.getName(), room.getcA().getX(), room.getcA().getY(), room.getcE().getX(), room.getcE().getY(), mousePos, room.getWaylist());
-    }
-    
-    @Override
-    public void paint(Graphics g) {
+	private Coordinates cA, cE, cC;
+    private LinkedList<Way> waylist;
+    private String name;
+	
+	public DashedRoom(String name, double xmin, double ymin, double xmax, double ymax, Point center, LinkedList<Way> waylist) {
+		super(name, xmin, ymin, xmax, ymax, center, waylist);
+		
+		this.cA = new Coordinates(xmin, ymin);
+		this.cE = new Coordinates(xmax, ymax);
+		this.cC = new Coordinates((center.x / 5), (center.y / 5));
+		
+		this.name = name;
+		
+		this.waylist = waylist;
+		
+	}
 
-            //in ursprung verschieben
-            //skalieren
-            //zurückschieben
-        
-    	g.setColor(Color.BLACK);
-    	
-        int cX = (int) (cC.getPosx() + 0.5);
-        int cY = (int) (cC.getPosy() + 0.5);
-    	Point c = new Point(cX, cY);
-        Point a = cA.getScaledIntCoordinates(cC);
-        Point e = cE.getScaledIntCoordinates(cC);
+	public DashedRoom(Room room, Point mousePos) {
+		this(room.getName(), room.getcA().getX(), room.getcA().getY(), room.getcE().getX(), room.getcE().getY(),
+				mousePos, room.getWaylist());
+	}
 
-        a.x+=c.x;
-        a.y+=c.y;
-        e.x+=c.x;
-        e.y+=c.y;
+	@Override
+	public void paint(Graphics g) {
+		
+		// in ursprung verschieben
+		// skalieren
+		// zurückschieben
 
-        //rechteck zeichnen
-        Point ur = new Point(e.x, a.y);
-        Point ll = new Point(a.x, e.y);
+		g.setColor(Color.BLACK);
 
-        new DashedLine(a, ur).paint(g);
-        new DashedLine(ur, e).paint(g);
-        new DashedLine(e, ll).paint(g);
-        new DashedLine(ll, a).paint(g);
+		Point a = this.cA.getScaledIntCoordinates(this.cC);
+        Point e = this.cE.getScaledIntCoordinates(this.cC);
+		// rechteck zeichnen
+		Point ur = new Point(e.x, a.y);
+		Point ll = new Point(a.x, e.y);
 
-        //wege zeichnen
-        for (Way roomway : waylist){
-            roomway.paint(g);
-        }
-    }
+		new DashedLine(a, ur).paint(g);
+		new DashedLine(ur, e).paint(g);
+		new DashedLine(e, ll).paint(g);
+		new DashedLine(ll, a).paint(g);
+
+		// wege zeichnen
+		for (Way roomway : this.waylist) {
+			roomway.paint(g);
+		}
+	}
 
 }

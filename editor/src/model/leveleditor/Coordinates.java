@@ -160,10 +160,9 @@ public class Coordinates {
 		
 		this.posx = matPoint.getValue(0, 0);
 		this.posy = matPoint.getValue(1, 0);
-		System.out.println("Rot: " + this.posx + ", " + this.posy);
 		
 		this.angle = (this.angle + angle) % 360;
-		
+		System.out.println(this.angle);
 	}
 	
 	/**
@@ -273,10 +272,14 @@ public class Coordinates {
 		int width = 800;
 		int heigth = 640;
 		
-		double newX = (p.x / factor) + (width / 2);
-		double newY = (p.y / factor) + (heigth / 2);
+		double newX = (p.x / factor) - (width / 2);
+		double newY = (p.y / factor) - (heigth / 2);
 		
 		return new Coordinates(newX, newY);
+	}
+	
+	public String toString() {
+		return "Koordinaten: " + this.getPosx() + ", " + this.getPosy();
 	}
 	
 	/*********************************************************/
