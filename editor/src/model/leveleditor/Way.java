@@ -3,6 +3,7 @@ package model.leveleditor;
 import model.drawables.DrawableObject;
 
 import model.drawables.Line;
+import model.Matrix;
 import model.drawables.*;
 
 import java.awt.Color;
@@ -80,6 +81,14 @@ public class Way extends DrawableObject {
 	public Point fittingPos(){
 //		//gets the Positions of way and the center of father
 		Point nowPos = pos.getScaledIntCoordinates(father.cC);
+//		int x = nowPos.x * 2;
+//		int y = nowPos.y * 2;
+//		double[][] translate = {{1, 0, x}, 
+//				{0, 1, y},{0,0,1}};
+//		Matrix workaround = new Matrix(translate);
+//		nowPos = workaround.multiply(nowPos);
+		
+		//nowPos =new Point(nowPos.x, nowPos.y);
 //		int papaPosX = (int) (father.getCenter().getPosx() +0.5);
 //		int papaPosY = (int) (father.getCenter().getPosy() +0.5);
 //		Point papaPos = new Point(papaPosX, papaPosY);
@@ -94,7 +103,6 @@ public class Way extends DrawableObject {
 //		
 //		//returns point
 		return nowPos;
-	
 	}
 	
 	@Override
@@ -102,6 +110,7 @@ public class Way extends DrawableObject {
 	 *Paints a line in direction of normal with the radius of clickable circle
 	 */
 	public void paint(Graphics g){
+		
 		
 		//updates normals
 		this.calcNormal(father.getCenter().getAngle());
@@ -151,7 +160,7 @@ public class Way extends DrawableObject {
 		g.setColor(c);
 		
 		// draws line from current position to the setted Point by normal
-		
+		System.out.println(father.getCenter().getScaledIntCoordinates(father.getCenter()));
 		new Line(a, b).paint(g);
 	}
 
