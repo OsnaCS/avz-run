@@ -69,13 +69,13 @@ public class Coordinates {
 	
 	public Point getScaledIntCoordinates(Coordinates p) {
 		// Basis Trafo der Koordinatensysteme
-		double[][] translate = {{1, 0, -p.getPosx()}, 
+		double[][] translateHin = {{1, 0, -p.getPosx()}, 
 				{0, 1, -p.getPosy()},{0,0,1}};
 		
-		Matrix translateTo = new Matrix(translate);
+		Matrix translateTo = new Matrix(translateHin);
 		
-		translate[0][2] = p.getPosx();
-		translate[1][2] = p.getPosy();
+		double[][] translate = {{1, 0, p.getPosx()}, 
+				{0, 1, p.getPosy()},{0,0,1}};
 		
 		Matrix translateFrom = new Matrix(translate);
 		
@@ -134,34 +134,18 @@ public class Coordinates {
 	 */
 	public void rotation(int angle, Coordinates point){
 		
-		double[][] translate = {{1, 0, -(point.getPosx())}, 
-				{0, 1, -(point.getPosy())},{0,0,1}};
+		double[][] translateHin = {{1, 0, -point.getPosx()}, 
+				{0, 1, -point.getPosy()},{0,0,1}};
 		
-		System.out.println("Hin");
-		for (int row = 0; row < translate.length; row++) {
-			for (int col = 0; col < translate[row].length; col++) {
-				System.out.print(" " + translate[row][col]);
-			}
-			System.out.println();
-		}
+		Matrix translateTo = new Matrix(translateHin);
 		
-		Matrix translateTo = new Matrix(translate);
-		
-		translate[0][2] = point.getPosx();
-		translate[1][2] = point.getPosy();
-		
-		System.out.println("Rück");
-		for (int row = 0; row < translate.length; row++) {
-			for (int col = 0; col < translate[row].length; col++) {
-				System.out.print(" " + translate[row][col]);
-			}
-			System.out.println();
-		}
+		double[][] translate = {{1, 0, point.getPosx()}, 
+				{0, 1, point.getPosy()},{0,0,1}};
 		
 		Matrix translateFrom = new Matrix(translate);
 		
-		double[][] rotate = {{Math.cos(angle), -Math.sin(angle), 0}, 
-				{Math.sin(angle), Math.cos(angle), 0},{0,0,1}};
+		double[][] rotate = {{0, -1, 0}, 
+				{1, 0, 0},{0,0,1}};
 		
 		Matrix rotation = new Matrix(rotate);
 		
@@ -170,9 +154,9 @@ public class Coordinates {
 		
 		Matrix matPoint = new Matrix(arrPoint);
 		
-		matPoint = translateTo.multiply(matPoint);
-		matPoint = rotation.multiply(matPoint);
-		matPoint = translateFrom.multiply(matPoint);
+		Matrix temp = translateFrom.multiply(rotation).multiply(translateTo);
+		
+		matPoint= temp.multiply(matPoint);
 		
 		this.posx = matPoint.getValue(0, 0);
 		this.posy = matPoint.getValue(1, 0);
