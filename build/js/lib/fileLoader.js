@@ -89,10 +89,12 @@ var FileLoader = function (callback) {
                     if( material.materials[i].opacity==1) {
                         console.log(material.materials[i]);
 
-                        var basic = new THREE.MeshBasicMaterial();
+                        var basic = new THREE.MeshLambertMaterial();
                         if(material.materials[i].map) {
                             basic.map = material.materials[i].map;
                         }
+                        // basic.metalness=0;
+                        // basic.roughness=0;
                         basic.color = material.materials[i].color;
                         basic.opacity =  material.materials[i].opacity;
                         basic.reflectivity =  material.materials[i].reflectivity;
