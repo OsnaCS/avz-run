@@ -24,7 +24,7 @@ public class Coordinates {
 	private int angle;
 	
 	// Faktor, um den skaliert wird
-	private static int factor = 10;
+	private static int factor = 5;
 	
 	/**
 	 * Konstruktor für einen zweidimesionalen Punkt
@@ -54,18 +54,18 @@ public class Coordinates {
 		
 		this.angle = toCopy.getAngle();
 	}
-	/**
-	 * Gibt die aktuellen Koordinaten umgerechnet in int und skaliert zurück
-	 * @param factor Faktor, um den skaliert wird
-	 * @return int-Koordinaten
-	 */
-	public Point getScaledIntCoordinates() {
-		// Basis Trafo der Koordinatensysteme
-		int x = (int) ((factor * this.posx) + 0.5);
-		int y = (int) ((factor * this.posy) + 0.5);
-				
-		return new Point(x,y);
-	}
+//	/**
+//	 * Gibt die aktuellen Koordinaten umgerechnet in int und skaliert zurück
+//	 * @param factor Faktor, um den skaliert wird
+//	 * @return int-Koordinaten
+//	 */
+//	public Point getScaledIntCoordinates() {
+//		// Basis Trafo der Koordinatensysteme
+//		int x = (int) ((factor * this.posx) + 0.5);
+//		int y = (int) ((factor * this.posy) + 0.5);
+//				
+//		return new Point(x,y);
+//	}
 	
 	public Point getScaledIntCoordinates(Coordinates p) {
 		// Basis Trafo der Koordinatensysteme
@@ -134,13 +134,29 @@ public class Coordinates {
 	 */
 	public void rotation(int angle, Coordinates point){
 		
-		double[][] translate = {{1, 0, -point.getPosx()}, 
-				{0, 1, -point.getPosy()},{0,0,1}};
+		double[][] translate = {{1, 0, -(point.getPosx())}, 
+				{0, 1, -(point.getPosy())},{0,0,1}};
+		
+		System.out.println("Hin");
+		for (int row = 0; row < translate.length; row++) {
+			for (int col = 0; col < translate[row].length; col++) {
+				System.out.print(" " + translate[row][col]);
+			}
+			System.out.println();
+		}
 		
 		Matrix translateTo = new Matrix(translate);
 		
 		translate[0][2] = point.getPosx();
 		translate[1][2] = point.getPosy();
+		
+		System.out.println("Rück");
+		for (int row = 0; row < translate.length; row++) {
+			for (int col = 0; col < translate[row].length; col++) {
+				System.out.print(" " + translate[row][col]);
+			}
+			System.out.println();
+		}
 		
 		Matrix translateFrom = new Matrix(translate);
 		
@@ -160,8 +176,9 @@ public class Coordinates {
 		
 		this.posx = matPoint.getValue(0, 0);
 		this.posy = matPoint.getValue(1, 0);
+		System.out.println("Rot: " + this.posx + ", " + this.posy);
 		
-		this.angle = this.angle + angle % 360;
+		this.angle = (this.angle + angle) % 360;
 		
 	}
 	
@@ -250,13 +267,13 @@ public class Coordinates {
 	 * in Koordinaten bzgl des Int-Koordinatensystem um
 	 * @return umgerechnete Koordinaten
 	 */
-	public Point basisChangeDoubleInt() {
+	public Point basisChangeDoubleInt(Coordinates center) {
 		
 		int width = 800;
 		int heigth = 640;
 		
-		int newX = this.getScaledIntCoordinates().x + (width / 2);
-		int newY = this.getScaledIntCoordinates().y + (heigth / 2);
+		int newX = this.getScaledIntCoordinates(center).x + (width / 2);
+		int newY = this.getScaledIntCoordinates(center).y + (heigth / 2);
 		
 		return new Point(newX, newY);
 	}

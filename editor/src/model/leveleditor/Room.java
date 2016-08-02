@@ -93,8 +93,11 @@ public class Room extends DrawableObject {
 
     //Rotiert um angle°
     public void rotate(int angle){
+    	System.out.println("A");
         cA.rotation(90, cC);
+        System.out.println("E");
         cE.rotation(90, cC);
+        System.out.println("C");
         cC.rotation(90, cC);
     }
 
@@ -111,11 +114,12 @@ public class Room extends DrawableObject {
         
     	g.setColor(Color.BLACK);
     	
-        int cX = (int) (cC.getPosx() + 0.5);
-        int cY = (int) (cC.getPosy() + 0.5);
-    	Point c = new Point(cX, cY);
+//        int cX = (int) (cC.getPosx() + 0.5);
+//        int cY = (int) (cC.getPosy() + 0.5);
+//    	Point c = new Point(cX, cY);
         Point a = cA.getScaledIntCoordinates(cC);
         Point e = cE.getScaledIntCoordinates(cC);
+        
         
 
         //zeichenkoordinaten erstellen
@@ -124,10 +128,10 @@ public class Room extends DrawableObject {
 //        e = cE.basisChangeDoubleInt();
 //        c = originalCenter.basisChangeDoubleInt();
 //
-        a.x+=c.x;
-        a.y+=c.y;
-        e.x+=c.x;
-        e.y+=c.y;
+//        a.x+=c.x;
+//        a.y+=c.y;
+//        e.x+=c.x;
+//        e.y+=c.y;
 
         //rechteck zeichnen
         Point ur = new Point(e.x, a.y);
@@ -142,6 +146,7 @@ public class Room extends DrawableObject {
         for (Way roomway : waylist){
             roomway.paint(g);
         }
+        System.out.println(cC.getScaledIntCoordinates(cC));
 
         //center zurücksetzen für korrektes speichern
         //setCenter(originalCenter);
@@ -180,6 +185,9 @@ public class Room extends DrawableObject {
         this.cC = cC;
         this.cA.setPos(cC.addCoordinats(cA.getVector()));
         this.cE.setPos(cC.addCoordinats(cE.getVector()));
+        for(int i=0; i< waylist.size();i++){
+        	waylist.get(i).getPos().setPos(cC.addCoordinats(waylist.get(i).getPos()));
+        }
     }
 
 }
