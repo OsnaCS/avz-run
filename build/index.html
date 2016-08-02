@@ -23,18 +23,41 @@
             </div>
         </div>
     </div>
-    <!-- Startscreen -->
-    <div id="startInstructions">
-        <div class="instructionsContent">
-            <h1>AVZ-Run</h1>
-            <h2>Kannst du entkommen?</h2>
-            <hr>
-            <h3>Namen eingeben:</h3>
-            <input id="nickname" type="text" class="form-control" placeholder="Nickname">
-            <hr>
-            <button id="buttonStart" class="btn">Spielen</button>
-        </div>
+<!-- Startscreen -->
+<div id="startInstructions">
+    <div class="instructionsContent" id="mainMenu">
+        <h1>AVZ-Run</h1>
+        <h2>Kannst du entkommen?</h2>
+        <hr>
+        <h3>Namen eingeben:</h3>
+        <input id="nickname" type="text" class="form-control" placeholder="Nickname">
+        <hr>
+        <button id="buttonStart" class="btn" style="width: 270px; padding: 20px">Spielen</button>
+        <br>
+        <button id="buttonInfo" class="btn" style="width: 270px; margin-top: 25px;">Info</button>
     </div>
+    <div class="instructionsContent" id="infoScreen" style="display:none">
+        <h1>Information</h1>
+        <hr>
+        <div style="margin: 30px;">
+            <p>
+                Das Projekt wurde im Rahmen des 3-Wöchigen Computergrafik Praktikums 2016 an der Universität Osnabrück
+                durchgeführt.
+            </p>
+            <p>
+                Im Spiel "AVZ Run" ist der Spieler im brennenden AVZ gefangen und muss versuchen, diesem Inferno zu
+                entkommen. Der Spieler kontrolliert den In-Game-Charakter und muss sich gegen Hindernisse, Rätsel
+                und Fallen behaupten, um ganz nach unten und aus dem AVZ zu gelangen.
+            </p>
+            <p>
+                Der Quellcode ist auf GitHub zu finden:
+                <a href="https://github.com/OsnaCS/avz-run" style="color: rgb(100, 100, 255)">OsnaCS/avz-run</a>
+            </p>
+        </div>
+        <hr>
+        <button id="buttonInfoBack" class="btn" style="width: 270px">Zurück</button>
+    </div>
+</div>
     <!-- Pause Screen -->
     <div id="blocker">
         <div class="instructionsContent">

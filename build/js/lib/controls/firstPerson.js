@@ -155,6 +155,16 @@ function initPointerLock() {
 
         }, false);
 
+        buttonInfo.addEventListener('click', function(event) {
+            mainMenu.style.display = 'none';
+            infoScreen.style.display = 'block';
+        }, false);
+
+        buttonInfoBack.addEventListener('click', function(event) {
+            infoScreen.style.display = 'none';
+            mainMenu.style.display = 'block';
+        }, false);
+
         button.addEventListener('click', function(event) {
 
             startInstructions.style.display = 'none';
