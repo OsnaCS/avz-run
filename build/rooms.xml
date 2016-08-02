@@ -57,8 +57,8 @@
 			<fire index="cip" position="(-10.88, -21.41, 0)" size="(1,1,1)" val="6"/>
 			<fire index="cip" position="(-7.85, -21.97, 0)" size="(1,1,1)" val="6"/>
 			<fire index="lobby" position="(-8.24, 8.96, 0)" size="(1,1,1)" val="6"/>
-			<fire index="exit" position="(30, -6, 0)" size="(1,1,1)" val="6"/>
-			<fire index="lobby" position="(0.45, 1.79, 0)" size="(1,1,1)" val="6"/>
+			<fire index="exit" position="(30, -6, 0)" size="(1,4,3)" val="6"/>
+			<fire index="lobby" position="(1.45, 1.79, 0)" size="(1,1,1)" val="6"/>
 			<fire index="flur" position="(24.02, -10.4, 0)" size="(1,1,1)" val="6"/>
 			<fire index="flur" position="(18.05, -4.71, 0)" size="(1,1,1)" val="6"/>
 			<fire index="hs1" position="(17.15, 5.96, 0)" size="(1,1,1)" val="6"/>
@@ -79,8 +79,10 @@
 			<light index="hs2_front" kind="pointlight" objectname="deckenlicht" position="(26.87, 2.97, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
 			<light index="hs2_back" kind="pointlight" objectname="deckenlicht" position="(26.87, 9.05, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
 			<light index="klo_small" kind="pointlight" objectname="kleinlicht" position="(7.71, -14.13, 5)" normal="(0,0,-1)" intensity="0.2" objectscale="1" color="0xFFFFFF"  visiblewidth="33"/>
-
         </lights>
+		<triggers>
+			<trigger index="exit" xpos="30" ypos="-6" size="2" functionname="showThoughts" fparam1="ICH LEBE!!!!" fparam2="5000" />
+		</triggers>
 	</room>
 
     <!-- positon spieler spawn: (10.5, 4.8, 3) -->
