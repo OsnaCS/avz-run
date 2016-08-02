@@ -47,7 +47,8 @@ public class DashedRoom extends Room {
 		Point a = this.cA.getScaledIntCoordinates(this.cC);
         Point e = this.cE.getScaledIntCoordinates(this.cC);
 		// rechteck zeichnen
-		Point ur = new Point(e.x, a.y);
+
+        Point ur = new Point(e.x, a.y);
 		Point ll = new Point(a.x, e.y);
 
 		new DashedLine(a, ur).paint(g);

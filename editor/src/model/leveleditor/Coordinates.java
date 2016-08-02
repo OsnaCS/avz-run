@@ -119,8 +119,8 @@ public class Coordinates {
 	 */
 	public Coordinates getVector() {
 		
-		Coordinates v = new Coordinates(0, 0);
-		
+		Coordinates v = new Coordinates(getPosx(), getPosy());
+
 		v.setPosx(getX());
 		v.setPosy(getY());
 		
@@ -162,7 +162,6 @@ public class Coordinates {
 		this.posy = matPoint.getValue(1, 0);
 		
 		this.angle = (this.angle + angle) % 360;
-		System.out.println(this.angle);
 	}
 	
 	/**
@@ -264,7 +263,7 @@ public class Coordinates {
 	/**
 	 * Gibt die Koordinaten, die bzgl des Int-Koordinatensystems gegeben sind,
 	 * in Koordinaten bzgl des Double-Koordinatensystem um
-	 * @param c unzurechnende Koordinaten
+	 * @param p unzurechnungsfähige Koordinaten
 	 * @return umgerechnete Koordinaten
 	 */
 	public Coordinates basisChangeIntDouble(Point p) {
