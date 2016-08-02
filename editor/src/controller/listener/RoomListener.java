@@ -5,6 +5,7 @@ import controller.DrawingPanelViewController;
 import model.drawables.Point;
 import model.leveleditor.Level;
 import model.leveleditor.Room;
+import model.leveleditor.Way;
 
 import javax.swing.event.MouseInputAdapter;
 import java.awt.event.MouseEvent;
@@ -58,22 +59,16 @@ public class RoomListener extends MouseInputAdapter {
 			//room.setCenter(mousePos, room.getCenter().getAngle());
 		} else {
 
-            //for(int i = 0; i < this.room.getWaylist().size(); i++) {
-              //  System.out.println(this.room.getWaylist().get(i));
-            //}
+            //
             //System.out.println("Stopp");
 			// Reaction for leftmouseclick
 			if (isLeftMouseButton(e)) {
-
+				
 				// Compare ways with all not checked or cleared Level-ways
 				if (room.compareWays(level.getWays())) {
 					// Add room
 
 					Room thisroom = new Room(room);
-              /*      for(int i = 0; i < thisroom.getWaylist().size(); i++) {
-                        System.out.println(thisroom.getWaylist().get(i));
-                        System.out.println(this.room.getWaylist().get(i));
-                    }*/
 					level.addRoom(thisroom);
 					//delegate.clearTemporaryDrawableObject();
 					//delegate.processDrawableObject(thisroom);
@@ -96,10 +91,11 @@ public class RoomListener extends MouseInputAdapter {
 			} else if (isRightMouseButton(e)) {
 				// Rotate Room
                 room.rotate();
-                /*for(int i = 0; i < this.room.getWaylist().size(); i++) {
-                    System.out.println(this.room.getWaylist().get(i));
+                for(Way way: room.getWaylist()){
+                	way.calcNormal(90);
                 }
-                System.out.println("Stopp");*/
+               
+                //System.out.println("Stopp");
 
 				delegate.setTemporaryDrawableObject(room);
 
@@ -124,13 +120,14 @@ public class RoomListener extends MouseInputAdapter {
 	public void mouseMoved(MouseEvent e) {
 		// If mousePos was'nt set yet
 		if (mousePos == null) {
-			//System.out.println(mousePos);
+			
 			// Set MousePos
 			//mousePos = new Point(e.getX(), e.getY());
 			//room.setCenter(mousePos);
 		} else {
 			mousePos = new Point(e.getX(), e.getY());
             // Set center
+			
             room.moveCenter(mousePos, room.getCenter().getAngle());
 			//DashedRoom r = new DashedRoom(this.room, mousePos);
 			// Temporäres Objekt neu zeichnen

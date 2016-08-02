@@ -29,7 +29,8 @@ public class Room extends DrawableObject {
         cC = cC.basisChangeIntDouble(center);
 
         this.waylist = waylist;
-        System.out.println("tst");
+        
+        
 
     }
     
@@ -57,9 +58,7 @@ public class Room extends DrawableObject {
      * @return
      */
     public boolean compareWays(LinkedList<Way> allways){
-        /*for(int i = 0; i < this.room.getWaylist().size(); i++) {
-                    System.out.println(this.room.getWaylist().get(i));
-        }
+        
         boolean added = false;
         LinkedList<Way> cutways = new LinkedList<>(allways);
         LinkedList<Way> ownways = new LinkedList<>(waylist);
@@ -68,7 +67,7 @@ public class Room extends DrawableObject {
             for (Way roomway : waylist){
 
                 if (roomway.compareDistance(mapway)){
-                    System.out.println("Hallo");
+                   
                     ownways.remove(roomway);
                     cutways.remove(mapway);
 
@@ -90,6 +89,7 @@ public class Room extends DrawableObject {
         //setWaylist(cutways);
 
         //return added;
+
         return true;
     }
 
@@ -234,15 +234,21 @@ public class Room extends DrawableObject {
 
         this.cA.setPos(newC.addCoordinats(cA.getVector()));
         this.cE.setPos(newC.addCoordinats(cE.getVector()));
-
-        for(int i =0; i<newC.getAngle(); i+=90 ){
-            this.cA.rotation(90, newC);
-            this.cE.rotation(90, newC);
-        }
-
         for(int i=0; i< waylist.size();i++){
             waylist.get(i).getPos().setPos(newC.addCoordinats(waylist.get(i).getPos().getVector()));
         }
+        
+        for(int i =0; i<newC.getAngle(); i+=90 ){
+            this.cA.rotation(90, newC);
+            this.cE.rotation(90, newC);
+            for(int j = 0; j < waylist.size(); j++) {
+                waylist.get(j).getPos().rotation(90, cC);
+
+            }
+        }
+
+        
+        
 
     }
 
