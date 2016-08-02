@@ -75,12 +75,12 @@ public class Coordinates {
 		Matrix translateTo = new Matrix(translate);
 		
 		translate[0][2] = p.getPosx();
-		translate[1][3] = p.getPosy();
+		translate[1][2] = p.getPosy();
 		
 		Matrix translateFrom = new Matrix(translate);
 		
-		double[][] scale = {{5, 0, 0}, 
-				{0, 5, 0},{0,0,1}};
+		double[][] scale = {{factor, 0, 0}, 
+				{0, factor, 0},{0,0,1}};
 		
 		Matrix scaling = new Matrix(scale);
 		
@@ -140,7 +140,7 @@ public class Coordinates {
 		Matrix translateTo = new Matrix(translate);
 		
 		translate[0][2] = point.getPosx();
-		translate[1][3] = point.getPosy();
+		translate[1][2] = point.getPosy();
 		
 		Matrix translateFrom = new Matrix(translate);
 		
@@ -255,8 +255,8 @@ public class Coordinates {
 		int width = 800;
 		int heigth = 640;
 		
-		int newX = this.getScaledIntCoordinates().x - (width / 2);
-		int newY = this.getScaledIntCoordinates().y - (heigth / 2);
+		int newX = this.getScaledIntCoordinates().x + (width / 2);
+		int newY = this.getScaledIntCoordinates().y + (heigth / 2);
 		
 		return new Point(newX, newY);
 	}
