@@ -349,6 +349,7 @@ public class XMLhandler {
 
 			Attr rota = doc.createAttribute("rotation");
 			rota.setValue(new Double(currentRoom.getCenter().getAngle()).toString());
+			System.out.println(currentRoom.getCenter().getAngle());
 			room.setAttributeNode(rota);
 			
 			// Add Room to Hashmap

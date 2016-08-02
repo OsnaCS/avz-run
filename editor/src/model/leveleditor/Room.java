@@ -93,12 +93,13 @@ public class Room extends DrawableObject {
 
     //Rotiert um angle°
     public void rotate(int angle){
-    	System.out.println("A");
+
         cA.rotation(90, cC);
-        System.out.println("E");
+
         cE.rotation(90, cC);
-        System.out.println("C");
+
         cC.rotation(90, cC);
+        
     }
 
 
@@ -146,7 +147,8 @@ public class Room extends DrawableObject {
         for (Way roomway : waylist){
             roomway.paint(g);
         }
-        System.out.println(cC.getScaledIntCoordinates(cC));
+
+
 
         //center zurücksetzen für korrektes speichern
         //setCenter(originalCenter);
