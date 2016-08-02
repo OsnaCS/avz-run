@@ -514,7 +514,9 @@ function openTransponderDoor(){
     if(selectedItem != null && selectedItem.activeTransponder){
             doorSound();
 			var d = getSegmentFromIntItem(this);
-			addObjectViaName("holztur", "door", d.x, d.y, d.z, d.skale, d.rot-1, "openopened");
+			var kind = "glastur"
+			if (ObjectFilenameToName(d.filename) == "holztuer") kind = holztur;
+			addObjectViaName(kind, "door", d.x, d.y, d.z, d.skale, d.rot-1, "openopened");
 			remove_interactible(d);
 			this.delFromScene();
             // if(!this.open) {
