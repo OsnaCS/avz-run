@@ -66,7 +66,7 @@ function addFire(x, y, z, width, height, depth, spacing) {
     }else{
         pointlight = new THREE.PointLight(0xff9933, 1, fireDepth, 2);
     }
-    pointlight.position.set(x, y + (fireHeight / 2) , z);
+    pointlight.position.set(8, 0 , 0);
     scene.add(pointlight);
 
     // Firemesh
@@ -142,7 +142,6 @@ function delFire(fireColBox) {
             index = i;
             break;
         }
-        //index++;
     }
 
     if (fire_found == false) {
