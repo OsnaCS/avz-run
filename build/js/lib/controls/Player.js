@@ -158,7 +158,7 @@ function addIcon(item,slot) {
 		if (allobjects[i].pfad == item.name) {tName = allobjects[i].icon; break;}
 	}
     console.log(tName);
-    $("#slot"+(slot+1)).append("<img id='"+tName+"' src='icons/"+tName+".png'/>" );
+    $("#slot"+(slot+1)).append("<img id='"+tName+"' src='icons/"+tName+"'/>" );
 }
 
 function removeIcon(slot) {
