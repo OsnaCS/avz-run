@@ -245,6 +245,10 @@ function loop() {
             delta = (time - prevTime) / 1000;
 
             stats.begin();
+
+            //setTimeout( function() {
+            //     requestAnimationFrame( loop );
+            // }, 1000 / 10 );
             requestAnimationFrame(loop);
 
             scene.fog.density = myfog;

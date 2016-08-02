@@ -30,13 +30,14 @@ var interObj;
 
 var viewDirection = new THREE.Vector3();
 document.addEventListener( 'click', onMouseClick, false );
-var i;
+var interIter;
+var interIter2;
 
 function interactionLoop() {
 
     //this gets called once per loop. shoots a ray in viewdirection
     interactionRayCaster.set(viewDirection.copy(controls.getObject().position), controls.getDirection().normalize());
-    octreeInteractions = octree.search( interactionRayCaster.ray.origin, interactionRayCaster.ray.far, true, interactionRayCaster.ray.direction );
+    octreeInteractions = octree.search( interactionRayCaster.ray.origin, interactionRayCaster.far, true, interactionRayCaster.ray.direction );
     interactions = interactionRayCaster.intersectOctreeObjects( octreeInteractions);
 
     //if(interactions.length>0) console.log(getGameObject(interactions[0].object));
@@ -45,8 +46,8 @@ function interactionLoop() {
 
     //if it intersects something which is interactable we call its interaction function
     if(interactions.length>0) {
-        for(i = 0; i<interactions.length;i++) {
-            interObj = getGameObject(interactions[i].object)
+        for(interIter = 0; interIter<interactions.length;interIter++) {
+            interObj = getGameObject(interactions[interIter].object)
             if (interObj instanceof GameObject) break;
         }
 
@@ -90,8 +91,8 @@ function interactionLoop() {
     }
             //reaching the exit
     if (interactions.length>0) {
-        for(i = 0; i<interactions.length;i++) {
-            interObj = getGameObject(interactions[i].object)
+        for(interIter2 = 0; interIter2<interactions.length;interIter2++) {
+            interObj = getGameObject(interactions[interIter2].object)
             if (interObj instanceof GameObject) break;
         }
         if(interObj.type==TYPE_EXIT){
@@ -218,9 +219,9 @@ function openopened() {
     }
     this.open = !this.open;
 
-    scene.remove(this.mesh);
     scene.remove(outlineMesh);
     outlineMesh = null;
+    activeObject = null;
 }
 
 
@@ -515,7 +516,9 @@ function openTransponderDoor(){
             doorSound();
 			var d = getSegmentFromIntItem(this);
 			var kind = "glastur"
-			if (objectFilenameToName(d.filename) == "holztuer") kind = holztur;
+
+			if (objectFilenameToName(d.filename) == "holztuer") kind = "holztur";
+
 			addObjectViaName(kind, "door", d.x, d.y, d.z, d.skale, d.rot-1, "openopened");
 			remove_interactible(d);
 			this.delFromScene();
@@ -571,7 +574,11 @@ function hideThoughts() {
     showInterval = clearInterval();
 }
 
-
+function success() {
+    console.log("YEY");
+    $("#endScreen").fadeIn(5000);
+    $(".GUI").fadeOut(5000);
+}
 
 
 function extinguisherAnimation(){
