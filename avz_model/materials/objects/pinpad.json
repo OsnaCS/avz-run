@@ -1,0 +1,34 @@
+{
+    "materials":[{
+        "DbgName":"Material.003",
+        "shading":"lambert",
+        "blending":"NormalBlending",
+        "mapDiffuse":"pinpad.jpg",
+        "depthTest":true,
+        "depthWrite":true,
+        "opacity":1,
+        "mapDiffuseAnisotropy":1,
+        "visible":true,
+        "mapDiffuseWrap":["RepeatWrapping","RepeatWrapping"],
+        "mapDiffuseRepeat":[1,1],
+        "colorDiffuse":[0.8,0.8,0.8],
+        "DbgIndex":0,
+        "transparent":false,
+        "DbgColor":15658734,
+        "wireframe":false,
+        "colorEmissive":[0,0,0]
+    }],
+    "name":"CubeGeometry.2",
+    "faces":[11,0,1,2,3,0,0,0,0,0,11,4,7,6,5,0,0,0,0,0,11,0,4,5,1,0,1,2,3,4,11,1,5,6,2,0,0,0,0,0,11,2,6,7,3,0,0,0,0,0,11,4,0,3,7,0,0,0,0,0],
+    "vertices":[-0.217441,-1,-1,-0.217441,-1,1,-1,-1,1,-1,-1,-1,-0.217441,1,-1,-0.217442,1,1,-1,1,1,-1,1,-1],
+    "uvs":[[0,0,0.9999,9.998e-05,0.9999,0.9999,9.998e-05,0.9999,0.000100338,0.000100069]],
+    "metadata":{
+        "generator":"io_three",
+        "faces":6,
+        "vertices":8,
+        "uvs":1,
+        "version":3,
+        "type":"Geometry",
+        "materials":1
+    }
+}

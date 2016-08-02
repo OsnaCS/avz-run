@@ -14,6 +14,7 @@ var outlineMesh=null;
 var pin = new Array(4);
 var transponder_config = new Array(2);
 var pin_pos = 0;
+var ch_pos = 0;
 
 var CORRECT_PIN = ['0','0','4','2'];
 var CORRECT_TRANSPONDER = ['4','3'];
@@ -23,7 +24,10 @@ var TYPE_EXIT = 2;
 var TYPE_TRIGGER = 3;
 var FADE_TIME = 1200;
 
+var special_html_input = false;
+
 var interObj;
+
 
 document.addEventListener( 'click', onMouseClick, false );
 
@@ -77,25 +81,25 @@ function interactionLoop() {
     //
     if(interactions.length>0) {
         interObj = getGameObject(interactions[0].object);
-        if(interactions[0].object.type==TYPE_FIRE) {
-            console.log("interact");
+        if(interObj.type==TYPE_FIRE) {
+            //console.log("interact");
             //this might be changed..
             if(activeObject!=interObj) {
-                scene.remove(outlineMesh);
-                outlineMesh=null;
+                //scene.remove(outlineMesh);
+                //outlineMesh=null;
                 activeObject= interObj;
 
 
             } else {
 
                 activeObject= interObj;
-                if(outlineMesh==null) {
+                /*if(outlineMesh==null) {
                     outlineMesh = activeObject.mesh.clone();
                     outlineMesh.material = outlineMaterial;
                     outlineMesh.position.copy(activeObject.mesh.position);
                     outlineMesh.is_ob = true;
                     scene.add(outlineMesh);
-                }
+                }*/
 
 
             }
@@ -135,14 +139,21 @@ GameObject = function(mesh, interaction, type, name) {
         // prohibit further interaction by removing from terrain
         for (i = 0; terrain[i] != this && i < terrain.length; i++);
         if (terrain[i] == this) terrain.splice(i,1);
+		console.log("deleted item")
+		delGameObject(this.mesh);
 
     }
 
 }
 
+function delGameObject(mesh) {
+    octree.remove(mesh);
+
+}
+
 function getGameObject(mesh){
     for (var i = 0;i<octreeObjects.length;i++) {
-        if( octreeObjects[i].mesh != undefined &&octreeObjects[i].mesh == mesh) return octreeObjects[i];
+        if(octreeObjects[i] != null && octreeObjects[i].mesh != undefined && octreeObjects[i].mesh == mesh) return octreeObjects[i];
     }
     return mesh;
 }
@@ -155,16 +166,16 @@ function onMouseClick() {
 
 function pickUpItem() {
     player.pickUp(this);
-    //pickUpSound();
+    pickUpSound();
 }
 
 function nix() {
-
+	//damit ein interactible auch ohne interaction angezeigt werden kann braucht es diese dummy-funktion
 }
 
 function destroy(){
     if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
-        //damageDoorSound();
+        damageDoorSound();
         this.delFromScene();
         console.log('destroyed');
         player.delActItem();
@@ -175,7 +186,7 @@ function destroy(){
 }
 
 function openopened() {
-    doorSound(); //TODO: das klappt nicht, sorry.
+    doorSound(); 
     if(this.open) {
         this.mesh.rotateY(Math.PI/2.0);
     }
@@ -187,7 +198,7 @@ function openopened() {
 
 
 function open() {
-    doorSound(); //TODO: das klappt nicht, sorry.
+    doorSound(); 
     if(!this.open) {
         this.mesh.rotateY(Math.PI/2.0);
     }
@@ -197,20 +208,25 @@ function open() {
     this.open = !this.open;
 }
 
+function getSegmentFromIntItem(intItem) {
+	var j = -1;
+	for (i = 0; i < interact_obj.length; i++) {
+		if (interact_obj[i].interIt == intItem) {j = i; break;}
+	}
+	if (j > -1) {
+		var d = interact_obj[j];
+		return d;
+	} else {
+		alert("Something went terribly wrong.")
+	}
+}
+
 function damageDoor() {
     if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
-		var j = -1;
-		for (i = 0; i < interact_obj.length; i++) {
-			if (interact_obj[i].interIt == this) {j = i; break;}
-		}
-		if (j > -1) {
-			var d = interact_obj[j];
-			addObjectViaName("halbbrokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "destroyDoor");
-			remove_interactible(j);
-			this.delFromScene();
-		} else {
-			alert("Something went terribly wrong.")
-		}
+		var d = getSegmentFromIntItem(this);
+		addObjectViaName("halbbrokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "destroyDoor");
+		remove_interactible(d);
+		this.delFromScene();
         damageDoorSound();
     }else{
         showThoughts("Wie könnte ich diese Tür wohl öffnen?",5000);
@@ -219,20 +235,12 @@ function damageDoor() {
 
 function destroyDoor() {
     if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
-		var j = -1;
-		for (i = 0; i < interact_obj.length; i++) {
-			if (interact_obj[i].interIt == this) {j = i; break;}
-		}
-		if (j > -1) {
-			var d = interact_obj[j];
-			addObjectViaName("brokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "");
-			remove_interactible(j);
-			this.delFromScene();
-			player.delActItem();
-			showThoughts("Die Tür ist kaputt, die Axt jetzt leider auch.",3000);
-		} else {
-			alert("Something went terribly wrong.")
-		}
+		var d = getSegmentFromIntItem(this);
+		addObjectViaName("brokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "");
+		remove_interactible(d);
+		this.delFromScene();
+		player.delActItem();
+		showThoughts("Die Tür ist kaputt, die Axt jetzt leider auch.",3000);
         damageDoorSound();
     }else{
         showThoughts("Das Loch ist noch nicht groß genug... wie könnte ich es wohl vergrößern?",5000);
@@ -242,7 +250,7 @@ function destroyDoor() {
 
 function openLockedDoor() {
 	if(lockOpen){
-        //doorSound();
+        doorSound();
 		if(!this.open) {
 	        this.mesh.rotateY(Math.PI/2.0);
 	        this.open = !this.open;
@@ -251,7 +259,9 @@ function openLockedDoor() {
 	        this.mesh.rotateY(-Math.PI/2.0);
 	        this.open = !this.open;
 	    }
-    }
+    } else {
+		showThoughts("Noch zu...")
+	}
 
 }
 
@@ -264,7 +274,7 @@ function dFire(){
 
 // Attach this function to the fire
 function extinguish() {
-	if(this.type == TYPE_FIRE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "loscher")){
+	if(this.type == TYPE_FIRE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "feuerloescher")){
         // activeObject must be saved so that the dFire function is not influence
         // be new activeObject selected during the delay
         tempActObj = activeObject;
@@ -287,37 +297,23 @@ function extinguish() {
 // open pin pad image and its HTML
 function enterPin() {
 
-    pin_pos = 0;
-
-
-    // get object out of focus
-    scene.remove(outlineMesh);
-    outlineMesh = null;
-    activeObject = null;
-
     // pause interaction loop
-    menu = true;
+    special_html_input = true;
 
     // show pin pad and make default pause screen invisible
-    $("#pinPad").css("z-index", 20);
-    $("#blocker").css("z-index", 0);
     $("#pinPad").show();
+    $("#pinPad").css("z-index", 20);
+
 
     // exit pointerLock so player can use cursor
     document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
-    console.log(document.exitPointerLock);
     document.exitPointerLock();
-
 }
 
 // return to game from pin pad
 function exitPinPad() {
 
-    // start loop again
-    menu = false;
-
-    // hide pin pad, reset blocker
-    $("#blocker").css("z-index", 20);
+    // hide pin pad
     $("#pinPad").css("z-index", 0);
     $("#pinPad").hide();
 
@@ -329,11 +325,7 @@ function exitPinPad() {
     if (lockOpen) correctSound();
     else failedSound();
 
-    // reset delta
-    prevTime = performance.now();
-
-    //ask browser to lock the pointer again
-    element.requestPointerLock();
+    backToGame();
 
 }
 
@@ -366,8 +358,6 @@ function pinPad(pinvalue) {
 
             default:
 
-
-
                 if (pin_pos<4) { // unless 4 digits have already been entered
                     pin[pin_pos] = pinvalue; // set current digit to entered number
                     pin_pos++;
@@ -385,17 +375,11 @@ function pinPad(pinvalue) {
 
 function enterCH() {
 
-    if(this.type == TYPE_INTERACTABLE ){ //&& selectedItem.name == "transponder"){ //TODO change
-        pin_pos = 0;
-        // get object out of focus
-        scene.remove(outlineMesh);
-        outlineMesh = null;
-        activeObject = null;
+    if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "transponder")){ 
 
-        menu = true;
+        special_html_input = true;
 
         $("#compHack").css("z-index", 20);
-        $("#compHack").css("display","block");
         $("#compHack").show();
 
         document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
@@ -403,8 +387,9 @@ function enterCH() {
 
         document.exitPointerLock();
     } else {
-        console.log(selectedItem.name);
+        selectedItem != null && console.log(selectedItem.name);
         console.log('nicht anwendbar');
+		showThoughts("Hm, da ist ein Programm von der Raumverwaltung geöffnet...")
     }
 
 }
@@ -412,12 +397,9 @@ function enterCH() {
 
 function exitCH() {
 
-    $("#blocker").css("z-index", 20);
     $("#compHack").css("z-index", 0);
-    $("#compHack").hide();
+    $("#compHack").css("display","none");
 
-    // Ask the browser to lock the pointer
-    menu = false;
 
     // determine if entered code was correct
     if (CORRECT_TRANSPONDER[0] == transponder_config[0] && CORRECT_TRANSPONDER[1] == transponder_config[1]){
@@ -429,11 +411,7 @@ function exitCH() {
         selectedItem.activeTransponder = false;
     }
 
-
-    // reset delta
-    prevTime = performance.now();
-
-    element.requestPointerLock();
+   backToGame();
 }
 
 function compHack(hackButtonValue) {
@@ -448,7 +426,7 @@ function compHack(hackButtonValue) {
 
                 transponder_config[0] = null;
                 transponder_config[1] = null;
-                pin_pos = 0;
+                ch_pos = 0;
                 document.getElementById("pinDisplayCH").innerHTML = "key lock:";
                 break;
 
@@ -459,9 +437,9 @@ function compHack(hackButtonValue) {
 
             default:
 
-                if (pin_pos<2) {
-                    transponder_config[pin_pos] = hackButtonValue;
-                    pin_pos++;
+                if (ch_pos<2) {
+                    transponder_config[ch_pos] = hackButtonValue;
+                    ch_pos++;
                     document.getElementById("pinDisplayCH").innerHTML = "key lock: " + transponder_config.join("");
                 }
                 break;
@@ -469,12 +447,30 @@ function compHack(hackButtonValue) {
         }
 }
 
+function backToGame() {
+    // reset delta
+    prevTime = performance.now();
 
+    var element = document.getElementById('world');
+
+    //ask browser to lock the pointer again
+    element.requestPointerLock();
+
+    controls.enabled = true;
+    special_html_input = false;
+
+
+    loop();
+
+    scene.remove(outlineMesh);
+    outlineMesh = null;
+    activeObject = null;
+}
 
 
 // Attach this function to the sink
 function coverMouth(){
-    if(this.type == TYPE_INTERACTABLE&& (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "lappen")){
+    if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "lappen")){
         startHeavyBreathing();
         HEALTH_PER_SECOND = HEALTH_PER_SECOND / 2;
         //addItem((newItemList[31]), playerPos[1], playerPos[2] + 10, playerPos[3], 2, 270, true, pickUpItem);
@@ -488,30 +484,35 @@ function coverMouth(){
 
 // Attach this function the door to be opened by a transponder
 function openTransponderDoor(){
-
-    if(selectedItem.activeTransponder){
-
+    if(selectedItem != null && selectedItem.activeTransponder){
             doorSound();
-            if(!this.open) {
+			var d = getSegmentFromIntItem(this);
+			addObjectViaName("holztur", "door", d.x, d.y, d.z, d.skale, d.rot-1, "openopened");
+			remove_interactible(d);
+			this.delFromScene();
+            // if(!this.open) {
+                // this.mesh.rotateY(Math.PI/2.0);
+                // this.open = !this.open;
+            // }
 
-                this.mesh.rotateY(Math.PI/2.0);
-                this.open = !this.open;
-            }
-
-            else {
-                this.mesh.rotateY(-Math.PI/2.0);
-                this.open = !this.open;
-            }
-
+            // else {
+                // this.mesh.rotateY(-Math.PI/2.0);
+                // this.open = !this.open;
+            // }
             // transponder can only be used once
             selectedItem.activeTransponder = false;
             player.delActItem();
 
     } else{
         doorLockedSound();
-        console.log('nicht anwendbar');
-        // play doorLocked-Sound
-        showThoughts("Verschlossen. Vielleicht kann ich die Tür mit einem Transponder öffnen.",5000);
+		if(selectedItem != null && objectFilenameToName(selectedItem.name) == "transponder") 
+		{
+			console.log('Kein Transponder mit Code');
+			showThoughts("Hm, dieser Transponder scheint noch nicht für diese Tür eingestellt zu sein...")
+		} else {
+			console.log('kein Tranponder');
+			showThoughts("Verschlossen. Vielleicht kann ich die Tür mit einem Transponder öffnen.",5000);
+		}
     }
 }
 
