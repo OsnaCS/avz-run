@@ -89,7 +89,11 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 
 		this.aktLevel = new Level();
 		this.aktLevel.addRoom(temp);
-		this.aktLevel.setWays(temp.getWaylist());
+		for (int i =0; i <temp.getWaylist().size();i++){
+			this.aktLevel.addWay(temp.getWaylist().get(i));
+
+		}
+		
 
 		this.roomListener = new RoomListener(this, temp, this.aktLevel);
 
