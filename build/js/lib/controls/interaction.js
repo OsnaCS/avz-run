@@ -141,7 +141,7 @@ GameObject = function(mesh, interaction, type, name) {
     this.type = type;
     this.mesh = mesh;
     this.interact = interaction;
-
+http://127.0.0.1:8000
 
     this.name=name;
 
@@ -260,7 +260,7 @@ function getSegmentFromIntItem(intItem) {
 function damageDoor() {
     if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
 		var d = getSegmentFromIntItem(this);
-		addObjectViaName("halbbrokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "destroyDoor");
+		addObjectViaName("halbbrokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "destroyDoor", d.stretchx);
 		remove_interactible(d);
 		this.delFromScene();
         damageDoorSound();
@@ -272,7 +272,7 @@ function damageDoor() {
 function destroyDoor() {
     if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
 		var d = getSegmentFromIntItem(this);
-		addObjectViaName("brokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "");
+		addObjectViaName("brokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "", d.stretchx);
 		remove_interactible(d);
 		this.delFromScene();
 		player.delActItem();
@@ -518,8 +518,9 @@ function openTransponderDoor(){
             doorSound();
 			var d = getSegmentFromIntItem(this);
 			var kind = "glastur"
+
 			if (objectFilenameToName(d.filename) == "holztuer") kind = "holztur";
-			addObjectViaName(kind, "door", d.x, d.y, d.z, d.skale, d.rot-1, "openopened");
+			addObjectViaName(kind, "door", d.x, d.y, d.z, d.skale, d.rot-1, "openopened", d.stretchx);
 			remove_interactible(d);
 			this.delFromScene();
             // if(!this.open) {
@@ -574,7 +575,11 @@ function hideThoughts() {
     showInterval = clearInterval();
 }
 
-
+function success() {
+    console.log("YEY");
+    $("#endScreen").fadeIn(5000);
+    $(".GUI").fadeOut(5000);
+}
 
 
 function extinguisherAnimation(){

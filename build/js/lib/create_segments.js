@@ -277,6 +277,7 @@ var allrooms = []; listallrooms(); //same as line above.
 					cudo.push((curdoor[j].getAttribute("functionname") !== null) ? curdoor[j].getAttribute("functionname") : "showThoughts");
 					cudo.push((curdoor[j].getAttribute("fparam1") !== null) ? curdoor[j].getAttribute("fparam1") : "");
 					cudo.push((curdoor[j].getAttribute("fparam2") !== null) ? curdoor[j].getAttribute("fparam2") : "");
+					cudo.push((curdoor[j].getAttribute("enabledtriggerindex") !== null) ? curdoor[j].getAttribute("enabledtriggerindex") : "");
 					TriggerArr.push(cudo);
 				}
 			}
@@ -462,11 +463,10 @@ var allrooms = []; listallrooms(); //same as line above.
 				var functPtr = eval(tospawn[4]);
 				var fparam1 = tospawn[5];
 				var fparam2 = tospawn[6];
-
-
-				if (fparam1 === "") addTrigger(spawnx, spawny, size, functPtr)
-					else if (fparam2 === "") addTrigger(spawnx, spawny, size, partial(functPtr, fparam1))
-						else addTrigger(spawnx, spawny, size, partial(functPtr, fparam1, fparam2))
+				
+				if (fparam1 === "") addTrigger(spawnx, spawny, size, functPtr, tospawn[4], fparam1, fparam2, tospawn[7], tospawn[0], false) 
+					else if (fparam2 === "") addTrigger(spawnx, spawny, size, partial(functPtr, fparam1), tospawn[4], fparam1, fparam2, tospawn[7], tospawn[0], false)
+						else addTrigger(spawnx, spawny, size, partial(functPtr, fparam1, fparam2), tospawn[4], fparam1, fparam2, tospawn[7], tospawn[0], false)
 			}
 		}
 		callback();
@@ -601,8 +601,17 @@ function door_in_doors(callback) {
 		}
 		return xz;
 	}
-
-
+	
+	function fogdensitychange() {
+		myfog = 0;
+	}
+	
+	function fogdensitychange2() {
+		myfog = MAX_FOG;
+	}
+	
+	
+	
 //adds an OBJECT's mesh to the scene (needs to be changed when we stop loading from jsons directly and instead from the pre-loading-thingy.)
 	function addobject(objectpfad, name, posx, posy, posz, scale, rotate, responsefunct, stretchx) {
 		var intItem = null;
@@ -621,10 +630,10 @@ function door_in_doors(callback) {
 				var functPtr = eval(responsefunct);
 				intItem = new GameObject(mesh, functPtr, TYPE_INTERACTABLE, objectpfad);
 				if (intItem == undefined) intItem = null;
-				var segment = {filename:objectpfad, name: name, interIt: intItem, x: posx, y: posy, z: posz, skale: scale, rot: rotate, funct: responsefunct, msh: mesh};
+				var segment = {filename:objectpfad, name: name, interIt: intItem, x: posx, y: posy, z: posz, skale: scale, rot: rotate, funct: responsefunct, msh: mesh, xstretch: stretchx};
 				interact_obj.push(segment);
 			} else {
-				var segment = {filename:objectpfad, name: name, x: posx, y: posy, z: posz, skale: scale, rot: rotate, msh: mesh};
+				var segment = {filename:objectpfad, name: name, x: posx, y: posy, z: posz, skale: scale, rot: rotate, msh: mesh, xstretch: stretchx};
 				static_obj.push(segment);
 			}
 		}
@@ -712,7 +721,6 @@ function door_in_doors(callback) {
 	function addtoscene(mesh, intItem){
 		scene.add(mesh);
 		if (intItem == null) {
-
 			modifyOctree( mesh, true );
 		} else {
 			modifyOctree( intItem, true );
