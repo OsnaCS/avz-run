@@ -1,5 +1,6 @@
 package model.leveleditor;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.LinkedList;
 
@@ -20,32 +21,39 @@ public class DashedRoom extends Room {
     	super(room.getName(), room.getcA().getX(), room.getcA().getY(), room.getcE().getX(), room.getcE().getY(), mousePos, room.getWaylist());
     }
     
-//    @Override
-//    public void paint(Graphics g) {
-//
-//            //in ursprung verschieben
-//            //skalieren
-//            //zurückschieben
-//    	
-//    	Point a = cA.getScaledIntCoordinates(cC);
-//        Point e = cE.getScaledIntCoordinates(cC);
-//
-//        //rechteck zeichnen
-//        Point ur = new Point(e.x, a.y);
-//        Point ll = new Point(a.x, e.y);
-//
-//        new DashedLine(a, ur).paint(g);
-//        new DashedLine(ur, e).paint(g);
-//        new DashedLine(e, ll).paint(g);
-//        new DashedLine(ll, a).paint(g);
-//
-//        //wege zeichnen
-//        for (Way roomway : waylist){
-//            roomway.paint(g);
-//        }
-//
-//        //center zurücksetzen für korrektes speichern
-//        //setCenter(originalCenter);
-//    }
+    @Override
+    public void paint(Graphics g) {
+
+            //in ursprung verschieben
+            //skalieren
+            //zurückschieben
+        
+    	g.setColor(Color.BLACK);
+    	
+        int cX = (int) (cC.getPosx() + 0.5);
+        int cY = (int) (cC.getPosy() + 0.5);
+    	Point c = new Point(cX, cY);
+        Point a = cA.getScaledIntCoordinates(cC);
+        Point e = cE.getScaledIntCoordinates(cC);
+
+        a.x+=c.x;
+        a.y+=c.y;
+        e.x+=c.x;
+        e.y+=c.y;
+
+        //rechteck zeichnen
+        Point ur = new Point(e.x, a.y);
+        Point ll = new Point(a.x, e.y);
+
+        new DashedLine(a, ur).paint(g);
+        new DashedLine(ur, e).paint(g);
+        new DashedLine(e, ll).paint(g);
+        new DashedLine(ll, a).paint(g);
+
+        //wege zeichnen
+        for (Way roomway : waylist){
+            roomway.paint(g);
+        }
+    }
 
 }

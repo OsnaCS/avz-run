@@ -3,6 +3,7 @@ package model.leveleditor;
 import model.drawables.DrawableObject;
 
 import model.drawables.Line;
+import model.Matrix;
 import model.drawables.*;
 
 import java.awt.Color;
@@ -78,23 +79,30 @@ public class Way extends DrawableObject {
 	 * creates a usable Position of Way for drawing
 	 */
 	public Point fittingPos(){
-		//gets the Positions of way and the center of father
+//		//gets the Positions of way and the center of father
 		Point nowPos = pos.getScaledIntCoordinates(father.cC);
-		int papaPosX = (int) (father.getCenter().getPosx() +0.5);
-		int papaPosY = (int) (father.getCenter().getPosy() +0.5);
-		Point papaPos = new Point(papaPosX, papaPosY);
+//		int x = nowPos.x * 2;
+//		int y = nowPos.y * 2;
+//		double[][] translate = {{1, 0, x}, 
+//				{0, 1, y},{0,0,1}};
+//		Matrix workaround = new Matrix(translate);
+//		nowPos = workaround.multiply(nowPos);
 		
-		//merges both to get the position in coordinate system relative
-		//to the father's center
-		int x = nowPos.x + papaPos.x;
-		int y = nowPos.y + papaPos.y;
-		
-		//creates Point out of it
-		Point fitPos = new Point(x,y);
-		
-		//returns point
-		return fitPos;
-	
+		//nowPos =new Point(nowPos.x, nowPos.y);
+//		int papaPosX = (int) (father.getCenter().getPosx() +0.5);
+//		int papaPosY = (int) (father.getCenter().getPosy() +0.5);
+//		Point papaPos = new Point(papaPosX, papaPosY);
+//		
+//		//merges both to get the position in coordinate system relative
+//		//to the father's center
+//		int x = nowPos.x + papaPos.x;
+//		int y = nowPos.y + papaPos.y;
+//		
+//		//creates Point out of it
+//		Point fitPos = new Point(x,y);
+//		
+//		//returns point
+		return nowPos;
 	}
 	
 	@Override
@@ -103,11 +111,13 @@ public class Way extends DrawableObject {
 	 */
 	public void paint(Graphics g){
 		
+		
 		//updates normals
 		this.calcNormal(father.getCenter().getAngle());
 		
 		//gets the position of the way at the moment
 		Point a = this.fittingPos();
+		
 		
 		//dummy
 		Point b = new Point (0, 0);
@@ -124,11 +134,11 @@ public class Way extends DrawableObject {
 			b.x = x;
 			b.y = a.y;
 		}else if(normal.getPosy() > 0){
-			int y = a.x + maxDistance;
+			int y = a.y + maxDistance;
 			b.x = a.x;
 			b.y = y;
 		}else{
-			int y = a.x - maxDistance;
+			int y = a.y - maxDistance;
 			b.x = a.x;
 			b.y = y;
 		}
@@ -150,6 +160,7 @@ public class Way extends DrawableObject {
 		g.setColor(c);
 		
 		// draws line from current position to the setted Point by normal
+		System.out.println(father.getCenter().getScaledIntCoordinates(father.getCenter()));
 		new Line(a, b).paint(g);
 	}
 

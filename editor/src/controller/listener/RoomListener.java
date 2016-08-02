@@ -61,22 +61,25 @@ public class RoomListener extends MouseInputAdapter {
 
 			// Reaction for leftmouseclick
 			if (isLeftMouseButton(e)) {
-				// Compate ways with all not checked or cleared Level-ways
+				// Compare ways with all not checked or cleared Level-ways
 				if (room.compareWays(level.getWays())) {
 					// Add room
 					level.addRoom(room);
 					level.setWays(room.getWaylist());
 					delegate.clearTemporaryDrawableObject();
 					delegate.processDrawableObject(room);
+					this.delegate.refreshXML();
 				}
 				// Reaction of rightclick
 			} else if (isRightMouseButton(e)) {
 				// Rotate Room
 				room.rotate();
+				System.out.println(room.getcA().getAngle());
+				delegate.setTemporaryObject(room);
 				// TODO Delegate setzen (nice to have)
 			}
 
-			this.delegate.refreshXML();
+
 		}
 	}
 
