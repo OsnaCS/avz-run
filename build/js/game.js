@@ -74,7 +74,7 @@ function init(event) {
 
     //CreateSegment("lectureroom1",scene);
 
-	CreateSegment("groundlevel",scene);
+	CreateSegment("lectureroom1",scene);
 
     octree = new THREE.Octree( {
         // uncomment below to see the octree (may kill the fps)
@@ -236,13 +236,21 @@ function loop() {
             gameOver();
         } else {
 
+            // determines stepwidth
+            time = performance.now();
+            delta = (time - prevTime) / 1000;
+
             stats.begin();
             requestAnimationFrame(loop);
+
             scene.fog.density = myfog;
+            player.updateEnergy();
 
             // YOU NEED TO CALL THIS (srycaps)
-            if (!special_html_input) controlLoop(controls);
-            if (!special_html_input) interactionLoop();
+            if (!special_html_input) {
+                controlLoop(controls);
+                interactionLoop();
+            }
 
             renderer.render(scene, camera);
             octree.update();

@@ -1,3 +1,52 @@
+function listallobjects() {  //wird gebraucht um zu gucken ob er smoothen muss, sowie eigentlich um den pfad anhand des namens zu finden (ist besser so als asynchron ausm xml)
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (xhttp.readyState == 4 && xhttp.status == 200) {
+			var xmlDoc = xhttp.responseXML;
+			var pfad = xmlDoc.getElementsByTagName("objects")[0].getAttribute("ObjectPath");
+			var typeItems = xmlDoc.getElementsByTagName("objects")[0].getElementsByTagName("object");
+			for (i = 0; i < typeItems.length; i++) {
+				var path = pfad + typeItems[i].getAttribute("path"); 
+				var obj = {pfad: path, name: typeItems[i].getAttribute("name"), scale: typeItems[i].getAttribute("scale"), smooth: typeItems[i].getAttribute("smooth"), icon: ic = typeItems[i].getAttribute("icon")}
+				allobjects.push(obj);
+			}
+		}
+	};
+	xhttp.open("GET", OBJECTSXML, true);
+	xhttp.send();
+}
+
+function listallrooms() {  //wird gebraucht um zu gucken ob er smoothen muss, sowie eigentlich um den pfad anhand des namens zu finden (ist besser so als asynchron ausm xml)
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (xhttp.readyState == 4 && xhttp.status == 200) {
+			var xmlDoc = xhttp.responseXML;
+			var pfad = xmlDoc.getElementsByTagName("rooms")[0].getAttribute("RoomPath");
+			var typeItems = xmlDoc.getElementsByTagName("rooms")[0].getElementsByTagName("room");
+			for (i = 0; i < typeItems.length; i++) {
+				var path = pfad + typeItems[i].getAttribute("filename");
+				var obj = {pfad: path, name: typeItems[i].getAttribute("name"), smooth: typeItems[i].getAttribute("smooth")};
+				allrooms.push(obj);
+			}
+		}
+	};
+	xhttp.open("GET", ROOMSXML, true);
+	xhttp.send();
+}
+
+function shouldISmooth(file) {
+	//für objecte
+	for (var i = 0; i < allobjects.length; i++) {
+		if (allobjects[i].pfad === file) {return allobjects[i].smooth}
+	}
+	//für rooms
+	for (var i = 0; i < allrooms.length; i++) {
+		if (allrooms[i].pfad === file) {return allrooms[i].smooth}
+	}	
+	return false;
+}
+
+
 var FileLoader = function (callback) {
 
     var ready = false;
@@ -34,7 +83,14 @@ var FileLoader = function (callback) {
                 });
                 // Glättet die Objekte
                 geometry.mergeVertices();
-                if (!weaksystem) geometry.computeVertexNormals(); //macht flächen runder
+				
+                if (!weaksystem) {
+					if (shouldISmooth(file) !== "0") {
+						geometry.computeVertexNormals(); //macht flächen runder
+					} 
+				}
+				
+				
 
                 loadedFiles[name] = new THREE.Mesh(geometry, material);
 
@@ -80,7 +136,7 @@ var FileLoader = function (callback) {
                 callback();
             }
 
-        }, 3000
+        }, MAXTIMEOUT
     );
 
 

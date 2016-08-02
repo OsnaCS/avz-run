@@ -79,6 +79,33 @@ Player = function() {
         }
     }
 
+    this.updateEnergy = function() {
+
+        // player can get exhausted/regenerate energy
+        if (!menu) {
+            if (running) {
+                energy -= delta * 30;
+                if (energy <= 0) {
+                    adjustPlaybackRate(footsteps, 1, true);
+                    outOfBreathSound();
+                    regenerate = true;
+                    speed_factor = 1;
+                    running = false;
+                    $(".energy").css("box-shadow", " 0px 0px 20px 3px rgba(255, 82, 82, 0.6)");
+                }
+            } else {
+                energy += delta * 10;
+                if (energy >= STAMINA) {
+                    energy = STAMINA;
+                    if (regenerate) {
+                        regenerate = false;
+                        $(".energy").css("box-shadow", "none");
+                    }
+                }
+            }
+            $(".energy-bar").css("width", '' + energy + '%');
+        }
+    }
 
 }
 

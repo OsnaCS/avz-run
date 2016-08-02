@@ -38,7 +38,7 @@ public class DashedLine extends Line {
 	protected void setPixel(int x, int y, Graphics g) {
 
 		if (((steps++ / 3) % 2) == 0) {
-			g.setXORMode(Color.CYAN);
+			g.setXORMode(Color.WHITE);
 			super.setPixel(x, y, g);
 			g.setPaintMode();
 		}
