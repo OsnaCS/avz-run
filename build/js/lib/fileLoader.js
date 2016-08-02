@@ -7,7 +7,7 @@ function listallobjects() {  //wird gebraucht um zu gucken ob er smoothen muss, 
 			var typeItems = xmlDoc.getElementsByTagName("objects")[0].getElementsByTagName("object");
 			for (i = 0; i < typeItems.length; i++) {
 				var path = pfad + typeItems[i].getAttribute("path"); 
-				var obj = {pfad: path, name: typeItems[i].getAttribute("name"), scale: typeItems[i].getAttribute("scale"), smooth: typeItems[i].getAttribute("smooth"), icon: ic = typeItems[i].getAttribute("icon")}
+				var obj = {pfad: path, name: typeItems[i].getAttribute("name"), scale: typeItems[i].getAttribute("scale"), smooth: typeItems[i].getAttribute("smooth"), icon: typeItems[i].getAttribute("icon")}
 				allobjects.push(obj);
 			}
 		}

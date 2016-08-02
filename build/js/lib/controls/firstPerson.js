@@ -1,5 +1,5 @@
 var godmode = false; // zum testen, man kann nicht fallen, hat unendlich leben, unendlich sprinten, alle türen sind offen, Nebel kommt langsamer
-var weaksystem = false; //when true, it disables smoothing and makes the fires worse.
+var weaksystem = true; //when true, it disables smoothing and makes the fires worse.
 
 
 // Controls camera via WASD/Mouse, enables player to jump, run and crouch
@@ -66,12 +66,12 @@ var RUN_SPEED = 2; // speed at which player is running -"-
 var JUMP_SPEED = MOVEMENT_SPEED * 0.7; // speed of jump upwards -"-
 
 // for shake animation while moving
-var THRESH_RUN_UP = PLAYERHEIGHT * 1.56;
-var THRESH_RUN_DOWN = PLAYERHEIGHT * 1.28;
-var THRESH_UP = PLAYERHEIGHT * 1.52;
-var THRESH_DOWN = PLAYERHEIGHT * 1.32;
-var UPMOTION_RUN_SPEED = (THRESH_RUN_UP - THRESH_RUN_DOWN) * 0.128;
-var UPMOTION_SPEED = (THRESH_UP - THRESH_DOWN) * 0.07;
+var THRESH_RUN_UP = PLAYERHEIGHT * 1.52;
+var THRESH_RUN_DOWN = PLAYERHEIGHT * 1.32;
+var THRESH_UP = PLAYERHEIGHT * 1.48;
+var THRESH_DOWN = PLAYERHEIGHT * 1.36;
+var UPMOTION_RUN_SPEED = (THRESH_RUN_UP - THRESH_RUN_DOWN) * 0.13;
+var UPMOTION_SPEED = (THRESH_UP - THRESH_DOWN) * 0.08;
 
 // for energy bar
 var STAMINA = 100; if (godmode) {STAMINA = 1000000}
@@ -153,6 +153,16 @@ function initPointerLock() {
             $(".showNickname").html(playername);
             loop();
 
+        }, false);
+
+        buttonInfo.addEventListener('click', function(event) {
+            mainMenu.style.display = 'none';
+            infoScreen.style.display = 'block';
+        }, false);
+
+        buttonInfoBack.addEventListener('click', function(event) {
+            infoScreen.style.display = 'none';
+            mainMenu.style.display = 'block';
         }, false);
 
         button.addEventListener('click', function(event) {
@@ -245,7 +255,7 @@ function initControls(callback) {
             case 16: //RUN FOREST! (shift)
 
                 if (!ducked && !regenerate) {
-                    if (running == false && (moveForward || moveLeft || moveBackward || moveRight)) {
+                    if (running == false) {
                         adjustPlaybackRate(footsteps, 1.5);
                         running = true;
                     }
@@ -424,10 +434,6 @@ function controlLoop(controls) {
 
     octreeObjectsZneg = octree.search( raycasterZneg.ray.origin, raycasterZneg.ray.far, true, raycasterZneg.ray.direction );
     intersectionsZneg = raycasterZneg.intersectOctreeObjects( octreeObjectsZneg );
-
-
-
-
 
 
     // //determine intersections of rays with objects that were added to terrain
