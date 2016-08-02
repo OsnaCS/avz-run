@@ -75,12 +75,12 @@ public class Coordinates {
 		Matrix translateTo = new Matrix(translate);
 		
 		translate[0][2] = p.getPosx();
-		translate[1][3] = p.getPosy();
+		translate[1][2] = p.getPosy();
 		
 		Matrix translateFrom = new Matrix(translate);
 		
-		double[][] scale = {{5, 0, 0}, 
-				{0, 5, 0},{0,0,1}};
+		double[][] scale = {{factor, 0, 0}, 
+				{0, factor, 0},{0,0,1}};
 		
 		Matrix scaling = new Matrix(scale);
 		
