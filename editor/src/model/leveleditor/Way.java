@@ -31,30 +31,50 @@ public class Way extends DrawableObject {
 		this.normal = normal;
 		this.father = father;
 	}
-	public Way(Way way){
+	public Way(Way way, Room father){
 		this.type = way.getType();
 		this.pos= new Coordinates(way.getPos());
 		this.normal = new Coordinates(way.getNormal());
-		this.father = way.father;
+		this.father = father;
 	}
-	
+
+	public void updatePosition(){
+
+		Coordinates newPos = new Coordinates(father.getCenter());
+
+		newPos = newPos.addCoordinats(pos.getVector());
+
+		this.pos.setPos(newPos);
+	}
+
 	/*
 	 * compares distances of two ways, if they are smaller as 10 Pixels returns therefore true
 	 * and signals ability to connect
 	 */
 	public boolean compareDistance(Way other){
-		
+
+		updatePosition();
+		other.updatePosition();
+
 		//caclculates absolute value of the distances between x and y coordinate of the two ways
 		double distX = Math.abs(pos.getPosx() - other.pos.getPosx());
 		double distY = Math.abs(pos.getPosy() - other.pos.getPosy());
-		
+
+		if(distX < maxDistance && distY < maxDistance) {
+			System.out.println("Distanz:" + distX + "," + distY);
+		}
+		if (other.getNormal().getInvert().equals(this.normal)){
+			System.out.println("Normals:" + this.normal+ "," + other.normal);
+		}
+
 		//compares both distances with the allowed distance to create a circle
 		//which if it is small enough signals ability to connect and has orthogonal normals
 		//and is of the same type
-		if(distX < maxDistance && distY < maxDistance && other.getNormal().getInvert().equals(this.normal)
-				&& other.getType().equals(this.type))
-		return true;
-		
+		if(distX < maxDistance && distY < maxDistance
+				&& other.getNormal().getInvert().equals(this.normal)
+				&& other.getType().equals(this.type)) {
+			return true;
+		}
 		//else returns false
 		return false;
 	}
@@ -158,7 +178,7 @@ public class Way extends DrawableObject {
 			c = Color.BLUE;
 		} else if (type.equals("floor")) {
 			//Yellow for corridor
-			c = Color.YELLOW;
+			c = Color.MAGENTA;
 		} else {
 			//selects green for wooden door
 			c = Color.GREEN;

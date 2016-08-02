@@ -3,7 +3,6 @@ package model.leveleditor;
 import model.drawables.DrawableObject;
 import model.drawables.Line;
 import model.drawables.Point;
-import sun.awt.image.ImageWatched;
 
 
 import java.awt.*;
@@ -36,15 +35,14 @@ public class Room extends DrawableObject {
     public Room(Room room){
     	this.name=room.name;
     	 this.cA = new Coordinates(room.getcA());
-    	 this.cA.setAngle(room.getcA().getAngle());
+
          this.cE = new Coordinates(room.getcE());
-    	 this.cE.setAngle(room.getcE().getAngle());
+
          this.cC = new Coordinates(room.getCenter());
-    	 this.cC.setAngle(room.getCenter().getAngle());
+
     	 this.waylist=new LinkedList<Way>();
     	 for(int i=0; i<room.waylist.size();i++){
-    		 this.waylist.add(new Way(room.waylist.get(i)));
-    		 
+    		 this.waylist.add(new Way(room.waylist.get(i), this));
     	 }
          this.waylist = waylist;
     }
@@ -88,8 +86,8 @@ public class Room extends DrawableObject {
 
         //setWaylist(cutways);
 
-        //return added;
-        return true;
+        return added;
+        //return true;
     }
 
     /**
@@ -118,11 +116,11 @@ public class Room extends DrawableObject {
     //Rotiert um angle°
     public void rotate(int angle){
 
-        cA.rotation(90, cC);
+        cA.rotation(angle, cC);
 
-        cE.rotation(90, cC);
+        cE.rotation(angle, cC);
 
-        cC.rotation(90, cC);
+        cC.rotation(angle, cC);
         
     }
 

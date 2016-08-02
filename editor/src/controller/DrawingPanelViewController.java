@@ -220,6 +220,8 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 
 				drawingPanelView.getDrawingPanel().addMouseListener(newListener);
 				drawingPanelView.getDrawingPanel().addMouseMotionListener(newListener);
+
+				setRoomListener((RoomListener) newListener);
 			}
 
 		};
