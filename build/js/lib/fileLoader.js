@@ -6,7 +6,7 @@ function listallobjects() {  //wird gebraucht um zu gucken ob er smoothen muss, 
 			var pfad = xmlDoc.getElementsByTagName("objects")[0].getAttribute("ObjectPath");
 			var typeItems = xmlDoc.getElementsByTagName("objects")[0].getElementsByTagName("object");
 			for (i = 0; i < typeItems.length; i++) {
-				var path = pfad + typeItems[i].getAttribute("path");
+				var path = pfad + typeItems[i].getAttribute("path"); 
 				var obj = {pfad: path, name: typeItems[i].getAttribute("name"), scale: typeItems[i].getAttribute("scale"), smooth: typeItems[i].getAttribute("smooth"), icon: typeItems[i].getAttribute("icon")}
 				allobjects.push(obj);
 			}
@@ -42,7 +42,7 @@ function shouldISmooth(file) {
 	//für rooms
 	for (var i = 0; i < allrooms.length; i++) {
 		if (allrooms[i].pfad === file) {return allrooms[i].smooth}
-	}
+	}	
 	return false;
 }
 
@@ -72,46 +72,25 @@ var FileLoader = function (callback) {
 
 
                 material = new THREE.MultiMaterial(mat);
-                // console.log(name + " :" +material.materials);
+
 
                 // Die Schleife ist dafür da, damit nur eine Seite der Objekte gerendert wird
-      //           material.materials.forEach(function (e) {
-      //               var basic = new THREE.MeshBasicMaterial();
-      //               if (e instanceof THREE.MeshPhongMaterial || e instanceof THREE.MeshLambertMaterial) {
-
-      // //                   e.shading=THREE.FlatShading;
-      // //                   e.side = THREE.FrontSide;
-						// // e.shininess = 6; //sorgt dafür dass die flächen weniger spiegeln
-      //                   e=basic;
-      //               }
-      //           });
-                for (var i = 0 ; i<material.materials.length;i++) {
-                    if( material.materials[i].opacity==1) {
-                        console.log(material.materials[i]);
-
-                        var basic = new THREE.MeshBasicMaterial();
-                        if(material.materials[i].map) {
-                            basic.map = material.materials[i].map;
-                        }
-                        basic.color = material.materials[i].color;
-                        basic.opacity =  material.materials[i].opacity;
-                        basic.reflectivity =  material.materials[i].reflectivity;
-                        basic.shading = THREE.FlatShading;
-                        material.materials[i]=basic;
+                material.materials.forEach(function (e) {
+                    if (e instanceof THREE.MeshPhongMaterial || e instanceof THREE.MeshLambertMaterial) {
+                        e.side = THREE.FrontSide;
+						e.shininess = 6; //sorgt dafür dass die flächen weniger spiegeln
                     }
-                }
-
-                console.log(material.materials);
+                });
                 // Glättet die Objekte
                 geometry.mergeVertices();
-
+				
                 if (!weaksystem) {
 					if (shouldISmooth(file) !== "0") {
 						geometry.computeVertexNormals(); //macht flächen runder
-					}
+					} 
 				}
-
-
+				
+				
 
                 loadedFiles[name] = new THREE.Mesh(geometry, material);
 
