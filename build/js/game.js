@@ -323,7 +323,6 @@ function createRoom(callback) {
             function fires() {
                 set_fires(lights);
                 function lights () {
-
 	                turn_on_lights(callback);
                 }
             }
