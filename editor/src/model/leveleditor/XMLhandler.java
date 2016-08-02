@@ -138,7 +138,7 @@ public class XMLhandler {
 		Room room = new Room(name, xmin, ymin, xmax, ymax, new Point(0, 0), waylist);
 
 		// Add all Doors to waylist of current Room
-		for (int i = 0; i < length - 1; i++) {
+		for (int i = 0; i < length; i++) {
 			// Saves Door
 			Node doorTemp = doors.item(i);
 			String type = doorTemp.getAttributes().getNamedItem("type").getNodeValue();

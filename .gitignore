@@ -20,3 +20,5 @@ $RECYCLE.BIN/
 
 # Mac crap
 .DS_Store
+
+editor/editor.iml
