@@ -218,9 +218,9 @@ function openopened() {
     }
     this.open = !this.open;
 
-    scene.remove(this.mesh);
     scene.remove(outlineMesh);
     outlineMesh = null;
+    activeObject = null;
 }
 
 
@@ -515,7 +515,7 @@ function openTransponderDoor(){
             doorSound();
 			var d = getSegmentFromIntItem(this);
 			var kind = "glastur"
-			if (ObjectFilenameToName(d.filename) == "holztuer") kind = holztur;
+			if (objectFilenameToName(d.filename) == "holztuer") kind = "holztur";
 			addObjectViaName(kind, "door", d.x, d.y, d.z, d.skale, d.rot-1, "openopened");
 			remove_interactible(d);
 			this.delFromScene();
