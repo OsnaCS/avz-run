@@ -36,7 +36,7 @@ var smokeFragmentShader = [
 ].join('\n');
 
 var smokeTexture;
-var NUM_OF_PARTICLE = 32;
+var NUM_OF_PARTICLE = 28;
 var textureWasLoaded = false;
 
 function loadSmokeTexture(){
