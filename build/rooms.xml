@@ -34,18 +34,21 @@
         <origin x="0" y="0"/>
         <size xmin="-18.47646" xmax="31.0175" ymin="-25.4777" ymax="14"/>
         <doors>
-			<door type="norm" index="cip" position="(-8.53, -11 )" normal="(0, -1)" stretch="1.1"/>
+			<door type="norm" index="cip" position="(-8.53, -11 )" normal="(0, -1)" stretch="1.1" act="openable"/>
 			<door type="norm" index="klo" position="(9.16, -11)" normal="(0, -1)" stretch="1.1"/>
 			<door type="norm" index="hs1" position="(17.39, 0)" normal="(0, 1)" stretch="1.1" act="axtopenable"/>
 			<door type="norm" index="hs2" position="(24.17, 0)" normal="(0, 1)" stretch="1.1"/>
-			<door type="glass" index="flur" position="(11, -6.28)" normal="(1, 0)" stretch="1.1"/>
+			<door type="glass" index="flur" position="(11, -6.28)" normal="(1, 0)" stretch="1.1" act="transponderopenable"/>
         </doors>
         <spawns>
 			<spawn  index="feuerloescher" position="(14.3, 3, 1)" object="loscher" normaltowall="(0, 1)" scale="1" oninteract="pickUpItem"/>
 			<spawn  index="axt" position="(-7, -23.5, 1.1)" object="axt" normaltowall="(0, -1)" scale="1" oninteract="pickUpItem"/>
 			<spawn  index="sponge" position="(28.5, 1.9, 0.9)" object="schwamm" normaltowall="(0, 1)" scale="1" oninteract="pickUpItem"/>
-			<spawn  index="PC-hack" position="(2.5, -8.3, 1.08)" object="computer_message" normaltowall="(0,-1)" scake="1" oninteract="enterCH"/>
+
+			<spawn  index="PC-hack" position="(2.5, -8.3, 1.08)" object="computer_hack" normaltowall="(0,-1)" scake="1" oninteract="enterCH"/>
 			<spawn  index="transponder" position="(4.5, -8.8, 1.08)" object="transponder" normaltowall="(0, 1)" scale="1" oninteract="pickUpItem"/>
+			<spawn  index="wc_code" position="(6.58, -15.09, 1.50)" object="wc_code" normaltowall="(-1, 0)" scale="1"/>
+
         </spawns>
         <fires>
 			<fire index="cip" position="(-7.92, -15.35, 0)" size="(1,1,1)" val="6"/>

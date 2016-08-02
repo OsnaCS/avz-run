@@ -236,13 +236,21 @@ function loop() {
             gameOver();
         } else {
 
+            // determines stepwidth
+            time = performance.now();
+            delta = (time - prevTime) / 1000;
+
             stats.begin();
             requestAnimationFrame(loop);
+
             scene.fog.density = myfog;
+            player.updateEnergy();
 
             // YOU NEED TO CALL THIS (srycaps)
-            if (!special_html_input) controlLoop(controls);
-            if (!special_html_input) interactionLoop();
+            if (!special_html_input) {
+                controlLoop(controls);
+                interactionLoop();
+            }
 
             renderer.render(scene, camera);
             octree.update();
@@ -316,11 +324,6 @@ function createRoom(callback) {
                 set_fires(lights);
                 function lights () {
 
-                    for (var i = 0;i<terrain.length;i++) {
-                        terrain[i].mesh == undefined ?  modifyOctree( terrain[i], true ) : modifyOctree( terrain[i].mesh, true );
-
-
-                    }
 	                turn_on_lights(callback);
                 }
             }
