@@ -74,7 +74,7 @@ function init(event) {
 
     //CreateSegment("lectureroom1",scene);
 
-	CreateSegment("lectureroom1",scene);
+	CreateSegment("groundlevel",scene);
 
     octree = new THREE.Octree( {
         // uncomment below to see the octree (may kill the fps)
@@ -315,7 +315,6 @@ function createRoom(callback) {
             function fires() {
                 set_fires(lights);
                 function lights () {
-
 	                turn_on_lights(callback);
                 }
             }
