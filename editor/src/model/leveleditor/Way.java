@@ -147,10 +147,10 @@ public class Way extends DrawableObject {
 		// decides by type of door its color
 		if (type.equals("glass")) {
 			//Cyan for glassdoor
-			c = Color.CYAN;
+			c = Color.BLUE;
 		} else if (type.equals("floor")) {
 			//Yellow for corridor
-			c = Color.YELLOW;
+			c = Color.MAGENTA;
 		} else {
 			//selects green for wooden door
 			c = Color.GREEN;
@@ -160,7 +160,6 @@ public class Way extends DrawableObject {
 		g.setColor(c);
 		
 		// draws line from current position to the setted Point by normal
-		System.out.println(father.getCenter().getScaledIntCoordinates(father.getCenter()));
 		new Line(a, b).paint(g);
 	}
 

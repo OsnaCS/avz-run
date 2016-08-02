@@ -191,7 +191,6 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 				RoomListener roomListener = new RoomListener(controller, room, getAktLevel());
 				this.changeMouseInputListenerTo(roomListener);
 				setRoomListener(roomListener);
-				System.out.println(getRoomListener());
 
 			}
 		
@@ -245,9 +244,9 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-//				levels.removeLast();
-//				aktLevel = levels.getLast();
-//				refreshXML();
+				levels.removeLast();
+				aktLevel = levels.getLast();
+				refreshXML();
 
 			}
 		};

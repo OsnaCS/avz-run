@@ -145,7 +145,6 @@ public class Room extends DrawableObject {
         for (Way roomway : waylist){
             roomway.paint(g);
         }
-        System.out.println(cC.getScaledIntCoordinates(cC));
 
         //center zurücksetzen für korrektes speichern
         //setCenter(originalCenter);
@@ -185,7 +184,7 @@ public class Room extends DrawableObject {
         this.cA.setPos(cC.addCoordinats(cA.getVector()));
         this.cE.setPos(cC.addCoordinats(cE.getVector()));
         for(int i=0; i< waylist.size();i++){
-        	waylist.get(i).getPos().setPos(cC.addCoordinats(waylist.get(i).getPos()));
+        	waylist.get(i).getPos().setPos(cC.addCoordinats(waylist.get(i).getPos().getVector()));
         }
     }
 
