@@ -176,8 +176,8 @@ public class Room extends DrawableObject {
     }
 
     public void setCenter(Point center){
-    	Coordinates newC = cC.basisChangeIntDouble(center);
-        this.cC = newC;
+    	Coordinates newC = new Coordinates(center.x, center.y);
+        setCenter(newC);
     }
 
     public void setCenter(Coordinates cC) {
