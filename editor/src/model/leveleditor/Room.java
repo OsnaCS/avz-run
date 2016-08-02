@@ -42,29 +42,30 @@ public class Room extends DrawableObject {
 
         boolean added = false;
         LinkedList<Way> cutways = new LinkedList<>(allways);
+        LinkedList<Way> ownways = new LinkedList<>(waylist);
 
         for (Way mapway : allways){
             for (Way roomway : waylist){
 
                 if (roomway.compareDistance(mapway)){
 
-                    waylist.remove(roomway);
+                    ownways.remove(roomway);
                     cutways.remove(mapway);
 
                     if (!added){
                         connect(roomway, mapway);
-                        cutways.addAll(waylist);
+                        cutways.addAll(ownways);
                     }
 
                     added = true;
-
                 }
             }
         }
 
         setWaylist(cutways);
 
-        return added;
+        //return added;
+        return true;
     }
 
     /**
@@ -171,16 +172,14 @@ public class Room extends DrawableObject {
     }
 
     public void setCenter(Point center){
-    	System.out.println("Vorher: x = " + center.x + ", " + center.y);
-        Coordinates newC = cC.basisChangeIntDouble(center);
-        System.out.println("Nachher: x = " + newC.getPosx() + ", " + newC.getPosy());
+    	Coordinates newC = cC.basisChangeIntDouble(center);
         this.cC = newC;
     }
 
     public void setCenter(Coordinates cC) {
         this.cC = cC;
-        this.cA.setPos(cC);
-        this.cE.setPos(cC);
+        this.cA.setPos(cC.addCoordinats(cA.getVector()));
+        this.cE.setPos(cC.addCoordinats(cE.getVector()));
     }
 
 }

@@ -267,7 +267,7 @@ public class Coordinates {
 	 * @param c unzurechnende Koordinaten
 	 * @return umgerechnete Koordinaten
 	 */
-	public static Coordinates basisChangeIntDouble(Point p) {
+	public Coordinates basisChangeIntDouble(Point p) {
 		
 		int width = 800;
 		int heigth = 640;
