@@ -1,30 +1,21 @@
 package controller;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.event.MouseInputListener;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 import controller.listener.RoomListener;
 import model.drawables.DrawableObject;
 import model.drawables.Point;
+import model.leveleditor.Coordinates;
 import model.leveleditor.DashedRoom;
 import model.leveleditor.Level;
 import model.leveleditor.Room;
@@ -78,29 +69,40 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 	public DrawingPanelViewController(String filename, JFrame frame) {
 
 		this.filename = filename;
-		
+
 		levels = new LinkedList<Level>();
-		aktLevel = null;
+
+		// Center hinzufügen
+		Room temp = null;
+		try {
+			temp = handler.createRoomFromXML("center");
+		} catch (FileNotFoundException e3) {
+			e3.printStackTrace();
+		}
+//		temp.setCenter(new Coordinates(5, 5));
 
 		drawableObjectsModel = new LinkedList<DrawableObject>();
-		try {
-			this.drawableObjectsModel.add(handler.createRoomFromXML("center"));
-		} catch (FileNotFoundException e2) {
-			e2.printStackTrace();
-		}
+		this.drawableObjectsModel.add(temp);
+		
+		
 		drawingPanelView = new DrawingPanelView(width, height, drawableObjectsModel);
 
-		this.roomListener = null;
+		this.aktLevel = new Level();
+		this.aktLevel.addRoom(temp);
+		this.aktLevel.setWays(temp.getWaylist());
+
+		this.roomListener = new RoomListener(this, temp, this.aktLevel);
 
 		this.drawingPanelView.addMouseListener(roomListener);
-
-		// das UI anpassen
-		drawingPanelView.getButton().setText("Clear");
+		
 
 		// ComboBox befüllen
 		String[] box = { "Einzelflur", "Doppelflur", "Toilettenflur", "Vorlesungsraum", "Büro" };
 
 		drawingPanelView.getComboBox().setModel(new DefaultComboBoxModel<>(box));
+
+		// das UI anpassen
+		drawingPanelView.getButton().setText("Clear");
 
 		// Event-Listener für Button
 		ActionListener clear = new ActionListener() {
@@ -109,15 +111,20 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 			public void actionPerformed(ActionEvent e) {
 				// Das Model leeren und die View neu zeichnen
 				drawableObjectsModel.clear();
+				Room temp = null;
 				try {
-					drawableObjectsModel.add(handler.createRoomFromXML("center"));
-				} catch (FileNotFoundException e2) {
-					e2.printStackTrace();
+					temp = handler.createRoomFromXML("center");
+				} catch (FileNotFoundException e3) {
+					e3.printStackTrace();
 				}
+				temp.setCenter(new Coordinates(35, 35));
+				drawableObjectsModel.add(temp);
 				drawingPanelView.getDrawingPanel().repaint();
 				levels = new LinkedList<Level>();
 				aktLevel = null;
 				allRooms = new LinkedList<Room>();
+				refreshXML();
+				System.out.println("Clear");
 			}
 		};
 
@@ -168,6 +175,7 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 				this.changeMouseInputListenerTo(roomListener);
 
 			}
+		
 
 			/**
 			 * Convenience-Methode zum umsetzen des aktuellen MouseListeners an
@@ -207,7 +215,9 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		ActionListener save = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				
+				handler.writeXML(aktLevel, getFilename());
+				
 			}
 		};
 
@@ -215,6 +225,10 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		ActionListener undo = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+//				levels.removeLast();
+//				aktLevel = levels.getLast();
+//				refreshXML();
 
 			}
 		};
@@ -239,6 +253,8 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		drawableObjectsModel.add(drawableObject);
 		drawingPanelView.getDrawingPanel().repaint();
 
+		refreshXML();
+
 	}
 
 	/**
@@ -253,11 +269,6 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 
 	}
 
-	@Override
-	public void transformDrawableObjectsNear(Point p) {
-
-	}
-
 	/**
 	 * Fügt ein temporäres Objekt in das Model ein und fordert die View zum
 	 * Neuzeichnen auf. Das Objekt kann mit clearTemporaryDrawableObject wieder
@@ -266,21 +277,16 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 	public void setTemporaryDrawableObject(DrawableObject drawableObject) {
 
 		// Erst löschen
-		if (temporaryObject != null) {
+		if (temporaryObject != null)
 			this.clearTemporaryDrawableObject();
-		}
 
 		temporaryObject = drawableObject;
 		this.processDrawableObject(temporaryObject);
 
-		drawingPanelView.getDrawingPanel().repaint();
+	}
 
-		// keine Dashed-Rooms speichern
-		if (!(drawableObject instanceof DashedRoom)) {
-			this.allRooms.add((Room) drawableObject);
-		}
-		
-		
+	@Override
+	public void transformDrawableObjectsNear(Point p) {
 	}
 
 	/**
@@ -289,9 +295,13 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 	public void refreshXML() {
 
 		String text = handler.toXML(aktLevel);
-		
+
 		this.drawingPanelView.getXMLPanel().getTextField().setText(text);
 
+	}
+	
+	public void refreshLevel() {
+		
 	}
 
 	public DrawingPanelView getDrawingPanelView() {

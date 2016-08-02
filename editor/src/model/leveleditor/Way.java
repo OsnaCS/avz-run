@@ -79,8 +79,10 @@ public class Way extends DrawableObject {
 	 */
 	public Point fittingPos(){
 		//gets the Positions of way and the center of father
-		Point nowPos = pos.getScaledIntCoordinates();
-		Point papaPos = father.getCenter().getScaledIntCoordinates();
+		Point nowPos = pos.getScaledIntCoordinates(father.cC);
+		int papaPosX = (int) (father.getCenter().getPosx() +0.5);
+		int papaPosY = (int) (father.getCenter().getPosy() +0.5);
+		Point papaPos = new Point(papaPosX, papaPosY);
 		
 		//merges both to get the position in coordinate system relative
 		//to the father's center
