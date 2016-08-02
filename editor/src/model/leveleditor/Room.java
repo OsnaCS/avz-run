@@ -3,7 +3,6 @@ package model.leveleditor;
 import model.drawables.DrawableObject;
 import model.drawables.Line;
 import model.drawables.Point;
-import sun.awt.image.ImageWatched;
 
 
 import java.awt.*;
@@ -14,9 +13,9 @@ import java.util.LinkedList;
  */
 public class Room extends DrawableObject {
 
-     Coordinates cA, cE, cC;
-     LinkedList<Way> waylist;
-     String name;
+     private Coordinates cA, cE, cC;
+     private LinkedList<Way> waylist;
+     private String name;
 
     public Room(String name, double ax, double ay, double ex, double ey, Point center, LinkedList<Way> waylist){
 
@@ -24,10 +23,28 @@ public class Room extends DrawableObject {
 
         this.cA = new Coordinates(ax, ay);
         this.cE = new Coordinates(ex, ey);
-        this.cC = new Coordinates(center.x, center.y);
+
+        this.cC = new Coordinates(0,0);
+
+        cC = cC.basisChangeIntDouble(center);
 
         this.waylist = waylist;
 
+    }
+    
+    public Room(Room room){
+    	this.name=room.name;
+    	 this.cA = new Coordinates(room.getcA());
+
+         this.cE = new Coordinates(room.getcE());
+
+         this.cC = new Coordinates(room.getCenter());
+
+    	 this.waylist=new LinkedList<Way>();
+    	 for(int i=0; i<room.waylist.size();i++){
+    		 this.waylist.add(new Way(room.waylist.get(i), this));
+    	 }
+         this.waylist = waylist;
     }
 
     /**
@@ -62,10 +79,15 @@ public class Room extends DrawableObject {
             }
         }
 
-        setWaylist(cutways);
+        this.setWaylist(ownways);
 
-        //return added;
-        return true;
+        allways.clear();
+        allways.addAll(cutways);
+
+        //setWaylist(cutways);
+
+        return added;
+        //return true;
     }
 
     /**
@@ -93,12 +115,13 @@ public class Room extends DrawableObject {
 
     //Rotiert um angle°
     public void rotate(int angle){
-    	System.out.println("A");
-        cA.rotation(90, cC);
-        System.out.println("E");
-        cE.rotation(90, cC);
-        System.out.println("C");
-        cC.rotation(90, cC);
+
+        cA.rotation(angle, cC);
+
+        cE.rotation(angle, cC);
+
+        cC.rotation(angle, cC);
+        
     }
 
 

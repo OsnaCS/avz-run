@@ -31,22 +31,50 @@ public class Way extends DrawableObject {
 		this.normal = normal;
 		this.father = father;
 	}
-	
+	public Way(Way way, Room father){
+		this.type = way.getType();
+		this.pos= new Coordinates(way.getPos());
+		this.normal = new Coordinates(way.getNormal());
+		this.father = father;
+	}
+
+	public void updatePosition(){
+
+		Coordinates newPos = new Coordinates(father.getCenter());
+
+		newPos = newPos.addCoordinats(pos.getVector());
+
+		this.pos.setPos(newPos);
+	}
+
 	/*
 	 * compares distances of two ways, if they are smaller as 10 Pixels returns therefore true
 	 * and signals ability to connect
 	 */
 	public boolean compareDistance(Way other){
-		
+
+		updatePosition();
+		other.updatePosition();
+
 		//caclculates absolute value of the distances between x and y coordinate of the two ways
 		double distX = Math.abs(pos.getPosx() - other.pos.getPosx());
 		double distY = Math.abs(pos.getPosy() - other.pos.getPosy());
-		
+
+		if(distX < maxDistance && distY < maxDistance) {
+			System.out.println("Distanz:" + distX + "," + distY);
+		}
+		if (other.getNormal().getInvert().equals(this.normal)){
+			System.out.println("Normals:" + this.normal+ "," + other.normal);
+		}
+
 		//compares both distances with the allowed distance to create a circle
-		//which if it is small enough signals ability to connect
-		if(distX < maxDistance && distY < maxDistance)
-		return true;
-		
+		//which if it is small enough signals ability to connect and has orthogonal normals
+		//and is of the same type
+		if(distX < maxDistance && distY < maxDistance
+				&& other.getNormal().getInvert().equals(this.normal)
+				&& other.getType().equals(this.type)) {
+			return true;
+		}
 		//else returns false
 		return false;
 	}
@@ -80,7 +108,7 @@ public class Way extends DrawableObject {
 	 */
 	public Point fittingPos(){
 //		//gets the Positions of way and the center of father
-		Point nowPos = pos.getScaledIntCoordinates(father.cC);
+		Point nowPos = pos.getScaledIntCoordinates(father.getCenter());
 //		int x = nowPos.x * 2;
 //		int y = nowPos.y * 2;
 //		double[][] translate = {{1, 0, x}, 
@@ -142,15 +170,15 @@ public class Way extends DrawableObject {
 			b.x = a.x;
 			b.y = y;
 		}
-
+		
 		Color c = Color.BLACK;
 		// decides by type of door its color
-		if (type == "glass") {
+		if (type.equals("glass")) {
 			//Cyan for glassdoor
-			c = Color.CYAN;
-		} else if (type == "floor") {
+			c = Color.BLUE;
+		} else if (type.equals("floor")) {
 			//Yellow for corridor
-			c = Color.YELLOW;
+			c = Color.MAGENTA;
 		} else {
 			//selects green for wooden door
 			c = Color.GREEN;

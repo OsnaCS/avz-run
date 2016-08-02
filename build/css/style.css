@@ -1,12 +1,10 @@
 ﻿/** DOCUMENT
 * @project AVZ-RUN
 */
-
-
 /** General **/
-
 @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,700");
 @import url("https://fonts.googleapis.com/css?family=VT323");
+
 body {
     overflow: hidden;
     margin: 0;
@@ -73,6 +71,21 @@ h3 {
     box-shadow: 0px 0px 15px 8px rgba(255, 82, 82, 0.2);
 }
 
+a {
+    color: #FF5252;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+a:hover,
+a:focus,
+a:active,
+a:visited {
+    color: #FF5252;
+    text-decoration: none;
+    font-weight: 700;
+    text-shadow: 0px 0px 3px rgba(255, 82, 82, 1);
+}
 
 /* Mozilla based browsers */
 
@@ -85,7 +98,6 @@ button::-moz-focus-inner {
     border: 0;
 }
 
-
 /** Menu **/
 
 #startInstructions {
@@ -94,15 +106,16 @@ button::-moz-focus-inner {
     background-image: url(../bilder/avz.gif);
     background-size: cover;
     display: none;
+    padding-top: 100px;
 }
 
 .instructionsContent {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-    position: relative;
-    top: 50%;
-    transform: translateY(-75%);
+    /*position: relative;*/
+    /*top: 50%;*/
+    /*transform: translateY(-75%);*/
     width: 500px;
     background: rgba(0, 0, 0, 0.60);
     padding: 30px 0px;
@@ -118,6 +131,7 @@ hr {
 }
 
 #blocker {
+    padding-top: 100px;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
@@ -161,7 +175,6 @@ hr {
     box-shadow: 0px 0px 15px 8px rgba(255, 82, 82, 0.2);
 }
 
-
 /* GameOverScreen */
 
 .gameOverBlocker {
@@ -170,6 +183,7 @@ hr {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     display: none;
+    padding-top: 100px;
 }
 
 .gameOver {
@@ -179,10 +193,10 @@ hr {
     text-align: center;
 }
 
-
 /* Loading-Bar */
 
 #loadingBlocker .instructionsContent {
+    margin-top: 100px;
     padding: 30px 30px;
 }
 
@@ -217,7 +231,6 @@ hr {
     font-size: 24px;
     margin-bottom: 15px;
 }
-
 
 /* GUI */
 
@@ -373,7 +386,6 @@ hr {
     font-weight: 500;
 }
 
-
 /* Special Interactions */
 
 #pinPad {
@@ -417,9 +429,7 @@ hr {
     outline: none;
 }
 
-
 /* is supposed to remove small dotted border from active buttons, but useless right now :/ */
-
 
 /* (minor issue though, you can hardly see it) */
 
@@ -428,7 +438,6 @@ hr {
     outline: none !important;
     border: none;
 }
-
 
 /* Transponder */
 
