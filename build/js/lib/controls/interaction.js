@@ -28,19 +28,29 @@ var special_html_input = false;
 
 var interObj;
 
-
+var viewDirection = new THREE.Vector3();
 document.addEventListener( 'click', onMouseClick, false );
+var i;
 
 function interactionLoop() {
 
     //this gets called once per loop. shoots a ray in viewdirection
-    interactionRayCaster.set(controls.getObject().position, controls.getDirection());
+    interactionRayCaster.set(viewDirection.copy(controls.getObject().position), controls.getDirection().normalize());
     octreeInteractions = octree.search( interactionRayCaster.ray.origin, interactionRayCaster.ray.far, true, interactionRayCaster.ray.direction );
     interactions = interactionRayCaster.intersectOctreeObjects( octreeInteractions);
 
+    //if(interactions.length>0) console.log(getGameObject(interactions[0].object));
+    // console.log(interactions);
+
+
     //if it intersects something which is interactable we call its interaction function
     if(interactions.length>0) {
-        interObj= getGameObject(interactions[0].object);
+        for(i = 0; i<interactions.length;i++) {
+            interObj = getGameObject(interactions[i].object)
+            if (interObj instanceof GameObject) break;
+        }
+
+
         if( interObj.type==TYPE_INTERACTABLE) {
 
             if(activeObject!=interObj) {
@@ -62,6 +72,13 @@ function interactionLoop() {
 
 
             }
+        } else {
+            //remove outline mesh if there are no interactive items found
+            activeObject=null;
+            if(outlineMesh!=null) {
+                scene.remove(outlineMesh);
+                outlineMesh=null;
+            }
         }
     } else {
         //remove outline mesh if there are no interactive items found
@@ -73,14 +90,20 @@ function interactionLoop() {
     }
             //reaching the exit
     if (interactions.length>0) {
-        interObj = getGameObject(interactions[0].object);
+        for(i = 0; i<interactions.length;i++) {
+            interObj = getGameObject(interactions[i].object)
+            if (interObj instanceof GameObject) break;
+        }
         if(interObj.type==TYPE_EXIT){
         // nextLevel(); TODO: implement somewhere
         }
     }
     //
     if(interactions.length>0) {
-        interObj = getGameObject(interactions[0].object);
+        for(i = 0; i<interactions.length;i++) {
+            interObj = getGameObject(interactions[i].object)
+            if (interObj instanceof GameObject) break;
+        }
         if(interObj.type==TYPE_FIRE) {
             //console.log("interact");
             //this might be changed..
@@ -186,7 +209,7 @@ function destroy(){
 }
 
 function openopened() {
-    doorSound(); 
+    doorSound();
     if(this.open) {
         this.mesh.rotateY(Math.PI/2.0);
     }
@@ -198,7 +221,7 @@ function openopened() {
 
 
 function open() {
-    doorSound(); 
+    doorSound();
     if(!this.open) {
         this.mesh.rotateY(Math.PI/2.0);
     }
@@ -375,7 +398,7 @@ function pinPad(pinvalue) {
 
 function enterCH() {
 
-    if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "transponder")){ 
+    if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "transponder")){
 
         special_html_input = true;
 
@@ -505,7 +528,7 @@ function openTransponderDoor(){
 
     } else{
         doorLockedSound();
-		if(selectedItem != null && objectFilenameToName(selectedItem.name) == "transponder") 
+		if(selectedItem != null && objectFilenameToName(selectedItem.name) == "transponder")
 		{
 			console.log('Kein Transponder mit Code');
 			showThoughts("Hm, dieser Transponder scheint noch nicht für diese Tür eingestellt zu sein...")
