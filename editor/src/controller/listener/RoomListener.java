@@ -65,10 +65,7 @@ public class RoomListener extends MouseInputAdapter {
 				if (room.compareWays(level.getWays())) {
 					// Add room
 					level.addRoom(room);
-					for(int i=0; i<room.getWaylist().size();i++){
-						level.addWay(room.getWaylist().get(i));
-					}
-					
+					level.setWays(room.getWaylist());
 					delegate.clearTemporaryDrawableObject();
 					delegate.processDrawableObject(room);
 					this.delegate.refreshXML();
