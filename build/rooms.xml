@@ -5,7 +5,7 @@
 	<!-- in den spawns können entweder explizite objekte oder die kategorien static/interactible stehen. (wenn interactible braucht sie nat. auch ein oninteract.) -->
 
 	<!-- DAS HIER IST KOMPLETT FINAL-->
-	<room name="lectureroom1" filename="lectureroom1.json" smooth="0">
+	<room name="lectureroom1" filename="lectureroom1.json" smooth="0" fogdensityincrease="1">
 		<origin x="0" y="0"/>
 		<size xmin="-2" ymin="-2" xmax="12" ymax="8" />
 		<doors>
