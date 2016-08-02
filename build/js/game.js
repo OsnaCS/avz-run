@@ -30,7 +30,7 @@ var fileLoader =null;
 // Load file-pathes from XML in list
 // callback function complete
 function loadFiles(){
-    makeArrayFromXML(completedXmlLoad, newItemList);
+	makeArrayFromXML(completedXmlLoad, newItemList);
 }
 
 // if XML-Parsing done
@@ -43,13 +43,14 @@ function completedXmlLoad(){
 
 }
 function completedFileLoad () {
-    init();
+	init();
 }
 
 var scene,
-    camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,buttonInfoBack,
-    renderer, container, controls, audioLoader, startInstructions, buttonStart, infoScreen, buttonStart, buttonInfo,
-    mainMenu, instructions, blocker, button;
+camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
+renderer, container, controls, audioLoader, startInstructions, buttonStart,
+instructions, blocker, button;
+
 
 var menu = true;
 var pause = false;
@@ -65,16 +66,15 @@ var HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at
 
 var octree;
 var octreeObjects = [];
-    //loads all Objects before creating
+var clock;
 
-
-
+//loads all Objects before creating
 function init(event) {
 
+    clock = new THREE.Clock();
 
     //CreateSegment("groundlevel",scene);
-
-	CreateSegment("lectureroom1",scene);
+    CreateSegment("robolab",scene);
 
     octree = new THREE.Octree( {
         // uncomment below to see the octree (may kill the fps)
@@ -95,30 +95,32 @@ function init(event) {
 
     // set up the scene, the camera and the renderer
     function scene (){
-        createScene(audio);
+    	createScene(audio);
 
-        function audio (){
+    	function audio (){
         // init audio support
-            createAudio(room);
+        createAudio(room);
 
-            function room() {
+        function room() {
 
-                createRoom(controls);
-                function controls() {
+        	createRoom(controls);
+        	function controls() {
 
-                    // add the objects and lights - replace those functions as you please
-                    initControls(startLoop);
+                	   // add the objects and lights - replace those functions as you please
+                	   initControls(startLoop);
 
-                    function startLoop () {
+                	   function startLoop () {
                         // renderer.render(scene, camera);
     					// start a loop that will update the objects' positions
     					// and render the scene on each frame
-    					loop();
-                    }
-                }
-            }
-        }
+    					loop();    					
+    				}                
+
+    			}
+    		}
+    	}
     }
+
 }
 
 // Stats
@@ -140,7 +142,6 @@ function createScene(complete) {
     instructions = document.getElementById('instructions');
     button = document.getElementById('button');
     button2 = document.getElementById('button2');
-
     // Get the width and the height of the screen,
     // use them to set up the aspect ratio of the camera
     // and the size of the renderer.
@@ -153,13 +154,13 @@ function createScene(complete) {
     scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
 
     fogInterval = setInterval(function() {
-        if (!menu && !pause) {
-            player.damage(myfog / MAX_FOG) * (HEALTH_PER_SECOND / 100);
+    	if (!menu && !pause) {
+    		player.damage(myfog / MAX_FOG) * (HEALTH_PER_SECOND / 100);
 
-            if (myfog < MAX_FOG) {
-                myfog += fogIncrement;
-            }
-        }
+    		if (myfog < MAX_FOG) {
+    			myfog += fogIncrement;
+    		}
+    	}
     }, 10);
 
     // Create the camera
@@ -168,11 +169,11 @@ function createScene(complete) {
     nearPlane = 1;
     farPlane = 10000;
     camera = new THREE.PerspectiveCamera(
-        fieldOfView,
-        aspectRatio,
-        nearPlane,
-        farPlane
-    );
+    	fieldOfView,
+    	aspectRatio,
+    	nearPlane,
+    	farPlane
+    	);
 
     // Set the position of the camera, PLAYERHEIGHT is defined in firstPerson.js
     var camPos = new THREE.Vector3(0, PLAYERHEIGHT + PLAYERHEIGHT * 0.4, 0);
@@ -187,10 +188,10 @@ function createScene(complete) {
     sky_loader = new THREE.TextureLoader();
     // make texture array
     for (var i = 0; i < 6; i++) {
-        sky_array.push( new THREE.MeshBasicMaterial({
-            map: sky_loader.load( "../avz_model/materials/textures/sky/sky_" + sky_directions[i] + ".jpg" ),
-            side: THREE.BackSide,
-        }));
+    	sky_array.push( new THREE.MeshBasicMaterial({
+    		map: sky_loader.load( "../avz_model/materials/textures/sky/sky_" + sky_directions[i] + ".jpg" ),
+    		side: THREE.BackSide,
+    	}));
     }
 
     var skyGeom = new THREE.BoxGeometry(2000,2000,2000);
@@ -230,16 +231,16 @@ function createScene(complete) {
     complete();
 }
 
-
+var roboternum = 0;
 function loop() {
     //console.log(octreeObjects);
 	
 
     if (!menu && !pause) {
-        if (player.health <= 0) {
-            gameOverSound();
-            gameOver();
-        } else {
+    	if (player.health <= 0) {
+    		gameOverSound();
+    		gameOver();
+    	} else {
 
             // determines stepwidth
             time = performance.now();
@@ -257,20 +258,49 @@ function loop() {
 
             // YOU NEED TO CALL THIS (srycaps)
             if (!special_html_input) {
-                controlLoop(controls);
-                interactionLoop();
+            	controlLoop(controls);
+            	interactionLoop();
+            }                          
+
+           
+          
+            if(roboternum == 0){
+	            for (i = 0; i < static_obj.length; i++) {
+	            	if(static_obj[i].name == "roboter"){
+	            		roboternum = i;
+	            		break;
+	            	}
+	            	
+	            }
+	        }
+
+            var deltaTime = clock.getDelta();
+
+            if(!reached){
+            	moveObject(static_obj[roboternum].msh , 40, 0, 0, 1000, deltaTime);
+            	if(reached)
+            		static_obj[roboternum].msh.rotateY(Math.PI);
+            }
+            else{
+            	moveObject(static_obj[roboternum].msh , 40, 0, 160, 1000, deltaTime);
+            	if(!reached)
+            		static_obj[roboternum].msh.rotateY(Math.PI);
             }
 
-            renderer.render(scene, camera);
-            octree.update();
-            stats.end();
+
+
+
+
+                renderer.render(scene, camera);
+                octree.update();
+                stats.end();
+            }
         }
-    } 
-
-};
+} 
 
 
-function handleWindowResize() {
+
+    function handleWindowResize() {
     // update height and width of the renderer and the camera
     HEIGHT = window.innerHeight;
     WIDTH = window.innerWidth;
@@ -411,7 +441,6 @@ function addItemLogic(mesh, interact_type, intfunction, file){
 
 //adds a trigger at given position, performs action when walking over it and consumes it
 // ***** TO FADE IN THOUGHTS: look up partial, showThoughts, hideThoughts in interact! ******
-
 function addTrigger (xPos, zPos, size, action, fname, fparam1, fparam2, enabledtrigger, index, nonewentry) {
 	var hohe = (size > PLAYERHEIGHT*3) ? size: PLAYERHEIGHT*3;
     var triggerGeom = new THREE.BoxGeometry(size,hohe,size);
@@ -428,13 +457,14 @@ function addTrigger (xPos, zPos, size, action, fname, fparam1, fparam2, enabledt
 		}
 	}
 
-    trigger.mesh.position.x = xPos;
-    trigger.mesh.position.z = zPos;
-    trigger.mesh.position.y = 0;
-    scene.add(trigger.mesh);
-    modifyOctree(trigger,true);
+	trigger.mesh.position.x = xPos;
+	trigger.mesh.position.z = zPos;
+	trigger.mesh.position.y = 0;
+	scene.add(trigger.mesh);
+	modifyOctree(trigger,true);
 
 }
+
 
 function disableTrigger(trigger) {
 	for (var i = 0; i < triggers.length; i++) {
@@ -455,8 +485,7 @@ function disableTrigger(trigger) {
         if(terrain[i]==trigger) {
             terrain.splice(i,1);
         }
-
-    }
+	}
 }
 
 function enableTrigger(index) {
@@ -488,9 +517,9 @@ function modifyOctree( mesh , useFaces) {
         // give new object a random position, rotation, and scale
 
         if (mesh.mesh==undefined) {
-            octree.add( mesh, { useFaces: useFaces } );
+        	octree.add( mesh, { useFaces: useFaces } );
         } else {
-            octree.add( mesh.mesh, { useFaces: useFaces } );
+        	octree.add( mesh.mesh, { useFaces: useFaces } );
         }
 
         // add new object to octree and scene
@@ -523,4 +552,4 @@ function modifyOctree( mesh , useFaces) {
 
 
 
-}
+    }
