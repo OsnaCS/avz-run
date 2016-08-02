@@ -160,10 +160,9 @@ public class Coordinates {
 		
 		this.posx = matPoint.getValue(0, 0);
 		this.posy = matPoint.getValue(1, 0);
-		System.out.println("Rot: " + this.posx + ", " + this.posy);
 		
 		this.angle = (this.angle + angle) % 360;
-		
+		System.out.println(this.angle);
 	}
 	
 	/**
