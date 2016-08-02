@@ -68,6 +68,7 @@ public class RoomListener extends MouseInputAdapter {
 					level.setWays(room.getWaylist());
 					delegate.clearTemporaryDrawableObject();
 					delegate.processDrawableObject(room);
+					this.delegate.refreshXML();
 				}
 				// Reaction of rightclick
 			} else if (isRightMouseButton(e)) {
@@ -76,7 +77,7 @@ public class RoomListener extends MouseInputAdapter {
 				// TODO Delegate setzen (nice to have)
 			}
 
-			this.delegate.refreshXML();
+
 		}
 	}
 
