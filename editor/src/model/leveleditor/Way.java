@@ -151,10 +151,10 @@ public class Way extends DrawableObject {
 
 		Color c = Color.BLACK;
 		// decides by type of door its color
-		if (type == "glass") {
+		if (type.equals("glass")) {
 			//Cyan for glassdoor
-			c = Color.CYAN;
-		} else if (type == "floor") {
+			c = Color.BLUE;
+		} else if (type.equals("floor")) {
 			//Yellow for corridor
 			c = Color.YELLOW;
 		} else {
