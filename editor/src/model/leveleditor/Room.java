@@ -14,9 +14,9 @@ import java.util.LinkedList;
  */
 public class Room extends DrawableObject {
 
-    private Coordinates cA, cE, cC;
-    private LinkedList<Way> waylist;
-    private String name;
+     Coordinates cA, cE, cC;
+     LinkedList<Way> waylist;
+     String name;
 
     public Room(String name, double ax, double ay, double ex, double ey, Point center, LinkedList<Way> waylist){
 
@@ -104,16 +104,25 @@ public class Room extends DrawableObject {
             //in ursprung verschieben
             //skalieren
             //zurückschieben
-
-        Coordinates originalCenter = new Coordinates(cC);
-        setCenter(new Coordinates(0,0));
+    	
+//        Coordinates originalCenter = new Coordinates(cC);
+//        setCenter(new Coordinates(0,0));
+        
+    	g.setColor(Color.BLACK);
+    	
+        int cX = (int) (cC.getPosx() + 0.5);
+        int cY = (int) (cC.getPosy() + 0.5);
+    	Point c = new Point(cX, cY);
+        Point a = cA.getScaledIntCoordinates(cC);
+        Point e = cE.getScaledIntCoordinates(cC);
+        
 
         //zeichenkoordinaten erstellen
-        Point a, e, c;
-        a = cA.basisChangeDoubleInt();
-        e = cE.basisChangeDoubleInt();
-        c = originalCenter.basisChangeDoubleInt();
-
+//        Point a, e, c;
+//        a = cA.basisChangeDoubleInt();
+//        e = cE.basisChangeDoubleInt();
+//        c = originalCenter.basisChangeDoubleInt();
+//
         a.x+=c.x;
         a.y+=c.y;
         e.x+=c.x;
@@ -134,7 +143,7 @@ public class Room extends DrawableObject {
         }
 
         //center zurücksetzen für korrektes speichern
-        setCenter(originalCenter);
+        //setCenter(originalCenter);
     }
 
     public String getName() {
@@ -162,7 +171,9 @@ public class Room extends DrawableObject {
     }
 
     public void setCenter(Point center){
+    	System.out.println("Vorher: x = " + center.x + ", " + center.y);
         Coordinates newC = cC.basisChangeIntDouble(center);
+        System.out.println("Nachher: x = " + newC.getPosx() + ", " + newC.getPosy());
         this.cC = newC;
     }
 

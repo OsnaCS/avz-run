@@ -23,7 +23,7 @@ public class App {
 	 */
 	public static void main(String[] args) {
 
-		String filename = "hallo.xml";
+		String filename = "Gezeichnet.xml";
 		
 		JFrame frame = new JFrame("LevelEditor");
 
