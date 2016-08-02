@@ -24,7 +24,10 @@ public class Room extends DrawableObject {
 
         this.cA = new Coordinates(ax, ay);
         this.cE = new Coordinates(ex, ey);
-        this.cC = new Coordinates(center.x, center.y);
+
+        this.cC = new Coordinates(0,0);
+
+        cC = cC.basisChangeIntDouble(center);
 
         this.waylist = waylist;
 
@@ -62,7 +65,12 @@ public class Room extends DrawableObject {
             }
         }
 
-        setWaylist(cutways);
+        this.setWaylist(ownways);
+
+        allways.clear();
+        allways.addAll(cutways);
+
+        //setWaylist(cutways);
 
         //return added;
         return true;
