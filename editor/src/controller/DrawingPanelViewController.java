@@ -191,6 +191,9 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 				RoomListener roomListener = new RoomListener(controller, room, getAktLevel());
 				this.changeMouseInputListenerTo(roomListener);
 				setRoomListener(roomListener);
+				
+//				DashedRoom r = new DashedRoom(room, new Point(0,0));
+//				setTemporaryDrawableObject(r);
 
 			}
 		

@@ -279,6 +279,10 @@ public class Coordinates {
 		return new Coordinates(newX, newY);
 	}
 	
+	public String toString() {
+		return "Koordinaten: " + this.getPosx() + ", " + this.getPosy();
+	}
+	
 	/*********************************************************/
 	/***************** GETTER und SETTER *********************/
 	/*********************************************************/

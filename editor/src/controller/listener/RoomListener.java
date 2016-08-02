@@ -97,12 +97,15 @@ public class RoomListener extends MouseInputAdapter {
 	 */
 	public void mouseMoved(MouseEvent e) {
 		// If mousePos was'nt set yet
-		if (mousePos != null) {
+		if (mousePos == null) {
+			System.out.println(mousePos);
 			// Set MousePos
+			mousePos = new Point(e.getX(), e.getY());
+		} else {
 			mousePos = new Point(e.getX(), e.getY());
 			// Set center
 			room.setCenter(mousePos);
-
+			
 			DashedRoom r = new DashedRoom(this.room, mousePos);
 			// Temporäres Objekt neu zeichnen
 			delegate.setTemporaryDrawableObject(r);

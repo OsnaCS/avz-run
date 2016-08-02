@@ -13,9 +13,9 @@ import java.util.LinkedList;
  */
 public class Room extends DrawableObject {
 
-     Coordinates cA, cE, cC;
-     LinkedList<Way> waylist;
-     String name;
+     private Coordinates cA, cE, cC;
+     private LinkedList<Way> waylist;
+     private String name;
 
     public Room(String name, double ax, double ay, double ex, double ey, Point center, LinkedList<Way> waylist){
 
