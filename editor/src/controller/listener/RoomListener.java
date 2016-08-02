@@ -65,10 +65,11 @@ public class RoomListener extends MouseInputAdapter {
 					Room thisroom = new Room(room);
 
 					level.addRoom(thisroom);
-					level.setWays(thisroom.getWaylist());
 
 					delegate.clearTemporaryDrawableObject();
 					delegate.processDrawableObject(thisroom);
+
+					mousePos = null;
 
 					this.delegate.refreshXML();
 				}
@@ -76,7 +77,6 @@ public class RoomListener extends MouseInputAdapter {
 			} else if (isRightMouseButton(e)) {
 				// Rotate Room
 				room.rotate();
-
 
 				DashedRoom r = new DashedRoom(this.room, mousePos);
 
