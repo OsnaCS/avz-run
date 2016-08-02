@@ -3,12 +3,12 @@ package controller.listener;
 import controller.DrawableObjectProcessing;
 import controller.DrawingPanelViewController;
 import model.drawables.Point;
-import model.leveleditor.DashedRoom;
 import model.leveleditor.Level;
 import model.leveleditor.Room;
 
 import javax.swing.event.MouseInputAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileNotFoundException;
 
 import static javax.swing.SwingUtilities.isLeftMouseButton;
 import static javax.swing.SwingUtilities.isRightMouseButton;
@@ -55,32 +55,54 @@ public class RoomListener extends MouseInputAdapter {
 			// Create new MousePos
 			mousePos = new Point(e.getX(), e.getY());
 			// Sets the new center from the room
-			room.setCenter(mousePos);
+			//room.setCenter(mousePos, room.getCenter().getAngle());
 		} else {
+
+            //for(int i = 0; i < this.room.getWaylist().size(); i++) {
+              //  System.out.println(this.room.getWaylist().get(i));
+            //}
+            //System.out.println("Stopp");
 			// Reaction for leftmouseclick
 			if (isLeftMouseButton(e)) {
+
 				// Compare ways with all not checked or cleared Level-ways
 				if (room.compareWays(level.getWays())) {
 					// Add room
+
 					Room thisroom = new Room(room);
-
+              /*      for(int i = 0; i < thisroom.getWaylist().size(); i++) {
+                        System.out.println(thisroom.getWaylist().get(i));
+                        System.out.println(this.room.getWaylist().get(i));
+                    }*/
 					level.addRoom(thisroom);
-
-					delegate.clearTemporaryDrawableObject();
-					delegate.processDrawableObject(thisroom);
-
+					//delegate.clearTemporaryDrawableObject();
+					//delegate.processDrawableObject(thisroom);
+                    delegate.processDrawableObject(thisroom);
 					mousePos = null;
 
 					this.delegate.refreshXML();
-				}
+                   // this.room.getCenter().setAngle(0);
+                   // this.room.getcE().setAngle(0);
+                   // this.room.getcA().setAngle(0);
+
+
+                    try {
+                        this.room = delegate.getHandler().createRoomFromXML(this.room.getName());
+                    } catch (FileNotFoundException e1) {
+                        e1.printStackTrace();
+                    }
+                }
 				// Reaction of rightclick
 			} else if (isRightMouseButton(e)) {
 				// Rotate Room
-				room.rotate();
+                room.rotate();
+                /*for(int i = 0; i < this.room.getWaylist().size(); i++) {
+                    System.out.println(this.room.getWaylist().get(i));
+                }
+                System.out.println("Stopp");*/
 
-				DashedRoom r = new DashedRoom(this.room, mousePos);
+				delegate.setTemporaryDrawableObject(room);
 
-				delegate.setTemporaryObject(r);
 
 			}
 
@@ -102,17 +124,18 @@ public class RoomListener extends MouseInputAdapter {
 	public void mouseMoved(MouseEvent e) {
 		// If mousePos was'nt set yet
 		if (mousePos == null) {
-			System.out.println(mousePos);
+			//System.out.println(mousePos);
 			// Set MousePos
-			mousePos = new Point(e.getX(), e.getY());
+			//mousePos = new Point(e.getX(), e.getY());
+			//room.setCenter(mousePos);
 		} else {
 			mousePos = new Point(e.getX(), e.getY());
-			// Set center
-			room.setCenter(mousePos);
-			
-			DashedRoom r = new DashedRoom(this.room, mousePos);
+            // Set center
+            room.moveCenter(mousePos, room.getCenter().getAngle());
+			//DashedRoom r = new DashedRoom(this.room, mousePos);
 			// Temporäres Objekt neu zeichnen
-			delegate.setTemporaryDrawableObject(r);
+			delegate.setTemporaryDrawableObject(room);
+			//mousePos = null;
 		}
 	}
 

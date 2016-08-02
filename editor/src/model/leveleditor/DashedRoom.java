@@ -11,7 +11,7 @@ import model.drawables.Point;
 /**
  * Created by Thomas Dautzenberg on 28/07/2016.
  */
-public class DashedRoom extends Room {
+/*public class DashedRoom extends Room {
 
 	private Coordinates cA, cE, cC;
     private LinkedList<Way> waylist;
@@ -48,6 +48,11 @@ public class DashedRoom extends Room {
         Point e = this.cE.getScaledIntCoordinates(this.cC);
 		// rechteck zeichnen
 
+		a.x *= -1;
+		a.y *= -1;
+		e.x *= -1;
+		e.y *= -1;
+
         Point ur = new Point(e.x, a.y);
 		Point ll = new Point(a.x, e.y);
 
@@ -62,4 +67,4 @@ public class DashedRoom extends Room {
 		}
 	}
 
-}
+}*/
