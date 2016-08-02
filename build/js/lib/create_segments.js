@@ -25,8 +25,10 @@ var static_obj = [];  //hier stehen alle StaticSegments drin. StaticSegment = Ob
 var interact_obj = [];//hier stehen alle interactibleSegments drin. Das sind alle PickupItems, Türen ungleich closedDoor, und sonstwie interactibles.
 var lamps = [];	//noch sinnlos!  //Hier stehen alle LightSegments drin. Diese bestehen aus dem mesh der Lampe (+position etc) sowie der Lichtquelle als three.light!
 var fires = [];       //Hier stehen alle Feuer drin.
+var triggers = [];	  //Hier stehen alle Triggers drin.
 var allobjects = [];  listallobjects();  //hierdrin stehen alle MÖGLICHEN objects (..damit man sie nicht mehr aus der xml auslesen kann, asynchronität undso.)
 var allrooms = []; listallrooms(); //same as line above.
+
 
 //functions
 
@@ -34,7 +36,7 @@ var allrooms = []; listallrooms(); //same as line above.
 //the callback-function WAS ORIGINALLY MEANT TO BE nothing, fitdoor or the one loading the info from the levels.xml
 //now, it loads all the other stuff (lights, audios, etc.)
 	function CreateSegment(forwhichroom, callback) {
-		var currseg = {filename:"", doors:[], spawns:[], lights:[], fires:[], xmin:0, ymin:0, xmax:0, ymax:0, orx:0, ory:0, orz: 0, transx:0, transy:0, rot:0, rauch: 0, applied:false};
+		var currseg = {filename:"", doors:[], spawns:[], lights:[], fires:[], triggers: [], xmin:0, ymin:0, xmax:0, ymax:0, orx:0, ory:0, orz: 0, transx:0, transy:0, rot:0, rauch: 0, applied:false};
 		if (typeof callback !== 'function')
 		{
 			currseg.transx = 0;
@@ -50,7 +52,7 @@ var allrooms = []; listallrooms(); //same as line above.
 	}
 
 	function CreateSegment(forwhichroom, callback, x, y, rot) {
-		var currseg = {filename:"", doors:[], spawns:[], lights:[], fires:[], xmin:0, ymin:0, xmax:0, ymax:0, orx:0, ory:0, orz: 0, transx:0, transy:0, rot:0, rauch: 0, applied:false};
+		var currseg = {filename:"", doors:[], spawns:[], lights:[], fires:[], triggers: [], xmin:0, ymin:0, xmax:0, ymax:0, orx:0, ory:0, orz: 0, transx:0, transy:0, rot:0, rauch: 0, applied:false};
 		if (typeof callback !== 'function')
 		{
 			currseg.transx = x;
@@ -86,9 +88,12 @@ var allrooms = []; listallrooms(); //same as line above.
 					function fires () {
 						getFires(xhttp,segmentindex,whichroom,coords);
 						function coords() {
-							getCoords(xhttp,segmentindex,whichroom,fileName);
-							function fileName() {
-								getFileName(xhttp,segmentindex,whichroom,callback); //this function calls, when done, the function to create and add the mesh.
+							getCoords(xhttp,segmentindex,whichroom,triggers);
+							function triggers() {
+								getTriggers(xhttp,segmentindex,whichroom,fileName);
+								function fileName() {
+									getFileName(xhttp,segmentindex,whichroom,callback); //this function calls, when done, the function to create and add the mesh.
+								}
 							}
 					// typeof callback === 'function' && callback(); //if there is a callback specified, run it.
 						}
@@ -106,10 +111,10 @@ var allrooms = []; listallrooms(); //same as line above.
 		var DoorArr = [];
 		var xmlDoc = xml.responseXML;
 		var curroom = xmlDoc.getElementsByTagName("room");
-		for (i = 0; i <curroom.length; i++) {
+		for (var i = 0; i <curroom.length; i++) {
 			if (curroom[i].getAttribute("name") === whichroom) {
 				var curdoor = curroom[i].getElementsByTagName("door");
-				for (j = 0; j < curdoor.length; j++) {
+				for (var j = 0; j < curdoor.length; j++) {
 					var cudo = [];
 					cudo.push(curdoor[j].getAttribute("index"));
 					cudo.push((curdoor[j].getAttribute("type") !== null) ? curdoor[j].getAttribute("type") : "norm");
@@ -129,20 +134,20 @@ var allrooms = []; listallrooms(); //same as line above.
 		var SpawnArr = [];
 		var xmlDoc = xml.responseXML;
 		var curroom = xmlDoc.getElementsByTagName("room");
-		for (i = 0; i <curroom.length; i++) {
+		for (var i = 0; i <curroom.length; i++) {
 			if (curroom[i].getAttribute("name") === whichroom) {
 				var curdoor = curroom[i].getElementsByTagName("spawn");
-				for (j = 0; j < curdoor.length; j++) {
+				for (var j = 0; j < curdoor.length; j++) {
 					var first = 0; var second = 0; var third = 0;
 					if (curdoor[j].getAttribute("position").indexOf("to") > 0) {
 						parts = curdoor[j].getAttribute("position").split("(")[1].split(")")[0].split(",");
 						var x = []; var y = []; var z = [];
-						for (k = 0; k < parts.length; k++) {
+						for (var k = 0; k < parts.length; k++) {
 							if (parts[k].indexOf("to") > 0) {
 								first = parseFloat(parts[k].split(" to ")[0]);
 								second = parseFloat(parts[k].split(" to ")[1].split(" step ")[0]);
 								third = parseFloat(parts[k].split(" to ")[1].split(" step ")[1]);
-								for (l = first; l <= second; l+= third) {
+								for (var l = first; l <= second; l+= third) {
 									switch(k){
 										case 0: x.push(l); break;
 										case 1: y.push(l); break;
@@ -158,9 +163,9 @@ var allrooms = []; listallrooms(); //same as line above.
 							}
 						}
 						var p = 0;
-						for (m = 0; m < x.length; m++) {
-							for (n = 0; n < y.length; n++) {
-								for (o = 0; o < z.length; o++) {
+						for (var m = 0; m < x.length; m++) {
+							for (var n = 0; n < y.length; n++) {
+								for (var o = 0; o < z.length; o++) {
 									var cudo = [];
 									cudo.push(curdoor[j].getAttribute("index")+""+p);
 									cudo.push("("+x[m]+","+y[n]+","+z[o]+")");
@@ -194,10 +199,10 @@ var allrooms = []; listallrooms(); //same as line above.
 		var LightArr = [];
 		var xmlDoc = xml.responseXML;
 		var curroom = xmlDoc.getElementsByTagName("room");
-		for (i = 0; i <curroom.length; i++) {
+		for (var i = 0; i <curroom.length; i++) {
 			if (curroom[i].getAttribute("name") === whichroom) {
 				var curdoor = curroom[i].getElementsByTagName("light");
-				for (j = 0; j < curdoor.length; j++) {
+				for (var j = 0; j < curdoor.length; j++) {
 					var cudo = [];
 					cudo.push(curdoor[j].getAttribute("index"));
 					cudo.push((curdoor[j].getAttribute("kind") !== null) ? curdoor[j].getAttribute("kind") : "pointlight");
@@ -220,10 +225,10 @@ var allrooms = []; listallrooms(); //same as line above.
 		var FireArr = [];
 		var xmlDoc = xml.responseXML;
 		var curroom = xmlDoc.getElementsByTagName("room");
-		for (i = 0; i <curroom.length; i++) {
+		for (var i = 0; i <curroom.length; i++) {
 			if (curroom[i].getAttribute("name") === whichroom) {
 				var curdoor = curroom[i].getElementsByTagName("fire");
-				for (j = 0; j < curdoor.length; j++) {
+				for (var j = 0; j < curdoor.length; j++) {
 					var cudo = [];
 					cudo.push(curdoor[j].getAttribute("index"));
 					cudo.push(curdoor[j].getAttribute("position"));
@@ -240,7 +245,7 @@ var allrooms = []; listallrooms(); //same as line above.
 	function getCoords(xml, segmentindex, whichroom,callback) {
 		var xmlDoc = xml.responseXML;
 		var curroom = xmlDoc.getElementsByTagName("room");
-		for (i = 0; i <curroom.length; i++) {
+		for (var i = 0; i <curroom.length; i++) {
 			if (curroom[i].getAttribute("name") === whichroom) {
 				sizeinfo = curroom[i].getElementsByTagName("size");
 				segments[segmentindex].xmin = sizeinfo[0].getAttribute("xmin");
@@ -256,10 +261,38 @@ var allrooms = []; listallrooms(); //same as line above.
 		callback();
 	}
 
+	function getTriggers(xml, segmentindex, whichroom, callback) {
+		var TriggerArr = [];
+		var xmlDoc = xml.responseXML;
+		var curroom = xmlDoc.getElementsByTagName("room");
+		for (var i = 0; i <curroom.length; i++) {
+			if (curroom[i].getAttribute("name") === whichroom) {
+				var curdoor = curroom[i].getElementsByTagName("trigger");
+				for (var j = 0; j < curdoor.length; j++) {
+					var cudo = [];
+					cudo.push(curdoor[j].getAttribute("index"));
+					cudo.push(curdoor[j].getAttribute("xpos"));
+					cudo.push(curdoor[j].getAttribute("ypos"));
+					cudo.push(curdoor[j].getAttribute("size"));
+					cudo.push((curdoor[j].getAttribute("functionname") !== null) ? curdoor[j].getAttribute("functionname") : "showThoughts");
+					cudo.push((curdoor[j].getAttribute("fparam1") !== null) ? curdoor[j].getAttribute("fparam1") : "");
+					cudo.push((curdoor[j].getAttribute("fparam2") !== null) ? curdoor[j].getAttribute("fparam2") : "");
+					TriggerArr.push(cudo);
+				}
+			}
+		}
+		segments[segmentindex].triggers = TriggerArr;
+		callback();
+
+	}
+
+
+
+
 	function getFileName(xml, segmentindex, whichroom,callback) {
 		var xmlDoc = xml.responseXML;
 		var curroom = xmlDoc.getElementsByTagName("room");
-		for (i = 0; i <curroom.length; i++) {
+		for (var i = 0; i <curroom.length; i++) {
 			if (curroom[i].getAttribute("name") === whichroom) {
 				segments[segmentindex].filename = curroom[i].getAttribute("filename");
 				addmesh(curroom[i].getAttribute("filename"), segmentindex);
@@ -271,8 +304,8 @@ var allrooms = []; listallrooms(); //same as line above.
 
 //puts the objects in its spawn-location  //TODO: normaltowall ist nicht die normale zur wand, sondern die normale blender-normale :/
 	function objects_in_spawns(callback) {
-		for (INDEX1 = 0; INDEX1<segments.length; INDEX1++){
-			for (i = 0; i <segments[INDEX1].spawns.length; i++) {
+		for (var INDEX1 = 0; INDEX1<segments.length; INDEX1++){
+			for (var i = 0; i <segments[INDEX1].spawns.length; i++) {
 				tospawn = segments[INDEX1].spawns[i];
 
 				room1pos = [segments[INDEX1].transx, segments[INDEX1].transy];
@@ -285,7 +318,7 @@ var allrooms = []; listallrooms(); //same as line above.
 				spawny = spawny*SKALIERUNGSFAKTOR*-1;
 				spawnz = spawnz*SKALIERUNGSFAKTOR;
 
-				for (j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
+				for (var j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
 					var tmp = spawnx;
 					spawnx = -spawny;
 					spawny = tmp;
@@ -308,10 +341,10 @@ var allrooms = []; listallrooms(); //same as line above.
 
 //puts the fires where they belong
 	function set_fires(callback) {
-		for (INDEX1 = 0; INDEX1<segments.length; INDEX1++){
+		for (var INDEX1 = 0; INDEX1<segments.length; INDEX1++){
 
 			var fire = segments[INDEX1].fires;
-			for (i = 0; i <fire.length; i++) {
+			for (var i = 0; i <fire.length; i++) {
 
 				var spawnx = parseFloat(fire[i][1].slice(1,fire[i][1].indexOf(',')));
 				var spawny = parseFloat(fire[i][1].slice(fire[i][1].indexOf(',')+1,fire[i][1].lastIndexOf(',')));
@@ -325,7 +358,7 @@ var allrooms = []; listallrooms(); //same as line above.
 				spawny = spawny*SKALIERUNGSFAKTOR*-1;
 				spawnz = spawnz*SKALIERUNGSFAKTOR;
 
-				for (j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
+				for (var j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
 					var tmp = spawnx;
 					spawnx = -spawny;
 					spawny = tmp;
@@ -345,17 +378,18 @@ var allrooms = []; listallrooms(); //same as line above.
 
 	function createFire(x, z, y, sx, sy, sz, s) {
 		VolumetricFire.texturePath = FIRETEXTUREPATH;
-		var fireseg = {x:x, y:y, z:z, sx:sx*SKALIERUNGSFAKTOR, sy:sy*SKALIERUNGSFAKTOR, sz:sz*SKALIERUNGSFAKTOR, val:s}; //TODO: kann ich auch das mesh des feuers adden?
+		var fireseg = {x:x, y:y, z:z, sx:sx*SKALIERUNGSFAKTOR, sy:sy*SKALIERUNGSFAKTOR, sz:sz*SKALIERUNGSFAKTOR, val:s*SKALIERUNGSFAKTOR}; //TODO: kann ich auch das mesh des feuers adden?
 		fires.push(fireseg);
+
 		addFire(x, y, z, sx*SKALIERUNGSFAKTOR, sy*SKALIERUNGSFAKTOR, sz*SKALIERUNGSFAKTOR, s*SKALIERUNGSFAKTOR);
 	}
 
 //puts the lights where they belong
 	function turn_on_lights(callback) {
-		for (INDEX1 = 0; INDEX1<segments.length; INDEX1++){
+		for (var INDEX1 = 0; INDEX1<segments.length; INDEX1++){
 
 			var light = segments[INDEX1].lights;
-			for (i = 0; i <light.length; i++) {
+			for (var i = 0; i <light.length; i++) {
 
 				var spawnx = parseFloat(light[i][4].slice(1,light[i][4].indexOf(',')));
 				var spawny = parseFloat(light[i][4].slice(light[i][4].indexOf(',')+1,light[i][4].lastIndexOf(',')));
@@ -366,7 +400,7 @@ var allrooms = []; listallrooms(); //same as line above.
 				spawny = spawny*SKALIERUNGSFAKTOR*-1;
 				spawnz = spawnz*SKALIERUNGSFAKTOR;
 
-				for (j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
+				for (var j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
 					var tmp = spawnx;
 					spawnx = -spawny;
 					spawny = tmp;
@@ -397,13 +431,53 @@ var allrooms = []; listallrooms(); //same as line above.
 		scene.add(light);
 	}
 
-//puts the right kind of door where it fits.
-//TODO: da immer Türrahmen an Türrahmen pappt, packt der immer 2 Türen rein. Da sollte er noch gucken dass er nur falls es ein Flur ist eine Tür rein packt.
-//...da ist tatsächlich flur eine binäre relation, denn der circle_walled ist relativ zum büro Flur, aber relativ zum center Nicht!!!
+	function addtriggers(callback) {
+		// addTrigger(0,-50,partial(showThoughts, "Hello World",5000));
+		// [index,xpos,ypos,functionname,fparam1,fparam2]
+		for (var INDEX1 = 0; INDEX1<segments.length; INDEX1++){
+			for (var i = 0; i <segments[INDEX1].triggers.length; i++) {
 
+				tospawn = segments[INDEX1].triggers[i];
+				room1pos = [segments[INDEX1].transx, segments[INDEX1].transy];
+
+				var spawnx = tospawn[1];
+				var spawny = tospawn[2];
+				var spawnz = 0
+
+				spawnx = spawnx*SKALIERUNGSFAKTOR;
+				spawny = spawny*SKALIERUNGSFAKTOR*-1;
+				spawnz = spawnz*SKALIERUNGSFAKTOR;
+
+				for (var j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
+					var tmp = spawnx;
+					spawnx = -spawny;
+					spawny = tmp;
+				}
+
+				var xz = changexzaccordingtorot(segments[INDEX1].orx, segments[INDEX1].ory, segments[INDEX1].rot);
+				spawnx = spawnx + parseInt(segments[INDEX1].transx)+xz[0];
+				spawny = spawny + parseInt(segments[INDEX1].transy)+xz[1];
+
+				var size = tospawn[3]*SKALIERUNGSFAKTOR;
+				var functPtr = eval(tospawn[4]);
+				var fparam1 = tospawn[5];
+				var fparam2 = tospawn[6];
+
+
+				if (fparam1 === "") addTrigger(spawnx, spawny, size, functPtr)
+					else if (fparam2 === "") addTrigger(spawnx, spawny, size, partial(functPtr, fparam1))
+						else addTrigger(spawnx, spawny, size, partial(functPtr, fparam1, fparam2))
+			}
+		}
+		callback();
+
+	}
+
+
+//puts the right kind of door where it fits.
 function door_in_doors(callback) {
-	for (INDEX1 = 0; INDEX1<segments.length; INDEX1++){
-		for (i = 0; i <segments[INDEX1].doors.length; i++) {
+	for (var INDEX1 = 0; INDEX1<segments.length; INDEX1++){
+		for (var i = 0; i <segments[INDEX1].doors.length; i++) {
 			room1door = segments[INDEX1].doors[i];
 			room1pos = [segments[INDEX1].transx, segments[INDEX1].transy];
 
@@ -418,7 +492,7 @@ function door_in_doors(callback) {
 			else if (room1door[1] === "klotuer") {changex = KLOTUERBREITE; }
 			changex = changex*(1+0.5*(room1door[5]-1)); //room1door[5] ist der stretch-faktor
 			var changey = 0;
-			for (j = 0; j <parseInt(rotate); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
+			for (var j = 0; j <parseInt(rotate); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
 				var tmp = changex;
 				changex = -changey;
 				changey = tmp;
@@ -430,7 +504,7 @@ function door_in_doors(callback) {
 			door1x = door1x*SKALIERUNGSFAKTOR+changex;
 			door1y = door1y*SKALIERUNGSFAKTOR*-1+changey;
 
-			for (j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
+			for (var j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
 				var tmp = door1x;
 				door1x = -door1y;
 				door1y = tmp;
@@ -569,7 +643,7 @@ function door_in_doors(callback) {
 					var randomobject = pfad+typeItems[Math.round(Math.random()*(typeItems.length-1))];
 					addobject(randomobject.getAttribute("path"), randomobject.getAttribute("name"), spawnx, spawny, spawnz, scale, rotate, actionfunction)
 				} else {
-					for (i = 0; i < typeItems.length; i++) {
+					for (var i = 0; i < typeItems.length; i++) {
 						if (typeItems[i].getAttribute("name") === objectname) {
 							pfad += typeItems[i].getAttribute("path");
 							addobject(pfad, objectname, spawnx, spawny, spawnz, scale*typeItems[i].getAttribute("scale"), rotate, actionfunction, stretchx)
@@ -627,7 +701,7 @@ function door_in_doors(callback) {
 //löscht erst alle objekte aus der Szene, bevor es dann alle neu hinzufügt.
 	function PutSegments(callback){
 		empty_scene();
-		for (i = 0; i <segments.length; i++) {
+		for (var i = 0; i <segments.length; i++) {
 			addtoscene(applytransrot(segments[i]),null);
 
 		}
@@ -707,7 +781,7 @@ function door_in_doors(callback) {
 		door1x = door1x*SKALIERUNGSFAKTOR;
 		door1y = door1y*SKALIERUNGSFAKTOR*-1;
 
-		for (j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
+		for (var j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
 			var tmp = door1x;
 			door1x = -door1y;
 			door1y = tmp;
@@ -720,7 +794,7 @@ function door_in_doors(callback) {
 		//remove me
 		document.getElementById('posx').value = door1x;
 		document.getElementById('posy').value = door1y;
-		for (j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
+		for (var j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
 			var tmp = door1x;
 			door1x = -door1y;
 			door1y = tmp;
@@ -793,7 +867,7 @@ function door_in_doors(callback) {
 		door2x = door2x*SKALIERUNGSFAKTOR*-1;
 		door2y = door2y*SKALIERUNGSFAKTOR*-1;
 
-		for (j = 0; j <parseInt(rotation); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
+		for (var j = 0; j <parseInt(rotation); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
 			var tmp = door2x;
 			door2x = -door2y;
 			door2y = tmp;

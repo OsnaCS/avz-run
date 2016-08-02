@@ -8,6 +8,8 @@ var fire_collision_box_list = [];
 
 var smoke_and_light_count = 0;
 
+var fireElapsed;
+
 var fire;
 var fireWidth = -1;
 var fireHeight = -1;
@@ -70,7 +72,7 @@ function addFire(x, y, z, width, height, depth, spacing) {
     }else{
         pointlight = new THREE.PointLight(0xff9933, 1, fireDepth, 2);
     }
-    pointlight.position.set(8, 0 , 0);
+    pointlight.position.set(x, y + fireHeight / 2, z);
     scene.add(pointlight);
 
     // Firemesh
@@ -79,13 +81,14 @@ function addFire(x, y, z, width, height, depth, spacing) {
     fmesh.position.set(x, y + fireHeight / 2, z);
     fire_mesh_list.push(fmesh);
 
+    var fireGeom;
     // Collision Box
     if (fireHeight < (PLAYERHEIGHT * 2)){
         fireGeom = new THREE.BoxGeometry(fireWidth, PLAYERHEIGHT * 2, fireDepth);
     }else{
         fireGeom = new THREE.BoxGeometry(fireWidth, fireHeight, fireDepth);
     }
-    var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 1, depthWrite: false })
+    var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
     var fireMesh = new THREE.Mesh(fireGeom, mat);
 
     // create fire sound
@@ -119,17 +122,17 @@ function animateFire() {
 
     requestAnimationFrame(animateFire);
 
-    var elapsed = clock.getElapsedTime();
+     fireElapsed = clock.getElapsedTime();
 
     // update alle fire Objekte aus dem Array
     for (i = 0; i < fire_count; i++) {
-        fire_list[i].update(elapsed);
+        fire_list[i].update(fireElapsed);
     }
 
     // update alle smoke und pointlights
     for (j = 0; j < smoke_and_light_count; j++) {
 
-        pointlight_list[j].intensity = Math.sin(elapsed * 30) * 0.25 + 3;
+        pointlight_list[j].intensity = Math.sin(fireElapsed * 30) * 0.25 + 3;
 
         smoke_list[j].material.uniforms.time.value = clock.getElapsedTime();
     }

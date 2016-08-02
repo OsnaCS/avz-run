@@ -47,9 +47,9 @@ function completedFileLoad () {
 }
 
 var scene,
-    camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
-    renderer, container, controls, audioLoader, startInstructions, buttonStart,
-    instructions, blocker, button;
+    camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,buttonInfoBack,
+    renderer, container, controls, audioLoader, startInstructions, buttonStart, infoScreen, buttonStart, buttonInfo,
+    mainMenu, instructions, blocker, button;
 
 var menu = true;
 var pause = false;
@@ -74,7 +74,7 @@ function init(event) {
 
     //CreateSegment("lectureroom1",scene);
 
-	CreateSegment("lectureroom1",scene);
+	CreateSegment("groundlevel",scene);
 
     octree = new THREE.Octree( {
         // uncomment below to see the octree (may kill the fps)
@@ -132,7 +132,11 @@ function createScene(complete) {
     blocker = document.getElementById('blocker');
     container = document.getElementById('world');
     startInstructions = document.getElementById('startInstructions');
+    mainMenu = document.getElementById('mainMenu');
+    infoScreen = document.getElementById('infoScreen');
     buttonStart = document.getElementById('buttonStart');
+    buttonInfo = document.getElementById('buttonInfo');
+    buttonInfoBack = document.getElementById('buttonInfoBack');
     instructions = document.getElementById('instructions');
     button = document.getElementById('button');
     button2 = document.getElementById('button2');
@@ -236,13 +240,21 @@ function loop() {
             gameOver();
         } else {
 
+            // determines stepwidth
+            time = performance.now();
+            delta = (time - prevTime) / 1000;
+
             stats.begin();
             requestAnimationFrame(loop);
+
             scene.fog.density = myfog;
+            player.updateEnergy();
 
             // YOU NEED TO CALL THIS (srycaps)
-            if (!special_html_input) controlLoop(controls);
-            if (!special_html_input) interactionLoop();
+            if (!special_html_input) {
+                controlLoop(controls);
+                interactionLoop();
+            }
 
             renderer.render(scene, camera);
             octree.update();
@@ -315,13 +327,10 @@ function createRoom(callback) {
             function fires() {
                 set_fires(lights);
                 function lights () {
-
-                    for (var i = 0;i<terrain.length;i++) {
-                        terrain[i].mesh == undefined ?  modifyOctree( terrain[i], true ) : modifyOctree( terrain[i].mesh, true );
-
-
-                    }
-	                turn_on_lights(callback);
+	                turn_on_lights(triggers);
+					function triggers () {
+						addtriggers(callback);
+					}
                 }
             }
         }
@@ -397,8 +406,9 @@ function addItemLogic(mesh, interact_type, intfunction, file){
 //adds a trigger at given position, performs action when walking over it and consumes it
 // ***** TO FADE IN THOUGHTS: look up partial, showThoughts, hideThoughts in interact! ******
 
-function addTrigger (xPos, zPos, action) {
-    var triggerGeom = new THREE.BoxGeometry(30,30,30);
+function addTrigger (xPos, zPos, size, action) {
+	var hohe = (size > PLAYERHEIGHT*1.1) ? size: PLAYERHEIGHT*1.1
+    var triggerGeom = new THREE.BoxGeometry(size,hohe,size);
     var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, color:0xFFFFFF});
     var triggerMesh = new THREE.Mesh(triggerGeom,mat);
     var trigger = new GameObject(triggerMesh,action,TYPE_TRIGGER);
