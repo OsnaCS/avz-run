@@ -83,7 +83,7 @@ Player = function() {
 
         // player can get exhausted/regenerate energy
         if (!menu) {
-            if (running) {
+            if (running && (moveForward || moveLeft || moveBackward || moveRight)) {
                 energy -= delta * 30;
                 if (energy <= 0) {
                     adjustPlaybackRate(footsteps, 1, true);
