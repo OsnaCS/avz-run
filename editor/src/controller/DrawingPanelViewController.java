@@ -99,7 +99,8 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		for (int i =0; i <temp.getWaylist().size();i++){
 			this.aktLevel.addWay(temp.getWaylist().get(i));
 		}
-		this.roomListener = new RoomListener(this, temp, this.aktLevel);
+		this.roomListener = null;
+		//this.roomListener = new RoomListener(this, temp, this.aktLevel);
 		this.drawingPanelView.addMouseListener(roomListener);
 		
 
@@ -116,7 +117,6 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		// Event-Listener für Button
 		ActionListener clear = new ActionListener() {
 			@Override
-			// TODO Files zurücksetzen
 			public void actionPerformed(ActionEvent e) {
 				
 				// Das Model leeren und die View neu zeichnen
@@ -190,6 +190,10 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 				// Für den neuen Raum einen neuen Listener erstellen und anhängen
 				RoomListener roomListener = new RoomListener(controller, room, getAktLevel());
 				this.changeMouseInputListenerTo(roomListener);
+				setRoomListener(roomListener);
+				
+//				DashedRoom r = new DashedRoom(room, new Point(0,0));
+//				setTemporaryDrawableObject(r);
 
 			}
 		
@@ -245,9 +249,9 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-//				levels.removeLast();
-//				aktLevel = levels.getLast();
-//				refreshXML();
+				levels.removeLast();
+				aktLevel = levels.getLast();
+				refreshXML();
 
 			}
 		};

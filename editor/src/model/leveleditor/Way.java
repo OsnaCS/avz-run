@@ -108,7 +108,7 @@ public class Way extends DrawableObject {
 	 */
 	public Point fittingPos(){
 //		//gets the Positions of way and the center of father
-		Point nowPos = pos.getScaledIntCoordinates(father.cC);
+		Point nowPos = pos.getScaledIntCoordinates(father.getCenter());
 //		int x = nowPos.x * 2;
 //		int y = nowPos.y * 2;
 //		double[][] translate = {{1, 0, x}, 
@@ -170,7 +170,7 @@ public class Way extends DrawableObject {
 			b.x = a.x;
 			b.y = y;
 		}
-
+		
 		Color c = Color.BLACK;
 		// decides by type of door its color
 		if (type.equals("glass")) {

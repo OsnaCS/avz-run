@@ -271,10 +271,14 @@ public class Coordinates {
 		int width = 800;
 		int heigth = 640;
 		
-		double newX = (p.x / factor) + (width / 2);
-		double newY = (p.y / factor) + (heigth / 2);
+		double newX = (p.x / factor) - (width / 2);
+		double newY = (p.y / factor) - (heigth / 2);
 		
 		return new Coordinates(newX, newY);
+	}
+	
+	public String toString() {
+		return "Koordinaten: " + this.getPosx() + ", " + this.getPosy();
 	}
 	
 	/*********************************************************/
