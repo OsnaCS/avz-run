@@ -14,9 +14,9 @@ var SKALIERUNGSFAKTOR = 20;
 var HOLZTURBREITE = SKALIERUNGSFAKTOR*0.88;
 var GLASTURBREITE = SKALIERUNGSFAKTOR*1.2;
 var KLOTUERBREITE = SKALIERUNGSFAKTOR*1;
-var DOORSKALIERUNG = 1.1;
+var DOORSKALIERUNG = 1.0;
 var FIRETEXTUREPATH = './levels/materials/textures/';
-
+var MAXTIMEOUT = 10000;
 
 //global vars
 var scene_items = []; //hier stehen SÄTMLICHE Referenzen der Mashes der Räume,Objekte,Feuer,etc, welche aktuell angezeigt (in der scene) sind. Dadurch kann man sich alle nach Bedarf auflisten lassen, verändern & löschen
@@ -25,6 +25,8 @@ var static_obj = [];  //hier stehen alle StaticSegments drin. StaticSegment = Ob
 var interact_obj = [];//hier stehen alle interactibleSegments drin. Das sind alle PickupItems, Türen ungleich closedDoor, und sonstwie interactibles.
 var lamps = [];	//noch sinnlos!  //Hier stehen alle LightSegments drin. Diese bestehen aus dem mesh der Lampe (+position etc) sowie der Lichtquelle als three.light!
 var fires = [];       //Hier stehen alle Feuer drin.
+var allobjects = [];  listallobjects();  //hierdrin stehen alle MÖGLICHEN objects (..damit man sie nicht mehr aus der xml auslesen kann, asynchronität undso.)
+var allrooms = []; listallrooms(); //same as line above.
 
 //functions
 
@@ -110,10 +112,11 @@ var fires = [];       //Hier stehen alle Feuer drin.
 				for (j = 0; j < curdoor.length; j++) {
 					var cudo = [];
 					cudo.push(curdoor[j].getAttribute("index"));
-					cudo.push(curdoor[j].getAttribute("type"));
+					cudo.push((curdoor[j].getAttribute("type") !== null) ? curdoor[j].getAttribute("type") : "norm");
 					cudo.push(curdoor[j].getAttribute("position"));
 					cudo.push(curdoor[j].getAttribute("normal"));
-					cudo.push(curdoor[j].getAttribute("act"));
+					cudo.push((curdoor[j].getAttribute("act") !== null) ? curdoor[j].getAttribute("act") : "open");
+					cudo.push((curdoor[j].getAttribute("stretch") !== null) ? curdoor[j].getAttribute("stretch") : 1);
 					DoorArr.push(cudo);
 				}
 			}
@@ -163,8 +166,8 @@ var fires = [];       //Hier stehen alle Feuer drin.
 									cudo.push("("+x[m]+","+y[n]+","+z[o]+")");
 									cudo.push(curdoor[j].getAttribute("object"));
 									cudo.push(curdoor[j].getAttribute("normaltowall"));
-									cudo.push(curdoor[j].getAttribute("scale"));
-									if (curdoor[j].getAttribute("oninteract") != "") { cudo.push(curdoor[j].getAttribute("oninteract")); } else {cudo.push(""); }
+									cudo.push((curdoor[j].getAttribute("scale") !== null) ? curdoor[j].getAttribute("scale") : 1);
+									cudo.push((curdoor[j].getAttribute("oninteract") !== "") ? curdoor[j].getAttribute("oninteract") : "");
 									SpawnArr.push(cudo);	
 									p++;
 								}
@@ -176,8 +179,8 @@ var fires = [];       //Hier stehen alle Feuer drin.
 						cudo.push(curdoor[j].getAttribute("position"));
 						cudo.push(curdoor[j].getAttribute("object"));
 						cudo.push(curdoor[j].getAttribute("normaltowall"));
-						cudo.push(curdoor[j].getAttribute("scale"));
-						if (curdoor[j].getAttribute("oninteract") != "") { cudo.push(curdoor[j].getAttribute("oninteract")); } else {cudo.push(""); }
+						cudo.push((curdoor[j].getAttribute("scale") !== null) ? curdoor[j].getAttribute("scale") : 1);
+						cudo.push((curdoor[j].getAttribute("oninteract") !== "") ? curdoor[j].getAttribute("oninteract") : "");
 						SpawnArr.push(cudo);
 					}
 				}
@@ -197,14 +200,14 @@ var fires = [];       //Hier stehen alle Feuer drin.
 				for (j = 0; j < curdoor.length; j++) {
 					var cudo = [];
 					cudo.push(curdoor[j].getAttribute("index"));
-					cudo.push(curdoor[j].getAttribute("kind"));
-					cudo.push(curdoor[j].getAttribute("objectname"));
-					cudo.push(curdoor[j].getAttribute("objectscale"));
+					cudo.push((curdoor[j].getAttribute("kind") !== null) ? curdoor[j].getAttribute("kind") : "pointlight");
+					cudo.push((curdoor[j].getAttribute("objectname") !== null) ? curdoor[j].getAttribute("objectname") : "deckenlicht");
+					cudo.push((curdoor[j].getAttribute("objectscale") !== null) ? curdoor[j].getAttribute("objectscale") : 1);
 					cudo.push(curdoor[j].getAttribute("position"));
 					cudo.push(curdoor[j].getAttribute("normal"));
-					cudo.push(curdoor[j].getAttribute("intensity"));
-					cudo.push(curdoor[j].getAttribute("color"));
-					cudo.push(curdoor[j].getAttribute("visiblewidth"));
+					cudo.push((curdoor[j].getAttribute("intensity") !== null) ? curdoor[j].getAttribute("intensity") : 0.1);
+					cudo.push((curdoor[j].getAttribute("color") !== null) ? curdoor[j].getAttribute("color") : 0xFFFFFF);
+					cudo.push((curdoor[j].getAttribute("visiblewidth") !== null) ? curdoor[j].getAttribute("visiblewidth") : 30);
 					LightArr.push(cudo);
 				}
 			}
@@ -225,7 +228,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 					cudo.push(curdoor[j].getAttribute("index"));
 					cudo.push(curdoor[j].getAttribute("position"));
 					cudo.push(curdoor[j].getAttribute("size"));
-					cudo.push(curdoor[j].getAttribute("val"));
+					cudo.push((curdoor[j].getAttribute("val") !== null) ? curdoor[j].getAttribute("val") : 20);
 					FireArr.push(cudo);
 				}
 			}
@@ -413,6 +416,7 @@ function door_in_doors(callback) {
 			if (room1door[1] === "norm") {changex = HOLZTURBREITE;}
 			else if (room1door[1] === "glass") {changex = GLASTURBREITE; }
 			else if (room1door[1] === "klotuer") {changex = KLOTUERBREITE; }
+			changex = changex*(1+0.5*(room1door[5]-1)); //room1door[5] ist der stretch-faktor
 			var changey = 0;
 			for (j = 0; j <parseInt(rotate); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
 				var tmp = changex;
@@ -436,7 +440,6 @@ function door_in_doors(callback) {
 			door1x = door1x + parseInt(segments[INDEX1].transx)+xz[0];
 			door1y = door1y + parseInt(segments[INDEX1].transy)+xz[1];
 
-			
 			var doorkind ="";
 			switch(room1door[1]){
 				case "norm": doorkind = "holztur"; break;
@@ -444,7 +447,6 @@ function door_in_doors(callback) {
 				case "klotuer": doorkind = "klotur"; break;
 			}
 			
-
 			var act = "";
 			switch(room1door[4]) {
 				case "openable": act = "open"; break;
@@ -455,10 +457,16 @@ function door_in_doors(callback) {
 			}
 			if (godmode) {act = "openopened"; rotate -= 1;};
 
-			//TODO: Transponderopenable und codeopenable funktioniert nicht!!
-
-			addObjectViaName(doorkind, "door", door1x, door1y, 0, DOORSKALIERUNG, rotate-segments[INDEX1].rot, act)
-			if (doorkind == "glastur") {addObjectViaName("glastuerrahmen", "static", door1x, door1y, 0, DOORSKALIERUNG, (act==="openopened")?rotate-segments[INDEX1].rot+1:rotate-segments[INDEX1].rot, "")  }
+			for (var j = 0; i < interact_obj.length; i++) {
+				if ((Math.abs(interact_obj[i].x - door1x) > 5) && (Math.abs(interact_obj[i].y - door1y) > 5)) 
+				{
+					return; //keine tür adden wo schon eine ist.
+				}
+			}
+			
+			
+			addObjectViaName(doorkind, "door", door1x, door1y, 0, DOORSKALIERUNG, rotate-segments[INDEX1].rot, act, room1door[5])
+			if (doorkind == "glastur") {addObjectViaName("glastuerrahmen", "static", door1x, door1y, 0, DOORSKALIERUNG, (act==="openopened")?rotate-segments[INDEX1].rot+1:rotate-segments[INDEX1].rot, "", room1door[5])  }
 		}
 	}
 	callback();
@@ -467,23 +475,33 @@ function door_in_doors(callback) {
 
 	//TODO: diese Funktionen. In synchron. Am besten per globalen Variablen (...dafür checken die Funktionen vorher ob die Variablen != "")
 	function objectFilenameToName(filename){
+		// for (var i = 0; i < allobjects.length; i++) {  //würde ich gerne so machen, aber aufgrund von kompatibilität zu den anderen... :/
+			// if (allobjects[i].path === filename) return allobjects[i].name
+		// }
 		var tName = filename.split("/");
 		tName = tName[tName.length-1].split(".")[0];  //TODO: bei einigen Objekten ist der Name ungleich dem Filenamen! Das hier ist nur die Notlösung!
 		return tName;
 	}
 
 	function objectNameToFilename(name){
-
+		for (var i = 0; i < allobjects.length; i++) {
+			if (allobjects[i].name === name) return allobjects[i].path
+		}
 	}
 
 	function roomFilenameToName(filename){
+		// for (var i = 0; i < allrooms.length; i++) {
+			// if (allrooms[i].path === filename) return allrooms[i].name
+		// }		
 		var tName = filename.split("/");
 		tName = tName[tName.length-1].split(".")[0];	//TODO: bei einigen Objekten ist der Name ungleich dem Filenamen! Das hier ist nur die Notlösung!
 		return tName;
 	}
 
 	function roomNameToFilename(name){
-
+		for (var i = 0; i < allrooms.length; i++) {
+			if (allrooms[i].name === name) return allrooms[i].filename
+		}
 	}
 
 
@@ -512,11 +530,11 @@ function door_in_doors(callback) {
 
 
 //adds an OBJECT's mesh to the scene (needs to be changed when we stop loading from jsons directly and instead from the pre-loading-thingy.)
-	function addobject(objectpfad, name, posx, posy, posz, scale, rotate, responsefunct) {
+	function addobject(objectpfad, name, posx, posy, posz, scale, rotate, responsefunct, stretchx) {
 		var intItem = null;
 		var tName = objectFilenameToName(objectpfad);  //TODO: der fileLoader sollte auch einfach das argument name von hier nutzen, und intern nochmal ne name->filename mapfunktion haben!
 		mesh = fileLoader.get(tName);
-		mesh.scale.set(SKALIERUNGSFAKTOR*scale,SKALIERUNGSFAKTOR*scale,SKALIERUNGSFAKTOR*scale);
+		mesh.scale.set(SKALIERUNGSFAKTOR*scale*stretchx,SKALIERUNGSFAKTOR*scale,SKALIERUNGSFAKTOR*scale);
 		mesh.position.x = Math.round(posx);
 		mesh.position.z = Math.round(posy); //IN BLENDER SIND Y UND Z ACHSE VERTAUSCHT
 		mesh.position.y = Math.round(posz);
@@ -539,7 +557,8 @@ function door_in_doors(callback) {
 		addtoscene(mesh, intItem);
 	}
 
-	function addObjectViaName(objectname, objecttype, spawnx, spawny, spawnz, scale, rotate, actionfunction) {
+	function addObjectViaName(objectname, objecttype, spawnx, spawny, spawnz, scale, rotate, actionfunction, stretchx) {
+		if (stretchx === undefined) {stretchx = 1};
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function() {
 			if (xhttp.readyState == 4 && xhttp.status == 200) {
@@ -553,7 +572,7 @@ function door_in_doors(callback) {
 					for (i = 0; i < typeItems.length; i++) {
 						if (typeItems[i].getAttribute("name") === objectname) {
 							pfad += typeItems[i].getAttribute("path");
-							addobject(pfad, objectname, spawnx, spawny, spawnz, scale*typeItems[i].getAttribute("scale"), rotate, actionfunction)
+							addobject(pfad, objectname, spawnx, spawny, spawnz, scale*typeItems[i].getAttribute("scale"), rotate, actionfunction, stretchx)
 						}
 					}
 				}
@@ -644,7 +663,8 @@ function door_in_doors(callback) {
 	  }
 	}
 
-	function remove_interactible(segmentIndex){
+	function remove_interactible(which){
+		segmentIndex = interact_obj.indexOf(which);
 		mesh = interact_obj[segmentIndex].msh;
 		intObj = interact_obj[segmentIndex].interIt;
 		interact_obj.splice(segmentIndex);

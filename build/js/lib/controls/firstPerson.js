@@ -1,9 +1,6 @@
-// GODMODE (zum testen, man kann nicht fallen, hat unendlich leben, unendlich sprinten, alle türen sind offen, Nebel kommt langsamer)
+var godmode = false; // zum testen, man kann nicht fallen, hat unendlich leben, unendlich sprinten, alle türen sind offen, Nebel kommt langsamer
+var weaksystem = false; //when true, it disables smoothing and makes the fires worse.
 
-var godmode = false;
-
-var weaksystem = true;
-//
 
 // Controls camera via WASD/Mouse, enables player to jump, run and crouch
 
@@ -262,15 +259,16 @@ function initControls(callback) {
 
                 if (!ducked && !running) {
                     ducked = true;
-                    PLAYERHEIGHT -= DUCK_DIFFERENCE;
+
                     speed_factor = DUCK_SPEED;
 
                     // change far plane of collision rays (as they
                     // are now parallel to XZ plane)
-                    raycasterXpos.far = PLAYERHEIGHT * 0.12;
-                    raycasterXneg.far = PLAYERHEIGHT * 0.12;
-                    raycasterZpos.far = PLAYERHEIGHT * 0.12;
-                    raycasterZneg.far = PLAYERHEIGHT * 0.12;
+                    raycasterXpos.far = PLAYERHEIGHT * 0.5;
+                    raycasterXneg.far = PLAYERHEIGHT * 0.5;
+                    raycasterZpos.far = PLAYERHEIGHT * 0.5;
+                    raycasterZneg.far = PLAYERHEIGHT * 0.5;
+                    PLAYERHEIGHT -= DUCK_DIFFERENCE;
                 }
 
                 break;
@@ -578,10 +576,10 @@ function handleStandup() {
             controls.getObject().position.y += DUCK_DIFFERENCE;
             ducked = false;
             speed_factor = 1;
-            raycasterXpos.far = PLAYERHEIGHT * 1.8;
-            raycasterXneg.far = PLAYERHEIGHT * 1.8;
-            raycasterZpos.far = PLAYERHEIGHT * 1.8;
-            raycasterZneg.far = PLAYERHEIGHT * 1.8;
+            raycasterXpos.far = PLAYERHEIGHT * 1.28;
+            raycasterXneg.far = PLAYERHEIGHT * 1.28;
+            raycasterZpos.far = PLAYERHEIGHT * 1.28;
+            raycasterZneg.far = PLAYERHEIGHT * 1.28;
             standupRequest = false;
         }
 
