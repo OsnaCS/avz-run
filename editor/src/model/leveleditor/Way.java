@@ -31,6 +31,12 @@ public class Way extends DrawableObject {
 		this.normal = normal;
 		this.father = father;
 	}
+	public Way(Way way){
+		this.type = way.getType();
+		this.pos= new Coordinates(way.getPos());
+		this.normal = new Coordinates(way.getNormal());
+		this.father = way.father;
+	}
 	
 	/*
 	 * compares distances of two ways, if they are smaller as 10 Pixels returns therefore true
@@ -145,10 +151,10 @@ public class Way extends DrawableObject {
 
 		Color c = Color.BLACK;
 		// decides by type of door its color
-		if (type == "glass") {
+		if (type.equals("glass")) {
 			//Cyan for glassdoor
-			c = Color.CYAN;
-		} else if (type == "floor") {
+			c = Color.BLUE;
+		} else if (type.equals("floor")) {
 			//Yellow for corridor
 			c = Color.YELLOW;
 		} else {
