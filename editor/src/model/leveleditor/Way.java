@@ -160,7 +160,6 @@ public class Way extends DrawableObject {
 		g.setColor(c);
 		
 		// draws line from current position to the setted Point by normal
-		System.out.println(father.getCenter().getScaledIntCoordinates(father.getCenter()));
 		new Line(a, b).paint(g);
 	}
 

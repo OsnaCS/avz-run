@@ -77,7 +77,7 @@ public class DrawingPanelViewController implements DrawableObjectProcessing {
 		} catch (FileNotFoundException e3) {
 			e3.printStackTrace();
 		}
-		//temp.setCenter(new Coordinates(50, 50));
+		temp.setCenter(new Coordinates(width/2, height/2));
 
 		// aktuelles Level setzen und in Liste speichern
 		this.aktLevel = new Level();
