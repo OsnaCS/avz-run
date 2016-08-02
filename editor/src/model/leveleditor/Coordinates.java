@@ -54,18 +54,18 @@ public class Coordinates {
 		
 		this.angle = toCopy.getAngle();
 	}
-	/**
-	 * Gibt die aktuellen Koordinaten umgerechnet in int und skaliert zurück
-	 * @param factor Faktor, um den skaliert wird
-	 * @return int-Koordinaten
-	 */
-	public Point getScaledIntCoordinates() {
-		// Basis Trafo der Koordinatensysteme
-		int x = (int) ((factor * this.posx) + 0.5);
-		int y = (int) ((factor * this.posy) + 0.5);
-				
-		return new Point(x,y);
-	}
+//	/**
+//	 * Gibt die aktuellen Koordinaten umgerechnet in int und skaliert zurück
+//	 * @param factor Faktor, um den skaliert wird
+//	 * @return int-Koordinaten
+//	 */
+//	public Point getScaledIntCoordinates() {
+//		// Basis Trafo der Koordinatensysteme
+//		int x = (int) ((factor * this.posx) + 0.5);
+//		int y = (int) ((factor * this.posy) + 0.5);
+//				
+//		return new Point(x,y);
+//	}
 	
 	public Point getScaledIntCoordinates(Coordinates p) {
 		// Basis Trafo der Koordinatensysteme
@@ -251,13 +251,13 @@ public class Coordinates {
 	 * in Koordinaten bzgl des Int-Koordinatensystem um
 	 * @return umgerechnete Koordinaten
 	 */
-	public Point basisChangeDoubleInt() {
+	public Point basisChangeDoubleInt(Coordinates center) {
 		
 		int width = 800;
 		int heigth = 640;
 		
-		int newX = this.getScaledIntCoordinates().x + (width / 2);
-		int newY = this.getScaledIntCoordinates().y + (heigth / 2);
+		int newX = this.getScaledIntCoordinates(center).x + (width / 2);
+		int newY = this.getScaledIntCoordinates(center).y + (heigth / 2);
 		
 		return new Point(newX, newY);
 	}
