@@ -396,9 +396,6 @@ function controlLoop(controls) {
 
     setRays();
 
-    // determines stepwidth
-    time = performance.now();
-    delta = (time - prevTime) / 1000;
     if(delta>0.5) delta=0.1;
     velocity.x -= velocity.x * 10.0 * delta;
     velocity.z -= velocity.z * 10.0 * delta;
@@ -533,32 +530,6 @@ function controlLoop(controls) {
             controls.getObject().position.y += upMotion * UPMOTION_SPEED;
         }
     }
-
-    // player can get exhausted/regenerate energy
-    if (!menu) {
-        if (running) {
-            energy -= delta * 30;
-            if (energy <= 0) {
-                adjustPlaybackRate(footsteps, 1, true);
-                outOfBreathSound();
-                regenerate = true;
-                speed_factor = 1;
-                running = false;
-                $(".energy").css("box-shadow", " 0px 0px 20px 3px rgba(255, 82, 82, 0.6)");
-            }
-        } else {
-            energy += delta * 10;
-            if (energy >= STAMINA) {
-                energy = STAMINA;
-                if (regenerate) {
-                    regenerate = false;
-                    $(".energy").css("box-shadow", "none");
-                }
-            }
-        }
-        $(".energy-bar").css("width", '' + energy + '%');
-    }
-
 
     // stop gravity at ground level as collision detection sometimes fails for floor
     if ((firstTime || godmode) && controls.getObject().position.y < PLAYERHEIGHT) {
