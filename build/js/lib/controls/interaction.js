@@ -194,6 +194,10 @@ function openopened() {
         this.mesh.rotateY(-Math.PI/2.0);
     }
     this.open = !this.open;
+
+    scene.remove(this.mesh);
+    scene.remove(outlineMesh);
+    outlineMesh = null;
 }
 
 
