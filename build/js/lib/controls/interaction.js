@@ -8,7 +8,7 @@ var activeObject;
 
 var lockOpen = false; // pin pad boolean
 
-var outlineMesh=null;
+var outlineMesh = null;
 
 // pin pad variables.... may not be stored here?
 var pin = new Array(4);
@@ -28,19 +28,29 @@ var special_html_input = false;
 
 var interObj;
 
-
+var viewDirection = new THREE.Vector3();
 document.addEventListener( 'click', onMouseClick, false );
+var i;
 
 function interactionLoop() {
 
     //this gets called once per loop. shoots a ray in viewdirection
-    interactionRayCaster.set(controls.getObject().position, controls.getDirection());
+    interactionRayCaster.set(viewDirection.copy(controls.getObject().position), controls.getDirection().normalize());
     octreeInteractions = octree.search( interactionRayCaster.ray.origin, interactionRayCaster.ray.far, true, interactionRayCaster.ray.direction );
     interactions = interactionRayCaster.intersectOctreeObjects( octreeInteractions);
 
+    //if(interactions.length>0) console.log(getGameObject(interactions[0].object));
+    // console.log(interactions);
+
+
     //if it intersects something which is interactable we call its interaction function
     if(interactions.length>0) {
-        interObj= getGameObject(interactions[0].object);
+        for(i = 0; i<interactions.length;i++) {
+            interObj = getGameObject(interactions[i].object)
+            if (interObj instanceof GameObject) break;
+        }
+
+
         if( interObj.type==TYPE_INTERACTABLE) {
 
             if(activeObject!=interObj) {
@@ -62,6 +72,13 @@ function interactionLoop() {
 
 
             }
+        } else {
+            //remove outline mesh if there are no interactive items found
+            activeObject=null;
+            if(outlineMesh!=null) {
+                scene.remove(outlineMesh);
+                outlineMesh=null;
+            }
         }
     } else {
         //remove outline mesh if there are no interactive items found
@@ -73,14 +90,20 @@ function interactionLoop() {
     }
             //reaching the exit
     if (interactions.length>0) {
-        interObj = getGameObject(interactions[0].object);
+        for(i = 0; i<interactions.length;i++) {
+            interObj = getGameObject(interactions[i].object)
+            if (interObj instanceof GameObject) break;
+        }
         if(interObj.type==TYPE_EXIT){
         // nextLevel(); TODO: implement somewhere
         }
     }
     //
     if(interactions.length>0) {
-        interObj = getGameObject(interactions[0].object);
+        for(i = 0; i<interactions.length;i++) {
+            interObj = getGameObject(interactions[i].object)
+            if (interObj instanceof GameObject) break;
+        }
         if(interObj.type==TYPE_FIRE) {
             //console.log("interact");
             //this might be changed..
@@ -186,7 +209,7 @@ function destroy(){
 }
 
 function openopened() {
-    doorSound(); 
+    doorSound();
     if(this.open) {
         this.mesh.rotateY(Math.PI/2.0);
     }
@@ -194,11 +217,15 @@ function openopened() {
         this.mesh.rotateY(-Math.PI/2.0);
     }
     this.open = !this.open;
+
+    scene.remove(this.mesh);
+    scene.remove(outlineMesh);
+    outlineMesh = null;
 }
 
 
 function open() {
-    doorSound(); 
+    doorSound();
     if(!this.open) {
         this.mesh.rotateY(Math.PI/2.0);
     }
@@ -206,6 +233,12 @@ function open() {
         this.mesh.rotateY(-Math.PI/2.0);
     }
     this.open = !this.open;
+
+    // mesh is removed
+    scene.remove(outlineMesh);
+    outlineMesh = null;
+    activeObject = null;
+
 }
 
 function getSegmentFromIntItem(intItem) {
@@ -302,8 +335,6 @@ function enterPin() {
 
     // show pin pad and make default pause screen invisible
     $("#pinPad").show();
-    $("#pinPad").css("z-index", 20);
-
 
     // exit pointerLock so player can use cursor
     document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
@@ -313,17 +344,16 @@ function enterPin() {
 // return to game from pin pad
 function exitPinPad() {
 
-    // hide pin pad
-    $("#pinPad").css("z-index", 0);
     $("#pinPad").hide();
 
     // determine if entered code was correct
-    if (CORRECT_PIN[0] == pin[0] && CORRECT_PIN[1] == pin[1] && CORRECT_PIN[2] == pin[2] && CORRECT_PIN[3] == pin[3]) lockOpen = true;
-    else lockOpen = false;
-
-    // REPLACE WITH RESPECTIVE SOUND CALLS
-    if (lockOpen) correctSound();
-    else failedSound();
+    if (CORRECT_PIN[0] == pin[0] && CORRECT_PIN[1] == pin[1] && CORRECT_PIN[2] == pin[2] && CORRECT_PIN[3] == pin[3]) {
+        lockOpen = true;
+        correctSound();
+    } else {
+        lockOpen = false;
+        failedSound();
+    }
 
     backToGame();
 
@@ -375,11 +405,10 @@ function pinPad(pinvalue) {
 
 function enterCH() {
 
-    if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "transponder")){ 
+    if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "transponder")){
 
         special_html_input = true;
 
-        $("#compHack").css("z-index", 20);
         $("#compHack").show();
 
         document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
@@ -387,6 +416,7 @@ function enterCH() {
 
         document.exitPointerLock();
     } else {
+
         selectedItem != null && console.log(selectedItem.name);
         console.log('nicht anwendbar');
 		showThoughts("Hm, da ist ein Programm von der Raumverwaltung geöffnet...")
@@ -397,9 +427,7 @@ function enterCH() {
 
 function exitCH() {
 
-    $("#compHack").css("z-index", 0);
-    $("#compHack").css("display","none");
-
+    $("#compHack").hide();
 
     // determine if entered code was correct
     if (CORRECT_TRANSPONDER[0] == transponder_config[0] && CORRECT_TRANSPONDER[1] == transponder_config[1]){
@@ -448,20 +476,19 @@ function compHack(hackButtonValue) {
 }
 
 function backToGame() {
+
     // reset delta
     prevTime = performance.now();
 
-    var element = document.getElementById('world');
-
     //ask browser to lock the pointer again
+    var element = document.getElementById('world');
     element.requestPointerLock();
 
+    // activate controls
     controls.enabled = true;
     special_html_input = false;
 
-
-    loop();
-
+    // remove focus from the object that was just used again
     scene.remove(outlineMesh);
     outlineMesh = null;
     activeObject = null;
@@ -505,10 +532,10 @@ function openTransponderDoor(){
 
     } else{
         doorLockedSound();
-		if(selectedItem != null && objectFilenameToName(selectedItem.name) == "transponder") 
+		if(selectedItem != null && objectFilenameToName(selectedItem.name) == "transponder")
 		{
 			console.log('Kein Transponder mit Code');
-			showThoughts("Hm, dieser Transponder scheint noch nicht für diese Tür eingestellt zu sein...")
+			showThoughts("Hm, dieser Transponder scheint noch nicht für diese Tür eingestellt zu sein...",5000)
 		} else {
 			console.log('kein Tranponder');
 			showThoughts("Verschlossen. Vielleicht kann ich die Tür mit einem Transponder öffnen.",5000);
