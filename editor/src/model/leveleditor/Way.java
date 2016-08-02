@@ -31,6 +31,12 @@ public class Way extends DrawableObject {
 		this.normal = normal;
 		this.father = father;
 	}
+	public Way(Way way){
+		this.type = way.getType();
+		this.pos= new Coordinates(way.getPos());
+		this.normal = new Coordinates(way.getNormal());
+		this.father = way.father;
+	}
 	
 	/*
 	 * compares distances of two ways, if they are smaller as 10 Pixels returns therefore true
@@ -43,8 +49,10 @@ public class Way extends DrawableObject {
 		double distY = Math.abs(pos.getPosy() - other.pos.getPosy());
 		
 		//compares both distances with the allowed distance to create a circle
-		//which if it is small enough signals ability to connect
-		if(distX < maxDistance && distY < maxDistance)
+		//which if it is small enough signals ability to connect and has orthogonal normals
+		//and is of the same type
+		if(distX < maxDistance && distY < maxDistance && other.getNormal().getInvert().equals(this.normal)
+				&& other.getType().equals(this.type))
 		return true;
 		
 		//else returns false

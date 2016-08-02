@@ -76,9 +76,11 @@ public class RoomListener extends MouseInputAdapter {
 				// Rotate Room
 				room.rotate();
 
+
 				DashedRoom r = new DashedRoom(this.room, mousePos);
 
 				delegate.setTemporaryObject(r);
+
 			}
 
 

@@ -32,6 +32,22 @@ public class Room extends DrawableObject {
         this.waylist = waylist;
 
     }
+    
+    public Room(Room room){
+    	this.name=room.name;
+    	 this.cA = new Coordinates(room.getcA());
+    	 this.cA.setAngle(room.getcA().getAngle());
+         this.cE = new Coordinates(room.getcE());
+    	 this.cE.setAngle(room.getcE().getAngle());
+         this.cC = new Coordinates(room.getCenter());
+    	 this.cC.setAngle(room.getCenter().getAngle());
+    	 this.waylist=new LinkedList<Way>();
+    	 for(int i=0; i<room.waylist.size();i++){
+    		 this.waylist.add(new Way(room.waylist.get(i)));
+    		 
+    	 }
+         this.waylist = waylist;
+    }
 
     /**
      * Vergleicht alle eigenen Raeume mit der Liste uebergebener Raeume (alle).
@@ -101,12 +117,13 @@ public class Room extends DrawableObject {
 
     //Rotiert um angle°
     public void rotate(int angle){
-    	System.out.println("A");
+
         cA.rotation(90, cC);
-        System.out.println("E");
+
         cE.rotation(90, cC);
-        System.out.println("C");
+
         cC.rotation(90, cC);
+        
     }
 
 
