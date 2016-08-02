@@ -331,7 +331,7 @@ function createRoom(callback) {
             function fires() {
                 set_fires(lights);
                 function lights () {
-	                turn_on_lights(triggers); 
+	                turn_on_lights(triggers);
 					function triggers () {
 						addtriggers(callback);
 					}
