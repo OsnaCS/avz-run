@@ -1,63 +1,63 @@
 var hbreathing_playing = false;
 
 function extinguisherSound(){
-    extinguisher_Sound.play();
+    playSound(extinguisher_Sound);
 }
 
 function doorSound(){
-    door_Sound.play();
+    playSound(door_Sound);
 }
 
 function doorLockedSound(){
-    doorLocked_Sound.play();
+    playSound(doorLocked_Sound);
 }
 
 function buttonSound(){
-    button_Sound.play();
+    playSound(button_Sound);
 }
 
 function correctSound(){
-    correct_Sound.play();
+    playSound(correct_Sound);
 }
 
 function failedSound(){
-    failed_Sound.play();
+    playSound(failed_Sound);
 }
 
 // sound for coverd mouth
 function startHeavyBreathing(){
     if(!hbreathing_playing){
-        hbreathing_Sound.play();
+        playSound(hbreathing_Sound);
         hbreathing_playing = true;
     }
 }
 
 function stopHeavyBreathing(){
-    hbreathing_Sound.stop();
+    stopSound(hbreathing_Sound);
     hbreathing_playing = false;
 }
 
 function successSound(){
-    success_Sound.play();
+    playSound(success_Sound);
 }
 
 function painSound(){
-    pain_Sound.play();
+    playSound(pain_Sound);
 }
 
 function damageDoorSound(){
-    damageDoor_Sound.play();
+    playSound(damageDoor_Sound);
 }
 
 function pickUpSound(){
-    pickUp_Sound.play();
+    playSound(pickUp_Sound);
 }
 
 // sound when out of breath after running
 function outOfBreathSound(){
-    outOfBreath_Sound.play();
+    playSound(outOfBreath_Sound);
 }
 
 function gameOverSound(){
-    gameOver_Sound.play();
+    playSound(gameOver_Sound);
 }
