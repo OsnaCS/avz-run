@@ -251,7 +251,7 @@ function loop() {
             requestAnimationFrame(loop);
 
             if (!nofog) scene.fog.density = myfog;
-            player.updateEnergy();
+            player.updateEnergy(); 
 
             // YOU NEED TO CALL THIS (srycaps)
             if (!special_html_input) {
@@ -341,8 +341,9 @@ function createRoom(callback) {
 						}
 						HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at final density you lose this much health			
 						controls.getObject().position.x = parseFloat(thisfloor.spawn.slice(1,thisfloor.spawn.indexOf(',')))*SKALIERUNGSFAKTOR;
-						controls.getObject().position.y = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.indexOf(',')+1,thisfloor.spawn.lastIndexOf(',')))*SKALIERUNGSFAKTOR;
-						controls.getObject().position.z = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.lastIndexOf(',')+1,thisfloor.spawn.indexOf(')')))*SKALIERUNGSFAKTOR;
+						controls.getObject().position.z = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.indexOf(',')+1,thisfloor.spawn.lastIndexOf(',')))*SKALIERUNGSFAKTOR;
+						controls.getObject().position.y = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.lastIndexOf(',')+1,thisfloor.spawn.indexOf(')')))*SKALIERUNGSFAKTOR;
+						firstTime == true;
     					set_fires(lights);
     					function lights () {
     						turn_on_lights(triggers);

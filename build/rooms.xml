@@ -11,9 +11,9 @@
 		<doors>
 		   <door type="norm" index="1" position="(12,-0.75)" normal="(1,0)" act="codeopenable" stretch="1.05"/>
 		</doors>
-		<spawns>
-		   <spawn index="1" position="(10, 4, 0.4)" object="axt" normaltowall="(-1,0)" scale="2" oninteract="pickUpItem"/>
-		   <spawn index="2" position="(10, 5, 1)" object="transponder" normaltowall="(1,0)" scale="2" oninteract="pickUpItem"/>
+		<spawns><!--
+		   <spawn index="1" position="(10, 4, 0.1)" object="axt" normaltowall="(-1,0)" scale="2" oninteract="pickUpItem"/>
+		   <spawn index="2" position="(10, 5, 0)" object="transponder" normaltowall="(1,0)" scale="2" oninteract="pickUpItem"/> -->
 		   <spawn index="2" position="(10, 7, 0)" object="tisch" normaltowall="(1,0)" scale="1"/>
 		   <spawn index="2" position="(10, 7, 1)" object="computer" normaltowall="(0,-1)" scale="1" oninteract="enterCH"/>
 		   <spawn index="2" position="(11.8, 0.3, 1.8)" object="pinpad" normaltowall="(0,-1)" scale="1" oninteract="enterPin"/>
@@ -56,6 +56,8 @@
 			<spawn  index="wc_code" position="(6.58, -15.09, 1.50)" object="wc_code" normaltowall="(-1, 0)" scale="1"/>
 
 			<spawn  index="energy_counter" position="(-7, 0, 3.6)" object="energy_counter" normaltowall="(-1, 0)" scale="1"/>
+			
+			<spawn index = "mediklo" position="(6, -11.24, 1.5)" object = "medipack" normaltowall="(0, 1)" scale="1.5" oninteract="pickUpItem"/>
         </spawns>
         <fires>
 			<fire index="cip1" position="(-7.92, -15.35, 0)" size="(1,1,1)" val="6"/>
@@ -229,7 +231,9 @@
 			 <spawn index="8" position="(4.5, 17.2, 1)" object="computer" normaltowall="(0,-1)" scale="1" oninteract="robotControll"/>
 		</spawns>
 		<triggers>
-			<trigger index="1" xpos="-2.7" ypos="2.85" size="1" functionname="showThoughts" fparam1="Oh ein gefährlicher Roboter! Ich komme nicht an die Axt ran. Vielleicht kann einer der Computer ihn abschalten" fparam2="8000" />
+			<trigger index="rl1" xpos="-2.7" ypos="2.85" size="1" functionname="showThoughts" fparam1="Oh ein gefährlicher Roboter! Ich komme nicht an die Axt ran. Vielleicht kann einer der Computer ihn abschalten" fparam2="8000" />
+			<trigger index="rl2" xpos="-7.15" ypos="26.5" size="4" functionname="nextLevel" />
+			<trigger index="rl2" xpos="-7.15" ypos="23.24" size="1" functionname="showThoughts" fparam1="Diese Tür ist richtig! Ich muss springen!" fparam2="5000"/>
 		</triggers>
 	</room>
 
