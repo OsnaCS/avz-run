@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<floors>
+	<floor number="1" characterspawn="(10.5, 4.8, 0)" ambientlightintens="0.1" ambientlightcolor="0xffbfbf" fogtime="60" startfog="0.002" maxfog="0.015">
+		<segment index="1" which="center">
+			<door doorind="1" type="openable" to_ind="2" />
+			<door doorind="2" type="closed" />
+			<door doorind="3" type="closed" />
+			<door doorind="4" type="closed" />
+		</segment>
+		<segment index="2" which="flur1">
+			<door doorind="1" type="openable" to_ind="1" />
+			<door doorind="2" type="open" to_ind="3" />
+			<door doorind="3" type="closed" />
+			<door doorind="4" type="openable" to_ind="4" />
+		</segment>
+		<segment index="3" which="office">
+			<door doorind="1" type="open" to_ind="2" />
+		</segment>
+		<segment index="4" which="office">
+			<door doorind="1" type="open" to_ind="2" />
+		</segment>
+	</floor>
+</floors>
