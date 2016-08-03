@@ -16,9 +16,9 @@
 	<!-- DAS HIER IST FINAL!!!!! -->
 	<room name="circle_walled" filename="circle_WALLED.json">
 		<!--<origin x="0" y="0"/>-->
-		<size xmin="-8.94993" xmax="11.00008" ymin="-28.19999" ymax="13.50002"/>
+		<size xmin="-8.94993" xmax="11.00008" ymin="-13.5" ymax="28.20001"/>
+
 		<doors>
-		   <door type="norm" index="1" x = "11" y = "25.85" normalX ="1" normalY = "0"/>
 		   <door type="norm" index="2" x = "11" y = "20.4" normalX = "1" normalY =  "0"/>
 		   <door type="norm" index="3" x = "11" y = "14.9" normalX = "1" normalY = "0"/>
 		   <door type="norm" index="4" x ="11"  y = "10.4" normalX = "1" normalY = "0"/>
@@ -38,8 +38,6 @@
 		   <door type="norm" index="18" x = "-7.15" y = "23.24" normalX = "0" normalY =  "1"/>
 		   <door type="glass" index="19" x = "-1.72" y = "23.24" normalX = "0" normalY =  "1"/>
 		   <door type="norm" index="20" x = "3.15"  y = "23.24" normalX = "0" normalY =  "1"/>
-		   <door type="norm" index="21" x = "-3.75" y = "2.85" normalX = "1" normalY =  "0"/>
-		   <door type="norm" index="22" x = "-3.75" y =  "-1.85" normalX = "1" normalY =  "0"/>
 		</doors>
 		<spawns>
 		</spawns>
@@ -80,8 +78,8 @@
 		<!--<origin x="0" y="0" z="0"/>-->
 		<size xmin = "-4.6" xmax = "2.8" ymin = "-8.1" ymax = "11.02"/>
 		<doors>
-			<door index="1" type="floor"  normalX = "0" normalY = "-1" x = "-2" y =  "11.02"/>
-			<door index="2" type="glass"  normalX = "0" normalY = "1" x = "1.57" y =  "-8.1"/>
+			<door index="1" type="floor"  normalX = "0" normalY = "1" x = "-2" y =  "11.02"/>
+			<door index="2" type="glass"  normalX = "0" normalY = "-1" x = "1.57" y =  "-8.1"/>
 			<door index="3" type="norm"  normalX = "1"  normalY = "0" x = "2.8"  y =  "-0.15"/>
 			<door index="4" type="norm"  normalX ="1"   normalY = "0" x = "2.8"  y = "5.25"/>
 			<door index="5" type="norm"  normalX ="1"   normalY = "0" x = "2.8"  y =  "8.45"/>
@@ -90,9 +88,7 @@
 			<door index="8" type="norm"  normalX = "-1" normalY = "0" x = "-4.6"  y =  "4.25"/>
 			<door index="9" type="norm"  normalX = "-1" normalY = "0" x = "-4.6"  y =  "2.25"/>
 			<!-- Innen-Türen!-->
-			<door index="10" type="norm"  normalX = "1" normalY = "0" x = "0.6"  y =  "8.45"/>
-			<door index="11" type="glass"  normalX = "0" normalY = "-1" x = "1.57" y=  "-1.2"/>
-			<door index="12" type="norm"  normalX = "-1" normalY = "0" x = "-0.5"  y =  "-3.56"/>
+
 		</doors>
 		<spawns>
 		</spawns>
@@ -134,7 +130,7 @@
 		<!--<origin x="0" y="0" z="0"/>-->
 		<size xmin = "0" xmax = "7" ymin = "-8.5" ymax = "0"/>
 		<doors>
-			<door index="1" type="norm"  normalX = "0" normalY = "-1" x = "1.85" y =  "0"/>
+			<door index="1" type="norm"  normalX = "0" normalY = "1" x = "1.85" y =  "0"/>
 		</doors>
 	</room>
 
