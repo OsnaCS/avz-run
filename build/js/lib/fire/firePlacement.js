@@ -66,12 +66,12 @@ function addFire(x, y, z, width, height, depth, spacing) {
         }
     }
     // Pointlight
+    var pointlight;
     if (!performantfire) {
-       var pointlight;
        if(fireDepth > fireWidth) {
-           pointlight = new THREE.PointLight(0xff9933, 1, fireWidth, 2);
+           pointlight = new THREE.PointLight(0xff9933, 1, fireWidth * 2.5, 2);
        }else{
-           pointlight = new THREE.PointLight(0xff9933, 1, fireDepth, 2);
+           pointlight = new THREE.PointLight(0xff9933, 1, fireDepth * 2.5, 2);
        }
        pointlight.position.set(x, y + (fireHeight / 2) , z);
        scene.add(pointlight);
@@ -84,6 +84,7 @@ function addFire(x, y, z, width, height, depth, spacing) {
     fire_mesh_list.push(fmesh);
 
 
+    var fireGeom;
     // Collision Box
     if (fireHeight < (PLAYERHEIGHT * 2)){
         fireGeom = new THREE.BoxGeometry(fireWidth, PLAYERHEIGHT * 2, fireDepth);
@@ -137,7 +138,7 @@ function animateFire() {
     // update alle smoke und pointlights
     for (f_j = 0; f_j < smoke_and_light_count; f_j++) {
 
-         if (!performantfire) pointlight_list[j].intensity = Math.sin(elapsed * 30) * 0.25 + 3;
+         if (!performantfire) pointlight_list[f_j].intensity = Math.sin(fireElapsed * 30) * 0.25 + 3;
 
         smoke_list[f_j].material.uniforms.time.value = clock.getElapsedTime();
     }
