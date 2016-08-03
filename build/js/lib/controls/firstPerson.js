@@ -1,6 +1,18 @@
 var godmode = false; // zum testen, man kann nicht fallen, hat unendlich leben, unendlich sprinten, alle türen sind offen, Nebel kommt langsamer
-var weaksystem = true; //when true, it disables smoothing and makes the fires worse.
+
 var muteSounds = false; // if true, no sound will be played
+var performantfire = true; //when true, it makes the fires a bit worse and removes their pointlight
+var nosmoothedges = true; //if true, it no edge will be smoothed.
+var useLambertMaterial = false; //Meinungen gehen auseinander ob Lambert oder Phong performanter ist.
+var onlygloballight = false;  //when true, no pointlights (specified in the rooms.xml) will be set.
+
+document.getElementById("mutesounds").checked = muteSounds;
+document.getElementById("performantfire").checked = performantfire;
+document.getElementById("nosmoothing").checked = nosmoothedges;
+document.getElementById("uselambert").checked = useLambertMaterial;
+document.getElementById("useambient").checked = onlygloballight;
+
+
 
 // Controls camera via WASD/Mouse, enables player to jump, run and crouch
 
@@ -41,7 +53,6 @@ var prevTime = performance.now();
 
 var velocity = new THREE.Vector3();
 
-var terrain = [];
 
 var ducked = false;
 var running = false;
@@ -164,6 +175,15 @@ function initPointerLock() {
             infoScreen.style.display = 'none';
             mainMenu.style.display = 'block';
         }, false);
+        buttonSettings.addEventListener('click', function(event) {
+            mainMenu.style.display = 'none';
+            settingswindow.style.display = 'block';
+        }, false);
+        buttonSettingsBack.addEventListener('click', function(event) {
+            settingswindow.style.display = 'none';
+            mainMenu.style.display = 'block';
+        }, false);
+
 
         button.addEventListener('click', function(event) {
 
@@ -471,7 +491,7 @@ function controlLoop(controls) {
         } else if (gameObj.type == TYPE_TRIGGER) {
             //collision with trigger
             gameObj.interact();
-            removeTrigger(gameObj);
+            disableTrigger(gameObj);
         } else {
             //stop when hitting the floor
             velocity.y = Math.max(0, velocity.y);
@@ -487,7 +507,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (gameObj.type == TYPE_TRIGGER) {
             gameObj.interact();
-            removeTrigger(gameObj);
+            disableTrigger(gameObj);
         } else {
             velocity.z = Math.min(0, velocity.z);
         }
@@ -499,7 +519,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (gameObj.type == TYPE_TRIGGER) {
             gameObj.interact();
-            removeTrigger(gameObj);
+            disableTrigger(gameObj);
         } else {
             velocity.z = Math.max(0, velocity.z);
         }
@@ -511,7 +531,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (gameObj.type == TYPE_TRIGGER) {
             gameObj.interact();
-            removeTrigger(gameObj);
+            disableTrigger(gameObj);
         } else {
             velocity.x = Math.min(0, velocity.x);
         }
@@ -523,7 +543,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (gameObj.type == TYPE_TRIGGER) {
             gameObj.interact();
-            removeTrigger(gameObj);
+            disableTrigger(gameObj);
         } else {
             velocity.x = Math.max(0, velocity.x);
         }

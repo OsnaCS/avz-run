@@ -9,7 +9,7 @@
 //consts (change iff you know what you're doing! :P)
 var ROOMSXML = "rooms.xml"
 var OBJECTSXML = "objects.xml"
-var LEVELSXML = "levels.xml"
+var LEVELSXML = "floors.xml"
 var SKALIERUNGSFAKTOR = 20;
 var HOLZTURBREITE = SKALIERUNGSFAKTOR*0.88;
 var GLASTURBREITE = SKALIERUNGSFAKTOR*1.2;
@@ -28,9 +28,39 @@ var fires = [];       //Hier stehen alle Feuer drin.
 var triggers = [];	  //Hier stehen alle Triggers drin.
 var allobjects = [];  listallobjects();  //hierdrin stehen alle MÖGLICHEN objects (..damit man sie nicht mehr aus der xml auslesen kann, asynchronität undso.)
 var allrooms = []; listallrooms(); //same as line above.
+var floornumber = 1; //sollte wachsen/sinken von stockwerk zu stockwerk.
+var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF", maxfog: "0.015", fogtime:"120", startfog:"0.002"};
 
 
 //functions
+
+	function readLevelsXML(callback) {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (xhttp.readyState == 4 && xhttp.status == 200) {
+				var xmlDoc = xhttp.responseXML;
+				//var pfad = xmlDoc.getElementsByTagName("objects")[0].getAttribute("ObjectPath");
+
+				var typeItems = xmlDoc.getElementsByTagName("floors")[0].getElementsByTagName("floor");
+				for (i = 0; i < typeItems.length; i++) {
+					if (typeItems[i].getAttribute("number") == floornumber) {
+						thisfloor.spawn = typeItems[i].getAttribute("characterspawn");
+						thisfloor.ambientintens = typeItems[i].getAttribute("ambientlightintens");
+						thisfloor.ambientcolor = typeItems[i].getAttribute("ambientlightcolor");
+						thisfloor.fogtime = typeItems[i].getAttribute("fogtime");
+						thisfloor.maxfog = typeItems[i].getAttribute("maxfog");
+						thisfloor.maxfog = typeItems[i].getAttribute("startfog");
+						callback();
+					}
+				}
+			}
+		};
+		xhttp.open("GET", LEVELSXML, true);
+		xhttp.send();
+	}
+
+
+
 
 //this function takes as input the name of a room, and adds to the "segments"-array the object containing its info + mesh (no return value due to asynchrony)
 //the callback-function WAS ORIGINALLY MEANT TO BE nothing, fitdoor or the one loading the info from the levels.xml
@@ -277,6 +307,8 @@ var allrooms = []; listallrooms(); //same as line above.
 					cudo.push((curdoor[j].getAttribute("functionname") !== null) ? curdoor[j].getAttribute("functionname") : "showThoughts");
 					cudo.push((curdoor[j].getAttribute("fparam1") !== null) ? curdoor[j].getAttribute("fparam1") : "");
 					cudo.push((curdoor[j].getAttribute("fparam2") !== null) ? curdoor[j].getAttribute("fparam2") : "");
+					cudo.push((curdoor[j].getAttribute("enabledtriggerindex") !== null) ? curdoor[j].getAttribute("enabledtriggerindex") : "");
+					cudo.push((curdoor[j].getAttribute("enabled") !== null) ? curdoor[j].getAttribute("enabled") : "true");
 					TriggerArr.push(cudo);
 				}
 			}
@@ -368,7 +400,7 @@ var allrooms = []; listallrooms(); //same as line above.
 				spawnx = spawnx + parseInt(segments[INDEX1].transx)+xz[0];
 				spawny = spawny + parseInt(segments[INDEX1].transy)+xz[1];
 
-				createFire(spawnx, spawny, spawnz, sizex, sizez, sizey, (weaksystem)?fire[i][3]*20:fire[i][3]); //ja, ist richtig so mit x,y,z
+				createFire(spawnx, spawny, spawnz, sizex, sizez, sizey, (performantfire)?fire[i][3]*20:fire[i][3]); //ja, ist richtig so mit x,y,z
 
 			}
 		}
@@ -380,12 +412,12 @@ var allrooms = []; listallrooms(); //same as line above.
 		VolumetricFire.texturePath = FIRETEXTUREPATH;
 		var fireseg = {x:x, y:y, z:z, sx:sx*SKALIERUNGSFAKTOR, sy:sy*SKALIERUNGSFAKTOR, sz:sz*SKALIERUNGSFAKTOR, val:s*SKALIERUNGSFAKTOR}; //TODO: kann ich auch das mesh des feuers adden?
 		fires.push(fireseg);
-
 		addFire(x, y, z, sx*SKALIERUNGSFAKTOR, sy*SKALIERUNGSFAKTOR, sz*SKALIERUNGSFAKTOR, s*SKALIERUNGSFAKTOR);
 	}
 
 //puts the lights where they belong
 	function turn_on_lights(callback) {
+		//index, kind, objectname, objectscale, position, normal, intensity, color, visiblewidth
 		for (var INDEX1 = 0; INDEX1<segments.length; INDEX1++){
 
 			var light = segments[INDEX1].lights;
@@ -416,19 +448,19 @@ var allrooms = []; listallrooms(); //same as line above.
 				rotate -= segments[INDEX1].rot;
 
 				//TODO: Lampen auch noch zu einem lampen-segment hinzufügen!!
-				addObjectViaName(light[i][2], "lamp", spawnx, spawny, spawnz, light[i][3], rotate, "");
-				addLight(spawnx, spawnz, spawny, light[i][1], light[i][5], light[i][6], light[i][7], light[i][8]);
+				if (light[i][2] !== "") addObjectViaName(light[i][2], "lamp", spawnx, spawny, spawnz, light[i][3], rotate, "");
+				if (light[i][1] !== "") addLight(spawnx, spawnz, spawny, light[i][1], light[i][5], light[i][6], light[i][7], light[i][8]);
 			}
 		}
 		callback();
 	}
 
 	function addLight(x, y, z, kind, normal, intensity, color, visiblewidth){
-
-		var light = new THREE.PointLight( parseInt(color), intensity, visiblewidth*SKALIERUNGSFAKTOR );
-		light.position.set(x, y, z);
-
-		scene.add(light);
+		if (!onlygloballight) {
+			var light = new THREE.PointLight( parseInt(color), intensity, visiblewidth*SKALIERUNGSFAKTOR );
+			light.position.set(x, y, z);
+			scene.add(light);
+		}
 	}
 
 	function addtriggers(callback) {
@@ -462,11 +494,11 @@ var allrooms = []; listallrooms(); //same as line above.
 				var functPtr = eval(tospawn[4]);
 				var fparam1 = tospawn[5];
 				var fparam2 = tospawn[6];
+				var enabled = tospawn[8] === "true";
 
-
-				if (fparam1 === "") addTrigger(spawnx, spawny, size, functPtr)
-					else if (fparam2 === "") addTrigger(spawnx, spawny, size, partial(functPtr, fparam1))
-						else addTrigger(spawnx, spawny, size, partial(functPtr, fparam1, fparam2))
+				if (fparam1 === "") addTrigger(enabled, spawnx, spawny, size, functPtr, tospawn[4], fparam1, fparam2, tospawn[7], tospawn[0], false)
+					else if (fparam2 === "") addTrigger(enabled, spawnx, spawny, size, partial(functPtr, fparam1), tospawn[4], fparam1, fparam2, tospawn[7], tospawn[0], false)
+						else addTrigger(enabled, spawnx, spawny, size, partial(functPtr, fparam1, fparam2), tospawn[4], fparam1, fparam2, tospawn[7], tospawn[0], false)
 			}
 		}
 		callback();
@@ -621,10 +653,10 @@ function door_in_doors(callback) {
 				var functPtr = eval(responsefunct);
 				intItem = new GameObject(mesh, functPtr, TYPE_INTERACTABLE, objectpfad);
 				if (intItem == undefined) intItem = null;
-				var segment = {filename:objectpfad, name: name, interIt: intItem, x: posx, y: posy, z: posz, skale: scale, rot: rotate, funct: responsefunct, msh: mesh};
+				var segment = {filename:objectpfad, name: name, interIt: intItem, x: posx, y: posy, z: posz, skale: scale, rot: rotate, funct: responsefunct, msh: mesh, xstretch: stretchx};
 				interact_obj.push(segment);
 			} else {
-				var segment = {filename:objectpfad, name: name, x: posx, y: posy, z: posz, skale: scale, rot: rotate, msh: mesh};
+				var segment = {filename:objectpfad, name: name, x: posx, y: posy, z: posz, skale: scale, rot: rotate, msh: mesh, xstretch: stretchx};
 				static_obj.push(segment);
 			}
 		}
@@ -700,19 +732,18 @@ function door_in_doors(callback) {
 
 //löscht erst alle objekte aus der Szene, bevor es dann alle neu hinzufügt.
 	function PutSegments(callback){
-		empty_scene();
+		//empty_scene();
 		for (var i = 0; i <segments.length; i++) {
 			addtoscene(applytransrot(segments[i]),null);
 
 		}
-	callback();
+		if (typeof callback == "function") callback();
 	}
 
 //diese Funktion ist nötig, da in der scene_items SÄTMLICHE meshes der Räume stehen (ihre referenz), welche gerade angezeigt sind. Dadurch kann man sich alle auflisten lassen, verändern & löschen nach Bedarf.
 	function addtoscene(mesh, intItem){
 		scene.add(mesh);
 		if (intItem == null) {
-
 			modifyOctree( mesh, true );
 		} else {
 			modifyOctree( intItem, true );
@@ -724,10 +755,14 @@ function door_in_doors(callback) {
 
 //zum thema alle objekte aus der scene löschen.
 	function empty_scene(){
+	for( var i = scene.children.length - 1; i >= 0; i--) {
+		obj = scene.children[i];
+		scene.remove(obj);
+	}
 	  if(scene_items.length > 0 ) {
-		scene_items.forEach(function(v,i) {  //TODO: anpassen auf neue struktur.
-		   v.parent.remove(v);
-		});
+		// scene_items.forEach(function(v,i) {  //TODO: anpassen auf neue struktur.
+		   // v.parent.remove(v);
+		// });
 		scene_items = null;
 		scene_items = [];
 		static_obj = null;

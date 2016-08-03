@@ -54,6 +54,16 @@ public class Coordinates {
 		
 		this.angle = toCopy.getAngle();
 	}
+
+	public Coordinates(Coordinates toCopy, int angle){
+		this(toCopy);
+		this.setAngle(angle);
+	}
+
+	public Coordinates(double x, double y, int angle){
+		this(x,y);
+		this.setAngle(angle);
+	}
 //	/**
 //	 * Gibt die aktuellen Koordinaten umgerechnet in int und skaliert zurück
 //	 * @param factor Faktor, um den skaliert wird
@@ -236,10 +246,8 @@ public class Coordinates {
 		double newPosX = this.posx + point.getPosx();
 		double newPosY = this.posy + point.getPosy();
 		
-		Coordinates v = new Coordinates(0, 0);
-		
-		v.setPosx(newPosX);
-		v.setPosy(newPosY);
+		Coordinates v = new Coordinates(newPosX, newPosY);
+
 		
 		return v;
 	}
