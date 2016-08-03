@@ -171,7 +171,7 @@ function delFire(fireColBox) {
         fireColBox.mesh.children[0].stop();
 
         fire_collision_box_list.splice(index,1);
-        pointlight_list.splice(index,1);
+        if (!performantfire) pointlight_list.splice(index,1);
         smoke_list.splice(index,1);
         fire_mesh_list.splice(index,1);
 

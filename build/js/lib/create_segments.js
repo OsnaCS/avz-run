@@ -26,12 +26,12 @@ var interact_obj = [];//hier stehen alle interactibleSegments drin. Das sind all
 var threelights = [];	//noch sinnlos!  //Hier stehen alle LightSegments drin. Diese bestehen aus dem mesh der Lampe (+position etc) sowie der Lichtquelle als three.light!
 var fires = [];       //Hier stehen alle Feuer drin.
 var triggers = [];	  //Hier stehen alle Triggers drin.
+var threelights = [];
 var allobjects = [];  listallobjects();  //hierdrin stehen alle MÖGLICHEN objects (..damit man sie nicht mehr aus der xml auslesen kann, asynchronität undso.)
 var allrooms = []; listallrooms(); //same as line above.
 var floornumber = 2; //sollte wachsen/sinken von stockwerk zu stockwerk. //TODO: sollte höchste nummer der floors.xml sein
 var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF", maxfog: "0.015", fogtime:"120", startfog:"0.002"};
 
-var threelights = [];
 
 //functions
 
