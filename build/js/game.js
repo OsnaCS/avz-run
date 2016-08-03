@@ -317,7 +317,7 @@ function move(){
 function createRoom(callback) {
 	$("#loadingBlocker2").show();
 	$(".gui").hide();
-	readLevelsXML(csegments);
+	if (firstfloor) { readLevelsXML(csegments); firstfloor = false; } else csegments();
 	function csegments() {
         createAllSegments(psegments);
         function psegments () {
@@ -344,6 +344,7 @@ function createRoom(callback) {
 						controls.getObject().position.z = parseFloat(allfloors[floornumber-1].spawn.slice(allfloors[floornumber-1].spawn.indexOf(',')+1,allfloors[floornumber-1].spawn.lastIndexOf(',')))*SKALIERUNGSFAKTOR;
 						controls.getObject().position.y = parseFloat(allfloors[floornumber-1].spawn.slice(allfloors[floornumber-1].spawn.lastIndexOf(',')+1,allfloors[floornumber-1].spawn.indexOf(')')))*SKALIERUNGSFAKTOR;
 						firstTime == true;
+						
     					set_fires(lights);
     					function lights () {
     						turn_on_lights(triggers);

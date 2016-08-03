@@ -232,7 +232,7 @@
 		</spawns>
 		<triggers>
 			<trigger index="rl1" xpos="-2.7" ypos="2.85" size="1" functionname="showThoughts" fparam1="Oh ein gefährlicher Roboter! Ich komme nicht an die Axt ran. Vielleicht kann einer der Computer ihn abschalten" fparam2="8000" />
-			<trigger index="rl2" xpos="-7.15" ypos="26.5" size="4" functionname="nextLevel" />
+			<trigger index="rl2" xpos="-7.15" ypos="26.45" size="4" functionname="nextLevel" />
 			<trigger index="rl2" xpos="-7.15" ypos="23.24" size="1" functionname="showThoughts" fparam1="Diese Tür ist richtig! Ich muss springen!" fparam2="5000"/>
 		</triggers>
 	</room>

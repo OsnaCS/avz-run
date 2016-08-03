@@ -28,8 +28,10 @@ var fires = [];       //Hier stehen alle Feuer drin.
 var triggers = [];	  //Hier stehen alle Triggers drin.
 var allobjects = [];  listallobjects();  //hierdrin stehen alle MÖGLICHEN objects (..damit man sie nicht mehr aus der xml auslesen kann, asynchronität undso.)
 var allrooms = []; listallrooms(); //same as line above.
-var floornumber = 0; //sollte wachsen/sinken von stockwerk zu stockwerk. //TODO: sollte höchste nummer der floors.xml sein
+var firstfloor = true;
+var floornumber = 0; //sollte wachsen/sinken von stockwerk zu stockwerk. 
 var allfloors = [];
+
 
 //functions
 
@@ -45,13 +47,17 @@ var allfloors = [];
 				floornumber = typeItems.length;
 				
 				for (var i = 0; i < typeItems.length; i++) {						
-					var thisfloor = {spawn: "(0,0,3)", ambientintens: 0.3, ambientcolor: "0xFFBFBF", maxfog: "0.015", fogtime:"120", startfog:"0.002", rooms: []};
+					var thisfloor = {spawn: "(0,0,3)", ambientintens: 0.3, ambientcolor: "0xFFBFBF", maxfog: "0.015", fogtime:"120", startfog:"0.002", correctpin: "", correcttransponder: "", rooms: []};
 					thisfloor.spawn = typeItems[i].getAttribute("characterspawn");
 					thisfloor.ambientintens = typeItems[i].getAttribute("ambientlightintens");
 					thisfloor.ambientcolor = typeItems[i].getAttribute("ambientlightcolor");
 					thisfloor.fogtime = parseFloat(typeItems[i].getAttribute("fogtime"));
 					thisfloor.maxfog = parseFloat(typeItems[i].getAttribute("maxfog"));
 					thisfloor.startfog = parseFloat(typeItems[i].getAttribute("startfog"));
+					
+					thisfloor.correctpin = (typeItems[i].getAttribute("correctpin") !== null) ? typeItems[i].getAttribute("correctpin") : "";
+					thisfloor.correcttransponder = (typeItems[i].getAttribute("correcttransponder") !== null) ? typeItems[i].getAttribute("correcttransponder") : "";
+					
 					var thisrooms = [];
 					for (var j = 0; j < typeItems[i].getElementsByTagName("room").length; j++) {
 						var room = {index: 0, name: "", rotation: 0, x: 0, y: 0};
@@ -65,6 +71,7 @@ var allfloors = [];
 					thisfloor.rooms = thisrooms;
 					allfloors.push(thisfloor);
 				}
+				//TODO: jetzt müsste er allfloors eig nach allfloors[i].index number sortieren, sonst kann es zu problemen führen bei falscher RF in den Dateien..
 				callback();
 			}
 		};
@@ -76,7 +83,7 @@ var allfloors = [];
 
 
 	function createAllSegments(callback) {
-		
+		console.log("STOCKWERK "+floornumber);
 		switch(floornumber) {
 			case 3: CreateSegment("robolab", callback); break;
 			case 2: CreateSegment("lectureroom1", callback); break;

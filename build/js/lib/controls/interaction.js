@@ -15,14 +15,14 @@ var coveredmouth = false;
 var additional_healthloose = 0;
 var heavybreath = false;
 
-// pin pad variables.... may not be stored here?
+// pin pad variables initialisierung
 var pin = new Array(4);
 var transponder_config = new Array(2);
 var pin_pos = 0;
 var ch_pos = 0;
+//correct_pin und correct_transponder werden pro level aus der levels.xml ausgelesen.
 
-var CORRECT_PIN = ['0','0','4','2'];
-var CORRECT_TRANSPONDER = ['4','3'];
+
 var TYPE_INTERACTABLE = 0;
 var TYPE_FIRE = 1;
 var TYPE_TRIGGER = 3;
@@ -169,6 +169,16 @@ GameObject = function(mesh, interaction, type, name) {
 }
 
 function nextLevel() {
+	lockOpen = false;
+	transponder_config = new Array(2);
+	pin[0] = null; pin[1] = null; pin[2] = null; pin[3] = null; pin = new Array(4); pin_pos = 0; 
+	transponder_config[0] = null; transponder_config[1] = null; ch_pos = 0;
+	if ((selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "transponder"))
+	{
+		selectedItem.activeTransponder = false;
+		//TODO: ist das wirklich nur für selectedItem, muss ich das also für die anderen noch tun?
+	}
+	
     floornumber-=1;
 	pause=true;
     recreateRoom();
@@ -378,9 +388,8 @@ function enterPin() {
 function exitPinPad() {
 
     $("#pinPad").hide();
-
     // determine if entered code was correct
-    if (CORRECT_PIN[0] == pin[0] && CORRECT_PIN[1] == pin[1] && CORRECT_PIN[2] == pin[2] && CORRECT_PIN[3] == pin[3]) {
+    if (allfloors[floornumber-1].correctpin[0] == pin[0] && allfloors[floornumber-1].correctpin[1] == pin[1] && allfloors[floornumber-1].correctpin[2] == pin[2] && allfloors[floornumber-1].correctpin[3] == pin[3]) {
         lockOpen = true;
         correctSound();
     } else {
@@ -463,7 +472,7 @@ function exitCH() {
     $("#compHack").hide();
 
     // determine if entered code was correct
-    if (CORRECT_TRANSPONDER[0] == transponder_config[0] && CORRECT_TRANSPONDER[1] == transponder_config[1]){
+    if (allfloors[floornumber-1].correcttransponder[0] == transponder_config[0] && allfloors[floornumber-1].correcttransponder[1] == transponder_config[1]){
         correctSound();
         selectedItem.activeTransponder = true;
     }
