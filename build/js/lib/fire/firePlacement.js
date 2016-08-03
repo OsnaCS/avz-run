@@ -83,7 +83,7 @@ function addFire(x, y, z, width, height, depth, spacing) {
     fmesh.position.set(x, y + fireHeight / 2, z);
     fire_mesh_list.push(fmesh);
 
-    var fireGeom;
+
     // Collision Box
     if (fireHeight < (PLAYERHEIGHT * 2)){
         fireGeom = new THREE.BoxGeometry(fireWidth, PLAYERHEIGHT * 2, fireDepth);
