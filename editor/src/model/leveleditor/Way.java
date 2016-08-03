@@ -254,6 +254,7 @@ public class Way extends DrawableObject {
 		this.maxDistance = maxDistance;
 	}
 	
+	
 
 	public String toString(){
 		return getType() + " Pos:" + getPos().getPosx() + "/" + getPos().getPosy() + " Normal: " + getNormal().getPosx() +
