@@ -58,10 +58,12 @@ public class Way extends DrawableObject {
 		//updatePosition();
 		//other.updatePosition();
 
+		
 		//caclculates absolute value of the distances between x and y coordinate of the two ways
-		double distX = Math.abs(pos.getPosx() - other.pos.getPosx());
-		double distY = Math.abs(pos.getPosy() - other.pos.getPosy());
-
+		double distX = Math.abs(this.pos.getScaledIntCoordinates(this.getFather().getCenter()).x - other.pos.getScaledIntCoordinates(other.getFather().getCenter()).x);
+		double distY = Math.abs(this.pos.getScaledIntCoordinates(this.getFather().getCenter()).y - other.pos.getScaledIntCoordinates(other.getFather().getCenter()).y);
+//		System.out.println("Distanz:" + distX + "," + distY);
+//		System.out.println("this x:"  +this.getFather().getCenter().getPosx()+ " other:" + (other.getFather().getCenter().getPosx()));
 		if(distX < maxDistance && distY < maxDistance) {
 			System.out.println("Distanz:" + distX + "," + distY);
 		}
@@ -74,7 +76,7 @@ public class Way extends DrawableObject {
 		//and is of the same type
 		if(distX < maxDistance && distY < maxDistance
 				&& other.getNormal().getInvert().equals(this.normal)
-				&& other.getType().equals(this.type)) {
+				/*&& other.getType().equals(this.type)*/) {
 			return true;
 		}
 		//else returns false
