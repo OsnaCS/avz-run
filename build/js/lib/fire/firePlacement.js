@@ -35,7 +35,7 @@ function initFire() {
 
 // Adds a fire with a pointlight and smoke to the scene. For better performance
 // fire objects with same size only exist once and their meshes are cloned.
-function addFire(x, y, z, width, height, depth, spacing) {
+function addFire(x, y, z, width, height, depth, spacing, index) {
 
     // Compare to last used fire
     if (fireWidth != width || fireHeight != height || fireDepth != depth || sliceSpacing != spacing) {
@@ -83,6 +83,9 @@ function addFire(x, y, z, width, height, depth, spacing) {
     fmesh.position.set(x, y + fireHeight / 2, z);
     fire_mesh_list.push(fmesh);
 
+	
+	var thisfire = {index: index, x: x, y: y, z: z, width: width, height: height, depth: depth, spacing: spacing, mesh: fmesh}
+	fires.push(thisfire);
 
     var fireGeom;
     // Collision Box
@@ -173,6 +176,14 @@ function delFire(fireColBox) {
         fire_collision_box_list.splice(index,1);
         if (!performantfire) pointlight_list.splice(index,1);
         smoke_list.splice(index,1);
+		
+		//pendant zu createsegments-stuff: lösche das Feuer auch aus dem fires-array.
+		for (var i = 0; i < fire_mesh_list.length; i++) {
+			if (fires[i].mesh === fire_mesh_list[index]) {
+				fires.splice(i,1); break;
+			}
+		}
+		
         fire_mesh_list.splice(index,1);
 
         smoke_and_light_count--;

@@ -23,13 +23,12 @@ var scene_items = []; //hier stehen SÄTMLICHE Referenzen der Mashes der Räume,Ob
 var segments = [];    //hier stehen alle Segments drin. Segment = Teil des AVZs mit Infos über position usw.
 var static_obj = [];  //hier stehen alle StaticSegments drin. StaticSegment = Objekte welche Teil der Szene sind (auch mit Infos über position etc) (closed Doors auch!) (KEINE LAMPEN!)
 var interact_obj = [];//hier stehen alle interactibleSegments drin. Das sind alle PickupItems, Türen ungleich closedDoor, und sonstwie interactibles.
-var threelights = [];	//noch sinnlos!  //Hier stehen alle LightSegments drin. Diese bestehen aus dem mesh der Lampe (+position etc) sowie der Lichtquelle als three.light!
+var threelights = []; //Hier stehen alle LightSegments drin. Diese bestehen NUR AUS der Lichtquelle als three.light! (lampe ist in static_obj)
 var fires = [];       //Hier stehen alle Feuer drin.
 var triggers = [];	  //Hier stehen alle Triggers drin.
-var threelights = [];
 var allobjects = [];  listallobjects();  //hierdrin stehen alle MÖGLICHEN objects (..damit man sie nicht mehr aus der xml auslesen kann, asynchronität undso.)
 var allrooms = []; listallrooms(); //same as line above.
-var floornumber = 2; //sollte wachsen/sinken von stockwerk zu stockwerk. //TODO: sollte höchste nummer der floors.xml sein
+var floornumber = 1; //sollte wachsen/sinken von stockwerk zu stockwerk. //TODO: sollte höchste nummer der floors.xml sein
 var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF", maxfog: "0.015", fogtime:"120", startfog:"0.002"};
 
 
@@ -405,7 +404,7 @@ var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF",
 				spawnx = spawnx + parseInt(segments[INDEX1].transx)+xz[0];
 				spawny = spawny + parseInt(segments[INDEX1].transy)+xz[1];
 
-				createFire(spawnx, spawny, spawnz, sizex, sizez, sizey, (performantfire)?fire[i][3]*20:fire[i][3]); //ja, ist richtig so mit x,y,z
+				createFire(spawnx, spawny, spawnz, sizex, sizez, sizey, (performantfire)?fire[i][3]*20:fire[i][3], fire[i][0]); //ja, ist richtig so mit x,y,z
 
 			}
 		}
@@ -413,11 +412,10 @@ var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF",
 		callback();
 	}
 
-	function createFire(x, z, y, sx, sy, sz, s) {
+	function createFire(x, z, y, sx, sy, sz, s, index) {
 		VolumetricFire.texturePath = FIRETEXTUREPATH;
 		var fireseg = {x:x, y:y, z:z, sx:sx*SKALIERUNGSFAKTOR, sy:sy*SKALIERUNGSFAKTOR, sz:sz*SKALIERUNGSFAKTOR, val:s*SKALIERUNGSFAKTOR}; //TODO: kann ich auch das mesh des feuers adden?
-		fires.push(fireseg);
-		addFire(x, y, z, sx*SKALIERUNGSFAKTOR, sy*SKALIERUNGSFAKTOR, sz*SKALIERUNGSFAKTOR, s*SKALIERUNGSFAKTOR);
+		addFire(x, y, z, sx*SKALIERUNGSFAKTOR, sy*SKALIERUNGSFAKTOR, sz*SKALIERUNGSFAKTOR, s*SKALIERUNGSFAKTOR, index);
 	}
 
 //puts the lights where they belong
@@ -561,6 +559,7 @@ function door_in_doors(callback) {
 			var act = "";
 			switch(room1door[4]) {
 				case "openable": act = "open"; break;
+				case "openable_after_ext": act = "open_after_ext"; break;
 				case "open": act = "openopened"; rotate -= 1; break;
 				case "transponderopenable": act = "openTransponderDoor"; break;
 				case "axtopenable": act = "damageDoor"; break;

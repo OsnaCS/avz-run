@@ -13,6 +13,7 @@ var outlineMesh = null;
 var extinguisherParticleSystem;
 var coveredmouth = false;
 var additional_healthloose = 0;
+var heavybreath = false;
 
 // pin pad variables.... may not be stored here?
 var pin = new Array(4);
@@ -243,6 +244,31 @@ function open() {
     outlineMesh = null;
     activeObject = null;
 
+}
+
+function open_after_ext() {
+	var notext = false;
+	//welches feuer gelöscht sein muss ist hartgecoded, sorry. //TODO: ändern.
+	for (var i = 0; i < fires.length; i++) {
+		if (fires[i].index == "exit") notext = true;
+	}
+	if (notext) {
+		showThoughts("Aua, ich stehe in Feuer, aua! Da öffne ich doch keine Tür!",5000);
+	} else {
+		doorSound();
+		if(!this.open) {
+			this.mesh.rotateY(Math.PI/2.0);
+		}
+		else {
+			this.mesh.rotateY(-Math.PI/2.0);
+		}
+		this.open = !this.open;
+
+		// mesh is removed
+		scene.remove(outlineMesh);
+		outlineMesh = null;
+		activeObject = null;
+	}
 }
 
 function getSegmentFromIntItem(intItem) {
@@ -584,9 +610,9 @@ function success() {
 
 
 function coverMouth(){
-    //if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "schwamm")){
     if((selectedItem != null) && (objectFilenameToName(selectedItem.name) == "schwamm")){
         startHeavyBreathing();
+		heavybreath = true;
         additional_healthloose = 0;
         //addItem((newItemList[31]), playerPos[1], playerPos[2] + 10, playerPos[3], 2, 270, true, pickUpItem);
         console.log('covered mouth');
@@ -605,6 +631,7 @@ function makelessfog() {
 		}
         console.log("Der Nebel lichtet sich");
 		additional_healthloose = 0;
+		if (heavybreath) { stopHeavyBreathing(); heavybreath = false;}
 }
 
 function makemorefog() {
