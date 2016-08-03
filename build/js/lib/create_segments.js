@@ -23,7 +23,7 @@ var scene_items = []; //hier stehen SÄTMLICHE Referenzen der Mashes der Räume,Ob
 var segments = [];    //hier stehen alle Segments drin. Segment = Teil des AVZs mit Infos über position usw.
 var static_obj = [];  //hier stehen alle StaticSegments drin. StaticSegment = Objekte welche Teil der Szene sind (auch mit Infos über position etc) (closed Doors auch!) (KEINE LAMPEN!)
 var interact_obj = [];//hier stehen alle interactibleSegments drin. Das sind alle PickupItems, Türen ungleich closedDoor, und sonstwie interactibles.
-var lamps = [];	//noch sinnlos!  //Hier stehen alle LightSegments drin. Diese bestehen aus dem mesh der Lampe (+position etc) sowie der Lichtquelle als three.light!
+var threelights = [];	//noch sinnlos!  //Hier stehen alle LightSegments drin. Diese bestehen aus dem mesh der Lampe (+position etc) sowie der Lichtquelle als three.light!
 var fires = [];       //Hier stehen alle Feuer drin.
 var triggers = [];	  //Hier stehen alle Triggers drin.
 var allobjects = [];  listallobjects();  //hierdrin stehen alle MÖGLICHEN objects (..damit man sie nicht mehr aus der xml auslesen kann, asynchronität undso.)
@@ -31,6 +31,7 @@ var allrooms = []; listallrooms(); //same as line above.
 var floornumber = 1; //sollte wachsen/sinken von stockwerk zu stockwerk.
 var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF", maxfog: "0.015", fogtime:"120", startfog:"0.002"};
 
+var threelights = [];
 
 //functions
 
@@ -42,14 +43,14 @@ var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF",
 				//var pfad = xmlDoc.getElementsByTagName("objects")[0].getAttribute("ObjectPath");
 
 				var typeItems = xmlDoc.getElementsByTagName("floors")[0].getElementsByTagName("floor");
-				for (i = 0; i < typeItems.length; i++) {
+				for (var i = 0; i < typeItems.length; i++) {
 					if (typeItems[i].getAttribute("number") == floornumber) {
 						thisfloor.spawn = typeItems[i].getAttribute("characterspawn");
 						thisfloor.ambientintens = typeItems[i].getAttribute("ambientlightintens");
 						thisfloor.ambientcolor = typeItems[i].getAttribute("ambientlightcolor");
-						thisfloor.fogtime = typeItems[i].getAttribute("fogtime");
-						thisfloor.maxfog = typeItems[i].getAttribute("maxfog");
-						thisfloor.maxfog = typeItems[i].getAttribute("startfog");
+						thisfloor.fogtime = parseFloat(typeItems[i].getAttribute("fogtime"));
+						thisfloor.maxfog = parseFloat(typeItems[i].getAttribute("maxfog"));
+						thisfloor.startfog = parseFloat(typeItems[i].getAttribute("startfog"));
 						callback();
 					}
 				}
@@ -60,7 +61,11 @@ var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF",
 	}
 
 
-
+	function createAllSegments(callback) {
+		CreateSegment("groundlevel", callback);		
+	}
+	
+	
 
 //this function takes as input the name of a room, and adds to the "segments"-array the object containing its info + mesh (no return value due to asynchrony)
 //the callback-function WAS ORIGINALLY MEANT TO BE nothing, fitdoor or the one loading the info from the levels.xml
@@ -318,9 +323,6 @@ var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF",
 
 	}
 
-
-
-
 	function getFileName(xml, segmentindex, whichroom,callback) {
 		var xmlDoc = xml.responseXML;
 		var curroom = xmlDoc.getElementsByTagName("room");
@@ -333,6 +335,7 @@ var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF",
 		callback();
 	}
 //"these functions" end.
+
 
 //puts the objects in its spawn-location  //TODO: normaltowall ist nicht die normale zur wand, sondern die normale blender-normale :/
 	function objects_in_spawns(callback) {
@@ -447,7 +450,6 @@ var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF",
 				rotate = vec2dir([parseFloat(vector.slice(1,vector.indexOf(','))),parseFloat(vector.slice(vector.indexOf(',')+1,vector.indexOf(')')))]);
 				rotate -= segments[INDEX1].rot;
 
-				//TODO: Lampen auch noch zu einem lampen-segment hinzufügen!!
 				if (light[i][2] !== "") addObjectViaName(light[i][2], "lamp", spawnx, spawny, spawnz, light[i][3], rotate, "");
 				if (light[i][1] !== "") addLight(spawnx, spawnz, spawny, light[i][1], light[i][5], light[i][6], light[i][7], light[i][8]);
 			}
@@ -459,7 +461,8 @@ var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF",
 		if (!onlygloballight) {
 			var light = new THREE.PointLight( parseInt(color), intensity, visiblewidth*SKALIERUNGSFAKTOR );
 			light.position.set(x, y, z);
-			scene.add(light);
+			threelights.push(light);
+			addtoscene(light);
 		}
 	}
 
@@ -581,9 +584,6 @@ function door_in_doors(callback) {
 
 	//TODO: diese Funktionen. In synchron. Am besten per globalen Variablen (...dafür checken die Funktionen vorher ob die Variablen != "")
 	function objectFilenameToName(filename){
-		// for (var i = 0; i < allobjects.length; i++) {  //würde ich gerne so machen, aber aufgrund von kompatibilität zu den anderen... :/
-			// if (allobjects[i].path === filename) return allobjects[i].name
-		// }
 		var tName = filename.split("/");
 		tName = tName[tName.length-1].split(".")[0];  //TODO: bei einigen Objekten ist der Name ungleich dem Filenamen! Das hier ist nur die Notlösung!
 		return tName;
@@ -596,9 +596,6 @@ function door_in_doors(callback) {
 	}
 
 	function roomFilenameToName(filename){
-		// for (var i = 0; i < allrooms.length; i++) {
-			// if (allrooms[i].path === filename) return allrooms[i].name
-		// }
 		var tName = filename.split("/");
 		tName = tName[tName.length-1].split(".")[0];	//TODO: bei einigen Objekten ist der Name ungleich dem Filenamen! Das hier ist nur die Notlösung!
 		return tName;
@@ -634,17 +631,6 @@ function door_in_doors(callback) {
 		return xz;
 	}
 
-	function makelessfog() {
-		console.log("Der Nebel lichtet sich");
-		scene.fog = new THREE.FogExp2(0x424242, 0.00015);
-	}
-
-	function makemorefog() {
-		console.log("Der Nebel dichtet sich");
-		scene.fog = new THREE.FogExp2(0x424242, 0.15);
-	}
-
-
 
 //adds an OBJECT's mesh to the scene (needs to be changed when we stop loading from jsons directly and instead from the pre-loading-thingy.)
 	function addobject(objectpfad, name, posx, posy, posz, scale, rotate, responsefunct, stretchx) {
@@ -658,16 +644,17 @@ function door_in_doors(callback) {
 		mesh.rotation.y = 0.5*Math.PI*(4-rotate);
 
 		if (name === "lamp") {
-			//TODO: adde ein passendes segment für ne Lampe
+			var segment = {filename:objectpfad, name: name, x: posx, y: posy, z: posz, skale: scale, rot: rotate, msh: mesh, stretchx: stretchx};
+			static_obj.push(segment);
 		} else {
 			if ((responsefunct != "") && (responsefunct != null)) {
 				var functPtr = eval(responsefunct);
 				intItem = new GameObject(mesh, functPtr, TYPE_INTERACTABLE, objectpfad);
 				if (intItem == undefined) intItem = null;
-				var segment = {filename:objectpfad, name: name, interIt: intItem, x: posx, y: posy, z: posz, skale: scale, rot: rotate, funct: responsefunct, msh: mesh, xstretch: stretchx};
+				var segment = {filename:objectpfad, name: name, interIt: intItem, x: posx, y: posy, z: posz, skale: scale, rot: rotate, funct: responsefunct, msh: mesh, stretchx: stretchx};
 				interact_obj.push(segment);
 			} else {
-				var segment = {filename:objectpfad, name: name, x: posx, y: posy, z: posz, skale: scale, rot: rotate, msh: mesh, xstretch: stretchx};
+				var segment = {filename:objectpfad, name: name, x: posx, y: posy, z: posz, skale: scale, rot: rotate, msh: mesh, stretchx: stretchx};
 				static_obj.push(segment);
 			}
 		}
@@ -754,42 +741,50 @@ function door_in_doors(callback) {
 //diese Funktion ist nötig, da in der scene_items SÄTMLICHE meshes der Räume stehen (ihre referenz), welche gerade angezeigt sind. Dadurch kann man sich alle auflisten lassen, verändern & löschen nach Bedarf.
 	function addtoscene(mesh, intItem){
 		scene.add(mesh);
-		if (intItem == null) {
-			modifyOctree( mesh, true );
-		} else {
-			modifyOctree( intItem, true );
+		if(!((mesh instanceof THREE.PointLight)||(mesh instanceof THREE.AmbientLight))) {
+			if (intItem == null) {
+				modifyOctree( mesh, true );
+			} else {
+				modifyOctree( intItem, true );
+			}
 		}
-
 		scene_items.push(mesh);
 	}
 
 
 //zum thema alle objekte aus der scene löschen.
 	function empty_scene(){
-	for( var i = scene.children.length - 1; i >= 0; i--) {
-		obj = scene.children[i];
-		scene.remove(obj);
-	}
+	// for( var i = scene.children.length - 1; i >= 0; i--) {
+		// obj = scene.children[i];
+		// scene.remove(obj);
+	// }
 	  if(scene_items.length > 0 ) {
-		// scene_items.forEach(function(v,i) {  //TODO: anpassen auf neue struktur.
-		   // v.parent.remove(v);
-		// });
-		scene_items = null;
-		scene_items = [];
-		static_obj = null;
-		static_obj = [];
-		interact_obj = null;
-		interact_obj = [];
+		scene_items = null; scene_items = [];
+		static_obj = null; static_obj = [];
+		interact_obj = null; interact_obj = [];
+		segments = null; segments = [];
+		threelights = null; threelights = [];
+		fires = null; fires = [];
+		trigger = null; triggers = [];
+		
+		//feuer-stuff
+		fire_list = null; fire_list = [];
+		pointlight_list = null; pointlight_list = [];
+		smoke_list = null; smoke_list = [];
+		fire_mesh_list = null; fire_mesh_list = [];
+		fire_collision_box_list = null; fire_collision_box_list = [];
+		fire_count = 0;
+		smoke_and_light_count = 0;		
 	  }
 	}
 
 	function remove_interactible(which){
 		segmentIndex = interact_obj.indexOf(which);
 		mesh = interact_obj[segmentIndex].msh;
-		intObj = interact_obj[segmentIndex].interIt;
-		interact_obj.splice(segmentIndex);
+		//intObj = interact_obj[segmentIndex].interIt;
+		interact_obj.splice(segmentIndex,1);
 		i2 = scene_items.indexOf(mesh);
-		scene_items.splice(i2);
+		scene_items.splice(i2,1);
 		//scene.remove(mesh); braucht nicht, da das von interactible-this.delFromScene() gemacht wird.
 	}
 

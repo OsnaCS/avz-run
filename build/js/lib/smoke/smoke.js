@@ -29,7 +29,7 @@ var smokeFragmentShader = [
     'vec3 color = vec3( 1. );',
 
     // fog support
-    'float depth = (gl_FragCoord.z / gl_FragCoord.w)+10.0;',
+    'float depth = (gl_FragCoord.z / gl_FragCoord.w)+75.0;',
     'depth = depth * fogDensity * 3.0;',
     'gl_FragColor = texture2D( texture, gl_PointCoord ) * vec4( color, .3 * ( 1. - progress ))/depth;',
     '}',
