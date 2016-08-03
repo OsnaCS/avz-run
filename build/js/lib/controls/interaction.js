@@ -167,7 +167,7 @@ GameObject = function(mesh, interaction, type, name) {
 
 function nextLevel() {
     floornumber-=1;
-    recreateRoom;
+    recreateRoom();
 }
 
 function delGameObject(mesh) {
