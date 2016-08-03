@@ -74,39 +74,37 @@ var FileLoader = function (callback) {
                 material = new THREE.MultiMaterial(mat);
 
 
-                // Die Schleife ist dafür da, damit nur eine Seite der Objekte gerendert wird
+				if (useLambertMaterial) {
+					for (var i = 0 ; i<material.materials.length;i++) {
+						if( material.materials[i].opacity==1) {
+							var basic = new THREE.MeshLambertMaterial();
+							if(material.materials[i].map) {
+								basic.map = material.materials[i].map;
+							}
+							// basic.metalness=0;
+							// basic.roughness=0;
+							basic.color = material.materials[i].color;
+							basic.opacity =  material.materials[i].opacity;
+							basic.reflectivity =  material.materials[i].reflectivity;
+							basic.shading = THREE.FlatShading;
+							material.materials[i]=basic;
 
-      //           material.materials.forEach(function (e) {
-      //               var basic = new THREE.MeshBasicMaterial();
-      //               if (e instanceof THREE.MeshPhongMaterial || e instanceof THREE.MeshLambertMaterial) {
+						}
+					}
+				} else {
+					//Die Schleife ist dafür da, damit nur eine Seite der Objekte gerendert wird
+					material.materials.forEach(function (e) {
+						if (e instanceof THREE.MeshPhongMaterial || e instanceof THREE.MeshLambertMaterial) {
+							e.side = THREE.FrontSide;
+							e.shininess = 6; //sorgt dafür dass die flächen weniger spiegeln
+						}
+					});
+				}
 
-      // //                   e.shading=THREE.FlatShading;
-      // //                   e.side = THREE.FrontSide;
-						// // e.shininess = 6; //sorgt dafür dass die flächen weniger spiegeln
-      //                   e=basic;
-      //               }
-      //           });
-                for (var i = 0 ; i<material.materials.length;i++) {
-                    if( material.materials[i].opacity==1) {
-
-                        var basic = new THREE.MeshLambertMaterial();
-                        if(material.materials[i].map) {
-                            basic.map = material.materials[i].map;
-                        }
-                        // basic.metalness=0;
-                        // basic.roughness=0;
-                        basic.color = material.materials[i].color;
-                        basic.opacity =  material.materials[i].opacity;
-                        basic.reflectivity =  material.materials[i].reflectivity;
-                        basic.shading = THREE.FlatShading;
-                        material.materials[i]=basic;
-
-                    }
-                }
                 // Glättet die Objekte
                 geometry.mergeVertices();
 
-                if (!weaksystem) {
+                if (!nosmoothedges) {
 					if (shouldISmooth(file) !== "0") {
 						geometry.computeVertexNormals(); //macht flächen runder
 					}

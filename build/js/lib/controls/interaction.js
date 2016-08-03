@@ -22,7 +22,6 @@ var CORRECT_PIN = ['0','0','4','2'];
 var CORRECT_TRANSPONDER = ['4','3'];
 var TYPE_INTERACTABLE = 0;
 var TYPE_FIRE = 1;
-var TYPE_EXIT = 2;
 var TYPE_TRIGGER = 3;
 var FADE_TIME = 1200;
 
@@ -97,9 +96,6 @@ function interactionLoop() {
             interObj = getGameObject(interactions[interIter2].object)
             if (interObj instanceof GameObject) break;
         }
-        if(interObj.type==TYPE_EXIT){
-        // nextLevel(); TODO: implement somewhere
-        }
     }
     //
     if(interactions.length>0) {
@@ -141,7 +137,7 @@ GameObject = function(mesh, interaction, type, name) {
     this.type = type;
     this.mesh = mesh;
     this.interact = interaction;
-http://127.0.0.1:8000
+
 
     this.name=name;
 
@@ -167,6 +163,11 @@ http://127.0.0.1:8000
 		delGameObject(this.mesh);
     }
 
+}
+
+function nextLevel() {
+    floornumber-=1;
+    recreateRoom;
 }
 
 function delGameObject(mesh) {
