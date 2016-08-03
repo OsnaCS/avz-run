@@ -5,6 +5,7 @@ var performantfire = true; //when true, it makes the fires a bit worse and remov
 var nosmoothedges = true; //if true, it no edge will be smoothed.
 var useLambertMaterial = false; //Meinungen gehen auseinander ob Lambert oder Phong performanter ist.
 var onlygloballight = false;  //when true, no pointlights (specified in the rooms.xml) will be set.
+var nofog = false;
 
 document.getElementById("mutesounds").checked = muteSounds;
 document.getElementById("performantfire").checked = performantfire;
@@ -582,6 +583,7 @@ function controlLoop(controls) {
         velocity.y = 0;
         controls.getObject().position.y = PLAYERHEIGHT + PLAYERHEIGHT * 0.2;
     }
+	
     if (controls.getObject().position.y < -500) {
         player.damage(10000);
     }
@@ -600,7 +602,8 @@ function controlLoop(controls) {
 
     if (flashCooldown == 0) {
         scene.remove(flashLight);
-        scene.fog.color.set(0x424242);
+		
+        if(!nofog) scene.fog.color.set(0x424242);
         clearInterval(flashInterval);
         flashCooldown = -1;
     }

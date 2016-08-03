@@ -58,7 +58,7 @@ var pause = false;
 
 //variables used for increasing fog are now to find after the creation of the scene
 
-
+var player;
 var octree;
 var octreeObjects = [];
 var clock;
@@ -224,13 +224,12 @@ function createScene(complete) {
     // we have to update the camera and the renderer size
     window.addEventListener('resize', handleWindowResize, false);
 
-    scene.fog = new THREE.FogExp2(0x424242, 0.005);
+    if (!nofog) scene.fog = new THREE.FogExp2(0x424242, 0.005);
     complete();
 }
 
 
 function loop() {
-    //console.log(octreeObjects);
 
 
     if (!menu && !pause) {
@@ -250,7 +249,7 @@ function loop() {
             // }, 1000 / 10 );
             requestAnimationFrame(loop);
 
-            scene.fog.density = myfog;
+            if (!nofog) scene.fog.density = myfog;
             player.updateEnergy();
 
             // YOU NEED TO CALL THIS (srycaps)
@@ -315,16 +314,34 @@ function move(){
 }
 
 function createRoom(callback) {
+	$("#loadingBlocker2").show();
+	$(".gui").hide();
 	readLevelsXML(csegments);
 	function csegments() {
-        createAllSegments(psegments)
+        createAllSegments(psegments);
         function psegments () {
     		PutSegments(doors);
+			
+			
     		function doors () {
     			door_in_doors(objects);
     			function objects() {
     				objects_in_spawns(fires);
     				function fires() {
+						if (!nofog) {
+							console.log("Max-Fog auf diesem Level: "+thisfloor.maxfog)
+							MAX_FOG = thisfloor.maxfog; if (godmode) {MAX_FOG = 0.005};
+							myfog = thisfloor.startfog; if (godmode) {myfog = 0.0002}; 
+							fogTime = thisfloor.fogtime; if (godmode) {fogTime = 1200};  //siehe oben
+
+							fogIncrement= MAX_FOG/(fogTime*1000/10) ;
+							
+							scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
+						}
+						HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at final density you lose this much health			
+						controls.getObject().position.x = parseFloat(thisfloor.spawn.slice(1,thisfloor.spawn.indexOf(',')))*SKALIERUNGSFAKTOR;
+						controls.getObject().position.y = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.indexOf(',')+1,thisfloor.spawn.lastIndexOf(',')))*SKALIERUNGSFAKTOR;
+						controls.getObject().position.z = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.lastIndexOf(',')+1,thisfloor.spawn.indexOf(')')))*SKALIERUNGSFAKTOR;
     					set_fires(lights);
     					function lights () {
     						turn_on_lights(triggers);
@@ -347,17 +364,8 @@ function createRoom(callback) {
     						function triggers () {
     							addtriggers(levelSettings);
                                 function levelSettings () {
-                                    MAX_FOG = thisfloor.maxfog; if (godmode) {MAX_FOG = 0.005};
-                                    myfog = thisfloor.startfog; if (godmode) {myfog = 0.0002}; 
-                                    fogTime = thisfloor.fogtime; if (godmode) {fogTime = 1200};  //siehe oben
-
-                                    fogIncrement= MAX_FOG/(fogTime*1000/10) ;
-                                    HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at final density you lose this much health
-                                    scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
-
-                                    controls.getObject().position.x = parseFloat(thisfloor.spawn.slice(1,thisfloor.spawn.indexOf(',')))*SKALIERUNGSFAKTOR;
-                                    controls.getObject().position.y = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.indexOf(',')+1,thisfloor.spawn.lastIndexOf(',')))*SKALIERUNGSFAKTOR;
-                                    controls.getObject().position.z = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.lastIndexOf(',')+1,thisfloor.spawn.indexOf(')')))*SKALIERUNGSFAKTOR;
+									$("#loadingBlocker2").hide();
+									$(".gui").show();
                                     callback();
                                 }
     						}
@@ -369,13 +377,16 @@ function createRoom(callback) {
 	}
 }
 
-function resetScene() {
+function resetScene(callback) {
     scene = null;
     scene= new THREE.Scene();
+	
 
-    var camPos = new THREE.Vector3(0, PLAYERHEIGHT + PLAYERHEIGHT * 0.4, 0);
-    controls = new THREE.PointerLockControls(camera, camPos);
-    scene.add(controls.getObject());
+	
+    // var camPos = new THREE.Vector3(0, PLAYERHEIGHT + PLAYERHEIGHT * 0.4, 0);
+	// controls = null;
+    // controls = new THREE.PointerLockControls(camera, camPos);
+    // scene.add(controls.getObject());
 
     // sky box
     // files are named by directions
@@ -393,21 +404,45 @@ function resetScene() {
     var skyGeom = new THREE.BoxGeometry(2000,2000,2000);
     var skyMat = new THREE.MeshFaceMaterial( sky_array );
     var skyMesh = new THREE.Mesh(skyGeom,skyMat);
-    scene.add(skyMesh);
+    addtoscene(skyMesh);
+	callback();
+		
 }
 
 
 function recreateRoom() {
 	//lösche erst alle segments, doors, objects, fires, lights, triggers. Dann calle createRoom/init
-    resetScene();
-    for(var j = 0;j<octreeObjects.length;j++) {
-        octree.remove(octreeObjects[j]);
-    }
-    scene = null;
-    scene= new THREE.Scene();
-	console.log("Recreating everything...");
-    empty_scene();
-    createRoom(loop);
+	
+    empty_scene(reset);
+	
+	function reset() {
+		
+		resetScene(octrem);
+		function octrem () {
+			octree = null;
+			octree = new THREE.Octree( {
+				// uncomment below to see the octree (may kill the fps)
+				//scene: scene,
+				// when undeferred = true, objects are inserted immediately
+				// instead of being deferred until next octree.update() call
+				// this may decrease performance as it forces a matrix update
+				undeferred: false,
+				// set the max depth of tree
+				depthMax: 20,
+				// max number of objects before nodes split or merge
+				objectsThreshold: 8,
+				// percent between 0 and 1 that nodes will overlap each other
+				// helps insert objects that lie over more than one node
+				overlapPct: 0.15
+			} );
+			console.log("Recreating everything...");
+			function cont (){pause = false;
+				requestAnimationFrame(loop);
+			}	
+			// cont();			
+			createRoom(cont);
+		}
+	}
 }
 
 

@@ -167,6 +167,7 @@ GameObject = function(mesh, interaction, type, name) {
 
 function nextLevel() {
     floornumber-=1;
+	pause=true;
     recreateRoom();
 }
 
@@ -508,7 +509,6 @@ function openTransponderDoor(){
 
 			if (objectFilenameToName(d.filename) == "holztuer") kind = "holztur";
 			
-			console.log(d.stretchx);
 			addObjectViaName(kind, "door", d.x, d.y, d.z, d.skale, d.rot-1, "openopened", d.stretchx);
 			remove_interactible(d);
 			this.delFromScene();
@@ -597,14 +597,14 @@ function coverMouth(){
 
 function makelessfog() {
         console.log("Der Nebel lichtet sich");
-        scene.fog = new THREE.FogExp2(0x424242, 0.00015);
+        if (!nofog) scene.fog = new THREE.FogExp2(0x424242, 0.00015);
 }
 
 function makemorefog() {
         console.log("Der Nebel dichtet sich");
         if (coverMouth()) showThoughts("Das sollte mir helfen!",5000);
         else showThoughts("Der Rauch ist zu dicht, ich kann kaum atmen. Vielleicht finde ich etwas, das ich mir vor den Mund halten kann. Besser raus hier.",5000)
-        scene.fog = new THREE.FogExp2(0x424242, 0.15);
+        if (!nofog) scene.fog = new THREE.FogExp2(0x424242, 0.15);
 }
 
 

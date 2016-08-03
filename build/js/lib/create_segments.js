@@ -28,7 +28,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 var triggers = [];	  //Hier stehen alle Triggers drin.
 var allobjects = [];  listallobjects();  //hierdrin stehen alle MÖGLICHEN objects (..damit man sie nicht mehr aus der xml auslesen kann, asynchronität undso.)
 var allrooms = []; listallrooms(); //same as line above.
-var floornumber = 1; //sollte wachsen/sinken von stockwerk zu stockwerk.
+var floornumber = 2; //sollte wachsen/sinken von stockwerk zu stockwerk. //TODO: sollte höchste nummer der floors.xml sein
 var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF", maxfog: "0.015", fogtime:"120", startfog:"0.002"};
 
 var threelights = [];
@@ -62,7 +62,9 @@ var threelights = [];
 
 
 	function createAllSegments(callback) {
-		CreateSegment("groundlevel", callback);		
+		
+		if (floornumber == 2) CreateSegment("lectureroom1", callback)
+			else CreateSegment("groundlevel", callback)
 	}
 	
 	
@@ -753,7 +755,7 @@ function door_in_doors(callback) {
 
 
 //zum thema alle objekte aus der scene löschen.
-	function empty_scene(){
+	function empty_scene(callback){
 	// for( var i = scene.children.length - 1; i >= 0; i--) {
 		// obj = scene.children[i];
 		// scene.remove(obj);
@@ -776,6 +778,7 @@ function door_in_doors(callback) {
 		fire_count = 0;
 		smoke_and_light_count = 0;		
 	  }
+	  callback();
 	}
 
 	function remove_interactible(which){
