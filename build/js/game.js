@@ -351,7 +351,7 @@ function createRoom(callback) {
     							addtriggers(levelSettings);
                                 function levelSettings () {
                                     MAX_FOG = thisfloor.maxfog; if (godmode) {MAX_FOG = 0.005};
-                                    myfog = thisfloor.startfog; if (godmode) {myfog = 0.0002};
+                                    myfog = thisfloor.startfog; if (godmode) {myfog = 0.0002}; 
                                     fogTime = thisfloor.fogtime; if (godmode) {fogTime = 1200};  //siehe oben
 
                                     fogIncrement= MAX_FOG/(fogTime*1000/10) ;
