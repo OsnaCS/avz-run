@@ -97,23 +97,13 @@ function init(event) {
 
                 createRoom(controlls);
                 function controlls() {
-					MAX_FOG = thisfloor.maxfog; if (godmode) {MAX_FOG = 0.005};
-					myfog = thisfloor.startfog; if (godmode) {myfog = 0};
-					fogTime = thisfloor.fogtime; if (godmode) {fogTime = 1200};  //siehe oben
-					fogIncrement= MAX_FOG/(fogTime*1000/10) ;
-					fogInterval;
-					HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at final density you lose this much health
-
-					scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
 
 
                     // add the objects and lights - replace those functions as you please
                     initControls(startLoop);
 
                     function startLoop () {
-    					controls.getObject().position.x = parseFloat(thisfloor.spawn.slice(1,thisfloor.spawn.indexOf(',')))*SKALIERUNGSFAKTOR;
-    					controls.getObject().position.y = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.indexOf(',')+1,thisfloor.spawn.lastIndexOf(',')))*SKALIERUNGSFAKTOR;
-    					controls.getObject().position.z = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.lastIndexOf(',')+1,thisfloor.spawn.indexOf(')')))*SKALIERUNGSFAKTOR;
+
 
                         // renderer.render(scene, camera);
     					// start a loop that will update the objects' positions
@@ -330,7 +320,11 @@ function loop() {
 function createRoom(callback) {
 	readLevelsXML(csegments);
 	function csegments() {
+<<<<<<< HEAD
         createAllSegments(psegments)
+=======
+        createAllSegments(psegments);
+>>>>>>> 38d0f370484e299231c6e6082d5046c54f938e0d
         function psegments () {
     		PutSegments(doors);
     		function doors () {
@@ -343,11 +337,16 @@ function createRoom(callback) {
     						turn_on_lights(triggers);
     						var gesamtlicht = 0;
     						if (thisfloor.ambientintens > 0) {
+<<<<<<< HEAD
 								var tmplight = new THREE.AmbientLight(parseInt(thisfloor.ambientcolor),parseInt(thisfloor.ambientintens));
+=======
+                                tmplight = new THREE.AmbientLight(parseInt(thisfloor.ambientcolor),parseInt(thisfloor.ambientintens))
+>>>>>>> 38d0f370484e299231c6e6082d5046c54f938e0d
     							addtoscene(tmplight); threelights.push(tmplight);
     							gesamtlicht += parseInt(thisfloor.ambientintens);
     						}
     						if (godmode) {
+<<<<<<< HEAD
 								var tmplight = new THREE.AmbientLight(0xFFFFFF,(1-gesamtlicht));
     							addtoscene(tmplight); threelights.push(tmplight);
     							gesamtlicht += (1-gesamtlicht);
@@ -355,11 +354,34 @@ function createRoom(callback) {
     						if (gesamtlicht < 0.3 && onlygloballight) {
 								var tmplight = new THREE.AmbientLight(0xFFBFBF,(0.3-gesamtlicht));
     							addtoscene(tmplight); threelights.push(tmplight);
+=======
+    							tmplight = new THREE.AmbientLight(0xFFFFFF,(1-gesamtlicht));
+                                addtoscene(tmplight); threelights.push(tmplight);
+    							gesamtlicht += (1-gesamtlicht);
+    						}
+    						if (gesamtlicht < 0.3 && onlygloballight) {
+    							tmplight = new THREE.AmbientLight(0xFFBFBF,(0.3-gesamtlicht));
+                                addtoscene(tmplight); threelights.push(tmplight);
+>>>>>>> 38d0f370484e299231c6e6082d5046c54f938e0d
     						}
     						function triggers () {
-    							addtriggers(callback);
+    							addtriggers(levelSettings);
+                                function levelSettings () {
+                                    MAX_FOG = thisfloor.maxfog; if (godmode) {MAX_FOG = 0.005};
+                                    myfog = thisfloor.startfog; if (godmode) {myfog = 0.0002};
+                                    fogTime = thisfloor.fogtime; if (godmode) {fogTime = 1200};  //siehe oben
+
+                                    fogIncrement= MAX_FOG/(fogTime*1000/10) ;
+                                    HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at final density you lose this much health
+                                    scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
+
+                                    controls.getObject().position.x = parseFloat(thisfloor.spawn.slice(1,thisfloor.spawn.indexOf(',')))*SKALIERUNGSFAKTOR;
+                                    controls.getObject().position.y = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.indexOf(',')+1,thisfloor.spawn.lastIndexOf(',')))*SKALIERUNGSFAKTOR;
+                                    controls.getObject().position.z = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.lastIndexOf(',')+1,thisfloor.spawn.indexOf(')')))*SKALIERUNGSFAKTOR;
+                                    callback();
+                                }
     						}
-    					}
+                        }
     				}
     			}
     		}
@@ -367,16 +389,53 @@ function createRoom(callback) {
 	}
 }
 
+function resetScene() {
+    scene = null;
+    scene= new THREE.Scene();
+
+    var camPos = new THREE.Vector3(0, PLAYERHEIGHT + PLAYERHEIGHT * 0.4, 0);
+    controls = new THREE.PointerLockControls(camera, camPos);
+    scene.add(controls.getObject());
+
+    // sky box
+    // files are named by directions
+    var sky_directions  = ["right", "left", "top", "bottom", "back", "front"];
+    var sky_array = [];
+
+    sky_loader = new THREE.TextureLoader();
+    // make texture array
+    for (var i = 0; i < 6; i++) {
+        sky_array.push( new THREE.MeshBasicMaterial({
+            map: sky_loader.load( "../avz_model/materials/textures/sky/sky_" + sky_directions[i] + ".jpg" ),
+            side: THREE.BackSide,
+        }));
+    }
+    var skyGeom = new THREE.BoxGeometry(2000,2000,2000);
+    var skyMat = new THREE.MeshFaceMaterial( sky_array );
+    var skyMesh = new THREE.Mesh(skyGeom,skyMat);
+    scene.add(skyMesh);
+}
+
 
 function recreateRoom() {
 	//lösche erst alle segments, doors, objects, fires, lights, triggers. Dann calle createRoom/init
+    resetScene();
     for(var j = 0;j<octreeObjects.length;j++) {
         octree.remove(octreeObjects[j]);
     }
+<<<<<<< HEAD
     scene = null;
     scene= new THREE.Scene();
 	console.log("Recreating everything...");
     empty_scene();
+=======
+
+    // scene= new THREE.Scene();
+	console.log("Recreating everything...");
+    empty_scene();
+    createRoom(loop);
+
+>>>>>>> 38d0f370484e299231c6e6082d5046c54f938e0d
 }
 
 
@@ -473,7 +532,6 @@ function enableTrigger(index) {
 
 
 function modifyOctree( mesh , useFaces) {
-
         if (mesh.mesh==undefined) {
         	octree.add( mesh, { useFaces: useFaces } );
         } else {
@@ -486,7 +544,6 @@ function modifyOctree( mesh , useFaces) {
         // scene.add( mesh );
 
         // store object
-
         octreeObjects.push( mesh );
 
         /*
