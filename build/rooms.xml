@@ -168,11 +168,11 @@
 		   <door type="norm" index="15" position="(-8.95,10.1)" normal="(-1, 0)" act="openable"/>
 		   <door type="norm" index="16" position="(-8.95,15.6)" normal="(-1, 0)" act="openable"/>
 		   <door type="norm" index="17" position="(-8.95,19.57)" normal="(-1, 0)" act="openable"/>
-		   <door type="norm" index="18" position="(-7.15,23.24)" normal="(0, 1)" act="openable"/>
+		   <door type="norm" index="18" position="(-7.15,23.24)" normal="(0, 1)" act="axtopenable"/>
 		   <door type="glass" index="19" position="(-1.72,23.24)" normal="(0, 1)" act="openable"/>
 		   <door type="norm" index="20" position="(3.15,23.24)" normal="(0, 1)" act="openable"/>
 		   <door type="norm" index="21" position="(-3.75,2.85)" normal="(1, 0)" act="codeopenable"/>
-		   <door type="norm" index="22" position="(-3.75, -1.85)" normal="(1, 0)" act="openable"/>
+		   <door type="norm" index="22" position="(-3.75, -1.85)" normal="(1, 0)" act="closed"/>
 		</doors>
 		<lights>
 			<light index="1" kind="pointlight" objectname="deckenlicht" position="(-6,12.5,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="33"/>
@@ -186,7 +186,6 @@
 			<fire index="1" position="(7.5, -7, 0)" size="(3,3,3)" val="6"/>
 			<fire index="2" position="(1, 14, 0)" size="(3,3,3)" val="6"/>
 			<fire index="3" position="(1, -3.8, 0)" size="(3,2.5,2)" val="6"/>
-			<fire index="3" position="(2, 8, 0)" size="(4,4,8)" val="6"/>
         </fires>
 		<spawns>
 			 <spawn index="1" position="(1.03, 0.3, 0)" object="wand_kaputt" normaltowall="(0,1)" scale="2.38"/>
@@ -198,7 +197,7 @@
 			 <spawn index="7" position="(5.8, 8, 1.5)" object="tafel" normaltowall="(0,-1)" scale="2"/>
 			 <spawn index="8" position="(3, -3.8, 1)" object="computer" normaltowall="(1,0)" scale="1" oninteract=""/>
 			 <spawn index="9" position="(-1, -3.8, 1)" object="computer" normaltowall="(-1,0)" scale="1" oninteract=""/>
-			 <spawn index="10" position="(2, 8, 0)" object="evil_roboter" normaltowall="(0,1)" scale="2.7" oninteract=""/>
+			 <spawn index="10" position="(2, 12, 0)" object="evil_roboter" normaltowall="(0,1)" scale="2.7" oninteract=""/>
 			 <spawn index="11" position="(2.3, 6.4, 0)" object="axt" normaltowall="(-1,0)" scale="2" oninteract="pickUpItem"/>
 			 <spawn index="12" position="(4, -3.8, 0)" object="buerostuhl" normaltowall="(1,0)" scale="1"/>
 			 <spawn index="13" position="(-2.5, -3.8, 0)" object="buerostuhl" normaltowall="(-1,0)" scale="1"/>
@@ -218,7 +217,12 @@
 			 <spawn index="23" position="(-3, 9, 1)" object="ziegel" normaltowall="(0,1)" scale="1"/>
 			 <spawn index="2" position="(-3.95 ,4, 1.6)" object="pinpad" normaltowall="(0,-1)" scale="1" oninteract="enterPin"/>
 
+			 <spawn index="3" position="(4.5, 17.2, 0)" object="tisch" normaltowall="(1,0)" scale="1"/>
+			 <spawn index="8" position="(4.5, 17.2, 1)" object="computer" normaltowall="(0,-1)" scale="1" oninteract="robotControll"/>
 		</spawns>
+		<triggers>
+			<trigger index="1" xpos="-2.7" ypos="2.85" size="1" functionname="showThoughts" fparam1="Oh ein gefährlicher Roboter! Ich komme nicht an die Axt ran. Vielleicht kann einer der Computer ihn abschalten" fparam2="8000" />
+		</triggers>
 	</room>
 
 	<room name="circle_with_lecture" filename="circle_WALLED.json" smooth="1">
