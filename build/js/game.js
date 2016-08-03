@@ -52,7 +52,7 @@ var scene, camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
 
 
 var MAX_FOG, myfog, fogTime, fogIncrement, fogInterval, HEALTH_PER_SECOND;
-	
+
 var menu = true;
 var pause = false;
 
@@ -96,22 +96,22 @@ function init(event) {
         createAudio(room);
 
         function room() {
-			
+
                 createRoom(controlls);
                 function controlls() {
-					
+
 					MAX_FOG = thisfloor.maxfog; if (godmode) {MAX_FOG = 0.005};
 					myfog = thisfloor.startfog; if (godmode) {myfog = 0};
 					fogTime = thisfloor.fogtime; if (godmode) {fogTime = 1200};  //siehe oben
 					fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 					fogInterval;
 					HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at final density you lose this much health
-					
+
 					scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
-					
+
                     // add the objects and lights - replace those functions as you please
                     initControls(startLoop);
- 
+
                     function startLoop () {
 						controls.getObject().position.x = parseFloat(thisfloor.spawn.slice(1,thisfloor.spawn.indexOf(',')))*SKALIERUNGSFAKTOR;
 						controls.getObject().position.y = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.indexOf(',')+1,thisfloor.spawn.lastIndexOf(',')))*SKALIERUNGSFAKTOR;
@@ -120,8 +120,8 @@ function init(event) {
                         // renderer.render(scene, camera);
     					// start a loop that will update the objects' positions
     					// and render the scene on each frame
-    					loop();    					
-    				}                
+    					loop();
+    				}
 
     			}
     		}
@@ -242,7 +242,7 @@ function createScene(complete) {
 var roboternum = 0;
 function loop() {
     //console.log(octreeObjects);
-	
+
 
     if (!menu && !pause) {
     	if (player.health <= 0) {
@@ -268,17 +268,17 @@ function loop() {
             if (!special_html_input) {
             	controlLoop(controls);
             	interactionLoop();
-            }                          
+            }
 
-           
-          
+
+
             if(roboternum == 0){
 	            for (i = 0; i < static_obj.length; i++) {
 	            	if(static_obj[i].name == "roboter"){
 	            		roboternum = i;
 	            		break;
 	            	}
-	            	
+
 	            }
 	        }
 
@@ -304,7 +304,7 @@ function loop() {
                 stats.end();
             }
         }
-} 
+}
 
 
 
@@ -427,26 +427,28 @@ function printmost(obj) {
 //adds a trigger at given position, performs action when walking over it and consumes it
 // ***** TO FADE IN THOUGHTS: look up partial, showThoughts, hideThoughts in interact! ******
 function addTrigger (activated, xPos, zPos, size, action, fname, fparam1, fparam2, enabledtrigger, index, nonewentry) {
-	
+
 	var hohe = (size > PLAYERHEIGHT*3) ? size: PLAYERHEIGHT*3;
     var triggerGeom = new THREE.BoxGeometry(size,hohe,size);
     var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, color:0xFFFFFF});
     var triggerMesh = new THREE.Mesh(triggerGeom,mat);
     var trigger = new GameObject(triggerMesh,action,TYPE_TRIGGER);
-	
+
+
+
 	var thisone;
 	if (!nonewentry) {
 		thisone = {ind: index, obj: trigger, xpos: xPos, zpos: zPos, siz: size, fname: fname, fparam1: fparam1, fparam2: fparam2, followup: enabledtrigger, enabled: activated};
-		triggers.push(thisone);	
+		triggers.push(thisone);
 	} else {
-		for (var i = 0; i < triggers.length; i++) {		
+		for (var i = 0; i < triggers.length; i++) {
 			if (triggers[i].ind === index) {
 				triggers[i].obj = trigger;
 				thisone = triggers[i];
 			}
 		}
 	}
-	
+
 	if (activated) {
 		trigger.mesh.position.x = thisone.xpos;
 		trigger.mesh.position.z = thisone.zpos;
@@ -464,7 +466,7 @@ function disableTrigger(trigger) {
 			console.log(triggers[i].fname+"-trigger disabled");
 			for (var j = 0; j < triggers.length; j++) {
 				if (triggers[j].ind === triggers[i].followup) {
-					enableTrigger(triggers[j].ind); 
+					enableTrigger(triggers[j].ind);
 					break;
 				}
 			}
@@ -484,13 +486,13 @@ function enableTrigger(index) {
 		if (triggers[i].ind === index) {
 			triggers[i].enabled = true;
 			var functPtr = eval(triggers[i].fname);
-						
-			if (triggers[i].fparam1 === "") addTrigger(true, triggers[i].xpos, triggers[i].zpos, triggers[i].siz, functPtr, triggers[i].fname, "", "", triggers[i].followup, triggers[i].ind, true) 
-				else if (triggers[i].fparam2 === "") addTrigger(true, triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1), triggers[i].fname, triggers[i].fparam1, "", triggers[i].followup, triggers[i].ind, true)          
-					else addTrigger(true, triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1, triggers[i].fparam2), triggers[i].fname, triggers[i].fparam1, triggers[i].fparam2, triggers[i].followup, triggers[i].ind, true) 			
+			if (triggers[i].fparam1 === "") addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, functPtr, triggers[i].fname, "", "", triggers[i].followup, triggers[i].ind, true)
+				else if (triggers[i].fparam2 === "") addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1), triggers[i].fname, triggers[i].fparam1, "", triggers[i].followup, triggers[i].ind, true)
+					else addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1, triggers[i].fparam2), triggers[i].fname, triggers[i].fparam1, triggers[i].fparam2, triggers[i].followup, triggers[i].ind, true)
+
 			console.log(triggers[i].fname+"-trigger enabled");
 		}
-	}	
+	}
 }
 
 
