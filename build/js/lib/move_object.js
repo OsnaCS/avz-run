@@ -2,7 +2,6 @@ var reached = false;
 
 function moveObject(object, xTarget , yTarget, zTarget, speed, timeDif) {
 
-	console.log(object.position.z);
 	if(timeDif < 0.004){
 		var objectPosition = object.position;
 		var targetPosition = new THREE.Vector3( xTarget , yTarget, zTarget );

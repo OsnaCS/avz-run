@@ -73,8 +73,8 @@ function init(event) {
 
     clock = new THREE.Clock();
 
-    //CreateSegment("groundlevel",scene);
-    CreateSegment("robolab",scene);
+    CreateSegment("groundlevel",scene);
+    // CreateSegment("robolab",scene);
 
     octree = new THREE.Octree( {
         // uncomment below to see the octree (may kill the fps)
@@ -113,8 +113,8 @@ function init(event) {
                         // renderer.render(scene, camera);
     					// start a loop that will update the objects' positions
     					// and render the scene on each frame
-    					loop();    					
-    				}                
+    					loop();
+    				}
 
     			}
     		}
@@ -234,7 +234,7 @@ function createScene(complete) {
 var roboternum = 0;
 function loop() {
     //console.log(octreeObjects);
-	
+
 
     if (!menu && !pause) {
     	if (player.health <= 0) {
@@ -260,17 +260,17 @@ function loop() {
             if (!special_html_input) {
             	controlLoop(controls);
             	interactionLoop();
-            }                          
+            }
 
-           
-          
+
+
             if(roboternum == 0){
 	            for (i = 0; i < static_obj.length; i++) {
 	            	if(static_obj[i].name == "roboter"){
 	            		roboternum = i;
 	            		break;
 	            	}
-	            	
+
 	            }
 	        }
 
@@ -296,7 +296,7 @@ function loop() {
                 stats.end();
             }
         }
-} 
+}
 
 
 
@@ -447,12 +447,12 @@ function addTrigger (xPos, zPos, size, action, fname, fparam1, fparam2, enabledt
     var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, color:0xFFFFFF});
     var triggerMesh = new THREE.Mesh(triggerGeom,mat);
     var trigger = new GameObject(triggerMesh,action,TYPE_TRIGGER);
-	
+
 	if (!nonewentry) {
 		var thisone = {ind: index, obj: trigger, xpos: xPos, zpos: zPos, siz: size, fname: fname, fparam1: fparam1, fparam2: fparam2, followup: enabledtrigger, enabled: true};
-		triggers.push(thisone);	
+		triggers.push(thisone);
 	} else {
-		for (var i = 0; i < triggers.length; i++) {		
+		for (var i = 0; i < triggers.length; i++) {
 			if (triggers[i].ind === index) triggers[i].obj = trigger;
 		}
 	}
@@ -473,7 +473,7 @@ function disableTrigger(trigger) {
 			console.log(triggers[i].fname+"-trigger disabled");
 			for (var j = 0; j < triggers.length; j++) {
 				if (triggers[j].ind === triggers[i].followup) {
-					enableTrigger(triggers[j].ind); 
+					enableTrigger(triggers[j].ind);
 					break;
 				}
 			}
@@ -493,13 +493,13 @@ function enableTrigger(index) {
 		if (triggers[i].ind === index) {
 			triggers[i].enabled = true;
 			var functPtr = eval(triggers[i].fname);
-						
-			if (triggers[i].fparam1 === "") addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, functPtr, triggers[i].fname, "", "", triggers[i].followup, triggers[i].ind, true) 
-				else if (triggers[i].fparam2 === "") addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1), triggers[i].fname, triggers[i].fparam1, "", triggers[i].followup, triggers[i].ind, true)          
-					else addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1, triggers[i].fparam2), triggers[i].fname, triggers[i].fparam1, triggers[i].fparam2, triggers[i].followup, triggers[i].ind, true) 			
+
+			if (triggers[i].fparam1 === "") addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, functPtr, triggers[i].fname, "", "", triggers[i].followup, triggers[i].ind, true)
+				else if (triggers[i].fparam2 === "") addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1), triggers[i].fname, triggers[i].fparam1, "", triggers[i].followup, triggers[i].ind, true)
+					else addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1, triggers[i].fparam2), triggers[i].fname, triggers[i].fparam1, triggers[i].fparam2, triggers[i].followup, triggers[i].ind, true)
 			console.log(triggers[i].fname+"-trigger enabled");
 		}
-	}	
+	}
 }
 
 
