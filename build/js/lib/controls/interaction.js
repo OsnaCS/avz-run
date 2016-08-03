@@ -257,7 +257,7 @@ function getSegmentFromIntItem(intItem) {
 function damageDoor() {
     if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
 		var d = getSegmentFromIntItem(this);
-		addObjectViaName("halbbrokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "destroyDoor");
+		addObjectViaName("halbbrokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "destroyDoor", d.stretchx);
 		remove_interactible(d);
 		this.delFromScene();
         damageDoorSound();
@@ -269,7 +269,7 @@ function damageDoor() {
 function destroyDoor() {
     if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
 		var d = getSegmentFromIntItem(this);
-		addObjectViaName("brokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "");
+		addObjectViaName("brokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "", d.stretchx);
 		remove_interactible(d);
 		this.delFromScene();
 		player.delActItem();
@@ -517,8 +517,7 @@ function openTransponderDoor(){
 			var kind = "glastur"
 
 			if (objectFilenameToName(d.filename) == "holztuer") kind = "holztur";
-
-			addObjectViaName(kind, "door", d.x, d.y, d.z, d.skale, d.rot-1, "openopened");
+			addObjectViaName(kind, "door", d.x, d.y, d.z, d.skale, d.rot-1, "openopened", d.stretchx);
 			remove_interactible(d);
 			this.delFromScene();
             // if(!this.open) {

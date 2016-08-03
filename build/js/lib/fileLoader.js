@@ -88,7 +88,6 @@ var FileLoader = function (callback) {
       //           });
                 for (var i = 0 ; i<material.materials.length;i++) {
                     if( material.materials[i].opacity==1) {
-                        console.log(material.materials[i]);
 
                         var basic = new THREE.MeshLambertMaterial();
                         if(material.materials[i].map) {

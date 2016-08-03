@@ -470,7 +470,7 @@ function controlLoop(controls) {
         } else if (gameObj.type == TYPE_TRIGGER) {
             //collision with trigger
             gameObj.interact();
-            removeTrigger(gameObj);
+            disableTrigger(gameObj);
         } else {
             //stop when hitting the floor
             velocity.y = Math.max(0, velocity.y);
@@ -486,7 +486,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (gameObj.type == TYPE_TRIGGER) {
             gameObj.interact();
-            removeTrigger(gameObj);
+            disableTrigger(gameObj);
         } else {
             velocity.z = Math.min(0, velocity.z);
         }
@@ -498,7 +498,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (gameObj.type == TYPE_TRIGGER) {
             gameObj.interact();
-            removeTrigger(gameObj);
+            disableTrigger(gameObj);
         } else {
             velocity.z = Math.max(0, velocity.z);
         }
@@ -510,7 +510,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (gameObj.type == TYPE_TRIGGER) {
             gameObj.interact();
-            removeTrigger(gameObj);
+            disableTrigger(gameObj);
         } else {
             velocity.x = Math.min(0, velocity.x);
         }
@@ -522,7 +522,7 @@ function controlLoop(controls) {
             fireAction();
         } else if (gameObj.type == TYPE_TRIGGER) {
             gameObj.interact();
-            removeTrigger(gameObj);
+            disableTrigger(gameObj);
         } else {
             velocity.x = Math.max(0, velocity.x);
         }
