@@ -42,14 +42,14 @@ var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF",
 				//var pfad = xmlDoc.getElementsByTagName("objects")[0].getAttribute("ObjectPath");
 
 				var typeItems = xmlDoc.getElementsByTagName("floors")[0].getElementsByTagName("floor");
-				for (i = 0; i < typeItems.length; i++) {
+				for (var i = 0; i < typeItems.length; i++) {
 					if (typeItems[i].getAttribute("number") == floornumber) {
 						thisfloor.spawn = typeItems[i].getAttribute("characterspawn");
 						thisfloor.ambientintens = typeItems[i].getAttribute("ambientlightintens");
 						thisfloor.ambientcolor = typeItems[i].getAttribute("ambientlightcolor");
 						thisfloor.fogtime = typeItems[i].getAttribute("fogtime");
 						thisfloor.maxfog = typeItems[i].getAttribute("maxfog");
-						thisfloor.maxfog = typeItems[i].getAttribute("startfog");
+						thisfloor.startfog = typeItems[i].getAttribute("startfog");
 						callback();
 					}
 				}
@@ -61,6 +61,11 @@ var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF",
 
 
 
+	function createAllSegments(callback) {
+		CreateSegment("groundlevel", callback);		
+	}
+	
+	
 
 //this function takes as input the name of a room, and adds to the "segments"-array the object containing its info + mesh (no return value due to asynchrony)
 //the callback-function WAS ORIGINALLY MEANT TO BE nothing, fitdoor or the one loading the info from the levels.xml
@@ -457,7 +462,7 @@ var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF",
 			var light = new THREE.PointLight( parseInt(color), intensity, visiblewidth*SKALIERUNGSFAKTOR );
 			light.position.set(x, y, z);
 			threelights.push(light);
-			scene.add(light);
+			addtoscene(light);
 		}
 	}
 
@@ -759,14 +764,11 @@ function door_in_doors(callback) {
 
 //zum thema alle objekte aus der scene löschen.
 	function empty_scene(){
-	for( var i = scene.children.length - 1; i >= 0; i--) {
-		obj = scene.children[i];
-		scene.remove(obj);
-	}
+	// for( var i = scene.children.length - 1; i >= 0; i--) {
+		// obj = scene.children[i];
+		// scene.remove(obj);
+	// }
 	  if(scene_items.length > 0 ) {
-		// scene_items.forEach(function(v,i) {  //TODO: anpassen auf neue struktur.
-		   // v.parent.remove(v);
-		// });
 		scene_items = null; scene_items = [];
 		static_obj = null; static_obj = [];
 		interact_obj = null; interact_obj = [];
@@ -774,6 +776,15 @@ function door_in_doors(callback) {
 		threelights = null; threelights = [];
 		fires = null; fires = [];
 		trigger = null; triggers = [];
+		
+		//feuer-stuff
+		fire_list = null; fire_list = [];
+		pointlight_list = null; pointlight_list = [];
+		smoke_list = null; smoke_list = [];
+		fire_mesh_list = null; fire_mesh_list = [];
+		fire_collision_box_list = null; fire_collision_box_list = [];
+		fire_count = 0;
+		smoke_and_light_count = 0;		
 	  }
 	}
 

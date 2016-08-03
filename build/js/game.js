@@ -330,7 +330,7 @@ function loop() {
 function createRoom(callback) {
 	readLevelsXML(csegments);
 	function csegments() {
-        CreateSegment("groundlevel",psegments);
+        createAllSegments(psegments)
         function psegments () {
     		PutSegments(doors);
     		function doors () {
@@ -344,17 +344,17 @@ function createRoom(callback) {
     						var gesamtlicht = 0;
     						if (thisfloor.ambientintens > 0) {
 								var tmplight = new THREE.AmbientLight(parseInt(thisfloor.ambientcolor),parseInt(thisfloor.ambientintens));
-    							scene.add(tmplight); threelights.push(tmplight);
+    							addtoscene(tmplight); threelights.push(tmplight);
     							gesamtlicht += parseInt(thisfloor.ambientintens);
     						}
     						if (godmode) {
 								var tmplight = new THREE.AmbientLight(0xFFFFFF,(1-gesamtlicht));
-    							scene.add(tmplight); threelights.push(tmplight);
+    							addtoscene(tmplight); threelights.push(tmplight);
     							gesamtlicht += (1-gesamtlicht);
     						}
     						if (gesamtlicht < 0.3 && onlygloballight) {
 								var tmplight = new THREE.AmbientLight(0xFFBFBF,(0.3-gesamtlicht));
-    							scene.add(tmplight); threelights.push(tmplight);
+    							addtoscene(tmplight); threelights.push(tmplight);
     						}
     						function triggers () {
     							addtriggers(callback);
@@ -375,10 +375,8 @@ function recreateRoom() {
     }
     scene = null;
     scene= new THREE.Scene();
-    // scene= new THREE.Scene();
 	console.log("Recreating everything...");
     empty_scene();
-
 }
 
 
@@ -432,7 +430,7 @@ function addTrigger (activated, xPos, zPos, size, action, fname, fparam1, fparam
 		trigger.mesh.position.x = thisone.xpos;
 		trigger.mesh.position.z = thisone.zpos;
 		trigger.mesh.position.y = 0;
-		scene.add(trigger.mesh);
+		addtoscene(trigger.mesh);
 		modifyOctree(trigger,true);
 	}
 }
