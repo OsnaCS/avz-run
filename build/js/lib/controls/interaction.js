@@ -327,6 +327,9 @@ function extinguish() {
     }
 }
 
+function pfortnerliste() {
+    showThoughts("Noch austragen und fertig!",5000);
+}
 
 // ***** robo lab pin pad *****
 

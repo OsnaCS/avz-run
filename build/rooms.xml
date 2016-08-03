@@ -43,11 +43,13 @@
 			<door type="norm" index="hs1" position="(17.39, 0)" normal="(0, 1)" stretch="1.1" act="axtopenable"/>
 			<door type="norm" index="hs2" position="(24.17, 0)" normal="(0, 1)" stretch="1.1"/>
 			<door type="glass" index="flur" position="(11, -6.28)" normal="(1, 0)" stretch="1.1" act="transponderopenable"/>
+			<door type="glass" index="exit" position="(30.95, -6.3)" normal="(1, 0)" stretch="1.1" act="openable" oninteract="nix"/>
         </doors>
         <spawns>
 			<spawn  index="feuerloescher" position="(14.3, 3, 1)" object="loscher" normaltowall="(0, 1)" scale="1" oninteract="pickUpItem"/>
 			<spawn  index="axt" position="(-7, -25, 0.1)" object="axt" normaltowall="(0.3, -1)" scale="1" oninteract="pickUpItem"/>
 			<spawn  index="sponge" position="(28.5, 1.9, 0.9)" object="schwamm" normaltowall="(0, 1)" scale="1" oninteract="pickUpItem"/>
+			<spawn  index="list" position="(-1.8,-8.6,1.08)" object="list" normaltowall="(0,1)" scale="0.4" oninteract="pfortnerliste" />
 
 			<spawn  index="PC-hack" position="(2.5, -8.3, 1.08)" object="computer_hack" normaltowall="(0,-1)" scake="1" oninteract="enterCH"/>
 			<spawn  index="transponder" position="(4.5, -8.8, 1.08)" object="transponder" normaltowall="(0, 1)" scale="1" oninteract="pickUpItem"/>
@@ -59,11 +61,11 @@
 			<fire index="cip2" position="(-10.66, -17.84, 1)" size="(1,1,1)" val="6"/>
 			<fire index="cip3" position="(-10.88, -21.41, 0)" size="(3,3,3)" val="6"/>
 			<fire index="cip4" position="(-7.85, -21.97, 0)" size="(2,2,2)" val="6"/>
-			<fire index="cip5" position="(-14.70 ,-16.87, 0.5)" size="(1,1,1)" val="6"/>
-			<fire index="cip5" position="(-14.70 ,-11.7, 0.5)" size="(1,1,1)" val="6"/>
+			<fire index="cip5" position="(-14.70 ,-16.87, 0)" size="(0.7,0.7,0.7)" val="6"/>
+			<fire index="cip5b" position="(-14.70 ,-11.7, 0)" size="(1,1,1)" val="6"/>
 			<fire index="cip6" position="(-6.5, -12, 0.5)" size="(1,1,1)" val="6"/>
-			<fire index="cip6" position="(-14.3, -23.6, 1)" size="(0.5,0.5,0.5)" val="6"/>
-			<fire index="cip6" position="(-17.3, -23.6, 1)" size="(0.5,0.5,0.5)" val="6"/>
+			<fire index="cip7" position="(-14.3, -23.6, 1.2)" size="(0.3,0.3,0.3)" val="6"/>
+			<fire index="cip8" position="(-17.3, -23.6, 1.2)" size="(0.3,0.3,0.3)" val="6"/>
 
 
 			<fire index="lobby" position="(-8.24, 8.96, 0)" size="(1,1,1)" val="6"/>
@@ -92,8 +94,9 @@
         </lights>
 		<triggers>
 			<trigger index="exit" xpos="30" ypos="-6" size="2" functionname="success"/>
-			<trigger index="cip" xpos="-9" ypos="-11" size="2" functionname="showThoughts" fparam1="Der Rauch ist zu dicht, ich kann kaum atmen. Vielleicht finde ich etwas, das ich mir vor den Mund halten kann." fparam2="5000" />
-			<trigger index="exit_on_fire" xpos="20" ypos="-6" size="4" functionname="showThoughts" fparam1="Ach du Schreck ... Ein großes wildes Feuer greift den Ausgang an! Ich muss es löschen! " fparam2="5000" />
+			<trigger index="cip" xpos="-9" ypos="-12" size="2" functionname="showThoughts" fparam1="Der Rauch ist zu dicht, ich kann kaum atmen. Vielleicht finde ich etwas, das ich mir vor den Mund halten kann. Besser raus hier." fparam2="5000" />
+			<trigger index="hs2" xpos="24.17" ypos="2" size="2" functionname="showThoughts" fparam1="Hmm, vielleicht kann ich den Schwamm hier ja gebrauchen." fparam2="10000" />
+			<trigger index="exit_on_fire" xpos="20" ypos="-6" size="4" functionname="showThoughts" fparam1="Ach du Schreck ... Ein großes wildes Feuer greift den Ausgang an! Ich muss es löschen! " fparam2="4000" />
 		</triggers>
 	</room>
 
