@@ -316,13 +316,11 @@ function loop() {
 }
 
 
-var hemisphereLight, shadowLight;
-
 
 function createRoom(callback) {
 	readLevelsXML(csegments);
 	function csegments() {
-        createAllSegments(psegments);
+        createAllSegments(psegments)
         function psegments () {
     		PutSegments(doors);
     		function doors () {
@@ -334,19 +332,20 @@ function createRoom(callback) {
     					function lights () {
     						turn_on_lights(triggers);
     						var gesamtlicht = 0;
+							var tmplight;
     						if (thisfloor.ambientintens > 0) {
                                 tmplight = new THREE.AmbientLight(parseInt(thisfloor.ambientcolor),parseInt(thisfloor.ambientintens))
     							addtoscene(tmplight); threelights.push(tmplight);
     							gesamtlicht += parseInt(thisfloor.ambientintens);
     						}
     						if (godmode) {
-    							tmplight = new THREE.AmbientLight(0xFFFFFF,(1-gesamtlicht));
-                                addtoscene(tmplight); threelights.push(tmplight);
+								tmplight = new THREE.AmbientLight(0xFFFFFF,(1-gesamtlicht));
+    							addtoscene(tmplight); threelights.push(tmplight);
     							gesamtlicht += (1-gesamtlicht);
     						}
     						if (gesamtlicht < 0.3 && onlygloballight) {
-    							tmplight = new THREE.AmbientLight(0xFFBFBF,(0.3-gesamtlicht));
-                                addtoscene(tmplight); threelights.push(tmplight);
+								tmplight = new THREE.AmbientLight(0xFFBFBF,(0.3-gesamtlicht));
+    							addtoscene(tmplight); threelights.push(tmplight);
     						}
     						function triggers () {
     							addtriggers(levelSettings);
@@ -407,12 +406,11 @@ function recreateRoom() {
     for(var j = 0;j<octreeObjects.length;j++) {
         octree.remove(octreeObjects[j]);
     }
-
-    // scene= new THREE.Scene();
+    scene = null;
+    scene= new THREE.Scene();
 	console.log("Recreating everything...");
     empty_scene();
     createRoom(loop);
-
 }
 
 
@@ -443,7 +441,7 @@ function addTrigger (activated, xPos, zPos, size, action, fname, fparam1, fparam
 
 	var hohe = (size > PLAYERHEIGHT*3) ? size: PLAYERHEIGHT*3;
     var triggerGeom = new THREE.BoxGeometry(size,hohe,size);
-    var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, color:0xFFFFFF});
+    var mat = new THREE.MeshBasicMaterial({ transparent: false, opacity: 0, depthWrite: false, color:0xFFFFFF});
     var triggerMesh = new THREE.Mesh(triggerGeom,mat);
     var trigger = new GameObject(triggerMesh,action,TYPE_TRIGGER);
 
@@ -457,6 +455,7 @@ function addTrigger (activated, xPos, zPos, size, action, fname, fparam1, fparam
 			if (triggers[i].ind === index) {
 				triggers[i].obj = trigger;
 				thisone = triggers[i];
+				alert(thisone.fname);
 			}
 		}
 	}
@@ -465,7 +464,7 @@ function addTrigger (activated, xPos, zPos, size, action, fname, fparam1, fparam
 		trigger.mesh.position.x = thisone.xpos;
 		trigger.mesh.position.z = thisone.zpos;
 		trigger.mesh.position.y = 0;
-		scene.add(trigger.mesh);
+		addtoscene(trigger.mesh);
 		modifyOctree(trigger,true);
 	}
 }
