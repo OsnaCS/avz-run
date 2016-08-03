@@ -317,6 +317,8 @@ function loop() {
 
 
 function createRoom(callback) {
+	$("#loadingBlocker2").show();
+	$(".gui").hide();
 	readLevelsXML(csegments);
 	function csegments() {
         createAllSegments(psegments);
@@ -364,7 +366,8 @@ function createRoom(callback) {
     						function triggers () {
     							addtriggers(levelSettings);
                                 function levelSettings () {
-
+									$("#loadingBlocker2").hide();
+									$(".gui").show();
                                     callback();
                                 }
     						}
@@ -411,6 +414,7 @@ function resetScene(callback) {
 
 function recreateRoom() {
 	//lösche erst alle segments, doors, objects, fires, lights, triggers. Dann calle createRoom/init
+	
     empty_scene(reset);
 	
 	function reset() {
