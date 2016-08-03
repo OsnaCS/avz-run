@@ -509,7 +509,6 @@ function openTransponderDoor(){
 
 			if (objectFilenameToName(d.filename) == "holztuer") kind = "holztur";
 			
-			console.log(d.stretchx);
 			addObjectViaName(kind, "door", d.x, d.y, d.z, d.skale, d.rot-1, "openopened", d.stretchx);
 			remove_interactible(d);
 			this.delFromScene();

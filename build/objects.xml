@@ -10,7 +10,7 @@
 		<object name="schwamm" path="schwamm/schwamm.json" scale ="1.2" icon="schwamm.png" smooth="1" />
 		<object name="loscher" path="feuerloescher.json" scale="1" icon="feuerloescher.png" smooth="1" />
 
-		<!-- <object name="list" path="list/pfortnerliste.json" scale="1" icon="icon.jpg" smooth="1"/> -->
+		<object name="list" path="list/pfortnerliste.json" scale="1" icon="icon.jpg" smooth="1"/> 
 		<object name="roboter" path="roboter.json" scale="1" icon="icon.jpg" smooth="1" />
 		<object name="evil_roboter" path="evil_roboter.json" scale="1" icon="icon.jpg" smooth="1" />
 		<object name="klo" path="klo.json" scale="1" icon="icon.jpg" smooth="1" />
@@ -49,7 +49,7 @@
 		<object path="glastuerrahmen.json" name="glastuerrahmen" scale="1"  smooth="1" />
 		<object path="buerostuhl.json" name="buerostuhl" scale="1"  smooth="1" />
 		<object path="wc_code/wc_code.json" name="wc_code" scale="1"  smooth="0" />
-		<!-- <object path="energy_counter/energy_counter.json" name="energy_counter" scale="1"  smooth="0" /> -->
+		<object path="energy_counter/energy_counter.json" name="energy_counter" scale="1"  smooth="0" /> 
 	</static>
 
 	<door>

@@ -329,6 +329,7 @@ function createRoom(callback) {
     				objects_in_spawns(fires);
     				function fires() {
 						if (!nofog) {
+							console.log("Max-Fog auf diesem Level: "+thisfloor.maxfog)
 							MAX_FOG = thisfloor.maxfog; if (godmode) {MAX_FOG = 0.005};
 							myfog = thisfloor.startfog; if (godmode) {myfog = 0.0002}; 
 							fogTime = thisfloor.fogtime; if (godmode) {fogTime = 1200};  //siehe oben
