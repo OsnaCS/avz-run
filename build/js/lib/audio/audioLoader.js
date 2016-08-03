@@ -68,23 +68,23 @@ function stopSound(sound) {
 }
 
 function createBasicSounds() {
-    footsteps = createSound("footsteps", true, 1);
+    footsteps = createSound("footsteps", true, 0.8);
     atmosphere = createSound("atmosphere", true, 0.2, function() {
         playSound(atmosphere);
     });
 
-    extinguisher_Sound = createSound("extinguisher", false, 7);
-    door_Sound = createSound("door-open", false, 20);
-    doorLocked_Sound = createSound("door-locked", false, 5);
-    button_Sound = createSound("button", false, 3);
-    correct_Sound = createSound("correct", false, 4);
-    failed_Sound = createSound("failed", false, 4);
-    success_Sound = createSound("quest-success", false, 20);
-    pain_Sound = createSound("pain", false, 2);
-    damageDoor_Sound = createSound("door-brake", false, 3);
-    pickUp_Sound = createSound("pickup", false, 2);
-    outOfBreath_Sound = createSound("run-breath", false, 2);
-    gameOver_Sound = createSound("gameover", false, 1);
+    extinguisher_Sound = createSound("extinguisher", false, 0.8);
+    door_Sound = createSound("door-open", false, 10);
+    doorLocked_Sound = createSound("door-locked", false, 0.7);
+    button_Sound = createSound("button", false, 0.7);
+    correct_Sound = createSound("correct", false, 0.5);
+    failed_Sound = createSound("failed", false, 0.8);
+    success_Sound = createSound("quest-success", false, 1);
+    pain_Sound = createSound("pain", false, 0.8);
+    damageDoor_Sound = createSound("door-brake", false, 0.8);
+    pickUp_Sound = createSound("pickup", false, 0.9);
+    outOfBreath_Sound = createSound("run-breath", false, 1);
+    gameOver_Sound = createSound("gameover", false, 0.8);
     hbreathing_Sound = createSound("breath", true, 0.2);
 }
 
