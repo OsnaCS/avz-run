@@ -66,14 +66,16 @@ function addFire(x, y, z, width, height, depth, spacing) {
         }
     }
     // Pointlight
-    var pointlight;
-    if(fireDepth > fireWidth) {
-        pointlight = new THREE.PointLight(0xff9933, 1, fireWidth, 2);
-    }else{
-        pointlight = new THREE.PointLight(0xff9933, 1, fireDepth, 2);
-    }
-    pointlight.position.set(x, y + fireHeight / 2, z);
-    scene.add(pointlight);
+    if (!performantfire) {
+       var pointlight;
+       if(fireDepth > fireWidth) {
+           pointlight = new THREE.PointLight(0xff9933, 1, fireWidth, 2);
+       }else{
+           pointlight = new THREE.PointLight(0xff9933, 1, fireDepth, 2);
+       }
+       pointlight.position.set(x, y + (fireHeight / 2) , z);
+       scene.add(pointlight);
+   }
 
     // Firemesh
     var fmesh = fire.mesh.clone();
@@ -111,7 +113,7 @@ function addFire(x, y, z, width, height, depth, spacing) {
     var smoke = addSmoke(x, y, z);
 
     // Push smoke und light in Array
-    pointlight_list.push(pointlight);
+    if (!performantfire) pointlight_list.push(pointlight);
     smoke_list.push(smoke);
     smoke_and_light_count++;
 
@@ -135,7 +137,7 @@ function animateFire() {
     // update alle smoke und pointlights
     for (f_j = 0; f_j < smoke_and_light_count; f_j++) {
 
-        pointlight_list[f_j].intensity = Math.sin(fireElapsed * 30) * 0.25 + 3;
+         if (!performantfire) pointlight_list[j].intensity = Math.sin(elapsed * 30) * 0.25 + 3;
 
         smoke_list[f_j].material.uniforms.time.value = clock.getElapsedTime();
     }
@@ -162,7 +164,7 @@ function delFire(fireColBox) {
 
         fireColBox.delFromScene();
         octree.remove(fireColBox.mesh);
-        scene.remove(pointlight_list[index]);
+        if (!performantfire) scene.remove(pointlight_list[index]);
         scene.remove(smoke_list[index]);
         scene.remove(fire_mesh_list[index]);
         fireColBox.mesh.children[0].stop();
