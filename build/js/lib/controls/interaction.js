@@ -539,6 +539,16 @@ function openTransponderDoor(){
     }
 }
 
+//
+function robotControll(){
+    robolab = !robolab;
+    if(robolab){
+        showThoughts("Ich habe den Roboter wieder angeschaltet",5000);
+    } else{
+        showThoughts("Ich habe den Roboter ausgeschaltet",5000);
+    }
+}
+
 
 // can be used to bind events with parameters to game objects
 // ALWAYS NEEDS EXTRA VARIABLE
@@ -710,3 +720,4 @@ function extinguisherAnimation(){
 
     setTimeout(deleteExtinguisherParticles, 1000);
 }
+
