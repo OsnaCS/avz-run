@@ -1,4 +1,5 @@
 var godmode = false; // zum testen, man kann nicht fallen, hat unendlich leben, unendlich sprinten, alle türen sind offen, Nebel kommt langsamer
+
 var muteSounds = false; // if true, no sound will be played
 var performantfire = true; //when true, it makes the fires a bit worse and removes their pointlight
 var nosmoothedges = true; //if true, it no edge will be smoothed.
@@ -10,6 +11,7 @@ document.getElementById("performantfire").checked = performantfire;
 document.getElementById("nosmoothing").checked = nosmoothedges;
 document.getElementById("uselambert").checked = useLambertMaterial;
 document.getElementById("useambient").checked = onlygloballight;
+
 
 
 // Controls camera via WASD/Mouse, enables player to jump, run and crouch
@@ -51,7 +53,6 @@ var prevTime = performance.now();
 
 var velocity = new THREE.Vector3();
 
-var terrain = [];
 
 var ducked = false;
 var running = false;
@@ -182,7 +183,7 @@ function initPointerLock() {
             settingswindow.style.display = 'none';
             mainMenu.style.display = 'block';
         }, false);
- 		
+
 
         button.addEventListener('click', function(event) {
 
@@ -686,7 +687,7 @@ function fireAction() {
         scene.add(flashLight);
         scene.fog.color.set(0xff0000);;
         flashCooldown = 1;
-        player.damage(300);
+        player.damage(MAX_HEALTH/6);
         painSound();
         flashInterval = setInterval(function() {
             flashCooldown--;

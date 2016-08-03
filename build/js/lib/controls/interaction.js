@@ -22,7 +22,6 @@ var CORRECT_PIN = ['0','0','4','2'];
 var CORRECT_TRANSPONDER = ['4','3'];
 var TYPE_INTERACTABLE = 0;
 var TYPE_FIRE = 1;
-var TYPE_EXIT = 2;
 var TYPE_TRIGGER = 3;
 var FADE_TIME = 1200;
 
@@ -97,9 +96,6 @@ function interactionLoop() {
             interObj = getGameObject(interactions[interIter2].object)
             if (interObj instanceof GameObject) break;
         }
-        if(interObj.type==TYPE_EXIT){
-        // nextLevel(); TODO: implement somewhere
-        }
     }
     //
     if(interactions.length>0) {
@@ -141,7 +137,7 @@ GameObject = function(mesh, interaction, type, name) {
     this.type = type;
     this.mesh = mesh;
     this.interact = interaction;
-http://127.0.0.1:8000
+
 
     this.name=name;
 
@@ -163,13 +159,15 @@ http://127.0.0.1:8000
         outlineMesh = null;
 
         // prohibit further interaction by removing from terrain
-        for (i = 0; terrain[i] != this && i < terrain.length; i++);
-        if (terrain[i] == this) terrain.splice(i,1);
 		console.log("deleted item")
 		delGameObject(this.mesh);
-
     }
 
+}
+
+function nextLevel() {
+    floornumber-=1;
+    recreateRoom();
 }
 
 function delGameObject(mesh) {
@@ -258,7 +256,7 @@ function getSegmentFromIntItem(intItem) {
 }
 
 function damageDoor() {
-    if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
+    if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "axt")){
 		var d = getSegmentFromIntItem(this);
 		addObjectViaName("halbbrokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "destroyDoor", d.stretchx);
 		remove_interactible(d);
@@ -327,6 +325,9 @@ function extinguish() {
     }
 }
 
+function pfortnerliste() {
+    showThoughts("Noch austragen und fertig!",5000);
+}
 
 // ***** robo lab pin pad *****
 
@@ -498,20 +499,6 @@ function backToGame() {
 }
 
 
-// Attach this function to the sink
-function coverMouth(){
-    if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "lappen")){
-        startHeavyBreathing();
-        HEALTH_PER_SECOND = HEALTH_PER_SECOND / 2;
-        //addItem((newItemList[31]), playerPos[1], playerPos[2] + 10, playerPos[3], 2, 270, true, pickUpItem);
-        console.log('covered mouth');
-        player.delActItem();
-    }else{
-        console.log('nicht anwendbar');
-    }
-}
-
-
 // Attach this function the door to be opened by a transponder
 function openTransponderDoor(){
     if(selectedItem != null && selectedItem.activeTransponder){
@@ -520,6 +507,8 @@ function openTransponderDoor(){
 			var kind = "glastur"
 
 			if (objectFilenameToName(d.filename) == "holztuer") kind = "holztur";
+			
+			console.log(d.stretchx);
 			addObjectViaName(kind, "door", d.x, d.y, d.z, d.skale, d.rot-1, "openopened", d.stretchx);
 			remove_interactible(d);
 			this.delFromScene();
@@ -589,6 +578,33 @@ function success() {
     console.log("YEY");
     $("#endScreen").fadeIn(5000);
     $(".GUI").fadeOut(5000);
+}
+
+
+function coverMouth(){
+    //if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "schwamm")){
+    if((selectedItem != null) && (objectFilenameToName(selectedItem.name) == "schwamm")){
+        startHeavyBreathing();
+        HEALTH_PER_SECOND = HEALTH_PER_SECOND / 2;
+        //addItem((newItemList[31]), playerPos[1], playerPos[2] + 10, playerPos[3], 2, 270, true, pickUpItem);
+        console.log('covered mouth');
+        player.delActItem();
+        return true;
+    }else{
+        return false;
+    }
+}
+
+function makelessfog() {
+        console.log("Der Nebel lichtet sich");
+        scene.fog = new THREE.FogExp2(0x424242, 0.00015);
+}
+
+function makemorefog() {
+        console.log("Der Nebel dichtet sich");
+        if (coverMouth()) showThoughts("Das sollte mir helfen!",5000);
+        else showThoughts("Der Rauch ist zu dicht, ich kann kaum atmen. Vielleicht finde ich etwas, das ich mir vor den Mund halten kann. Besser raus hier.",5000)
+        scene.fog = new THREE.FogExp2(0x424242, 0.15);
 }
 
 

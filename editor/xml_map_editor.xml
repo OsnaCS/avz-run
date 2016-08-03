@@ -19,6 +19,7 @@
 		<size xmin="-8.94993" xmax="11.00008" ymin="-13.5" ymax="28.20001"/>
 
 		<doors>
+			 <door type="norm" index="1" x = "11" y = "25.85" normalX ="1" normalY = "0"/>
 		   <door type="norm" index="2" x = "11" y = "20.4" normalX = "1" normalY =  "0"/>
 		   <door type="norm" index="3" x = "11" y = "14.9" normalX = "1" normalY = "0"/>
 		   <door type="norm" index="4" x ="11"  y = "10.4" normalX = "1" normalY = "0"/>
@@ -38,6 +39,8 @@
 		   <door type="norm" index="18" x = "-7.15" y = "23.24" normalX = "0" normalY =  "1"/>
 		   <door type="glass" index="19" x = "-1.72" y = "23.24" normalX = "0" normalY =  "1"/>
 		   <door type="norm" index="20" x = "3.15"  y = "23.24" normalX = "0" normalY =  "1"/>
+		    <door type="norm" index="21" x = "-3.75" y = "2.85" normalX = "1" normalY =  "0"/>
+		   <door type="norm" index="22" x = "-3.75" y =  "-1.85" normalX = "1" normalY =  "0"/>
 		</doors>
 		<spawns>
 		</spawns>
@@ -88,6 +91,10 @@
 			<door index="8" type="norm"  normalX = "-1" normalY = "0" x = "-4.6"  y =  "4.25"/>
 			<door index="9" type="norm"  normalX = "-1" normalY = "0" x = "-4.6"  y =  "2.25"/>
 			<!-- Innen-Türen!-->
+			<door index="10" type="norm"  normalX = "1" normalY = "0" x = "0.6"  y =  "8.45"/>
+
+			<door index="11" type="glass"  normalX = "0" normalY = "-1" x = "1.57" y=  "-1.2"/>
+			<door index="12" type="norm"  normalX = "-1" normalY = "0" x = "-0.5"  y =  "-3.56"/>
 
 		</doors>
 		<spawns>
@@ -95,24 +102,24 @@
 	</room>
 
 	<room name="gang_solo" filename="gang_solo.json" >
-		<size xmin="-3.01985" ymin="-12.11332" xmax="2.12382" ymax="10.47742"/>
+		<size xmin="-3.02" ymin="-2.59927" xmax="2.17" ymax="20.06524"/>
 		<doors>
-		   <door type="floor" index="1" x="-0.4198496" y="-12.11332" normalX="0" normalY="-1"/>
-		   <door type="floor" index="2" x="-0.4761844" y="10.47742" normalX="0" normalY="1"/>
+		   <door type="floor" index="1" x="-0.424999" y="-2.5255" normalX="0" normalY="-1"/>
+		   <door type="floor" index="2" x="-0.424999" y="20.06524" normalX="0" normalY="1"/>
 
-		   <door type="norm" index="3" x="2.18015" y="4.03394" normalX="1" normalY="0"/>
-		   <door type="norm" index="4" x="2.18015" y="-0.9660568" normalX="1" normalY="0"/>
-		   <door type="norm" index="5" x="2.18015" y="-6.01606" normalX="1" normalY="0"/>
-		   <door type="norm" index="6" x="2.18015" y="-9.91605" normalX="1" normalY="0"/>
+		   <door type="norm" index="3" x="2.17" y="17.86798" normalX="1" normalY="0"/>
+		   <door type="norm" index="4" x="2.17" y="13.96798" normalX="1" normalY="0"/>
+		   <door type="norm" index="5" x="2.17" y="8.91798" normalX="1" normalY="0"/>
+		   <door type="norm" index="6" x="2.17" y="3.91798" normalX="1" normalY="0"/>
 
-		   <door type="norm" index="7" x="-3.01985" y="5.68394" normalX="-1" normalY="0"/>
-		   <door type="norm" index="8" x="-3.01985" y="3.68394" normalX="-1" normalY="0"/>
-		   <door type="norm" index="9" x="-3.01985" y="1.18394" normalX="-1" normalY="0"/>
-		   <door type="norm" index="10" x="-3.01985" y="-0.816057" normalX="-1" normalY="0"/>
-		   <door type="norm" index="11" x="-3.01985" y="-4.31606" normalX="-1" normalY="0"/>
-		   <door type="norm" index="12" x="-3.01985" y="-6.31606" normalX="-1" normalY="0"/>
-		   <door type="norm" index="13" x="-3.01985" y="-8.31606" normalX="-1" normalY="0"/>
-		   <door type="norm" index="14" x="-3.01985" y="-10.31606" normalX="-1" normalY="0"/>
+		   <door type="norm" index="7" x="-3.02" y="18.26798" normalX="-1" normalY="0"/>
+		   <door type="norm" index="8" x="-3.02" y="16.26798" normalX="-1" normalY="0"/>
+		   <door type="norm" index="9" x="-3.02" y="14.26798" normalX="-1" normalY="0"/>
+		   <door type="norm" index="10" x="-3.02" y="12.26798" normalX="-1" normalY="0"/>
+		   <door type="norm" index="11" x="-3.02" y="8.76798" normalX="-1" normalY="0"/>
+		   <door type="norm" index="12" x="-3.02" y="6.76798" normalX="-1" normalY="0"/>
+		   <door type="norm" index="13" x="-3.02" y="4.26798" normalX="-1" normalY="0"/>
+		   <door type="norm" index="14" x="-3.02" y="2.26798" normalX="-1" normalY="0"/>
 		</doors>
 	</room>
 
