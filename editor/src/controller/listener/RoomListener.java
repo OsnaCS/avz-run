@@ -3,6 +3,7 @@ package controller.listener;
 import controller.DrawableObjectProcessing;
 import controller.DrawingPanelViewController;
 import model.drawables.Point;
+import model.leveleditor.Coordinates;
 import model.leveleditor.Level;
 import model.leveleditor.Room;
 import model.leveleditor.Way;
@@ -24,6 +25,7 @@ public class RoomListener extends MouseInputAdapter {
 	private Point mousePos;
 	private DrawingPanelViewController delegate;
 	private Level level;
+    final Room templateRoom;
 	private Room room;
 
 	/**
@@ -39,7 +41,9 @@ public class RoomListener extends MouseInputAdapter {
 	public RoomListener(DrawableObjectProcessing delegate, Room room, Level level) {
 		this.delegate = (DrawingPanelViewController) delegate;
 		this.level = level;
-		this.room = room;
+		this.templateRoom = room;
+
+        this.room = new Room(templateRoom);
 	}
 
 	/**
@@ -56,7 +60,7 @@ public class RoomListener extends MouseInputAdapter {
 			// Create new MousePos
 			mousePos = new Point(e.getX(), e.getY());
 			// Sets the new center from the room
-			//room.setCenter(mousePos, room.getCenter().getAngle());
+			room = new Room(templateRoom);
 		} else {
 
             //
@@ -66,13 +70,12 @@ public class RoomListener extends MouseInputAdapter {
 				
 				// Compare ways with all not checked or cleared Level-ways
 				if (room.compareWays(level.getWays())) {
-					// Add room
 
-					Room thisroom = new Room(room);
-					level.addRoom(thisroom);
+				    // Add room
+					level.addRoom(room);
 					//delegate.clearTemporaryDrawableObject();
 					//delegate.processDrawableObject(thisroom);
-                    delegate.processDrawableObject(thisroom);
+                    delegate.processDrawableObject(room);
 					mousePos = null;
 
 					this.delegate.refreshXML();
@@ -98,7 +101,6 @@ public class RoomListener extends MouseInputAdapter {
                 //System.out.println("Stopp");
 
 				delegate.setTemporaryDrawableObject(room);
-
 
 			}
 
@@ -145,6 +147,7 @@ public class RoomListener extends MouseInputAdapter {
 	public void mouseExited(MouseEvent e) {
 		delegate.clearTemporaryDrawableObject();
 		mousePos = null;
+        room = null;
 	}
 
 	/**
