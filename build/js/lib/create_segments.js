@@ -9,7 +9,7 @@
 //consts (change iff you know what you're doing! :P)
 var ROOMSXML = "rooms.xml"
 var OBJECTSXML = "objects.xml"
-var LEVELSXML = "floors.xml"
+var LEVELSXML = "exported.xml"
 var SKALIERUNGSFAKTOR = 20;
 var HOLZTURBREITE = SKALIERUNGSFAKTOR*0.88;
 var GLASTURBREITE = SKALIERUNGSFAKTOR*1.2;
@@ -28,11 +28,11 @@ var fires = [];       //Hier stehen alle Feuer drin.
 var triggers = [];	  //Hier stehen alle Triggers drin.
 var allobjects = [];  listallobjects();  //hierdrin stehen alle MÖGLICHEN objects (..damit man sie nicht mehr aus der xml auslesen kann, asynchronität undso.)
 var allrooms = []; listallrooms(); //same as line above.
-var floornumber = 3; //sollte wachsen/sinken von stockwerk zu stockwerk. //TODO: sollte höchste nummer der floors.xml sein
-var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF", maxfog: "0.015", fogtime:"120", startfog:"0.002"};
-
+var floornumber = 0; //sollte wachsen/sinken von stockwerk zu stockwerk. //TODO: sollte höchste nummer der floors.xml sein
+var allfloors = [];
 
 //functions
+
 
 	function readLevelsXML(callback) {
 		var xhttp = new XMLHttpRequest();
@@ -40,24 +40,39 @@ var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF",
 			if (xhttp.readyState == 4 && xhttp.status == 200) {
 				var xmlDoc = xhttp.responseXML;
 				//var pfad = xmlDoc.getElementsByTagName("objects")[0].getAttribute("ObjectPath");
-
+				
 				var typeItems = xmlDoc.getElementsByTagName("floors")[0].getElementsByTagName("floor");
-				for (var i = 0; i < typeItems.length; i++) {
-					if (typeItems[i].getAttribute("number") == floornumber) {
-						thisfloor.spawn = typeItems[i].getAttribute("characterspawn");
-						thisfloor.ambientintens = typeItems[i].getAttribute("ambientlightintens");
-						thisfloor.ambientcolor = typeItems[i].getAttribute("ambientlightcolor");
-						thisfloor.fogtime = parseFloat(typeItems[i].getAttribute("fogtime"));
-						thisfloor.maxfog = parseFloat(typeItems[i].getAttribute("maxfog"));
-						thisfloor.startfog = parseFloat(typeItems[i].getAttribute("startfog"));
-						callback();
+				floornumber = typeItems.length;
+				
+				for (var i = 0; i < typeItems.length; i++) {						
+					var thisfloor = {spawn: "(0,0,3)", ambientintens: 0.3, ambientcolor: "0xFFBFBF", maxfog: "0.015", fogtime:"120", startfog:"0.002", rooms: []};
+					thisfloor.spawn = typeItems[i].getAttribute("characterspawn");
+					thisfloor.ambientintens = typeItems[i].getAttribute("ambientlightintens");
+					thisfloor.ambientcolor = typeItems[i].getAttribute("ambientlightcolor");
+					thisfloor.fogtime = parseFloat(typeItems[i].getAttribute("fogtime"));
+					thisfloor.maxfog = parseFloat(typeItems[i].getAttribute("maxfog"));
+					thisfloor.startfog = parseFloat(typeItems[i].getAttribute("startfog"));
+					var thisrooms = [];
+					for (var j = 0; j < typeItems[i].getElementsByTagName("room").length; j++) {
+						var room = {index: 0, name: "", rotation: 0, x: 0, y: 0};
+						room.index = typeItems[i].getElementsByTagName("room")[j].getAttribute("index");
+						room.name = typeItems[i].getElementsByTagName("room")[j].getAttribute("name");
+						room.rotation = parseFloat(typeItems[i].getElementsByTagName("room")[j].getAttribute("rotation"))/90;
+						room.x = parseFloat(typeItems[i].getElementsByTagName("room")[j].getAttribute("x"));
+						room.y = parseFloat(typeItems[i].getElementsByTagName("room")[j].getAttribute("y"));
+						thisrooms.push(room);
 					}
+					thisfloor.rooms = thisrooms;
+					allfloors.push(thisfloor);
 				}
+				callback();
 			}
 		};
 		xhttp.open("GET", LEVELSXML, true);
 		xhttp.send();
 	}
+
+
 
 
 	function createAllSegments(callback) {

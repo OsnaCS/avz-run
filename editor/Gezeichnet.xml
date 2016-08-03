@@ -1,28 +1,61 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <level>
   <rooms>
-    <room index="0" name="center" rotation="0.0" x="-400.0" y="-320.0">room</room>
-    <room index="1" name="gang_solo" rotation="0.0" x="-400.0" y="-320.0">room</room>
-    <door father="0" normx="1.0" normy="0.0" type="glass" x="408.0" y="331.77">door</door>
-    <door father="0" normx="1.0" normy="0.0" type="glass" x="408.0" y="314.23">door</door>
-    <door father="0" normx="0.0" normy="-1.0" type="glass" x="405.77" y="312.0">door</door>
-    <door father="0" normx="0.0" normy="-1.0" type="glass" x="388.23" y="312.0">door</door>
-    <door father="0" normx="-1.0" normy="0.0" type="glass" x="386.0" y="314.23">door</door>
-    <door father="0" normx="-1.0" normy="0.0" type="glass" x="386.0" y="330.77">door</door>
-    <door father="0" normx="0.0" normy="1.0" type="glass" x="388.23" y="334.0">door</door>
-    <door father="1" normx="0.0" normy="1.0" type="floor" x="425.5238156" y="461.47742">door</door>
-    <door father="1" normx="1.0" normy="0.0" type="norm" x="428.18015" y="455.03394">door</door>
-    <door father="1" normx="1.0" normy="0.0" type="norm" x="428.18015" y="450.0339432">door</door>
-    <door father="1" normx="1.0" normy="0.0" type="norm" x="428.18015" y="444.98394">door</door>
-    <door father="1" normx="1.0" normy="0.0" type="norm" x="428.18015" y="441.08395">door</door>
-    <door father="1" normx="-1.0" normy="0.0" type="norm" x="422.98015" y="456.68394">door</door>
-    <door father="1" normx="-1.0" normy="0.0" type="norm" x="422.98015" y="454.68394">door</door>
-    <door father="1" normx="-1.0" normy="0.0" type="norm" x="422.98015" y="452.18394">door</door>
-    <door father="1" normx="-1.0" normy="0.0" type="norm" x="422.98015" y="450.183943">door</door>
-    <door father="1" normx="-1.0" normy="0.0" type="norm" x="422.98015" y="446.68394">door</door>
-    <door father="1" normx="-1.0" normy="0.0" type="norm" x="422.98015" y="444.68394">door</door>
-    <door father="1" normx="-1.0" normy="0.0" type="norm" x="422.98015" y="442.68394">door</door>
-    <door father="1" normx="-1.0" normy="0.0" type="norm" x="422.98015" y="440.68394">door</door>
+    <room index="0" name="center" rotation="0.0" x="0.0" y="0.0">room</room>
+    <room index="1" name="gang_solo" rotation="0.0" x="-11.345001" y="16.5255">room</room>
+    <room index="2" name="gang_solo" rotation="0.0" x="6.194998999999999" y="-28.06524">room</room>
+    <room index="3" name="circle_walled" rotation="270.0" x="21.5" y="4.039999999999999">room</room>
+    <door father="0" normx="0.0" normy="1.0" type="glass" x="4.77" y="14.0">door</door>
+    <door father="0" normx="0.0" normy="-1.0" type="glass" x="-11.77" y="-8.0">door</door>
+    <door father="0" normx="-1.0" normy="0.0" type="glass" x="-14.0" y="-5.77">door</door>
+    <door father="0" normx="-1.0" normy="0.0" type="glass" x="-14.0" y="10.77">door</door>
+    <door father="1" normx="0.0" normy="1.0" type="floor" x="-0.424999" y="20.06524">door</door>
+    <door father="1" normx="1.0" normy="0.0" type="norm" x="2.17" y="17.86798">door</door>
+    <door father="1" normx="1.0" normy="0.0" type="norm" x="2.17" y="13.96798">door</door>
+    <door father="1" normx="1.0" normy="0.0" type="norm" x="2.17" y="8.91798">door</door>
+    <door father="1" normx="1.0" normy="0.0" type="norm" x="2.17" y="3.91798">door</door>
+    <door father="1" normx="-1.0" normy="0.0" type="norm" x="-3.02" y="18.26798">door</door>
+    <door father="1" normx="-1.0" normy="0.0" type="norm" x="-3.02" y="16.26798">door</door>
+    <door father="1" normx="-1.0" normy="0.0" type="norm" x="-3.02" y="14.26798">door</door>
+    <door father="1" normx="-1.0" normy="0.0" type="norm" x="-3.02" y="12.26798">door</door>
+    <door father="1" normx="-1.0" normy="0.0" type="norm" x="-3.02" y="8.76798">door</door>
+    <door father="1" normx="-1.0" normy="0.0" type="norm" x="-3.02" y="6.76798">door</door>
+    <door father="1" normx="-1.0" normy="0.0" type="norm" x="-3.02" y="4.26798">door</door>
+    <door father="1" normx="-1.0" normy="0.0" type="norm" x="-3.02" y="2.26798">door</door>
+    <door father="2" normx="0.0" normy="-1.0" type="floor" x="-0.424999" y="-2.5255">door</door>
+    <door father="2" normx="1.0" normy="0.0" type="norm" x="2.17" y="17.86798">door</door>
+    <door father="2" normx="1.0" normy="0.0" type="norm" x="2.17" y="13.96798">door</door>
+    <door father="2" normx="1.0" normy="0.0" type="norm" x="2.17" y="8.91798">door</door>
+    <door father="2" normx="1.0" normy="0.0" type="norm" x="2.17" y="3.91798">door</door>
+    <door father="2" normx="-1.0" normy="0.0" type="norm" x="-3.02" y="18.26798">door</door>
+    <door father="2" normx="-1.0" normy="0.0" type="norm" x="-3.02" y="16.26798">door</door>
+    <door father="2" normx="-1.0" normy="0.0" type="norm" x="-3.02" y="14.26798">door</door>
+    <door father="2" normx="-1.0" normy="0.0" type="norm" x="-3.02" y="12.26798">door</door>
+    <door father="2" normx="-1.0" normy="0.0" type="norm" x="-3.02" y="8.76798">door</door>
+    <door father="2" normx="-1.0" normy="0.0" type="norm" x="-3.02" y="6.76798">door</door>
+    <door father="2" normx="-1.0" normy="0.0" type="norm" x="-3.02" y="4.26798">door</door>
+    <door father="2" normx="-1.0" normy="0.0" type="norm" x="-3.02" y="2.26798">door</door>
+    <door father="3" normx="0.0" normy="-1.0" type="norm" x="11.0" y="25.85">door</door>
+    <door father="3" normx="0.0" normy="-1.0" type="norm" x="11.0" y="20.4">door</door>
+    <door father="3" normx="0.0" normy="-1.0" type="norm" x="11.0" y="14.9">door</door>
+    <door father="3" normx="0.0" normy="-1.0" type="norm" x="11.0" y="10.4">door</door>
+    <door father="3" normx="0.0" normy="-1.0" type="norm" x="11.0" y="4.25">door</door>
+    <door father="3" normx="0.0" normy="-1.0" type="norm" x="11.0" y="-1.15">door</door>
+    <door father="3" normx="0.0" normy="-1.0" type="norm" x="11.0" y="-5.95">door</door>
+    <door father="3" normx="0.0" normy="-1.0" type="norm" x="11.0" y="-10.95">door</door>
+    <door father="3" normx="-1.0" normy="0.0" type="glass" x="9.78" y="-13.5">door</door>
+    <door father="3" normx="0.0" normy="1.0" type="norm" x="-8.95" y="-7.95">door</door>
+    <door father="3" normx="0.0" normy="1.0" type="norm" x="-8.95" y="-4.1">door</door>
+    <door father="3" normx="0.0" normy="1.0" type="norm" x="-8.95" y="0.3">door</door>
+    <door father="3" normx="0.0" normy="1.0" type="norm" x="-8.95" y="5.6">door</door>
+    <door father="3" normx="0.0" normy="1.0" type="norm" x="-8.95" y="10.1">door</door>
+    <door father="3" normx="0.0" normy="1.0" type="norm" x="-8.95" y="15.6">door</door>
+    <door father="3" normx="0.0" normy="1.0" type="norm" x="-8.95" y="19.57">door</door>
+    <door father="3" normx="1.0" normy="0.0" type="norm" x="-7.15" y="23.24">door</door>
+    <door father="3" normx="1.0" normy="0.0" type="glass" x="-1.72" y="23.24">door</door>
+    <door father="3" normx="1.0" normy="0.0" type="norm" x="3.15" y="23.24">door</door>
+    <door father="3" normx="0.0" normy="-1.0" type="norm" x="-3.75" y="2.85">door</door>
+    <door father="3" normx="0.0" normy="-1.0" type="norm" x="-3.75" y="-1.85">door</door>
   </rooms>
   <spawns/>
   <lights/>
