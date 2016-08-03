@@ -627,6 +627,9 @@ function useMedi(){
 	}
 }
 
+function endRobos() {
+	robolab = false;
+}
 
 function coverMouth(){
     if((selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "schwamm")){

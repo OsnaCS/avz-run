@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <floors>
 
-	<floor number="1" characterspawn="(10.5, -5, 5)" ambientlightintens="0.1" ambientlightcolor="0xffbfbf" fogtime="250" startfog="0.002" maxfog="0.012" correctpin="" correcttransponder="43">
+	<floor number="1" characterspawn="(10.5, -5, 5)" ambientlightintens="0.1" ambientlightcolor="0xffbfbf" fogtime="200" startfog="0.002" maxfog="0.012" correctpin="" correcttransponder="43">
 		<room index="0" name="center" rotation="0.0" x="0.0" y="0.0" />
 		<room index="1" name="gang_solo" rotation="0.0" x="-11.345001" y="16.5255" />
 		<room index="2" name="gang_solo" rotation="0.0" x="6.194998999999999" y="-28.06524" />
@@ -18,9 +18,7 @@
 	
 	<floor number="3" characterspawn="(6, 0, 0)" ambientlightintens="0.1" ambientlightcolor="0xffbfbf" fogtime="180" startfog="0.002" maxfog="0.015" correctpin="0042" correcttransponder="">
 		<room index="0" name="center" rotation="0.0" x="0.0" y="0.0" />
-		<room index="1" name="gang_solo" rotation="0.0" x="-11.345001" y="16.5255" />
-		<room index="2" name="gang_solo" rotation="0.0" x="6.194998999999999" y="-28.06524" />
-		<room index="3" name="circle_walled" rotation="270.0" x="21.5" y="4.039999999999999" />
+		<room index="1" name="circle_walled" rotation="0.0" x="-5.01" y="27.5">room</room>
 	</floor>
   
 </floors>

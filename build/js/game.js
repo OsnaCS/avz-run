@@ -232,7 +232,6 @@ function createScene(complete) {
 
 function loop() {
 
-
     if (!menu && !pause) {
     	if (player.health <= 0) {
     		gameOverSound();
@@ -322,11 +321,11 @@ function createRoom(callback) {
         createAllSegments(psegments);
         function psegments () {
     		PutSegments(doors);
-			
-			
+						
     		function doors () {
     			door_in_doors(objects);
     			function objects() {
+					
     				objects_in_spawns(fires);
     				function fires() {
 						if (!nofog) {
