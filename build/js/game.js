@@ -326,8 +326,6 @@ function loop() {
 }
 
 
-var hemisphereLight, shadowLight;
-
 
 function createRoom(callback) {
 	readLevelsXML(csegments);
@@ -345,15 +343,18 @@ function createRoom(callback) {
     						turn_on_lights(triggers);
     						var gesamtlicht = 0;
     						if (thisfloor.ambientintens > 0) {
-    							scene.add(new THREE.AmbientLight(parseInt(thisfloor.ambientcolor),parseInt(thisfloor.ambientintens)));
+								var tmplight = new THREE.AmbientLight(parseInt(thisfloor.ambientcolor),parseInt(thisfloor.ambientintens));
+    							scene.add(tmplight); threelights.push(tmplight);
     							gesamtlicht += parseInt(thisfloor.ambientintens);
     						}
     						if (godmode) {
-    							scene.add(new THREE.AmbientLight(0xFFFFFF,(1-gesamtlicht)));
+								var tmplight = new THREE.AmbientLight(0xFFFFFF,(1-gesamtlicht));
+    							scene.add(tmplight); threelights.push(tmplight);
     							gesamtlicht += (1-gesamtlicht);
     						}
     						if (gesamtlicht < 0.3 && onlygloballight) {
-    							scene.add(new THREE.AmbientLight(0xFFBFBF,(0.3-gesamtlicht)));
+								var tmplight = new THREE.AmbientLight(0xFFBFBF,(0.3-gesamtlicht));
+    							scene.add(tmplight); threelights.push(tmplight);
     						}
     						function triggers () {
     							addtriggers(callback);
