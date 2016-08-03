@@ -228,9 +228,6 @@ function createScene(complete) {
     complete();
 }
 
-var roboternum = 0;
-var robolab = false;
-var robo_zDist;
 
 function loop() {
     //console.log(octreeObjects);
@@ -262,40 +259,7 @@ function loop() {
             	interactionLoop();
             }
 
-
-            if(roboternum == 0){
-	            for (i = 0; i < static_obj.length; i++) {
-	            	if(static_obj[i].name == "evil_roboter"){
-	            		roboternum = i;
-                        robo_zDist = static_obj[roboternum].msh.position.z + 90;
-                        robolab = true;
-                        break;
-	            	}
-
-	            }
-
-                if(!robolab){
-                    roboternum = 1;
-                }
-
-	        }
-
-            if(robolab){
-                var deltaTime = clock.getDelta();
-
-                if(!reached){
-                	moveObject(static_obj[roboternum].msh , static_obj[roboternum].msh.position.x, static_obj[roboternum].msh.position.y, robo_zDist, 500, deltaTime);
-                	if(reached)
-                		static_obj[roboternum].msh.rotateY(Math.PI);
-                }
-                else{
-                	moveObject(static_obj[roboternum].msh ,static_obj[roboternum].msh.position.x, static_obj[roboternum].msh.position.y, robo_zDist-90, 500, deltaTime);
-                	if(!reached)
-                		static_obj[roboternum].msh.rotateY(Math.PI);
-                }
-            }
-
-
+            move();
 
             renderer.render(scene, camera);
             octree.update();
@@ -316,6 +280,49 @@ function loop() {
 }
 
 
+var roboternum = 0;
+var robolab = false;
+var roboPosX;
+var roboPosY;
+var roboPosZ;
+
+function move(){
+    if(roboternum == 0){
+        for (i = 0; i < static_obj.length; i++) {
+            if(static_obj[i].name == "evil_roboter"){
+                roboternum = i;
+                roboPosX = static_obj[roboternum].msh.position.x;
+                roboPosY = static_obj[roboternum].msh.position.y;
+                roboPosZ = static_obj[roboternum].msh.position.z;
+                robolab = true;
+                break;
+            }
+
+        }
+
+        if(!robolab){
+            roboternum = 1;
+        }
+
+    }
+
+    if(robolab){
+        var deltaTime = clock.getDelta();
+
+        moveObject(static_obj[roboternum].msh , roboPosX, roboPosY, roboPosZ, 0*SKALIERUNGSFAKTOR, 0*SKALIERUNGSFAKTOR, 9*SKALIERUNGSFAKTOR, 1000, deltaTime);
+            
+    }
+}
+// TEST ENVIRONMENT
+
+var hemisphereLight, shadowLight;
+
+function createLights() {
+
+    // // A hemisphere light is a gradient colored light;
+    // // the first parameter is the sky color, the second parameter is the ground color,
+    // // the third parameter is the intensity of the light
+    // hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, .9)
 
 function createRoom(callback) {
 	readLevelsXML(csegments);
