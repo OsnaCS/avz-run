@@ -634,17 +634,6 @@ function door_in_doors(callback) {
 		return xz;
 	}
 
-	function makelessfog() {
-		console.log("Der Nebel lichtet sich");
-		scene.fog = new THREE.FogExp2(0x424242, 0.00015);
-	}
-
-	function makemorefog() {
-		console.log("Der Nebel dichtet sich");
-		scene.fog = new THREE.FogExp2(0x424242, 0.15);
-	}
-
-
 
 //adds an OBJECT's mesh to the scene (needs to be changed when we stop loading from jsons directly and instead from the pre-loading-thingy.)
 	function addobject(objectpfad, name, posx, posy, posz, scale, rotate, responsefunct, stretchx) {
