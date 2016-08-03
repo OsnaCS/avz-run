@@ -3,16 +3,10 @@ package model.leveleditor;
 import model.drawables.DrawableObject;
 
 import model.drawables.Line;
-import model.Matrix;
 import model.drawables.*;
 
 import java.awt.Color;
 import java.awt.Graphics;
-
-import org.omg.CORBA.portable.Delegate;
-
-
-
 
 /*
  * Created by Tom Krümmel
@@ -53,33 +47,63 @@ public class Way extends DrawableObject {
 	 * compares distances of two ways, if they are smaller as 10 Pixels returns therefore true
 	 * and signals ability to connect
 	 */
-	public boolean compareDistance(Way other){
+	public boolean compareDistance(Way other) {
 
-		//updatePosition();
-		//other.updatePosition();
+		// updatePosition();
+		// other.updatePosition();
 
+		// caclculates absolute value of the distances between x and y
+		// coordinate of the two ways
 		
-		//caclculates absolute value of the distances between x and y coordinate of the two ways
-		double distX = Math.abs(this.pos.getScaledIntCoordinates(this.getFather().getCenter()).x - other.pos.getScaledIntCoordinates(other.getFather().getCenter()).x);
-		double distY = Math.abs(this.pos.getScaledIntCoordinates(this.getFather().getCenter()).y - other.pos.getScaledIntCoordinates(other.getFather().getCenter()).y);
-//		System.out.println("Distanz:" + distX + "," + distY);
-//		System.out.println("this x:"  +this.getFather().getCenter().getPosx()+ " other:" + (other.getFather().getCenter().getPosx()));
-		if(distX < maxDistance && distY < maxDistance) {
-			System.out.println("Distanz:" + distX + "," + distY);
-		}
-		if (other.getNormal().getInvert().equals(this.normal)){
-			System.out.println("Normals:" + this.normal+ "," + other.normal);
-		}
+		if (notInRoom()) {
 
-		//compares both distances with the allowed distance to create a circle
-		//which if it is small enough signals ability to connect and has orthogonal normals
-		//and is of the same type
-		if(distX < maxDistance && distY < maxDistance
-				&& other.getNormal().getInvert().equals(this.normal)
-				/*&& other.getType().equals(this.type)*/) {
+			double distX = Math.abs(this.pos.getScaledIntCoordinates(this.getFather().getCenter()).x
+					- other.pos.getScaledIntCoordinates(other.getFather().getCenter()).x);
+			double distY = Math.abs(this.pos.getScaledIntCoordinates(this.getFather().getCenter()).y
+					- other.pos.getScaledIntCoordinates(other.getFather().getCenter()).y);
+			// System.out.println("Distanz:" + distX + "," + distY);
+			// System.out.println("this x:"
+			// +this.getFather().getCenter().getPosx()+ " other:" +
+			// (other.getFather().getCenter().getPosx()));
+			if (distX < maxDistance && distY < maxDistance) {
+				System.out.println("Distanz:" + distX + "," + distY);
+			}
+			if (other.getNormal().getInvert().equals(this.normal)) {
+				System.out.println("Normals:" + this.normal + "," + other.normal);
+			}
+
+			// compares both distances with the allowed distance to create a
+			// circle
+			// which if it is small enough signals ability to connect and has
+			// orthogonal normals
+			// and is of the same type
+			if (distX < maxDistance && distY < maxDistance && other.getNormal().getInvert().equals(this.normal)
+			/* && other.getType().equals(this.type) */) {
+				return true;
+			}
+		}
+		// else returns false
+		return false;
+	}
+	
+	public boolean notInRoom(){
+		int doorCheckXbegin = Math
+				.abs((this.pos.getScaledIntCoordinates(this.getFather().getCenter()).x) - 
+						(int)father.getcA().getScaledIntCoordinates(father.getCenter()).x);
+		int doorCheckYbegin = Math
+				.abs((this.pos.getScaledIntCoordinates(this.getFather().getCenter()).y) - 
+						(int)father.getcA().getScaledIntCoordinates(father.getCenter()).y);
+		int doorCheckXend = Math
+				.abs((this.pos.getScaledIntCoordinates(this.getFather().getCenter()).x) - 
+						(int)father.getcE().getScaledIntCoordinates(father.getCenter()).x);
+		int doorCheckYend = Math
+				.abs((this.pos.getScaledIntCoordinates(this.getFather().getCenter()).y) - 
+						(int)father.getcE().getScaledIntCoordinates(father.getCenter()).y);
+		
+		if (doorCheckXbegin < 2 || doorCheckYbegin < 2 || doorCheckXend < 2 || doorCheckYend < 2) {
 			return true;
 		}
-		//else returns false
+		
 		return false;
 	}
 	
@@ -136,8 +160,9 @@ public class Way extends DrawableObject {
 	 *Paints a line in direction of normal with the radius of clickable circle
 	 */
 	public void paint(Graphics g){
-		
-		
+
+		if (notInRoom()) {
+
 		//updates normals
 		//this.calcNormal(father.getCenter().getAngle());
 		
@@ -187,6 +212,7 @@ public class Way extends DrawableObject {
 		
 		// draws line from current position to the setted Point by normal
 		new Line(a, b).paint(g);
+		}
 	}
 
 	
