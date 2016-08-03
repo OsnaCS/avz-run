@@ -59,6 +59,7 @@ Player = function() {
     }
 //damages the player by given amount
     this.damage = function(damage) {
+		console.log(this.health);
         var healthPercent = (this.health / MAX_HEALTH) * 100;
         this.health -= damage;
         $(".health-bar").css("width", '' + healthPercent + '%');
