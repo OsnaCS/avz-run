@@ -11,6 +11,9 @@ var lockOpen = false; // pin pad boolean
 var outlineMesh = null;
 
 var extinguisherParticleSystem;
+var coveredmouth = false;
+var additional_healthloose = 0;
+var heavybreath = false;
 
 // pin pad variables.... may not be stored here?
 var pin = new Array(4);
@@ -241,6 +244,31 @@ function open() {
     outlineMesh = null;
     activeObject = null;
 
+}
+
+function open_after_ext() {
+	var notext = false;
+	//welches feuer gelöscht sein muss ist hartgecoded, sorry. //TODO: ändern.
+	for (var i = 0; i < fires.length; i++) {
+		if (fires[i].index == "exit") notext = true;
+	}
+	if (notext) {
+		showThoughts("Aua, ich stehe in Feuer, aua! Da öffne ich doch keine Tür!",5000);
+	} else {
+		doorSound();
+		if(!this.open) {
+			this.mesh.rotateY(Math.PI/2.0);
+		}
+		else {
+			this.mesh.rotateY(-Math.PI/2.0);
+		}
+		this.open = !this.open;
+
+		// mesh is removed
+		scene.remove(outlineMesh);
+		outlineMesh = null;
+		activeObject = null;
+	}
 }
 
 function getSegmentFromIntItem(intItem) {
@@ -582,10 +610,10 @@ function success() {
 
 
 function coverMouth(){
-    //if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "schwamm")){
     if((selectedItem != null) && (objectFilenameToName(selectedItem.name) == "schwamm")){
         startHeavyBreathing();
-        HEALTH_PER_SECOND = HEALTH_PER_SECOND / 2;
+		heavybreath = true;
+        additional_healthloose = 0;
         //addItem((newItemList[31]), playerPos[1], playerPos[2] + 10, playerPos[3], 2, 270, true, pickUpItem);
         console.log('covered mouth');
         player.delActItem();
@@ -596,15 +624,28 @@ function coverMouth(){
 }
 
 function makelessfog() {
+		if (!coveredmouth) {
+			if (!nofog) myfog -= 0.008; if (myfog < 0.0001) myfog = 0.0001;
+		} else {
+			coveredmouth = false;
+		}
         console.log("Der Nebel lichtet sich");
-        if (!nofog) scene.fog = new THREE.FogExp2(0x424242, 0.00015);
+		additional_healthloose = 0;
+		if (heavybreath) { stopHeavyBreathing(); heavybreath = false;}
 }
 
 function makemorefog() {
         console.log("Der Nebel dichtet sich");
-        if (coverMouth()) showThoughts("Das sollte mir helfen!",5000);
-        else showThoughts("Der Rauch ist zu dicht, ich kann kaum atmen. Vielleicht finde ich etwas, das ich mir vor den Mund halten kann. Besser raus hier.",5000)
-        if (!nofog) scene.fog = new THREE.FogExp2(0x424242, 0.15);
+        if (coverMouth()) {
+			showThoughts("Das sollte mir helfen!",5000);
+			coveredmouth = true;
+		}
+        else {
+			additional_healthloose = MAX_HEALTH/2000;
+			if (!coveredmouth) if (!nofog) myfog += 0.008;
+			showThoughts("Der Rauch ist zu dicht, ich kann kaum atmen. Vielleicht finde ich etwas, das ich mir vor den Mund halten kann. Besser raus hier.",5000)
+			coveredmouth = false;
+		}
 }
 
 

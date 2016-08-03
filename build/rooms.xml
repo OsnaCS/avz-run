@@ -20,14 +20,15 @@
 		   <spawn index="stuhl" position="(4 to 8 step 1, 1 to 7 step 0.6, 0)" object="pult" normaltowall="(0,1)" scale="1"/>
 		</spawns>
 		<fires>
-		   <!-- <fire index="1" position="(9,0,0)" size="(1,1,2)" val="10" /> -->
+		   <fire index="l1" position="(9,0,0)" size="(1,1,2)" val="10" /> 
 		</fires>
 		<lights>
  		   <light index="1" kind="pointlight" objectname="deckenlicht" position="(9,3,5)" intensity="0.7" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="14"/>
 		   <light index="2" kind="pointlight" objectname="deckenlicht" position="(1,3,5)" intensity="0.7" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="14"/>
 		</lights>
 		<triggers>
-			<trigger index="exit" xpos="9" ypos="0" size="2" functionname="nextLevel"/>
+			<trigger index="exit" xpos="12" ypos="0" size="3" functionname="showThoughts" fparam1="Hinter dieser Tür ist die Treppe" fparam2="5000"/>
+			<trigger index="exit" xpos="13.5" ypos="-1" size="2" functionname="nextLevel"/>
 		</triggers>
 	</room>
 
@@ -39,10 +40,10 @@
         <doors>
 			<door type="norm" index="cip" position="(-8.53, -11 )" normal="(0, -1)" stretch="1.1" act="openable"/>
 			<door type="norm" index="klo" position="(9.16, -11)" normal="(0, -1)" stretch="1.1"/>
-			<door type="norm" index="hs1" position="(17.39, 0)" normal="(0, 1)" stretch="1.1" act="axtopenable"/>
+			<door type="norm" index="hs1" position="(17.39, 0)" normal="(0, 1)" stretch="1.1" act="axtopenable"/> <!-- axtopenable -->
 			<door type="norm" index="hs2" position="(24.17, 0)" normal="(0, 1)" stretch="1.1"/>
 			<door type="glass" index="flur" position="(11, -6.28)" normal="(1, 0)" stretch="1.1" act="transponderopenable"/> <!-- transponderopenable -->
-			<door type="glass" index="exit" position="(30.95, -6.3)" normal="(1, 0)" stretch="1.1" act="openable" oninteract="nix"/>
+			<door type="glass" index="exit" position="(30.95, -6.3)" normal="(1, 0)" stretch="1.1" act="openable_after_ext"/>
         </doors>
         <spawns>
 			<spawn  index="feuerloescher" position="(14.3, 3, 1)" object="loscher" normaltowall="(0, 1)" scale="1" oninteract="pickUpItem"/>
@@ -70,9 +71,9 @@
 
 			<fire index="lobby" position="(-8.24, 8.96, 0)" size="(1,1,1)" val="6"/>
 			<fire index="exit" position="(30, -6, 0)" size="(1,4,3)" val="6"/>
-			<fire index="lobby" position="(2.45, 1.79, 0)" size="(1,1,1)" val="6"/>
+			<fire index="lobbyb" position="(2.45, 1.79, 0)" size="(1,1,1)" val="6"/>
 			<fire index="flur" position="(24.02, -10.4, 0)" size="(1,1,1)" val="6"/>
-			<fire index="flur" position="(18.05, -4.71, 0)" size="(1,1,1)" val="6"/>
+			<fire index="flurb" position="(18.05, -4.71, 0)" size="(1,1,1)" val="6"/>
 			<fire index="hs1" position="(17.15, 5.96, 0)" size="(1,1,1)" val="6"/>
 			<fire index="hs2" position="(25.68, 2.88, 0)" size="(1,1,1)" val="6"/>
 			<fire index="klo" position="(8.03, -13.84, 0)" size="(1,1,1)" val="6"/>
@@ -95,12 +96,13 @@
 
         </lights>
 		<triggers>
-			<!--<trigger index="cip_makefog" xpos="-9" ypos="-12" size="2" functionname="makemorefog" fparam1="" fparam2="" enabledtriggerindex="cip_unmakefog"/>
-			<trigger index="cip_unmakefog" xpos="-7" ypos="-6.5" size="3" functionname="makelessfog" fparam1="" fparam2="" enabledtriggerindex="cip_makefog" enabled="false"/>-->
+			<trigger index="cip_makefog" xpos="-9" ypos="-12" size="2" functionname="makemorefog" fparam1="" fparam2="" enabledtriggerindex="cip_unmakefog"/>
+			<trigger index="cip_unmakefog" xpos="-7" ypos="-6.5" size="3" functionname="makelessfog" fparam1="" fparam2="" enabledtriggerindex="cip_makefog" enabled="false"/>
 
-			<trigger index="exit" xpos="32" ypos="-6" size="2" functionname="success"/>
+			<trigger index="exit" xpos="34" ypos="-7" size="3" functionname="success"/>
+			<trigger index="exitthought" xpos="28" ypos="-6" size="3" functionname="showThoughts" fparam1="Durch dieses Feuer laufe ich bestimmt nicht, um die Tür zu öffnen!" fparam2="5000"/>
 			<trigger index="hs2" xpos="24.17" ypos="2" size="2" functionname="showThoughts" fparam1="Hmm, vielleicht kann ich den Schwamm hier ja gebrauchen." fparam2="10000" />
-			<trigger index="exit_on_fire" xpos="20" ypos="-6" size="4" functionname="showThoughts" fparam1="Ach du Schreck ... Ein großes wildes Feuer greift den Ausgang an! Ich muss es löschen! " fparam2="4000" />
+			<trigger index="exit_on_fire" xpos="20" ypos="-6" size="6" functionname="showThoughts" fparam1="Ach du Schreck ... Ein großes wildes Feuer greift den Ausgang an! Ich muss es löschen! " fparam2="4000" />
 		</triggers>
 	</room>
 
@@ -146,7 +148,7 @@
 			<light index="6" kind="pointlight" objectname="deckenlicht" position="(1,-9,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="34"/>
 		</lights>
 		<fires>
-			<fire index="1" position="(7.5, -7, 0)" size="(3,3,3)" val="6"/>
+			<fire index="cw1" position="(7.5, -7, 0)" size="(3,3,3)" val="6"/>
         </fires>
 		<spawns>
 		</spawns>
@@ -189,9 +191,9 @@
 			<light index="6" kind="pointlight" objectname="deckenlicht" position="(1,-9,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="34"/>
 		</lights>
 		<fires>
-			<fire index="1" position="(7.5, -7, 0)" size="(3,3,3)" val="6"/>
-			<fire index="2" position="(1, 14, 0)" size="(3,3,3)" val="6"/>
-			<fire index="3" position="(1, -3.8, 0)" size="(3,2.5,2)" val="6"/>
+			<fire index="rl1" position="(7.5, -7, 0)" size="(3,3,3)" val="6"/>
+			<fire index="rl2" position="(1, 14, 0)" size="(3,3,3)" val="6"/>
+			<fire index="rl3" position="(1, -3.8, 0)" size="(3,2.5,2)" val="6"/>
         </fires>
 		<spawns>
 			 <spawn index="1" position="(1.03, 0.3, 0)" object="wand_kaputt" normaltowall="(0,1)" scale="2.38"/>
@@ -270,8 +272,8 @@
 			<light index="8" kind="pointlight" objectname="deckenlicht" position="(1,10,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(1,0)" visiblewidth="34"/>
 		</lights>
 		<fires>
-			<fire index="1" position="(7.5, -7, 0)" size="(3,3,3)" val="6"/>
-			<fire index="2" position="(-2.5, 4, 0)" size="(4,7,3)" val="12"/>
+			<fire index="cl1" position="(7.5, -7, 0)" size="(3,3,3)" val="6"/>
+			<fire index="cl2" position="(-2.5, 4, 0)" size="(4,7,3)" val="12"/>
         </fires>
 		<spawns>
 		   <spawn index="1" position="(-2.2, -4, 0)" object="tisch" normaltowall="(1,0)" scale="1.1"/>
@@ -305,9 +307,9 @@
 			<light index="2" kind="pointlight" objectname="deckenlicht" position="(-0.29, 4.04, 5)" normal="(1,0,0)" objectscale="1" intensity="0.7" color="0xFFFFFF" />
 		</lights>
 		<fires>
-			<fire index="1" position="(-3, 9, 0)" size="(1,1,1)" val="6"/>
-			<fire index="2" position="(3, -1.5, 0)" size="(1,1,1)" val="6"/>
-			<fire index="3" position="(-5, 2, 0)" size="(1,1,1)" val="6"/>
+			<fire index="c1" position="(-3, 9, 0)" size="(1,1,1)" val="6"/>
+			<fire index="c2" position="(3, -1.5, 0)" size="(1,1,1)" val="6"/>
+			<fire index="c3" position="(-5, 2, 0)" size="(1,1,1)" val="6"/>
 		</fires>
 		<spawns>
 		</spawns>
@@ -339,9 +341,9 @@
 			<light index="4" kind="pointlight" objectname="deckenlicht" position="(-1, 4, 5)" normal="(0,1,0)" objectscale="1" intensity="0.7" color="0xFFFFFF" />
 		</lights>
 		<fires>
-			<fire index="1" position="(-3.5, 7.5, 0)" size="(1,1,1)" val="6"/>
-			<fire index="2" position="(0.12, -2, 0)" size="(1,1,1)" val="6"/>
-			<fire index="3" position="(2, 6, 0)" size="(1,1,1)" val="6"/>
+			<fire index="ks1" position="(-3.5, 7.5, 0)" size="(1,1,1)" val="6"/>
+			<fire index="ks2" position="(0.12, -2, 0)" size="(1,1,1)" val="6"/>
+			<fire index="ks3" position="(2, 6, 0)" size="(1,1,1)" val="6"/>
 		</fires>
 		<spawns>
 		</spawns>
@@ -358,7 +360,7 @@
 			<light index="1" kind="pointlight" objectname="kleinlicht" position="(0, 4.5, 5)" normal="(1,0,0)" objectscale="1" intensity="0.7" color="0xFFFFFF" />
 		</lights>
 		<fires>
-			<fire index="1" position="(-1, 4.5, 0)" size="(1,1,1)" val="6"/>
+			<fire index="gf1" position="(-1, 4.5, 0)" size="(1,1,1)" val="6"/>
 		</fires>
 	</room>
 
@@ -380,7 +382,7 @@
 		  	<spawn index="5" position="(3, -6, 1)" object="computer" normaltowall="(0, -1)" scale="0.8" oninteract="pickUpItem"/>
 		</spawns>
 		<fires>
-			<fire index="1" position="(6, -7.5, 0)" size="(2,2,2)" val="6"/>
+			<fire index="b1" position="(6, -7.5, 0)" size="(2,2,2)" val="6"/>
 		</fires>
 	</room>
 
@@ -402,7 +404,7 @@
 		  	<spawn index="5" position="(3, -6, 1)" object="computer_message" normaltowall="(0, -1)" scale="0.8" oninteract="pickUpItem"/>
 		</spawns>
 		<fires>
-			<fire index="1" position="(6, -7.5, 0)" size="(2,2,2)" val="6"/>
+			<fire index="bm1" position="(6, -7.5, 0)" size="(2,2,2)" val="6"/>
 		</fires>
 	</room>
 
@@ -425,7 +427,7 @@
 		  	<spawn index="3" position="(0, -6, 1.5)" object="becken" normaltowall="(0,1)" scale="1" oninteract=""/>
 		</spawns>
 		<fires>
-			<fire index="1" position="(6, -3.5, 0)" size="(2,2,2)" val="6"/>
+			<fire index="t1" position="(6, -3.5, 0)" size="(2,2,2)" val="6"/>
 		</fires>
 	</room>
 

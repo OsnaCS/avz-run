@@ -6,6 +6,7 @@ var nosmoothedges = true; //if true, it no edge will be smoothed.
 var useLambertMaterial = false; //Meinungen gehen auseinander ob Lambert oder Phong performanter ist.
 var onlygloballight = false;  //when true, no pointlights (specified in the rooms.xml) will be set.
 var nofog = false;
+var triggerstransparent = true;
 
 document.getElementById("mutesounds").checked = muteSounds;
 document.getElementById("performantfire").checked = performantfire;
