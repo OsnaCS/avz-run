@@ -256,7 +256,7 @@ function getSegmentFromIntItem(intItem) {
 }
 
 function damageDoor() {
-    if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
+    if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "axt")){
 		var d = getSegmentFromIntItem(this);
 		addObjectViaName("halbbrokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "destroyDoor", d.stretchx);
 		remove_interactible(d);
@@ -507,6 +507,8 @@ function openTransponderDoor(){
 			var kind = "glastur"
 
 			if (objectFilenameToName(d.filename) == "holztuer") kind = "holztur";
+			
+			console.log(d.stretchx);
 			addObjectViaName(kind, "door", d.x, d.y, d.z, d.skale, d.rot-1, "openopened", d.stretchx);
 			remove_interactible(d);
 			this.delFromScene();

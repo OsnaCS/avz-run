@@ -644,17 +644,17 @@ function door_in_doors(callback) {
 		mesh.rotation.y = 0.5*Math.PI*(4-rotate);
 
 		if (name === "lamp") {
-			var segment = {filename:objectpfad, name: name, x: posx, y: posy, z: posz, skale: scale, rot: rotate, msh: mesh, xstretch: stretchx};
+			var segment = {filename:objectpfad, name: name, x: posx, y: posy, z: posz, skale: scale, rot: rotate, msh: mesh, stretchx: stretchx};
 			static_obj.push(segment);
 		} else {
 			if ((responsefunct != "") && (responsefunct != null)) {
 				var functPtr = eval(responsefunct);
 				intItem = new GameObject(mesh, functPtr, TYPE_INTERACTABLE, objectpfad);
 				if (intItem == undefined) intItem = null;
-				var segment = {filename:objectpfad, name: name, interIt: intItem, x: posx, y: posy, z: posz, skale: scale, rot: rotate, funct: responsefunct, msh: mesh, xstretch: stretchx};
+				var segment = {filename:objectpfad, name: name, interIt: intItem, x: posx, y: posy, z: posz, skale: scale, rot: rotate, funct: responsefunct, msh: mesh, stretchx: stretchx};
 				interact_obj.push(segment);
 			} else {
-				var segment = {filename:objectpfad, name: name, x: posx, y: posy, z: posz, skale: scale, rot: rotate, msh: mesh, xstretch: stretchx};
+				var segment = {filename:objectpfad, name: name, x: posx, y: posy, z: posz, skale: scale, rot: rotate, msh: mesh, stretchx: stretchx};
 				static_obj.push(segment);
 			}
 		}
@@ -781,10 +781,10 @@ function door_in_doors(callback) {
 	function remove_interactible(which){
 		segmentIndex = interact_obj.indexOf(which);
 		mesh = interact_obj[segmentIndex].msh;
-		intObj = interact_obj[segmentIndex].interIt;
-		interact_obj.splice(segmentIndex);
+		//intObj = interact_obj[segmentIndex].interIt;
+		interact_obj.splice(segmentIndex,1);
 		i2 = scene_items.indexOf(mesh);
-		scene_items.splice(i2);
+		scene_items.splice(i2,1);
 		//scene.remove(mesh); braucht nicht, da das von interactible-this.delFromScene() gemacht wird.
 	}
 

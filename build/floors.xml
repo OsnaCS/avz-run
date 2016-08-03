@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <floors>
-	<floor number="1" characterspawn="(10.5, 7, -5)" ambientlightintens="0.1" ambientlightcolor="0xffbfbf" fogtime="60" startfog="0.002" maxfog="0.015">
+	<floor number="1" characterspawn="(10.5, 7, -5)" ambientlightintens="0.1" ambientlightcolor="0xffbfbf" fogtime="180" startfog="0.002" maxfog="0.012">
 		<segment index="1" which="center">
 			<door doorind="1" type="openable" to_ind="2" />
 			<door doorind="2" type="closed" />
