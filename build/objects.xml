@@ -49,6 +49,7 @@
 		<object path="glastuerrahmen.json" name="glastuerrahmen" scale="1"  smooth="1" />
 		<object path="buerostuhl.json" name="buerostuhl" scale="1"  smooth="1" />
 		<object path="wc_code/wc_code.json" name="wc_code" scale="1"  smooth="0" />
+		<object path="energy_counter/energy_counter.json" name="energy_counter" scale="1"  smooth="0" />
 	</static>
 
 	<door>

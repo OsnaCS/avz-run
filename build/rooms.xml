@@ -51,6 +51,7 @@
 			<spawn  index="transponder" position="(4.5, -8.8, 1.08)" object="transponder" normaltowall="(0, 1)" scale="1" oninteract="pickUpItem"/>
 			<spawn  index="wc_code" position="(6.58, -15.09, 1.50)" object="wc_code" normaltowall="(-1, 0)" scale="1"/>
 
+			<spawn  index="energy_counter" position="(-7, 0, 3.6)" object="energy_counter" normaltowall="(-1, 0)" scale="1"/>
         </spawns>
         <fires>
 			<fire index="cip1" position="(-7.92, -15.35, 0)" size="(1,1,1)" val="6"/>
