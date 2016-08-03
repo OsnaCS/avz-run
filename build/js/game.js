@@ -438,7 +438,7 @@ function addTrigger (activated, xPos, zPos, size, action, fname, fparam1, fparam
 
 	var hohe = (size > PLAYERHEIGHT*3) ? size: PLAYERHEIGHT*3;
     var triggerGeom = new THREE.BoxGeometry(size,hohe,size);
-    var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, color:0xFFFFFF});
+    var mat = new THREE.MeshBasicMaterial({ transparent: false, opacity: 0, depthWrite: false, color:0xFFFFFF});
     var triggerMesh = new THREE.Mesh(triggerGeom,mat);
     var trigger = new GameObject(triggerMesh,action,TYPE_TRIGGER);
 
@@ -453,6 +453,7 @@ function addTrigger (activated, xPos, zPos, size, action, fname, fparam1, fparam
 			if (triggers[i].ind === index) {
 				triggers[i].obj = trigger;
 				thisone = triggers[i];
+				alert(thisone.fname);
 			}
 		}
 	}
