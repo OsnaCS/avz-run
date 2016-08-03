@@ -163,11 +163,8 @@ http://127.0.0.1:8000
         outlineMesh = null;
 
         // prohibit further interaction by removing from terrain
-        for (i = 0; terrain[i] != this && i < terrain.length; i++);
-        if (terrain[i] == this) terrain.splice(i,1);
 		console.log("deleted item")
 		delGameObject(this.mesh);
-
     }
 
 }

@@ -1,6 +1,6 @@
 var godmode = false; // zum testen, man kann nicht fallen, hat unendlich leben, unendlich sprinten, alle türen sind offen, Nebel kommt langsamer
 var weaksystem = true; //when true, it disables smoothing and makes the fires worse.
-var muteSounds = false; // if true, no sound will be played
+
 
 // Controls camera via WASD/Mouse, enables player to jump, run and crouch
 
@@ -41,7 +41,6 @@ var prevTime = performance.now();
 
 var velocity = new THREE.Vector3();
 
-var terrain = [];
 
 var ducked = false;
 var running = false;
@@ -56,7 +55,7 @@ var PLAYERHEIGHT = 25;
 
 var PLAYERMASS = PLAYERHEIGHT * 6.8; // to simulate gravity
 
-var DUCK_DIFFERENCE = 19 * (PLAYERHEIGHT / 20); // player height when ducked
+var DUCK_DIFFERENCE = 2 * (PLAYERHEIGHT / 3); // player height when ducked
 
 var INVERT_XZ = new THREE.Vector3(-1, 1, -1);
 

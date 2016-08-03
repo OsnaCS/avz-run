@@ -430,12 +430,6 @@ function addTrigger (xPos, zPos, size, action) {
 function removeTrigger(trigger) {
     scene.remove(trigger.mesh);
     octree.remove(trigger.mesh);
-    for (var i =0;i < terrain.length;i++) {
-        if(terrain[i]==trigger) {
-            terrain.splice(i,1);
-        }
-
-    }
 }
 
 
