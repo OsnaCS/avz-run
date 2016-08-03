@@ -72,7 +72,6 @@ function createBasicSounds() {
     atmosphere = createSound("atmosphere", true, 0.2, function() {
         playSound(atmosphere);
     });
-    console.log(footsteps);
 
     extinguisher_Sound = createSound("extinguisher", false, 7);
     door_Sound = createSound("door-open", false, 20);

@@ -40,7 +40,7 @@ var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF",
 			if (xhttp.readyState == 4 && xhttp.status == 200) {
 				var xmlDoc = xhttp.responseXML;
 				//var pfad = xmlDoc.getElementsByTagName("objects")[0].getAttribute("ObjectPath");
-				
+
 				var typeItems = xmlDoc.getElementsByTagName("floors")[0].getElementsByTagName("floor");
 				for (i = 0; i < typeItems.length; i++) {
 					if (typeItems[i].getAttribute("number") == floornumber) {
@@ -59,7 +59,7 @@ var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF",
 		xhttp.send();
 	}
 
-	
+
 
 
 //this function takes as input the name of a room, and adds to the "segments"-array the object containing its info + mesh (no return value due to asynchrony)
@@ -233,7 +233,7 @@ var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF",
 			if (curroom[i].getAttribute("name") === whichroom) {
 				var curdoor = curroom[i].getElementsByTagName("light");
 				for (var j = 0; j < curdoor.length; j++) {
-					var cudo = []; 
+					var cudo = [];
 					cudo.push(curdoor[j].getAttribute("index"));
 					cudo.push((curdoor[j].getAttribute("kind") !== null) ? curdoor[j].getAttribute("kind") : "pointlight");
 					cudo.push((curdoor[j].getAttribute("objectname") !== null) ? curdoor[j].getAttribute("objectname") : "deckenlicht");
@@ -495,8 +495,8 @@ var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF",
 				var fparam1 = tospawn[5];
 				var fparam2 = tospawn[6];
 				var enabled = tospawn[8] === "true";
-				
-				if (fparam1 === "") addTrigger(enabled, spawnx, spawny, size, functPtr, tospawn[4], fparam1, fparam2, tospawn[7], tospawn[0], false) 
+
+				if (fparam1 === "") addTrigger(enabled, spawnx, spawny, size, functPtr, tospawn[4], fparam1, fparam2, tospawn[7], tospawn[0], false)
 					else if (fparam2 === "") addTrigger(enabled, spawnx, spawny, size, partial(functPtr, fparam1), tospawn[4], fparam1, fparam2, tospawn[7], tospawn[0], false)
 						else addTrigger(enabled, spawnx, spawny, size, partial(functPtr, fparam1, fparam2), tospawn[4], fparam1, fparam2, tospawn[7], tospawn[0], false)
 			}
@@ -633,19 +633,19 @@ function door_in_doors(callback) {
 		}
 		return xz;
 	}
-	
+
 	function makelessfog() {
 		console.log("Der Nebel lichtet sich");
 		scene.fog = new THREE.FogExp2(0x424242, 0.00015);
 	}
-	
+
 	function makemorefog() {
 		console.log("Der Nebel dichtet sich");
 		scene.fog = new THREE.FogExp2(0x424242, 0.15);
 	}
-	
-	
-	
+
+
+
 //adds an OBJECT's mesh to the scene (needs to be changed when we stop loading from jsons directly and instead from the pre-loading-thingy.)
 	function addobject(objectpfad, name, posx, posy, posz, scale, rotate, responsefunct, stretchx) {
 		var intItem = null;
@@ -743,7 +743,7 @@ function door_in_doors(callback) {
 
 //löscht erst alle objekte aus der Szene, bevor es dann alle neu hinzufügt.
 	function PutSegments(callback){
-		empty_scene();
+		//empty_scene();
 		for (var i = 0; i <segments.length; i++) {
 			addtoscene(applytransrot(segments[i]),null);
 
@@ -766,10 +766,10 @@ function door_in_doors(callback) {
 
 //zum thema alle objekte aus der scene löschen.
 	function empty_scene(){
-	for( var i = scene.children.length - 1; i >= 0; i--) { 
+	for( var i = scene.children.length - 1; i >= 0; i--) {
 		obj = scene.children[i];
-		scene.remove(obj);	
-	}		
+		scene.remove(obj);
+	}
 	  if(scene_items.length > 0 ) {
 		// scene_items.forEach(function(v,i) {  //TODO: anpassen auf neue struktur.
 		   // v.parent.remove(v);

@@ -99,15 +99,15 @@ function init(event) {
 
                 createRoom(controlls);
                 function controlls() {
+					MAX_FOG = thisfloor.maxfog; if (godmode) {MAX_FOG = 0.005};
+					myfog = thisfloor.startfog; if (godmode) {myfog = 0};
+					fogTime = thisfloor.fogtime; if (godmode) {fogTime = 1200};  //siehe oben
+					fogIncrement= MAX_FOG/(fogTime*1000/10) ;
+					fogInterval;
+					HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at final density you lose this much health
 
-    				MAX_FOG = thisfloor.maxfog; if (godmode) {MAX_FOG = 0.005};
-    				myfog = thisfloor.startfog; if (godmode) {myfog = 0.00002};
-    				fogTime = thisfloor.fogtime; if (godmode) {fogTime = 1200};  //siehe oben
-    				fogIncrement= MAX_FOG/(fogTime*1000/10) ;
-    				fogInterval;
-    				HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at final density you lose this much health
+					scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
 
-    				scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
 
                     // add the objects and lights - replace those functions as you please
                     initControls(startLoop);
@@ -202,10 +202,10 @@ function createScene(complete) {
     		side: THREE.BackSide,
     	}));
     }
-
     var skyGeom = new THREE.BoxGeometry(2000,2000,2000);
     var skyMat = new THREE.MeshFaceMaterial( sky_array );
     var skyMesh = new THREE.Mesh(skyGeom,skyMat);
+
     scene.add(skyMesh);
 
     // Create the renderer
@@ -300,11 +300,11 @@ function loop() {
 
 
 
-                renderer.render(scene, camera);
-                octree.update();
-                stats.end();
-            }
+            renderer.render(scene, camera);
+            octree.update();
+            stats.end();
         }
+    }
 }
 
 
@@ -325,7 +325,7 @@ var hemisphereLight, shadowLight;
 function createRoom(callback) {
 	readLevelsXML(csegments);
 	function csegments() {
-        createAllSegments(psegments);
+        CreateSegment("groundlevel",psegments);
         function psegments () {
     		PutSegments(doors);
     		function doors () {
@@ -452,14 +452,13 @@ function enableTrigger(index) {
 			triggers[i].enabled = true;
 			var functPtr = eval(triggers[i].fname);
 
+			if (triggers[i].fparam1 === "") addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, functPtr, triggers[i].fname, "", "", triggers[i].followup, triggers[i].ind, true)
+				else if (triggers[i].fparam2 === "") addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1), triggers[i].fname, triggers[i].fparam1, "", triggers[i].followup, triggers[i].ind, true)
+					else addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1, triggers[i].fparam2), triggers[i].fname, triggers[i].fparam1, triggers[i].fparam2, triggers[i].followup, triggers[i].ind, true)
 
-			if (triggers[i].fparam1 === "") addTrigger(true, triggers[i].xpos, triggers[i].zpos, triggers[i].siz, functPtr, triggers[i].fname, "", "", triggers[i].followup, triggers[i].ind, true)
-				else if (triggers[i].fparam2 === "") addTrigger(true, triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1), triggers[i].fname, triggers[i].fparam1, "", triggers[i].followup, triggers[i].ind, true)
-					else addTrigger(true, triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1, triggers[i].fparam2), triggers[i].fname, triggers[i].fparam1, triggers[i].fparam2, triggers[i].followup, triggers[i].ind, true)
 			console.log(triggers[i].fname+"-trigger enabled");
 		}
 	}
-
 }
 
 
