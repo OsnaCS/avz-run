@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<level>
+	<rooms>
+		<room name="center" x="0" y="0" rota="0"/>
+		<room name="gang" x="25" y="0" rota="90"/>
+		<door type="glas" x="11" y="5" normx="0" normy="-1"/>
+		<door type="corridor" x="20" y="11" normx="1" normy="0"/>
+		<door type="wood" x="-10" y="7" normx="0" normy="11"/>
+	</rooms>
+	<spawns>
+	</spawns>
+	<lights>
+	</lights>
+	<fires>
+	</fires>
+</level>
