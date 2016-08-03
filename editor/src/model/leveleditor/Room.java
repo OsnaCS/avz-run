@@ -67,7 +67,7 @@ public class Room extends DrawableObject {
             for (Way roomway : waylist){
 
                 if (roomway.compareDistance(mapway)){
-                   
+
                     ownways.remove(roomway);
                     cutways.remove(mapway);
 
@@ -88,9 +88,9 @@ public class Room extends DrawableObject {
 
         //setWaylist(cutways);
 
-        //return added;
+        return added;
 
-        return true;
+        //return true;
     }
 
     /**
@@ -100,7 +100,7 @@ public class Room extends DrawableObject {
      *        otherway  andere Tuer
      */
     private void connect(Way ownway, Way otherway){
-        Coordinates touchedRoom = new Coordinates(otherway.getFather().getCenter());
+        /*Coordinates touchedRoom = new Coordinates(otherway.getFather().getCenter());
 
         //Raummitten werden in Respektive zur benutzten Tuer gesetzt
         Coordinates newCenter = new Coordinates(ownway.getPos().getVector().getInvert());
@@ -108,7 +108,53 @@ public class Room extends DrawableObject {
 
         newCenter = newCenter.addCoordinats(touchedRoom);
 
-        setCenter(newCenter);
+        Room dockstation = new Room(otherway.getFather());
+
+
+        //papa.center+rotated dockvector+rotated ownvector = new center
+
+        Coordinates dockVector = new Coordinates(ownway.getPos().addCoordinats(dockstation.getCenter().getInvert()));
+
+        dockVector.rotation(dockstation.getCenter().getAngle(), dockstation.getCenter());
+
+        Coordinates ownVector = new Coordinates(ownway.getPos().getVector());
+
+        ownVector.rotation(getCenter().getAngle(),getCenter());
+
+        Coordinates newCenter = new Coordinates(dockstation.getCenter().addCoordinats(dockVector).addCoordinats(ownVector));
+
+        moveCenter(newCenter, cC.getAngle());*/
+        //Coordinates updatedOwn = ownway.getActualPosition();
+                Point otherCenter = otherway.getFather().getCenter().getScaledIntCoordinates(otherway.getFather().getCenter());
+                Point thisCenter = ownway.getFather().getCenter().getScaledIntCoordinates(ownway.getFather().getCenter());
+                Point otherDoor = otherway.getPos().getScaledIntCoordinates(otherway.getFather().getCenter());
+                Point thisDoor = ownway.getPos().getScaledIntCoordinates(ownway.getFather().getCenter());
+
+                int newPosX=otherDoor.x+(-thisDoor.x+thisCenter.x);
+                int newPosY=otherDoor.y+(-thisDoor.y+thisCenter.y);
+                System.out.println(newPosX+" "+newPosY);
+
+                Coordinates newCenter = new Coordinates(newPosX,newPosY);
+
+        //Coordinates otherRotated = otherway.getActualPosition();
+
+        //newCenter.addCoordinats(otherRotated);
+
+       // Coordinates ownRotated = new Coordinates(ownway.getActualPosition());
+      //  ownRotated = new Coordinates(new Coordinates(ownRotated.addCoordinats(getCenter())).getInvert());
+
+      //  newCenter = new Coordinates(newCenter.addCoordinats(ownRotated));
+        /*
+        Coordinates updatedOther = otherway.getActualPosition();
+        double newx = updatedOther.getPosx()-ownway.getPos().getX();
+        System.out.println(""+updatedOther.getPosx());
+        System.out.println(""+updatedOther.getPosx());
+        double newy = updatedOther.getPosy()-ownway.getPos().getY();
+
+        newCenter.setPosx(newx);
+        newCenter.setPosy(newy);*/
+        moveCenter(newCenter, getCenter().getAngle());
+        //ownway.getActualPosition()
     }
 
     //Rotiert um 90° um center
@@ -141,9 +187,15 @@ public class Room extends DrawableObject {
     	
 //        Coordinates originalCenter = new Coordinates(cC);
 //        setCenter(new Coordinates(0,0));
-        
+
+
     	g.setColor(Color.BLACK);
-    	
+
+
+        //center anzeigen
+        Point middle = cC.getScaledIntCoordinates(cC);//new Point();
+        middle.paint(g);
+
 //        int cX = (int) (cC.getPosx() + 0.5);
 //        int cY = (int) (cC.getPosy() + 0.5);
 //    	Point c = new Point(cX, cY);
@@ -234,22 +286,37 @@ public class Room extends DrawableObject {
 
         this.cA.setPos(newC.addCoordinats(cA.getVector()));
         this.cE.setPos(newC.addCoordinats(cE.getVector()));
+        for (int i = 0; i < waylist.size(); i++) {
+            waylist.get(i).getPos().setPos(newC.addCoordinats(waylist.get(i).getPos().getVector()));
+        }
+
+        for (int i = 0; i < newC.getAngle(); i += 90) {
+            this.cA.rotation(90, newC);
+            this.cE.rotation(90, newC);
+            for (int j = 0; j < waylist.size(); j++) {
+                waylist.get(j).getPos().rotation(90, cC);
+            }
+        }
+    }
+
+    public void moveCenter(Coordinates newC, int angle) {
+
+        this.cC.setPosx(newC.getPosx());
+        this.cC.setPosy(newC.getPosy());
+        this.cC.setAngle(newC.getAngle());
+
+        this.cA.setPos(newC.addCoordinats(cA.getVector()));
+        this.cE.setPos(newC.addCoordinats(cE.getVector()));
         for(int i=0; i< waylist.size();i++){
             waylist.get(i).getPos().setPos(newC.addCoordinats(waylist.get(i).getPos().getVector()));
         }
-        
+
         for(int i =0; i<newC.getAngle(); i+=90 ){
             this.cA.rotation(90, newC);
             this.cE.rotation(90, newC);
             for(int j = 0; j < waylist.size(); j++) {
                 waylist.get(j).getPos().rotation(90, cC);
-
             }
         }
-
-        
-        
-
     }
-
 }

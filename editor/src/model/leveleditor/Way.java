@@ -49,6 +49,17 @@ public class Way extends DrawableObject {
 		this.pos.setPos(newPos);
 	}
 
+	public Coordinates getActualPosition(){
+		double updatedX = father.getCenter().getPosx() + pos.getX();
+		double updatedY = father.getCenter().getPosy() + pos.getY();
+		int angle = father.getCenter().getAngle();
+		Coordinates updatedCoordinates = new Coordinates(updatedX, updatedY, angle);
+		for(int i =0; i<angle ; i+=90 ){
+			updatedCoordinates.rotation(90, father.getCenter());
+		}
+		return updatedCoordinates;
+	}
+
 	/*
 	 * compares distances of two ways, if they are smaller as 10 Pixels returns therefore true
 	 * and signals ability to connect
@@ -65,18 +76,27 @@ public class Way extends DrawableObject {
 //		System.out.println("Distanz:" + distX + "," + distY);
 //		System.out.println("this x:"  +this.getFather().getCenter().getPosx()+ " other:" + (other.getFather().getCenter().getPosx()));
 		if(distX < maxDistance && distY < maxDistance) {
-			System.out.println("Distanz:" + distX + "," + distY);
+
+		//	System.out.println("Normals: (" + this.normal.getVector().getX() + "," + this.normal.getVector().getY() + ") ("+
+		//			other.normal.getInvert().getVector().getX()+","+other.normal.getInvert().getVector().getY()+")");
+
+			if (other.getNormal().getInvert().getVector().getX()==this.normal.getVector().getX()
+					|| other.getNormal().getInvert().getVector().getY()==this.normal.getVector().getY())
+			{
+			//	System.out.println("Distanz:" + distX + "," + distY);
+			}
+
 		}
-		if (other.getNormal().getInvert().equals(this.normal)){
-			System.out.println("Normals:" + this.normal+ "," + other.normal);
-		}
+
 
 		//compares both distances with the allowed distance to create a circle
 		//which if it is small enough signals ability to connect and has orthogonal normals
 		//and is of the same type
 		if(distX < maxDistance && distY < maxDistance
-				&& other.getNormal().getInvert().equals(this.normal)
-				/*&& other.getType().equals(this.type)*/) {
+				&& (other.getNormal().getInvert().getVector().getX()==this.normal.getVector().getX()
+						|| other.getNormal().getInvert().getVector().getY()==this.normal.getVector().getY()))
+			//	&& other.getType().equals(this.type)) {
+			{
 			return true;
 		}
 		//else returns false

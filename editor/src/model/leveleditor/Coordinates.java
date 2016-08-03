@@ -15,7 +15,7 @@ public class Coordinates {
 	private final double x;
 	private final double y;
 	
-	// Position des Punktes 
+	// Position des Punktes
 	private double posx;
 	private double posy;
 	
@@ -69,14 +69,6 @@ public class Coordinates {
 //	 * @param factor Faktor, um den skaliert wird
 //	 * @return int-Koordinaten
 //	 */
-//	public Point getScaledIntCoordinates() {
-//		// Basis Trafo der Koordinatensysteme
-//		int x = (int) ((factor * this.posx) + 0.5);
-//		int y = (int) ((factor * this.posy) + 0.5);
-//				
-//		return new Point(x,y);
-//	}
-	
 	public Point getScaledIntCoordinates(Coordinates p) {
 		// Basis Trafo der Koordinatensysteme
 		double[][] translateHin = {{1, 0, -p.getPosx()}, 
@@ -167,10 +159,8 @@ public class Coordinates {
 		Matrix temp = translateFrom.multiply(rotation).multiply(translateTo);
 		
 		matPoint= temp.multiply(matPoint);
-		
 		this.posx = matPoint.getValue(0, 0);
 		this.posy = matPoint.getValue(1, 0);
-		
 		this.angle = (this.angle + angle) % 360;
 	}
 	
@@ -245,9 +235,8 @@ public class Coordinates {
 		
 		double newPosX = this.posx + point.getPosx();
 		double newPosY = this.posy + point.getPosy();
-		
-		Coordinates v = new Coordinates(newPosX, newPosY);
 
+		Coordinates v = new Coordinates(newPosX, newPosY);
 		
 		return v;
 	}
