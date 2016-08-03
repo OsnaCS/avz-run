@@ -157,6 +157,7 @@ public class XMLhandler {
 			//Add Way to current Room
 			waylist.add(way);
 		}
+		System.out.println(room.getCenter().getX());
 		return room;
 
 	}
@@ -340,11 +341,11 @@ public class XMLhandler {
 			room.setAttributeNode(roomName);
 
 			Attr x = doc.createAttribute("x");
-			x.setValue(new Double(currentRoom.getCenter().getPosx()).toString());
+			x.setValue(new Double(currentRoom.getCenter().getX()).toString());
 			room.setAttributeNode(x);
 
 			Attr y = doc.createAttribute("y");
-			y.setValue(new Double(currentRoom.getCenter().getPosy()).toString());
+			y.setValue(new Double(currentRoom.getCenter().getY()).toString());
 			room.setAttributeNode(y);
 
 			Attr rota = doc.createAttribute("rotation");
@@ -378,11 +379,11 @@ public class XMLhandler {
 			door.setAttributeNode(type);
 
 			Attr x = doc.createAttribute("x");
-			x.setValue(new Double(currentWay.getPos().getPosx()).toString());
+			x.setValue(new Double(currentWay.getPos().getX()).toString());
 			door.setAttributeNode(x);
 
 			Attr y = doc.createAttribute("y");
-			y.setValue(new Double(currentWay.getPos().getPosy()).toString());
+			y.setValue(new Double(currentWay.getPos().getY()).toString());
 			door.setAttributeNode(y);
 
 			Attr normx = doc.createAttribute("normx");
