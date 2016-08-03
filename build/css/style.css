@@ -220,6 +220,15 @@ hr {
     position: absolute;
 }
 
+#loadingBlocker2 {
+    width: 100%;
+    height: 100%;
+    background-image: url(../bilder/avz.gif);
+    background-size: cover;
+    position: absolute;
+	display: none;
+}
+
 .loading {
     height: 40px;
     width: 100%;
