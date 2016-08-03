@@ -74,7 +74,7 @@ function init(event) {
     clock = new THREE.Clock();
 
     //CreateSegment("groundlevel",scene);
-    CreateSegment("robolab",scene);
+    CreateSegment("groundlevel",scene);
 
     octree = new THREE.Octree( {
         // uncomment below to see the octree (may kill the fps)
@@ -232,6 +232,9 @@ function createScene(complete) {
 }
 
 var roboternum = 0;
+var robolab = false;
+var robo_zDist;
+
 function loop() {
     //console.log(octreeObjects);
 	
@@ -263,31 +266,38 @@ function loop() {
             }                          
 
            
-          
+           
             if(roboternum == 0){
 	            for (i = 0; i < static_obj.length; i++) {
-	            	if(static_obj[i].name == "roboter"){
+	            	if(static_obj[i].name == "evil_roboter"){
 	            		roboternum = i;
-	            		break;
+                        robo_zDist = static_obj[roboternum].msh.position.z + 90;
+                        robolab = true;
+                        break;
 	            	}
-	            	
+
 	            }
+
+                if(!robolab){
+                    roboternum = 1;
+                }
+
 	        }
 
-            var deltaTime = clock.getDelta();
+            if(robolab){
+                var deltaTime = clock.getDelta();
 
-            if(!reached){
-            	moveObject(static_obj[roboternum].msh , 40, 0, 0, 1000, deltaTime);
-            	if(reached)
-            		static_obj[roboternum].msh.rotateY(Math.PI);
+                if(!reached){
+                	moveObject(static_obj[roboternum].msh , static_obj[roboternum].msh.position.x, static_obj[roboternum].msh.position.y, robo_zDist, 500, deltaTime);
+                	if(reached)
+                		static_obj[roboternum].msh.rotateY(Math.PI);
+                }
+                else{
+                	moveObject(static_obj[roboternum].msh ,static_obj[roboternum].msh.position.x, static_obj[roboternum].msh.position.y, robo_zDist-90, 500, deltaTime);
+                	if(!reached)
+                		static_obj[roboternum].msh.rotateY(Math.PI);
+                }
             }
-            else{
-            	moveObject(static_obj[roboternum].msh , 40, 0, 160, 1000, deltaTime);
-            	if(!reached)
-            		static_obj[roboternum].msh.rotateY(Math.PI);
-            }
-
-
 
 
 
