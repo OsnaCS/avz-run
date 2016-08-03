@@ -251,7 +251,7 @@ function loop() {
             requestAnimationFrame(loop);
 
             if (!nofog) scene.fog.density = myfog;
-            player.updateEnergy();
+            player.updateEnergy(); 
 
             // YOU NEED TO CALL THIS (srycaps)
             if (!special_html_input) {

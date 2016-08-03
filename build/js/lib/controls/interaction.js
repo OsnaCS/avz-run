@@ -202,7 +202,7 @@ function nix() {
 }
 
 function destroy(){
-    if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
+    if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "axt")){
         damageDoorSound();
         this.delFromScene();
         console.log('destroyed');
@@ -297,7 +297,7 @@ function damageDoor() {
 }
 
 function destroyDoor() {
-    if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
+    if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "axt")){
 		var d = getSegmentFromIntItem(this);
 		addObjectViaName("brokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "", d.stretchx);
 		remove_interactible(d);
@@ -337,7 +337,7 @@ function dFire(){
 
 // Attach this function to the fire
 function extinguish() {
-	if(this.type == TYPE_FIRE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "feuerloescher")){
+	if(this.type == TYPE_FIRE && (selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "feuerloescher")){
         // activeObject must be saved so that the dFire function is not influence
         // be new activeObject selected during the delay
         tempActObj = activeObject;
@@ -438,7 +438,7 @@ function pinPad(pinvalue) {
 
 function enterCH() {
 
-    if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "transponder")){
+    if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "transponder")){
 
         special_html_input = true;
 
@@ -450,7 +450,7 @@ function enterCH() {
         document.exitPointerLock();
     } else {
 
-        selectedItem != null && console.log(selectedItem.name);
+        selectedItem != null  && selectedItem.name != undefined && console.log(selectedItem.name);
         console.log('nicht anwendbar');
 		showThoughts("Hm, da ist ein Programm von der Raumverwaltung geöffnet...")
     }
@@ -530,7 +530,7 @@ function backToGame() {
 
 // Attach this function the door to be opened by a transponder
 function openTransponderDoor(){
-    if(selectedItem != null && selectedItem.activeTransponder){
+    if(selectedItem != null && (selectedItem.name != undefined) && selectedItem.activeTransponder){
             doorSound();
 			var d = getSegmentFromIntItem(this);
 			var kind = "glastur"
@@ -608,9 +608,19 @@ function success() {
     $(".GUI").fadeOut(5000);
 }
 
+function useMedi(){
+    if((selectedItem != null) && (selectedItem.name != undefined) && ((objectFilenameToName(selectedItem.name) == "ziegel") || (objectFilenameToName(selectedItem.name) == "medipack"))){ //das sollte definitiv anders TODO
+		//play some "ugh, healed"-sound?
+		showThoughts("Ahhh, das tut gut!", 5000);
+		player.health = MAX_HEALTH;
+        console.log('fully healed');
+        player.delActItem();
+	}
+}
+
 
 function coverMouth(){
-    if((selectedItem != null) && (objectFilenameToName(selectedItem.name) == "schwamm")){
+    if((selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "schwamm")){
         startHeavyBreathing();
 		heavybreath = true;
         additional_healthloose = 0;

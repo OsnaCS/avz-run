@@ -148,7 +148,7 @@ function setActiveSlot(slot)  {
                 break;
         }
     }
-
+	useMedi();
 }
 
 
