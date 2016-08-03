@@ -58,7 +58,7 @@ var pause = false;
 
 //variables used for increasing fog are now to find after the creation of the scene
 
-
+var player;
 var octree;
 var octreeObjects = [];
 var clock;
@@ -67,8 +67,6 @@ var clock;
 function init(event) {
 
     clock = new THREE.Clock();
-
-	CreateSegment("groundlevel",scene);
 
     octree = new THREE.Octree( {
         // uncomment below to see the octree (may kill the fps)
@@ -87,12 +85,12 @@ function init(event) {
     } );
 
 
-    // set up the scene, the camera and the renderer
-    function scene (){
-    	createScene(audio);
+// set up the scene, the camera and the renderer
 
-    	function audio (){
-        // init audio support
+	createScene(audio);
+
+	function audio (){
+    // init audio support
         createAudio(room);
 
         function room() {
@@ -100,33 +98,24 @@ function init(event) {
                 createRoom(controlls);
                 function controlls() {
 
-					MAX_FOG = thisfloor.maxfog; if (godmode) {MAX_FOG = 0.005};
-					myfog = thisfloor.startfog; if (godmode) {myfog = 0};
-					fogTime = thisfloor.fogtime; if (godmode) {fogTime = 1200};  //siehe oben
-					fogIncrement= MAX_FOG/(fogTime*1000/10) ;
-					fogInterval;
-					HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at final density you lose this much health
-
-					scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
 
                     // add the objects and lights - replace those functions as you please
                     initControls(startLoop);
 
                     function startLoop () {
-						controls.getObject().position.x = parseFloat(thisfloor.spawn.slice(1,thisfloor.spawn.indexOf(',')))*SKALIERUNGSFAKTOR;
-						controls.getObject().position.y = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.indexOf(',')+1,thisfloor.spawn.lastIndexOf(',')))*SKALIERUNGSFAKTOR;
-						controls.getObject().position.z = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.lastIndexOf(',')+1,thisfloor.spawn.indexOf(')')))*SKALIERUNGSFAKTOR;
+
 
                         // renderer.render(scene, camera);
     					// start a loop that will update the objects' positions
     					// and render the scene on each frame
+
     					loop();
     				}
 
     			}
     		}
     	}
-    }
+
 
 }
 
@@ -164,7 +153,8 @@ function createScene(complete) {
     fogInterval = setInterval(function() {
     	if (!menu && !pause) {
     		player.damage(myfog / MAX_FOG) * (HEALTH_PER_SECOND / 100);
-
+			player.damage(additional_healthloose);
+			
     		if (myfog < MAX_FOG) {
     			myfog += fogIncrement;
     		}
@@ -201,10 +191,10 @@ function createScene(complete) {
     		side: THREE.BackSide,
     	}));
     }
-
     var skyGeom = new THREE.BoxGeometry(2000,2000,2000);
     var skyMat = new THREE.MeshFaceMaterial( sky_array );
     var skyMesh = new THREE.Mesh(skyGeom,skyMat);
+
     scene.add(skyMesh);
 
     // Create the renderer
@@ -235,13 +225,12 @@ function createScene(complete) {
     // we have to update the camera and the renderer size
     window.addEventListener('resize', handleWindowResize, false);
 
-    scene.fog = new THREE.FogExp2(0x424242, 0.005);
+    if (!nofog) scene.fog = new THREE.FogExp2(0x424242, 0.005);
     complete();
 }
 
-var roboternum = 0;
+
 function loop() {
-    //console.log(octreeObjects);
 
 
     if (!menu && !pause) {
@@ -261,7 +250,7 @@ function loop() {
             // }, 1000 / 10 );
             requestAnimationFrame(loop);
 
-            scene.fog.density = myfog;
+            if (!nofog) scene.fog.density = myfog;
             player.updateEnergy();
 
             // YOU NEED TO CALL THIS (srycaps)
@@ -270,40 +259,13 @@ function loop() {
             	interactionLoop();
             }
 
+            move();
 
-
-            if(roboternum == 0){
-	            for (i = 0; i < static_obj.length; i++) {
-	            	if(static_obj[i].name == "roboter"){
-	            		roboternum = i;
-	            		break;
-	            	}
-
-	            }
-	        }
-
-            var deltaTime = clock.getDelta();
-
-            if(!reached){
-            	moveObject(static_obj[roboternum].msh , 40, 0, 0, 1000, deltaTime);
-            	if(reached)
-            		static_obj[roboternum].msh.rotateY(Math.PI);
-            }
-            else{
-            	moveObject(static_obj[roboternum].msh , 40, 0, 160, 1000, deltaTime);
-            	if(!reached)
-            		static_obj[roboternum].msh.rotateY(Math.PI);
-            }
-
-
-
-
-
-                renderer.render(scene, camera);
-                octree.update();
-                stats.end();
-            }
+            renderer.render(scene, camera);
+            octree.update();
+            stats.end();
         }
+    }
 }
 
 
@@ -318,88 +280,170 @@ function loop() {
 }
 
 
-var hemisphereLight, shadowLight;
+var roboternum = 0;
+var robolab = false;
+var roboPosX;
+var roboPosY;
+var roboPosZ;
 
+function move(){
+    if(roboternum == 0){
+        for (i = 0; i < static_obj.length; i++) {
+            if(static_obj[i].name == "evil_roboter"){
+                roboternum = i;
+                roboPosX = static_obj[roboternum].msh.position.x;
+                roboPosY = static_obj[roboternum].msh.position.y;
+                roboPosZ = static_obj[roboternum].msh.position.z;
+                robolab = true;
+                break;
+            }
 
-// TEST ENVIRONMENT
+        }
 
-function createLights() {
+        if(!robolab){
+            roboternum = 1;
+        }
 
-    // // A hemisphere light is a gradient colored light;
-    // // the first parameter is the sky color, the second parameter is the ground color,
-    // // the third parameter is the intensity of the light
-    // hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, .9)
+    }
 
-    // // A directional light shines from a specific direction.
-    // // It acts like the sun, that means that all the rays produced are parallel.
-    // shadowLight = new THREE.DirectionalLight(0xffffff, .9);
+    if(robolab){
+        var deltaTime = clock.getDelta();
 
-    // // Set the direction of the light
-    // shadowLight.position.set(50, 50, 50);
-
-    // // Allow shadow casting
-    // shadowLight.castShadow = true;
-
-    // // define the visible area of the projected shadow
-    // shadowLight.shadow.camera.left = -400;
-    // shadowLight.shadow.camera.right = 400;
-    // shadowLight.shadow.camera.top = 400;
-    // shadowLight.shadow.camera.bottom = -400;
-    // shadowLight.shadow.camera.near = 1;
-    // shadowLight.shadow.camera.far = 1000;
-
-    // // define the resolution of the shadow; the higher the better,
-    // // but also the more expensive and less performant
-    // shadowLight.shadow.mapSize.width = 2048;
-    // shadowLight.shadow.mapSize.height = 2048;
-
-    // // to activate the lights, just add them to the scene
-    // scene.add(hemisphereLight);
-    // scene.add(shadowLight);
-
+        moveObject(static_obj[roboternum].msh , roboPosX, roboPosY, roboPosZ, 0*SKALIERUNGSFAKTOR, 0*SKALIERUNGSFAKTOR, 9*SKALIERUNGSFAKTOR, 1000, deltaTime);
+            
+    }
 }
 
-
 function createRoom(callback) {
-	readLevelsXML(segments);
-	function segments() {
-		PutSegments(doors);
-		function doors () {
-			door_in_doors(objects);
-			function objects() {
-				objects_in_spawns(fires);
-				function fires() {
-					set_fires(lights);
-					function lights () {
-						turn_on_lights(triggers);
-						var gesamtlicht = 0;
-						if (thisfloor.ambientintens > 0) {
-							scene.add(new THREE.AmbientLight(parseInt(thisfloor.ambientcolor),parseInt(thisfloor.ambientintens)));
-							gesamtlicht += parseInt(thisfloor.ambientintens);
+	$("#loadingBlocker2").show();
+	$(".gui").hide();
+	readLevelsXML(csegments);
+	function csegments() {
+        createAllSegments(psegments);
+        function psegments () {
+    		PutSegments(doors);
+			
+			
+    		function doors () {
+    			door_in_doors(objects);
+    			function objects() {
+    				objects_in_spawns(fires);
+    				function fires() {
+						if (!nofog) {
+							console.log("Max-Fog auf diesem Level: "+thisfloor.maxfog)
+							MAX_FOG = thisfloor.maxfog; if (godmode) {MAX_FOG = 0.005};
+							myfog = thisfloor.startfog; if (godmode) {myfog = 0.0002}; 
+							fogTime = thisfloor.fogtime; if (godmode) {fogTime = 1200};  //siehe oben
+
+							fogIncrement= MAX_FOG/(fogTime*1000/10) ;
+							
+							scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
 						}
-						if (godmode) {
-							scene.add(new THREE.AmbientLight(0xFFFFFF,(1-gesamtlicht)));
-							gesamtlicht += (1-gesamtlicht);
-						}
-						if (gesamtlicht < 0.3 && onlygloballight) {
-							scene.add(new THREE.AmbientLight(0xFFBFBF,(0.3-gesamtlicht)));
-						}
-						function triggers () {
-							addtriggers(callback);
-						}
-					}
-				}
-			}
-		}
+						HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at final density you lose this much health			
+						controls.getObject().position.x = parseFloat(thisfloor.spawn.slice(1,thisfloor.spawn.indexOf(',')))*SKALIERUNGSFAKTOR;
+						controls.getObject().position.y = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.indexOf(',')+1,thisfloor.spawn.lastIndexOf(',')))*SKALIERUNGSFAKTOR;
+						controls.getObject().position.z = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.lastIndexOf(',')+1,thisfloor.spawn.indexOf(')')))*SKALIERUNGSFAKTOR;
+    					set_fires(lights);
+    					function lights () {
+    						turn_on_lights(triggers);
+    						var gesamtlicht = 0;
+							var tmplight;
+    						if (thisfloor.ambientintens > 0) {
+                                tmplight = new THREE.AmbientLight(parseInt(thisfloor.ambientcolor),parseInt(thisfloor.ambientintens))
+    							addtoscene(tmplight); threelights.push(tmplight);
+    							gesamtlicht += parseInt(thisfloor.ambientintens);
+    						}
+    						if (godmode) {
+								tmplight = new THREE.AmbientLight(0xFFFFFF,(1-gesamtlicht));
+    							addtoscene(tmplight); threelights.push(tmplight);
+    							gesamtlicht += (1-gesamtlicht);
+    						}
+    						if (gesamtlicht < 0.3 && onlygloballight) {
+								tmplight = new THREE.AmbientLight(0xFFBFBF,(0.3-gesamtlicht));
+    							addtoscene(tmplight); threelights.push(tmplight);
+    						}
+    						function triggers () {
+    							addtriggers(levelSettings);
+                                function levelSettings () {
+									$("#loadingBlocker2").hide();
+									$(".gui").show();
+                                    callback();
+                                }
+    						}
+                        }
+    				}
+    			}
+    		}
+        }
 	}
+}
+
+function resetScene(callback) {
+    scene = null;
+    scene= new THREE.Scene();
+	
+
+	
+    // var camPos = new THREE.Vector3(0, PLAYERHEIGHT + PLAYERHEIGHT * 0.4, 0);
+	// controls = null;
+    // controls = new THREE.PointerLockControls(camera, camPos);
+    // scene.add(controls.getObject());
+
+    // sky box
+    // files are named by directions
+    var sky_directions  = ["right", "left", "top", "bottom", "back", "front"];
+    var sky_array = [];
+
+    sky_loader = new THREE.TextureLoader();
+    // make texture array
+    for (var i = 0; i < 6; i++) {
+        sky_array.push( new THREE.MeshBasicMaterial({
+            map: sky_loader.load( "../avz_model/materials/textures/sky/sky_" + sky_directions[i] + ".jpg" ),
+            side: THREE.BackSide,
+        }));
+    }
+    var skyGeom = new THREE.BoxGeometry(2000,2000,2000);
+    var skyMat = new THREE.MeshFaceMaterial( sky_array );
+    var skyMesh = new THREE.Mesh(skyGeom,skyMat);
+    addtoscene(skyMesh);
+	callback();
+		
 }
 
 
 function recreateRoom() {
 	//lösche erst alle segments, doors, objects, fires, lights, triggers. Dann calle createRoom/init
-	console.log("Recreating everything...");
-	empty_scene();
-	init();
+	
+    empty_scene(reset);
+	
+	function reset() {
+		
+		resetScene(octrem);
+		function octrem () {
+			octree = null;
+			octree = new THREE.Octree( {
+				// uncomment below to see the octree (may kill the fps)
+				//scene: scene,
+				// when undeferred = true, objects are inserted immediately
+				// instead of being deferred until next octree.update() call
+				// this may decrease performance as it forces a matrix update
+				undeferred: false,
+				// set the max depth of tree
+				depthMax: 20,
+				// max number of objects before nodes split or merge
+				objectsThreshold: 8,
+				// percent between 0 and 1 that nodes will overlap each other
+				// helps insert objects that lie over more than one node
+				overlapPct: 0.15
+			} );
+			console.log("Recreating everything...");
+			function cont (){pause = false;
+				requestAnimationFrame(loop);
+			}	
+			// cont();			
+			createRoom(cont);
+		}
+	}
 }
 
 
@@ -430,10 +474,9 @@ function addTrigger (activated, xPos, zPos, size, action, fname, fparam1, fparam
 
 	var hohe = (size > PLAYERHEIGHT*3) ? size: PLAYERHEIGHT*3;
     var triggerGeom = new THREE.BoxGeometry(size,hohe,size);
-    var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, color:0xFFFFFF});
+    var mat = new THREE.MeshBasicMaterial({ transparent: triggerstransparent, opacity: 0, depthWrite: false, color:0xFFFFFF});
     var triggerMesh = new THREE.Mesh(triggerGeom,mat);
     var trigger = new GameObject(triggerMesh,action,TYPE_TRIGGER);
-
 
 
 	var thisone;
@@ -453,7 +496,7 @@ function addTrigger (activated, xPos, zPos, size, action, fname, fparam1, fparam
 		trigger.mesh.position.x = thisone.xpos;
 		trigger.mesh.position.z = thisone.zpos;
 		trigger.mesh.position.y = 0;
-		scene.add(trigger.mesh);
+		addtoscene(trigger.mesh);
 		modifyOctree(trigger,true);
 	}
 }
@@ -474,11 +517,6 @@ function disableTrigger(trigger) {
 	}
     scene.remove(trigger.mesh);
     octree.remove(trigger.mesh);
-    for (var i =0;i < terrain.length;i++) {
-        if(terrain[i]==trigger) {
-            terrain.splice(i,1);
-        }
-	}
 }
 
 function enableTrigger(index) {
@@ -486,9 +524,10 @@ function enableTrigger(index) {
 		if (triggers[i].ind === index) {
 			triggers[i].enabled = true;
 			var functPtr = eval(triggers[i].fname);
-			if (triggers[i].fparam1 === "") addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, functPtr, triggers[i].fname, "", "", triggers[i].followup, triggers[i].ind, true)
-				else if (triggers[i].fparam2 === "") addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1), triggers[i].fname, triggers[i].fparam1, "", triggers[i].followup, triggers[i].ind, true)
-					else addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1, triggers[i].fparam2), triggers[i].fname, triggers[i].fparam1, triggers[i].fparam2, triggers[i].followup, triggers[i].ind, true)
+
+			if (triggers[i].fparam1 === "") addTrigger(true, triggers[i].xpos, triggers[i].zpos, triggers[i].siz, functPtr, triggers[i].fname, "", "", triggers[i].followup, triggers[i].ind, true)
+				else if (triggers[i].fparam2 === "") addTrigger(true, triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1), triggers[i].fname, triggers[i].fparam1, "", triggers[i].followup, triggers[i].ind, true)
+					else addTrigger(true, triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1, triggers[i].fparam2), triggers[i].fname, triggers[i].fparam1, triggers[i].fparam2, triggers[i].followup, triggers[i].ind, true)
 
 			console.log(triggers[i].fname+"-trigger enabled");
 		}
@@ -500,7 +539,6 @@ function enableTrigger(index) {
 
 
 function modifyOctree( mesh , useFaces) {
-
         if (mesh.mesh==undefined) {
         	octree.add( mesh, { useFaces: useFaces } );
         } else {
@@ -513,7 +551,6 @@ function modifyOctree( mesh , useFaces) {
         // scene.add( mesh );
 
         // store object
-
         octreeObjects.push( mesh );
 
         /*
@@ -533,5 +570,4 @@ function modifyOctree( mesh , useFaces) {
         octree.toConsole();
 
         */
-
 }

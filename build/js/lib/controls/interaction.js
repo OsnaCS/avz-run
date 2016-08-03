@@ -11,6 +11,9 @@ var lockOpen = false; // pin pad boolean
 var outlineMesh = null;
 
 var extinguisherParticleSystem;
+var coveredmouth = false;
+var additional_healthloose = 0;
+var heavybreath = false;
 
 // pin pad variables.... may not be stored here?
 var pin = new Array(4);
@@ -22,7 +25,6 @@ var CORRECT_PIN = ['0','0','4','2'];
 var CORRECT_TRANSPONDER = ['4','3'];
 var TYPE_INTERACTABLE = 0;
 var TYPE_FIRE = 1;
-var TYPE_EXIT = 2;
 var TYPE_TRIGGER = 3;
 var FADE_TIME = 1200;
 
@@ -97,9 +99,6 @@ function interactionLoop() {
             interObj = getGameObject(interactions[interIter2].object)
             if (interObj instanceof GameObject) break;
         }
-        if(interObj.type==TYPE_EXIT){
-        // nextLevel(); TODO: implement somewhere
-        }
     }
     //
     if(interactions.length>0) {
@@ -141,7 +140,7 @@ GameObject = function(mesh, interaction, type, name) {
     this.type = type;
     this.mesh = mesh;
     this.interact = interaction;
-http://127.0.0.1:8000
+
 
     this.name=name;
 
@@ -163,13 +162,16 @@ http://127.0.0.1:8000
         outlineMesh = null;
 
         // prohibit further interaction by removing from terrain
-        for (i = 0; terrain[i] != this && i < terrain.length; i++);
-        if (terrain[i] == this) terrain.splice(i,1);
 		console.log("deleted item")
 		delGameObject(this.mesh);
-
     }
 
+}
+
+function nextLevel() {
+    floornumber-=1;
+	pause=true;
+    recreateRoom();
 }
 
 function delGameObject(mesh) {
@@ -244,6 +246,31 @@ function open() {
 
 }
 
+function open_after_ext() {
+	var notext = false;
+	//welches feuer gelöscht sein muss ist hartgecoded, sorry. //TODO: ändern.
+	for (var i = 0; i < fires.length; i++) {
+		if (fires[i].index == "exit") notext = true;
+	}
+	if (notext) {
+		showThoughts("Aua, ich stehe in Feuer, aua! Da öffne ich doch keine Tür!",5000);
+	} else {
+		doorSound();
+		if(!this.open) {
+			this.mesh.rotateY(Math.PI/2.0);
+		}
+		else {
+			this.mesh.rotateY(-Math.PI/2.0);
+		}
+		this.open = !this.open;
+
+		// mesh is removed
+		scene.remove(outlineMesh);
+		outlineMesh = null;
+		activeObject = null;
+	}
+}
+
 function getSegmentFromIntItem(intItem) {
 	var j = -1;
 	for (i = 0; i < interact_obj.length; i++) {
@@ -258,7 +285,7 @@ function getSegmentFromIntItem(intItem) {
 }
 
 function damageDoor() {
-    if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
+    if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "axt")){
 		var d = getSegmentFromIntItem(this);
 		addObjectViaName("halbbrokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "destroyDoor", d.stretchx);
 		remove_interactible(d);
@@ -327,6 +354,9 @@ function extinguish() {
     }
 }
 
+function pfortnerliste() {
+    showThoughts("Noch austragen und fertig!",5000);
+}
 
 // ***** robo lab pin pad *****
 
@@ -498,20 +528,6 @@ function backToGame() {
 }
 
 
-// Attach this function to the sink
-function coverMouth(){
-    if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "lappen")){
-        startHeavyBreathing();
-        HEALTH_PER_SECOND = HEALTH_PER_SECOND / 2;
-        //addItem((newItemList[31]), playerPos[1], playerPos[2] + 10, playerPos[3], 2, 270, true, pickUpItem);
-        console.log('covered mouth');
-        player.delActItem();
-    }else{
-        console.log('nicht anwendbar');
-    }
-}
-
-
 // Attach this function the door to be opened by a transponder
 function openTransponderDoor(){
     if(selectedItem != null && selectedItem.activeTransponder){
@@ -520,6 +536,7 @@ function openTransponderDoor(){
 			var kind = "glastur"
 
 			if (objectFilenameToName(d.filename) == "holztuer") kind = "holztur";
+			
 			addObjectViaName(kind, "door", d.x, d.y, d.z, d.skale, d.rot-1, "openopened", d.stretchx);
 			remove_interactible(d);
 			this.delFromScene();
@@ -546,6 +563,16 @@ function openTransponderDoor(){
 			console.log('kein Tranponder');
 			showThoughts("Verschlossen. Vielleicht kann ich die Tür mit einem Transponder öffnen.",5000);
 		}
+    }
+}
+
+//
+function robotControll(){
+    robolab = !robolab;
+    if(robolab){
+        showThoughts("Ich habe den Roboter wieder angeschaltet",5000);
+    } else{
+        showThoughts("Ich habe den Roboter ausgeschaltet",5000);
     }
 }
 
@@ -579,6 +606,46 @@ function success() {
     console.log("YEY");
     $("#endScreen").fadeIn(5000);
     $(".GUI").fadeOut(5000);
+}
+
+
+function coverMouth(){
+    if((selectedItem != null) && (objectFilenameToName(selectedItem.name) == "schwamm")){
+        startHeavyBreathing();
+		heavybreath = true;
+        additional_healthloose = 0;
+        //addItem((newItemList[31]), playerPos[1], playerPos[2] + 10, playerPos[3], 2, 270, true, pickUpItem);
+        console.log('covered mouth');
+        player.delActItem();
+        return true;
+    }else{
+        return false;
+    }
+}
+
+function makelessfog() {
+		if (!coveredmouth) {
+			if (!nofog) myfog -= 0.008; if (myfog < 0.0001) myfog = 0.0001;
+		} else {
+			coveredmouth = false;
+		}
+        console.log("Der Nebel lichtet sich");
+		additional_healthloose = 0;
+		if (heavybreath) { stopHeavyBreathing(); heavybreath = false;}
+}
+
+function makemorefog() {
+        console.log("Der Nebel dichtet sich");
+        if (coverMouth()) {
+			showThoughts("Das sollte mir helfen!",5000);
+			coveredmouth = true;
+		}
+        else {
+			additional_healthloose = MAX_HEALTH/2000;
+			if (!coveredmouth) if (!nofog) myfog += 0.008;
+			showThoughts("Der Rauch ist zu dicht, ich kann kaum atmen. Vielleicht finde ich etwas, das ich mir vor den Mund halten kann. Besser raus hier.",5000)
+			coveredmouth = false;
+		}
 }
 
 
@@ -693,3 +760,4 @@ function extinguisherAnimation(){
 
     setTimeout(deleteExtinguisherParticles, 1000);
 }
+
