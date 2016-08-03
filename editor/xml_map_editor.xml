@@ -16,7 +16,8 @@
 	<!-- DAS HIER IST FINAL!!!!! -->
 	<room name="circle_walled" filename="circle_WALLED.json">
 		<!--<origin x="0" y="0"/>-->
-		<size xmin="-8.94993" xmax="11.00008" ymin="-13.5" ymax="23.24"/>
+		<size xmin="-8.94993" xmax="11.00008" ymin="-13.5" ymax="28.20001"/>
+
 		<doors>
 		   <door type="norm" index="2" x = "11" y = "20.4" normalX = "1" normalY =  "0"/>
 		   <door type="norm" index="3" x = "11" y = "14.9" normalX = "1" normalY = "0"/>
