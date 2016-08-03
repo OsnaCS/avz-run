@@ -9,6 +9,8 @@ import model.drawables.*;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import org.omg.CORBA.portable.Delegate;
+
 
 
 
@@ -33,7 +35,7 @@ public class Way extends DrawableObject {
 	}
 	public Way(Way way, Room father){
 		this.type = way.getType();
-		this.pos= new Coordinates(way.getPos());
+		this.pos = new Coordinates(way.getPos());
 		this.normal = new Coordinates(way.getNormal());
 		this.father = father;
 	}
@@ -53,13 +55,15 @@ public class Way extends DrawableObject {
 	 */
 	public boolean compareDistance(Way other){
 
-		updatePosition();
-		other.updatePosition();
+		//updatePosition();
+		//other.updatePosition();
 
+		
 		//caclculates absolute value of the distances between x and y coordinate of the two ways
-		double distX = Math.abs(pos.getPosx() - other.pos.getPosx());
-		double distY = Math.abs(pos.getPosy() - other.pos.getPosy());
-
+		double distX = Math.abs(this.pos.getScaledIntCoordinates(this.getFather().getCenter()).x - other.pos.getScaledIntCoordinates(other.getFather().getCenter()).x);
+		double distY = Math.abs(this.pos.getScaledIntCoordinates(this.getFather().getCenter()).y - other.pos.getScaledIntCoordinates(other.getFather().getCenter()).y);
+//		System.out.println("Distanz:" + distX + "," + distY);
+//		System.out.println("this x:"  +this.getFather().getCenter().getPosx()+ " other:" + (other.getFather().getCenter().getPosx()));
 		if(distX < maxDistance && distY < maxDistance) {
 			System.out.println("Distanz:" + distX + "," + distY);
 		}
@@ -72,7 +76,7 @@ public class Way extends DrawableObject {
 		//and is of the same type
 		if(distX < maxDistance && distY < maxDistance
 				&& other.getNormal().getInvert().equals(this.normal)
-				&& other.getType().equals(this.type)) {
+				/*&& other.getType().equals(this.type)*/) {
 			return true;
 		}
 		//else returns false
@@ -84,22 +88,16 @@ public class Way extends DrawableObject {
 	 */
 	public void calcNormal(double rotation){
 		
-		//in case of switching to the sides, the absolute value of normals stays the same
-		//just x and y value change
-		if(rotation == 90 || rotation == 270){
-			double tmp;
-			tmp = normal.getPosx();
-			normal.setPosx(normal.getPosy());
-			normal.setPosy(tmp);
+		if(normal.getPosx()==0){
+			normal.setPosx(normal.getPosy()*-1);
+			normal.setPosy(0.0);
 		}
+		else{
+			normal.setPosy(normal.getPosx());
+			normal.setPosx(0.0);
+		}
+
 		
-		//switching to horizontal lines switches algebraic sign of normal
-		if(rotation == 180){
-			double tmp;
-			tmp = - normal.getPosx();
-			normal.setPosx(- normal.getPosy());
-			normal.setPosy(tmp);
-		}
 	}
 	
 	
@@ -141,7 +139,7 @@ public class Way extends DrawableObject {
 		
 		
 		//updates normals
-		this.calcNormal(father.getCenter().getAngle());
+		//this.calcNormal(father.getCenter().getAngle());
 		
 		//gets the position of the way at the moment
 		Point a = this.fittingPos();
