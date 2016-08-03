@@ -29,6 +29,8 @@ public class Room extends DrawableObject {
         cC = cC.basisChangeIntDouble(center);
 
         this.waylist = waylist;
+        
+        
 
     }
     
@@ -56,7 +58,7 @@ public class Room extends DrawableObject {
      * @return
      */
     public boolean compareWays(LinkedList<Way> allways){
-
+        
         boolean added = false;
         LinkedList<Way> cutways = new LinkedList<>(allways);
         LinkedList<Way> ownways = new LinkedList<>(waylist);
@@ -65,7 +67,7 @@ public class Room extends DrawableObject {
             for (Way roomway : waylist){
 
                 if (roomway.compareDistance(mapway)){
-
+                   
                     ownways.remove(roomway);
                     cutways.remove(mapway);
 
@@ -86,8 +88,9 @@ public class Room extends DrawableObject {
 
         //setWaylist(cutways);
 
-        return added;
-        //return true;
+        //return added;
+
+        return true;
     }
 
     /**
@@ -121,7 +124,11 @@ public class Room extends DrawableObject {
         cE.rotation(angle, cC);
 
         cC.rotation(angle, cC);
-        
+
+        for(int i = 0; i < waylist.size(); i++) {
+            waylist.get(i).getPos().rotation(angle, cC);
+
+        }
     }
 
 
@@ -198,18 +205,51 @@ public class Room extends DrawableObject {
         this.waylist = waylist;
     }
 
-    public void setCenter(Point center){
-    	Coordinates newC = new Coordinates(center.x, center.y);
+    public void setCenter(Point center, int angle){
+    	Coordinates newC = new Coordinates(center.x, center.y, angle);
         setCenter(newC);
     }
 
     public void setCenter(Coordinates cC) {
-        this.cC = cC;
+        //this.cC = cC;
+
+        this.cC.setPosx(cC.getPosx());
+        this.cC.setPosy(cC.getPosy());
+        this.cC.setAngle(cC.getAngle());
+
         this.cA.setPos(cC.addCoordinats(cA.getVector()));
         this.cE.setPos(cC.addCoordinats(cE.getVector()));
         for(int i=0; i< waylist.size();i++){
         	waylist.get(i).getPos().setPos(cC.addCoordinats(waylist.get(i).getPos().getVector()));
         }
+
+    }
+
+    public void moveCenter(Point center, int angle) {
+        //this.cC = cC;
+        Coordinates newC = new Coordinates(center.x, center.y, angle);
+        this.cC.setPosx(newC.getPosx());
+        this.cC.setPosy(newC.getPosy());
+        this.cC.setAngle(newC.getAngle());
+
+        this.cA.setPos(newC.addCoordinats(cA.getVector()));
+        this.cE.setPos(newC.addCoordinats(cE.getVector()));
+        for(int i=0; i< waylist.size();i++){
+            waylist.get(i).getPos().setPos(newC.addCoordinats(waylist.get(i).getPos().getVector()));
+        }
+        
+        for(int i =0; i<newC.getAngle(); i+=90 ){
+            this.cA.rotation(90, newC);
+            this.cE.rotation(90, newC);
+            for(int j = 0; j < waylist.size(); j++) {
+                waylist.get(j).getPos().rotation(90, cC);
+
+            }
+        }
+
+        
+        
+
     }
 
 }
