@@ -313,16 +313,6 @@ function move(){
             
     }
 }
-// TEST ENVIRONMENT
-
-var hemisphereLight, shadowLight;
-
-function createLights() {
-
-    // // A hemisphere light is a gradient colored light;
-    // // the first parameter is the sky color, the second parameter is the ground color,
-    // // the third parameter is the intensity of the light
-    // hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, .9)
 
 function createRoom(callback) {
 	readLevelsXML(csegments);
