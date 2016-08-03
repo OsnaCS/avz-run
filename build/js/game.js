@@ -320,11 +320,7 @@ function loop() {
 function createRoom(callback) {
 	readLevelsXML(csegments);
 	function csegments() {
-<<<<<<< HEAD
         createAllSegments(psegments)
-=======
-        createAllSegments(psegments);
->>>>>>> 38d0f370484e299231c6e6082d5046c54f938e0d
         function psegments () {
     		PutSegments(doors);
     		function doors () {
@@ -336,33 +332,20 @@ function createRoom(callback) {
     					function lights () {
     						turn_on_lights(triggers);
     						var gesamtlicht = 0;
+							var tmplight;
     						if (thisfloor.ambientintens > 0) {
-<<<<<<< HEAD
-								var tmplight = new THREE.AmbientLight(parseInt(thisfloor.ambientcolor),parseInt(thisfloor.ambientintens));
-=======
                                 tmplight = new THREE.AmbientLight(parseInt(thisfloor.ambientcolor),parseInt(thisfloor.ambientintens))
->>>>>>> 38d0f370484e299231c6e6082d5046c54f938e0d
     							addtoscene(tmplight); threelights.push(tmplight);
     							gesamtlicht += parseInt(thisfloor.ambientintens);
     						}
     						if (godmode) {
-<<<<<<< HEAD
-								var tmplight = new THREE.AmbientLight(0xFFFFFF,(1-gesamtlicht));
+								tmplight = new THREE.AmbientLight(0xFFFFFF,(1-gesamtlicht));
     							addtoscene(tmplight); threelights.push(tmplight);
     							gesamtlicht += (1-gesamtlicht);
     						}
     						if (gesamtlicht < 0.3 && onlygloballight) {
-								var tmplight = new THREE.AmbientLight(0xFFBFBF,(0.3-gesamtlicht));
+								tmplight = new THREE.AmbientLight(0xFFBFBF,(0.3-gesamtlicht));
     							addtoscene(tmplight); threelights.push(tmplight);
-=======
-    							tmplight = new THREE.AmbientLight(0xFFFFFF,(1-gesamtlicht));
-                                addtoscene(tmplight); threelights.push(tmplight);
-    							gesamtlicht += (1-gesamtlicht);
-    						}
-    						if (gesamtlicht < 0.3 && onlygloballight) {
-    							tmplight = new THREE.AmbientLight(0xFFBFBF,(0.3-gesamtlicht));
-                                addtoscene(tmplight); threelights.push(tmplight);
->>>>>>> 38d0f370484e299231c6e6082d5046c54f938e0d
     						}
     						function triggers () {
     							addtriggers(levelSettings);
@@ -423,19 +406,11 @@ function recreateRoom() {
     for(var j = 0;j<octreeObjects.length;j++) {
         octree.remove(octreeObjects[j]);
     }
-<<<<<<< HEAD
     scene = null;
     scene= new THREE.Scene();
 	console.log("Recreating everything...");
     empty_scene();
-=======
-
-    // scene= new THREE.Scene();
-	console.log("Recreating everything...");
-    empty_scene();
     createRoom(loop);
-
->>>>>>> 38d0f370484e299231c6e6082d5046c54f938e0d
 }
 
 
