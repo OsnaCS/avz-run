@@ -10,6 +10,7 @@
 		<object name="schwamm" path="schwamm/schwamm.json" scale ="1.2" icon="schwamm.png" smooth="1" />
 		<object name="loscher" path="feuerloescher.json" scale="1" icon="feuerloescher.png" smooth="1" />
 
+		<object name="list" path="list/pfortnerliste.json" scale="1" icon="icon.jpg" smooth="1"/>
 		<object name="roboter" path="roboter.json" scale="1" icon="icon.jpg" smooth="1" />
 		<object name="evil_roboter" path="evil_roboter.json" scale="1" icon="icon.jpg" smooth="1" />
 		<object name="klo" path="klo.json" scale="1" icon="icon.jpg" smooth="1" />

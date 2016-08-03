@@ -31,6 +31,7 @@ var allrooms = []; listallrooms(); //same as line above.
 var floornumber = 1; //sollte wachsen/sinken von stockwerk zu stockwerk.
 var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF", maxfog: "0.015", fogtime:"120", startfog:"0.002"};
 
+var threelights = [];
 
 //functions
 
@@ -42,14 +43,14 @@ var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF",
 				//var pfad = xmlDoc.getElementsByTagName("objects")[0].getAttribute("ObjectPath");
 
 				var typeItems = xmlDoc.getElementsByTagName("floors")[0].getElementsByTagName("floor");
-				for (i = 0; i < typeItems.length; i++) {
+				for (var i = 0; i < typeItems.length; i++) {
 					if (typeItems[i].getAttribute("number") == floornumber) {
 						thisfloor.spawn = typeItems[i].getAttribute("characterspawn");
 						thisfloor.ambientintens = typeItems[i].getAttribute("ambientlightintens");
 						thisfloor.ambientcolor = typeItems[i].getAttribute("ambientlightcolor");
-						thisfloor.fogtime = typeItems[i].getAttribute("fogtime");
-						thisfloor.maxfog = typeItems[i].getAttribute("maxfog");
-						thisfloor.maxfog = typeItems[i].getAttribute("startfog");
+						thisfloor.fogtime = parseFloat(typeItems[i].getAttribute("fogtime"));
+						thisfloor.maxfog = parseFloat(typeItems[i].getAttribute("maxfog"));
+						thisfloor.startfog = parseFloat(typeItems[i].getAttribute("startfog"));
 						callback();
 					}
 				}
@@ -60,7 +61,9 @@ var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF",
 	}
 
 
-
+	function createAllSegments (callback) {
+		CreateSegment("groundlevel",callback);
+	}
 
 //this function takes as input the name of a room, and adds to the "segments"-array the object containing its info + mesh (no return value due to asynchrony)
 //the callback-function WAS ORIGINALLY MEANT TO BE nothing, fitdoor or the one loading the info from the levels.xml
@@ -634,17 +637,6 @@ function door_in_doors(callback) {
 		return xz;
 	}
 
-	function makelessfog() {
-		console.log("Der Nebel lichtet sich");
-		scene.fog = new THREE.FogExp2(0x424242, 0.00015);
-	}
-
-	function makemorefog() {
-		console.log("Der Nebel dichtet sich");
-		scene.fog = new THREE.FogExp2(0x424242, 0.15);
-	}
-
-
 
 //adds an OBJECT's mesh to the scene (needs to be changed when we stop loading from jsons directly and instead from the pre-loading-thingy.)
 	function addobject(objectpfad, name, posx, posy, posz, scale, rotate, responsefunct, stretchx) {
@@ -754,12 +746,13 @@ function door_in_doors(callback) {
 //diese Funktion ist nötig, da in der scene_items SÄTMLICHE meshes der Räume stehen (ihre referenz), welche gerade angezeigt sind. Dadurch kann man sich alle auflisten lassen, verändern & löschen nach Bedarf.
 	function addtoscene(mesh, intItem){
 		scene.add(mesh);
-		if (intItem == null) {
-			modifyOctree( mesh, true );
-		} else {
-			modifyOctree( intItem, true );
+		if(!((mesh instanceof THREE.PointLight)||(mesh instanceof THREE.AmbientLight))) {
+			if (intItem == null) {
+				modifyOctree( mesh, true );
+			} else {
+				modifyOctree( intItem, true );
+			}
 		}
-
 		scene_items.push(mesh);
 	}
 
