@@ -291,6 +291,7 @@ var roboPosY;
 var roboPosZ;
 
 function move(){
+	
     if(roboternum == 0){
         for (i = 0; i < static_obj.length; i++) {
             if(static_obj[i].name == "evil_roboter"){
@@ -308,16 +309,15 @@ function move(){
         }
 
         if(!robolab){
-            roboternum = 1;
+            roboternum = -1;
         }
 
     }
 
     if(robolab){
         var deltaTime = clock.getDelta();
-
-        moveObject(static_obj[roboternum].msh , roboPosX, roboPosY, roboPosZ, 0*SKALIERUNGSFAKTOR, 0*SKALIERUNGSFAKTOR, 9*SKALIERUNGSFAKTOR, 1000, deltaTime);
-
+		if (roboternum > -1) 
+			moveObject(static_obj[roboternum].msh , roboPosX, roboPosY, roboPosZ, 0*SKALIERUNGSFAKTOR, 0*SKALIERUNGSFAKTOR, 9*SKALIERUNGSFAKTOR, 1000, deltaTime);
     }
 }
 
@@ -447,8 +447,8 @@ function recreateRoom() {
 			} );
 			console.log("Recreating everything...");
 			function cont (){pause = false;
-				// @ CHRIS: this causes a bug and is apparently not needed. trust me. :D
-                //requestAnimationFrame(loop);
+				loop();
+				requestAnimationFrame(loop); //@ Antonia: hat 5 von 5 malen nicht geklappt.
 			}
 			// cont();
 			createRoom(cont);

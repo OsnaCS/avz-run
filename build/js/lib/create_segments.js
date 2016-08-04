@@ -373,7 +373,7 @@ var allfloors = [];
 
 				var vector = tospawn[3];
 				rotate = vec2dir([parseFloat(vector.slice(1,vector.indexOf(','))),parseFloat(vector.slice(vector.indexOf(',')+1,vector.indexOf(')')))]);
-				rotate -= segments[INDEX1].rot;
+				rotate += segments[INDEX1].rot;
 
 				var xz = changexzaccordingtorot(segments[INDEX1].orx, segments[INDEX1].ory, segments[INDEX1].rot);
 				spawnx = spawnx + parseInt(segments[INDEX1].transx)+xz[0];
@@ -570,7 +570,9 @@ function door_in_doors(callback) {
 			var act = "";
 			switch(room1door[4]) {
 				case "openable": act = "open"; break;
+				case "notopen": act = "notopen"; break;
 				case "openable_after_ext": act = "open_after_ext"; break;
+				case "openaftermessage": act = "openaftermessage"; break;
 				case "open": act = "openopened"; rotate -= 1; break;
 				case "transponderopenable": act = "openTransponderDoor"; break;
 				case "axtopenable": act = "damageDoor"; break;
