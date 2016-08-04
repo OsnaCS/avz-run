@@ -398,7 +398,7 @@
 		   
 		</doors>
 		<lights>
-			<light index="1" kind="pointlight" objectname="deckenlicht" position="(3.5, -4.5, 5)" normal="(0,1,0)" objectscale="1" intensity="0.7" color="0xFFFFFF" />
+			<light index="1" kind="pointlight" objectname="deckenlicht" position="(3.5, -4.5, 5)" normal="(0,1,0)" objectscale="1" intensity="0.3" color="0xFFFFFF" />
 		</lights>
 		<spawns>
 			<spawn index="1" position="(0.5, -8, 0)" object="eimer" normaltowall="(0,1)" scale="2"/>

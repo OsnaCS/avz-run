@@ -11,7 +11,7 @@
 
 
 	<floor number="3" characterspawn="(-4, 4, 0)" ambientlightintens="0.1" ambientlightcolor="0xffbfbf" fogtime="180" startfog="0.002" maxfog="0.015" correctpin="0042" correcttransponder="">
-		<room index="0" name="circle_walled" rotation="0.0" x="8.95" y="-6" />
+		<room index="0" name="circle_with_lecture" rotation="0.0" x="8.95" y="-6.05" />
 		<room index="0" name="buero_msg" rotation="90.0" x="0.0" y="0.0" />
 	</floor>
 

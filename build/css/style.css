@@ -151,6 +151,14 @@ hr {
     position: absolute;
 }
 
+#startScreen {
+    width: 100%;
+    height: 100%;
+    background-color: #000000;
+    display: none;
+    position: absolute;
+}
+
 #endScreen {
     width: 100%;
     height: 100%;
@@ -162,7 +170,7 @@ hr {
 .endFont {
     width: 100%;
     height: 100%;
-    margin-top: 30%;
+    transform: translateY(40%);
     font-size: 100px;
     font-weight: 30px;
     text-align: center;

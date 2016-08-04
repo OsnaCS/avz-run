@@ -56,9 +56,9 @@
 	<door>
 		<object name="klotur" path="tuer_klo.json" scale ="1.35" smooth="1" />
 		<object name="glastur" path="tueren/glastuer.json" scale ="1" smooth="1" />
-		<object name="holztur" path="tueren/holztuer.json" scale ="1" smooth="1" />
-		<object name="halbbrokentur" path="tueren/tuer_halbkaputt.json" scale ="1" smooth="1" />
-		<object name="brokentur" path="tueren/tuer_kaputt.json" scale ="1" smooth="1" />
+		<object name="holztur" path="tueren/holztuer.json" scale ="1.05" smooth="1" />
+		<object name="halbbrokentur" path="tueren/tuer_halbkaputt.json" scale ="1.05" smooth="1" />
+		<object name="brokentur" path="tueren/tuer_kaputt.json" scale ="1.05" smooth="1" />
 	</door>
 
 	<lamp>
