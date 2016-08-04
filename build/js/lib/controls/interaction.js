@@ -174,8 +174,8 @@ function nextLevel() {
 	pin[0] = null; pin[1] = null; pin[2] = null; pin[3] = null; pin = new Array(4); pin_pos = 0;
 	document.getElementById("pinDisplay").innerHTML = "PIN EINGEBEN";
 	document.getElementById("pinDisplayCH").innerHTML = "key lock:";
-
 	transponder_config[0] = null; transponder_config[1] = null; ch_pos = 0;
+
 	if ((selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "transponder"))
 	{
 		selectedItem.activeTransponder = false;
@@ -185,6 +185,7 @@ function nextLevel() {
     floornumber-=1;
 	pause=true;
     recreateRoom();
+
 }
 
 function delGameObject(mesh) {
@@ -612,6 +613,18 @@ function showThoughts(text, duration) {
 function hideThoughts() {
     $(".thoughtBox").fadeOut(FADE_TIME);
     showInterval = clearInterval();
+}
+
+function wakeUp() {
+
+    showThoughts("Wo bin ich? Was ist passiert? Ich muss wohl eingeschlafen sein...",3000);
+    $("#startScreen").css("display","inline-block").delay(5000);
+    $("#startScreen").fadeOut(400);
+    $("#startScreen").fadeIn(200).delay(100);
+    $("#startScreen").fadeOut(250)
+    $("#startScreen").fadeIn(400).delay(500);
+    $("#startScreen").fadeOut(1400).delay(200);
+    setTimeout(function(){showThoughts("Oh nein, es brennt! Ich sollte schnell raus!",5000);},9000);
 }
 
 function success() {
