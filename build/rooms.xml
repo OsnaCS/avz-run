@@ -28,7 +28,7 @@
 		</lights>
 		<triggers>
 			<trigger index="exit" xpos="12" ypos="0" size="3" functionname="showThoughts" fparam1="Hinter dieser Tür ist die Treppe" fparam2="5000"/>
-			<trigger index="exit" xpos="13.5" ypos="-1" size="2" functionname="nextLevel"/>
+			<trigger index="exit2" xpos="13.5" ypos="-1" size="2" functionname="nextLevel"/>
 		</triggers>
 	</room>
 
@@ -72,7 +72,7 @@
 
 
 			<fire index="lobby" position="(-8.24, 8.96, 0)" size="(1,1,1)" val="6"/>
-			<fire index="exit" position="(30, -6, 0)" size="(1,4,3)" val="6"/>
+			<fire index="exit" position="(30, -6, 0)" size="(1,4,4)" val="6"/>
 			<fire index="lobbyb" position="(2.45, 1.79, 0)" size="(1,1,1)" val="6"/>
 			<fire index="flur" position="(24.02, -10.4, 0)" size="(1,1,1)" val="6"/>
 			<fire index="flurb" position="(18.05, -4.71, 0)" size="(1,1,1)" val="6"/>
@@ -232,8 +232,9 @@
 		</spawns>
 		<triggers>
 			<trigger index="rl1" xpos="-2.7" ypos="2.85" size="1" functionname="showThoughts" fparam1="Oh ein gefährlicher Roboter! Ich komme nicht an die Axt ran. Vielleicht kann einer der Computer ihn abschalten" fparam2="8000" />
-			<trigger index="rl2" xpos="-7.15" ypos="26.5" size="4" functionname="nextLevel" />
-			<trigger index="rl2" xpos="-7.15" ypos="23.24" size="1" functionname="showThoughts" fparam1="Diese Tür ist richtig! Ich muss springen!" fparam2="5000"/>
+			<trigger index="rl2" xpos="-7.15" ypos="26.45" size="4" functionname="endRobos" />
+			<trigger index="rl3" xpos="-7.15" ypos="26.45" size="4" functionname="nextLevel" />
+			<trigger index="rl4" xpos="-7.15" ypos="23.24" size="1" functionname="showThoughts" fparam1="Diese Tür ist richtig! Ich muss springen!" fparam2="5000"/>
 		</triggers>
 	</room>
 

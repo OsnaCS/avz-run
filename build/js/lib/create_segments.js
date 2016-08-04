@@ -9,7 +9,7 @@
 //consts (change iff you know what you're doing! :P)
 var ROOMSXML = "rooms.xml"
 var OBJECTSXML = "objects.xml"
-var LEVELSXML = "floors.xml"
+var LEVELSXML = "exported.xml"
 var SKALIERUNGSFAKTOR = 20;
 var HOLZTURBREITE = SKALIERUNGSFAKTOR*0.88;
 var GLASTURBREITE = SKALIERUNGSFAKTOR*1.2;
@@ -28,11 +28,13 @@ var fires = [];       //Hier stehen alle Feuer drin.
 var triggers = [];	  //Hier stehen alle Triggers drin.
 var allobjects = [];  listallobjects();  //hierdrin stehen alle MÖGLICHEN objects (..damit man sie nicht mehr aus der xml auslesen kann, asynchronität undso.)
 var allrooms = []; listallrooms(); //same as line above.
-var floornumber = 3; //sollte wachsen/sinken von stockwerk zu stockwerk. //TODO: sollte höchste nummer der floors.xml sein
-var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF", maxfog: "0.015", fogtime:"120", startfog:"0.002"};
+var firstfloor = true;
+var floornumber = 0; //sollte wachsen/sinken von stockwerk zu stockwerk. 
+var allfloors = [];
 
 
 //functions
+
 
 	function readLevelsXML(callback) {
 		var xhttp = new XMLHttpRequest();
@@ -40,19 +42,37 @@ var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF",
 			if (xhttp.readyState == 4 && xhttp.status == 200) {
 				var xmlDoc = xhttp.responseXML;
 				//var pfad = xmlDoc.getElementsByTagName("objects")[0].getAttribute("ObjectPath");
-
+				
 				var typeItems = xmlDoc.getElementsByTagName("floors")[0].getElementsByTagName("floor");
-				for (var i = 0; i < typeItems.length; i++) {
-					if (typeItems[i].getAttribute("number") == floornumber) {
-						thisfloor.spawn = typeItems[i].getAttribute("characterspawn");
-						thisfloor.ambientintens = typeItems[i].getAttribute("ambientlightintens");
-						thisfloor.ambientcolor = typeItems[i].getAttribute("ambientlightcolor");
-						thisfloor.fogtime = parseFloat(typeItems[i].getAttribute("fogtime"));
-						thisfloor.maxfog = parseFloat(typeItems[i].getAttribute("maxfog"));
-						thisfloor.startfog = parseFloat(typeItems[i].getAttribute("startfog"));
-						callback();
+				floornumber = typeItems.length;
+				
+				for (var i = 0; i < typeItems.length; i++) {						
+					var thisfloor = {spawn: "(0,0,3)", ambientintens: 0.3, ambientcolor: "0xFFBFBF", maxfog: "0.015", fogtime:"120", startfog:"0.002", correctpin: "", correcttransponder: "", rooms: []};
+					thisfloor.spawn = typeItems[i].getAttribute("characterspawn");
+					thisfloor.ambientintens = typeItems[i].getAttribute("ambientlightintens");
+					thisfloor.ambientcolor = typeItems[i].getAttribute("ambientlightcolor");
+					thisfloor.fogtime = parseFloat(typeItems[i].getAttribute("fogtime"));
+					thisfloor.maxfog = parseFloat(typeItems[i].getAttribute("maxfog"));
+					thisfloor.startfog = parseFloat(typeItems[i].getAttribute("startfog"));
+					
+					thisfloor.correctpin = (typeItems[i].getAttribute("correctpin") !== null) ? typeItems[i].getAttribute("correctpin") : "";
+					thisfloor.correcttransponder = (typeItems[i].getAttribute("correcttransponder") !== null) ? typeItems[i].getAttribute("correcttransponder") : "";
+					
+					var thisrooms = [];
+					for (var j = 0; j < typeItems[i].getElementsByTagName("room").length; j++) {
+						var room = {index: 0, name: "", rotation: 0, x: 0, y: 0};
+						room.index = typeItems[i].getElementsByTagName("room")[j].getAttribute("index");
+						room.name = typeItems[i].getElementsByTagName("room")[j].getAttribute("name");
+						room.rotation = parseFloat(typeItems[i].getElementsByTagName("room")[j].getAttribute("rotation"))/90;
+						room.x = parseFloat(typeItems[i].getElementsByTagName("room")[j].getAttribute("x"));
+						room.y = parseFloat(typeItems[i].getElementsByTagName("room")[j].getAttribute("y"));
+						thisrooms.push(room);
 					}
+					thisfloor.rooms = thisrooms;
+					allfloors.push(thisfloor);
 				}
+				//TODO: jetzt müsste er allfloors eig nach allfloors[i].index number sortieren, sonst kann es zu problemen führen bei falscher RF in den Dateien..
+				callback();
 			}
 		};
 		xhttp.open("GET", LEVELSXML, true);
@@ -60,61 +80,44 @@ var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF",
 	}
 
 
+
+
 	function createAllSegments(callback) {
+		console.log("STOCKWERK "+floornumber);
 		
+		// var roo2 = allfloors[floornumber-1].rooms[1];
+		// CreateSegment(roo2.name, function() {
+			// var room = allfloors[floornumber-1].rooms[0];
+			// CreateSegment(room.name, callback, room.x*SKALIERUNGSFAKTOR, room.y*SKALIERUNGSFAKTOR, room.rotation);
+		// }, roo2.x*SKALIERUNGSFAKTOR, roo2.y*SKALIERUNGSFAKTOR, roo2.rotation);
+		
+	
 		switch(floornumber) {
-			case 3: CreateSegment("robolab", callback); break;
-			case 2: CreateSegment("lectureroom1", callback); break;
-			case 1: CreateSegment("groundlevel", callback); break;
+			case 3: CreateSegment("robolab", callback, 0, 0, 0); break;
+			case 2: CreateSegment("lectureroom1", callback, 0, 0, 0); break;
+			case 1: CreateSegment("groundlevel", callback, 0, 0, 0); break;
 		}
 	}
 	
-	
 
-//this function takes as input the name of a room, and adds to the "segments"-array the object containing its info + mesh (no return value due to asynchrony)
-//the callback-function WAS ORIGINALLY MEANT TO BE nothing, fitdoor or the one loading the info from the levels.xml
-//now, it loads all the other stuff (lights, audios, etc.)
-	function CreateSegment(forwhichroom, callback) {
-		var currseg = {filename:"", doors:[], spawns:[], lights:[], fires:[], triggers: [], xmin:0, ymin:0, xmax:0, ymax:0, orx:0, ory:0, orz: 0, transx:0, transy:0, rot:0, rauch: 0, applied:false};
-		if (typeof callback !== 'function')
-		{
-			currseg.transx = 0;
-			currseg.transy = 0;
-			currseg.rot = 0;
-		}
-		segments.push(currseg);
-		if (typeof callback === 'function') {
-			loadStuff(forwhichroom,segments.length-1, callback); //callback is either fitdoor (which packs a segment door2door to a previous one) OR gets tranx,transy&rot von der levels.xml
-		} else {
-			loadStuff(forwhichroom,segments.length-1);
-		}
-	}
-
+//this function takes as input the name of a room, and adds to the "segments"-array the object containing its info + mesh 	
 	function CreateSegment(forwhichroom, callback, x, y, rot) {
-		var currseg = {filename:"", doors:[], spawns:[], lights:[], fires:[], triggers: [], xmin:0, ymin:0, xmax:0, ymax:0, orx:0, ory:0, orz: 0, transx:0, transy:0, rot:0, rauch: 0, applied:false};
-		if (typeof callback !== 'function')
-		{
-			currseg.transx = x;
-			currseg.transy = y;
-			currseg.rot = rot;
-		}
+		var currseg = {filename:"", doors:[], spawns:[], lights:[], fires:[], triggers: [], xmin:0, ymin:0, xmax:0, ymax:0, orx:0, ory:0, orz: 0, transx:x, transy:y, rot:rot, rauch: 0, applied:false};
+		currseg.transx = x;
+		currseg.transy = y;
+		currseg.rot = rot;
 		segments.push(currseg);
 		if (typeof callback === 'function') {
-			loadStuff(forwhichroom,segments.length-1, callback); //callback is either fitdoor (which packs a segment door2door to a previous one) OR gets tranx,transy&rot von der levels.xml
+			loadStuff(forwhichroom,segments.length-1, callback); 
 		} else {
 			loadStuff(forwhichroom,segments.length-1);
 		}
-	}
+	}	
+	
 
-//this function will be done as soon as the leveldesign group is done.
-	function getTransRotFromXML(){
-		//gets called as callback from createsegment. (REALLY?)
-		//returns [x,y,rot]
-	}
 
 //loads everything needed from the rooms.xml file (and then calls the followup-functions)
 	function loadStuff(whichroom, segmentindex, callback) {
-
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function() {
 			if (xhttp.readyState == 4 && xhttp.status == 200) {
@@ -336,7 +339,7 @@ var thisfloor = {spawn: "(0,0,0)", ambientintens: 0.3, ambientcolor: "0xFFBFBF",
 				addmesh(curroom[i].getAttribute("filename"), segmentindex);
 			}
 		}
-		callback();
+		if (typeof callback == "function") callback();
 	}
 //"these functions" end.
 
@@ -519,7 +522,7 @@ function door_in_doors(callback) {
 			room1door = segments[INDEX1].doors[i];
 			room1pos = [segments[INDEX1].transx, segments[INDEX1].transy];
 
-			if (room1door[1] == "floor") {return;} //floor-türen enthalten schlicht keine tür.
+			if (room1door[1] == "floor") {break;} //floor-türen enthalten schlicht keine tür.
 
 			var vector = room1door[3];
 			rotate = vec2dir([parseFloat(vector.slice(1,vector.indexOf(','))),parseFloat(vector.slice(vector.indexOf(',')+1,vector.indexOf(')')))]);
@@ -569,11 +572,11 @@ function door_in_doors(callback) {
 				case "codeopenable": act = "openLockedDoor"; break;
 			}
 			if (godmode) {act = "openopened"; rotate -= 1;};
-
+			
 			for (var j = 0; i < interact_obj.length; i++) {
 				if ((Math.abs(interact_obj[i].x - door1x) > 5) && (Math.abs(interact_obj[i].y - door1y) > 5))
 				{
-					return; //keine tür adden wo schon eine ist.
+					break; //keine tür adden wo schon eine ist.
 				}
 			}
 
@@ -711,7 +714,6 @@ function door_in_doors(callback) {
 
 
 			segment.mesh.rotation.y = 0.5*Math.PI*(4-segment.rot);
-
 			segment.mesh.position.x = segment.mesh.position.x + parseInt(segment.transx);
 			segment.mesh.position.z = segment.mesh.position.z + parseInt(segment.transy);  //IN BLENDER SIND Y UND Z ACHSE VERTAUSCHT
 			//segment.mesh.position.y = -(segment.orz*SKALIERUNGSFAKTOR);
@@ -737,7 +739,6 @@ function door_in_doors(callback) {
 		//empty_scene();
 		for (var i = 0; i <segments.length; i++) {
 			addtoscene(applytransrot(segments[i]),null);
-
 		}
 		if (typeof callback == "function") callback();
 	}

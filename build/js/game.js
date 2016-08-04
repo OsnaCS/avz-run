@@ -232,7 +232,6 @@ function createScene(complete) {
 
 function loop() {
 
-
     if (!menu && !pause) {
     	if (player.health <= 0) {
     		gameOverSound();
@@ -317,42 +316,43 @@ function move(){
 function createRoom(callback) {
 	$("#loadingBlocker2").show();
 	$(".gui").hide();
-	readLevelsXML(csegments);
+	if (firstfloor) { readLevelsXML(csegments); firstfloor = false; } else csegments();
 	function csegments() {
         createAllSegments(psegments);
         function psegments () {
     		PutSegments(doors);
-			
-			
+						
     		function doors () {
     			door_in_doors(objects);
     			function objects() {
+					
     				objects_in_spawns(fires);
     				function fires() {
 						if (!nofog) {
-							console.log("Max-Fog auf diesem Level: "+thisfloor.maxfog)
-							MAX_FOG = thisfloor.maxfog; if (godmode) {MAX_FOG = 0.005};
-							myfog = thisfloor.startfog; if (godmode) {myfog = 0.0002}; 
-							fogTime = thisfloor.fogtime; if (godmode) {fogTime = 1200};  //siehe oben
+							console.log("Max-Fog auf diesem Level: "+allfloors[floornumber-1].maxfog)
+							MAX_FOG = allfloors[floornumber-1].maxfog; if (godmode) {MAX_FOG = 0.005};
+							myfog = allfloors[floornumber-1].startfog; if (godmode) {myfog = 0.0002}; 
+							fogTime = allfloors[floornumber-1].fogtime; if (godmode) {fogTime = 1200};  //siehe oben
 
 							fogIncrement= MAX_FOG/(fogTime*1000/10) ;
 							
 							scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
 						}
 						HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at final density you lose this much health			
-						controls.getObject().position.x = parseFloat(thisfloor.spawn.slice(1,thisfloor.spawn.indexOf(',')))*SKALIERUNGSFAKTOR;
-						controls.getObject().position.z = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.indexOf(',')+1,thisfloor.spawn.lastIndexOf(',')))*SKALIERUNGSFAKTOR;
-						controls.getObject().position.y = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.lastIndexOf(',')+1,thisfloor.spawn.indexOf(')')))*SKALIERUNGSFAKTOR;
+						controls.getObject().position.x = parseFloat(allfloors[floornumber-1].spawn.slice(1,allfloors[floornumber-1].spawn.indexOf(',')))*SKALIERUNGSFAKTOR;
+						controls.getObject().position.z = parseFloat(allfloors[floornumber-1].spawn.slice(allfloors[floornumber-1].spawn.indexOf(',')+1,allfloors[floornumber-1].spawn.lastIndexOf(',')))*SKALIERUNGSFAKTOR;
+						controls.getObject().position.y = parseFloat(allfloors[floornumber-1].spawn.slice(allfloors[floornumber-1].spawn.lastIndexOf(',')+1,allfloors[floornumber-1].spawn.indexOf(')')))*SKALIERUNGSFAKTOR;
 						firstTime == true;
+						
     					set_fires(lights);
     					function lights () {
     						turn_on_lights(triggers);
     						var gesamtlicht = 0;
 							var tmplight;
-    						if (thisfloor.ambientintens > 0) {
-                                tmplight = new THREE.AmbientLight(parseInt(thisfloor.ambientcolor),parseInt(thisfloor.ambientintens))
+    						if (allfloors[floornumber-1].ambientintens > 0) {
+                                tmplight = new THREE.AmbientLight(parseInt(allfloors[floornumber-1].ambientcolor),parseInt(allfloors[floornumber-1].ambientintens))
     							addtoscene(tmplight); threelights.push(tmplight);
-    							gesamtlicht += parseInt(thisfloor.ambientintens);
+    							gesamtlicht += parseInt(allfloors[floornumber-1].ambientintens);
     						}
     						if (godmode) {
 								tmplight = new THREE.AmbientLight(0xFFFFFF,(1-gesamtlicht));
