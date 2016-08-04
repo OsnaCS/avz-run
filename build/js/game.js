@@ -250,9 +250,11 @@ function loop() {
             requestAnimationFrame(loop);
 
             if (!nofog) scene.fog.density = myfog;
+
              if(myfog >= 0.009){
                 setTimeout(coughSound, 3000);
             }
+
             player.updateEnergy();
 
             // YOU NEED TO CALL THIS (srycaps)
@@ -445,12 +447,14 @@ function recreateRoom() {
 			} );
 			console.log("Recreating everything...");
 			function cont (){pause = false;
-				requestAnimationFrame(loop);
+				// @ CHRIS: this causes a bug and is apparently not needed. trust me. :D
+                //requestAnimationFrame(loop);
 			}
 			// cont();
 			createRoom(cont);
 		}
 	}
+
 }
 
 
