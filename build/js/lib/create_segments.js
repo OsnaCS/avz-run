@@ -1,9 +1,7 @@
 //TODO:
-// -dass der der angegebene Punkt immer die Raummitte ist
-// -dass Door2Door fehlerfrei, trotz aller rotationen klappt
-// -Doors, Statics, fires, lamps, etc. alle  zu ner eigenen art Segment hinzufügen. Dafür mit anderen Gruppen kurzschließen
-// -Dass der nicht immer 2 Türen in nen Doppelt genutzten Türrahmen packt
-// -Dass er all das was ich so manuell eingebe aus der levels.xml liest
+// -dass der der angegebene Punkt immer die Raummitte ist (kompatibilität zu leveleditor?)
+// -dass Door2Door fehlerfrei, trotz aller rotationen klappt (überflüssig durch Leveleditor)
+// -Dass der nicht immer 2 Türen in nen Doppelt genutzten Türrahmen packt (sollte behoben sein.)
 
 
 //consts (change iff you know what you're doing! :P)
@@ -81,22 +79,29 @@ var allfloors = [];
 
 
 
-
 	function createAllSegments(callback) {
 		console.log("STOCKWERK "+floornumber);
 		
-		// var roo2 = allfloors[floornumber-1].rooms[1];
-		// CreateSegment(roo2.name, function() {
-			// var room = allfloors[floornumber-1].rooms[0];
-			// CreateSegment(room.name, callback, room.x*SKALIERUNGSFAKTOR, room.y*SKALIERUNGSFAKTOR, room.rotation);
-		// }, roo2.x*SKALIERUNGSFAKTOR, roo2.y*SKALIERUNGSFAKTOR, roo2.rotation);
+		var ii = 0;
+				
+		function create()  { //callback ist forloop
+			var room = allfloors[floornumber-1].rooms[ii];
+			if ((room !== undefined) && (room.name !== undefined) && (room.name !== "")) {
+				CreateSegment(room.name, forloop, room.x*SKALIERUNGSFAKTOR, room.y*SKALIERUNGSFAKTOR, room.rotation);
+			}
+		}		
 		
-	
-		switch(floornumber) {
-			case 3: CreateSegment("robolab", callback, 0, 0, 0); break;
-			case 2: CreateSegment("lectureroom1", callback, 0, 0, 0); break;
-			case 1: CreateSegment("groundlevel", callback, 0, 0, 0); break;
+		forloop();
+
+		function forloop() {
+			if(ii <= allfloors[floornumber-1].rooms.length-1) {
+				create();
+				ii++;
+			} else { 
+				callback();
+			}
 		}
+		
 	}
 	
 
@@ -589,7 +594,6 @@ function door_in_doors(callback) {
 }
 
 
-	//TODO: diese Funktionen. In synchron. Am besten per globalen Variablen (...dafür checken die Funktionen vorher ob die Variablen != "")
 	function objectFilenameToName(filename){
 		var tName = filename.split("/");
 		tName = tName[tName.length-1].split(".")[0];  //TODO: bei einigen Objekten ist der Name ungleich dem Filenamen! Das hier ist nur die Notlösung!
@@ -799,7 +803,7 @@ function door_in_doors(callback) {
 
 
 
-//buggy functions which may not even be needed
+//buggy functions which ARE NOT USED IN THIS GAME
 
 
 //diese Funktion klatscht einen Raum an einen anderen, wobei man angibt welche tür (index innerhalb des segments) welchen raums (index der segments), an welche tür welchen raum geklatscht wird.
