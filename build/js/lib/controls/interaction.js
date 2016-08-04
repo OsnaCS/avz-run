@@ -11,15 +11,18 @@ var lockOpen = false; // pin pad boolean
 var outlineMesh = null;
 
 var extinguisherParticleSystem;
+var coveredmouth = false;
+var additional_healthloose = 0;
+var heavybreath = false;
 
-// pin pad variables.... may not be stored here?
+// pin pad variables initialisierung
 var pin = new Array(4);
 var transponder_config = new Array(2);
 var pin_pos = 0;
 var ch_pos = 0;
+//correct_pin und correct_transponder werden pro level aus der levels.xml ausgelesen.
 
-var CORRECT_PIN = ['0','0','4','2'];
-var CORRECT_TRANSPONDER = ['4','3'];
+
 var TYPE_INTERACTABLE = 0;
 var TYPE_FIRE = 1;
 var TYPE_TRIGGER = 3;
@@ -166,7 +169,21 @@ GameObject = function(mesh, interaction, type, name) {
 }
 
 function nextLevel() {
+	lockOpen = false;
+	transponder_config = new Array(2);
+	pin[0] = null; pin[1] = null; pin[2] = null; pin[3] = null; pin = new Array(4); pin_pos = 0; 
+	document.getElementById("pinDisplay").innerHTML = "PIN EINGEBEN";
+	document.getElementById("pinDisplayCH").innerHTML = "key lock:";
+	
+	transponder_config[0] = null; transponder_config[1] = null; ch_pos = 0;
+	if ((selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "transponder"))
+	{
+		selectedItem.activeTransponder = false;
+		//TODO: ist das wirklich nur für selectedItem, muss ich das also für die anderen noch tun?
+	}
+	
     floornumber-=1;
+	pause=true;
     recreateRoom();
 }
 
@@ -198,7 +215,7 @@ function nix() {
 }
 
 function destroy(){
-    if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
+    if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "axt")){
         damageDoorSound();
         this.delFromScene();
         console.log('destroyed');
@@ -242,6 +259,31 @@ function open() {
 
 }
 
+function open_after_ext() {
+	var notext = false;
+	//welches feuer gelöscht sein muss ist hartgecoded, sorry. //TODO: ändern.
+	for (var i = 0; i < fires.length; i++) {
+		if (fires[i].index == "exit") notext = true;
+	}
+	if (notext) {
+		showThoughts("Aua, ich stehe in Feuer, aua! Da öffne ich doch keine Tür!",5000);
+	} else {
+		doorSound();
+		if(!this.open) {
+			this.mesh.rotateY(Math.PI/2.0);
+		}
+		else {
+			this.mesh.rotateY(-Math.PI/2.0);
+		}
+		this.open = !this.open;
+
+		// mesh is removed
+		scene.remove(outlineMesh);
+		outlineMesh = null;
+		activeObject = null;
+	}
+}
+
 function getSegmentFromIntItem(intItem) {
 	var j = -1;
 	for (i = 0; i < interact_obj.length; i++) {
@@ -268,7 +310,7 @@ function damageDoor() {
 }
 
 function destroyDoor() {
-    if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
+    if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "axt")){
 		var d = getSegmentFromIntItem(this);
 		addObjectViaName("brokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "", d.stretchx);
 		remove_interactible(d);
@@ -308,7 +350,7 @@ function dFire(){
 
 // Attach this function to the fire
 function extinguish() {
-	if(this.type == TYPE_FIRE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "feuerloescher")){
+	if(this.type == TYPE_FIRE && (selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "feuerloescher")){
         // activeObject must be saved so that the dFire function is not influence
         // be new activeObject selected during the delay
         tempActObj = activeObject;
@@ -349,9 +391,8 @@ function enterPin() {
 function exitPinPad() {
 
     $("#pinPad").hide();
-
     // determine if entered code was correct
-    if (CORRECT_PIN[0] == pin[0] && CORRECT_PIN[1] == pin[1] && CORRECT_PIN[2] == pin[2] && CORRECT_PIN[3] == pin[3]) {
+    if (allfloors[floornumber-1].correctpin[0] == pin[0] && allfloors[floornumber-1].correctpin[1] == pin[1] && allfloors[floornumber-1].correctpin[2] == pin[2] && allfloors[floornumber-1].correctpin[3] == pin[3]) {
         lockOpen = true;
         correctSound();
     } else {
@@ -409,7 +450,7 @@ function pinPad(pinvalue) {
 
 function enterCH() {
 
-    if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "transponder")){
+    if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "transponder")){
 
         special_html_input = true;
 
@@ -421,7 +462,7 @@ function enterCH() {
         document.exitPointerLock();
     } else {
 
-        selectedItem != null && console.log(selectedItem.name);
+        selectedItem != null  && selectedItem.name != undefined && console.log(selectedItem.name);
         console.log('nicht anwendbar');
 		showThoughts("Hm, da ist ein Programm von der Raumverwaltung geöffnet...")
     }
@@ -434,7 +475,7 @@ function exitCH() {
     $("#compHack").hide();
 
     // determine if entered code was correct
-    if (CORRECT_TRANSPONDER[0] == transponder_config[0] && CORRECT_TRANSPONDER[1] == transponder_config[1]){
+    if (allfloors[floornumber-1].correcttransponder[0] == transponder_config[0] && allfloors[floornumber-1].correcttransponder[1] == transponder_config[1]){
         correctSound();
         selectedItem.activeTransponder = true;
     }
@@ -501,14 +542,13 @@ function backToGame() {
 
 // Attach this function the door to be opened by a transponder
 function openTransponderDoor(){
-    if(selectedItem != null && selectedItem.activeTransponder){
+    if(selectedItem != null && (selectedItem.name != undefined) && selectedItem.activeTransponder){
             doorSound();
 			var d = getSegmentFromIntItem(this);
 			var kind = "glastur"
 
 			if (objectFilenameToName(d.filename) == "holztuer") kind = "holztur";
 			
-			console.log(d.stretchx);
 			addObjectViaName(kind, "door", d.x, d.y, d.z, d.skale, d.rot-1, "openopened", d.stretchx);
 			remove_interactible(d);
 			this.delFromScene();
@@ -580,12 +620,25 @@ function success() {
     $(".GUI").fadeOut(5000);
 }
 
+function useMedi(){
+    if((selectedItem != null) && (selectedItem.name != undefined) && ((objectFilenameToName(selectedItem.name) == "ziegel") || (objectFilenameToName(selectedItem.name) == "medipack"))){ //das sollte definitiv anders TODO
+		//play some "ugh, healed"-sound?
+		showThoughts("Ahhh, das tut gut!", 5000);
+		player.health = MAX_HEALTH;
+        console.log('fully healed');
+        player.delActItem();
+	}
+}
+
+function endRobos() {
+	robolab = false;
+}
 
 function coverMouth(){
-    //if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "schwamm")){
-    if((selectedItem != null) && (objectFilenameToName(selectedItem.name) == "schwamm")){
+    if((selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "schwamm")){
         startHeavyBreathing();
-        HEALTH_PER_SECOND = HEALTH_PER_SECOND / 2;
+		heavybreath = true;
+        additional_healthloose = 0;
         //addItem((newItemList[31]), playerPos[1], playerPos[2] + 10, playerPos[3], 2, 270, true, pickUpItem);
         console.log('covered mouth');
         player.delActItem();
@@ -596,15 +649,28 @@ function coverMouth(){
 }
 
 function makelessfog() {
+		if (!coveredmouth) {
+			if (!nofog) myfog -= 0.008; if (myfog < 0.0001) myfog = 0.0001;
+		} else {
+			coveredmouth = false;
+		}
         console.log("Der Nebel lichtet sich");
-        scene.fog = new THREE.FogExp2(0x424242, 0.00015);
+		additional_healthloose = 0;
+		if (heavybreath) { stopHeavyBreathing(); heavybreath = false;}
 }
 
 function makemorefog() {
         console.log("Der Nebel dichtet sich");
-        if (coverMouth()) showThoughts("Das sollte mir helfen!",5000);
-        else showThoughts("Der Rauch ist zu dicht, ich kann kaum atmen. Vielleicht finde ich etwas, das ich mir vor den Mund halten kann. Besser raus hier.",5000)
-        scene.fog = new THREE.FogExp2(0x424242, 0.15);
+        if (coverMouth()) {
+			showThoughts("Das sollte mir helfen!",5000);
+			coveredmouth = true;
+		}
+        else {
+			additional_healthloose = MAX_HEALTH/2000;
+			if (!coveredmouth) if (!nofog) myfog += 0.008;
+			showThoughts("Der Rauch ist zu dicht, ich kann kaum atmen. Vielleicht finde ich etwas, das ich mir vor den Mund halten kann. Besser raus hier.",5000)
+			coveredmouth = false;
+		}
 }
 
 

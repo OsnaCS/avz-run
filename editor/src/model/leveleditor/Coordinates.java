@@ -15,7 +15,7 @@ public class Coordinates {
 	private final double x;
 	private final double y;
 	
-	// Position des Punktes 
+	// Position des Punktes
 	private double posx;
 	private double posy;
 	
@@ -49,7 +49,7 @@ public class Coordinates {
 		this.x = toCopy.getX();
 		this.posx = toCopy.getPosx();
 		
-		this.y = toCopy.getPosy();
+		this.y = toCopy.getY();
 		this.posy = toCopy.getPosy();
 		
 		this.angle = toCopy.getAngle();
@@ -62,6 +62,7 @@ public class Coordinates {
 
 	public Coordinates(double x, double y, int angle){
 		this(x,y);
+		//System.out.println(x+" "+y);
 		this.setAngle(angle);
 	}
 //	/**
@@ -69,14 +70,6 @@ public class Coordinates {
 //	 * @param factor Faktor, um den skaliert wird
 //	 * @return int-Koordinaten
 //	 */
-//	public Point getScaledIntCoordinates() {
-//		// Basis Trafo der Koordinatensysteme
-//		int x = (int) ((factor * this.posx) + 0.5);
-//		int y = (int) ((factor * this.posy) + 0.5);
-//				
-//		return new Point(x,y);
-//	}
-	
 	public Point getScaledIntCoordinates(Coordinates p) {
 		// Basis Trafo der Koordinatensysteme
 		double[][] translateHin = {{1, 0, -p.getPosx()}, 
@@ -167,11 +160,42 @@ public class Coordinates {
 		Matrix temp = translateFrom.multiply(rotation).multiply(translateTo);
 		
 		matPoint= temp.multiply(matPoint);
-		
 		this.posx = matPoint.getValue(0, 0);
 		this.posy = matPoint.getValue(1, 0);
-		
 		this.angle = (this.angle + angle) % 360;
+	}
+	
+public Coordinates rotation(int angle, Coordinates point, Coordinates toRotate){
+		
+		double[][] translateHin = {{1, 0, -point.getX()}, 
+				{0, 1, -point.getY()},{0,0,1}};
+		
+		Matrix translateTo = new Matrix(translateHin);
+		
+		double[][] translate = {{1, 0, point.getX()}, 
+				{0, 1, point.getY()},{0,0,1}};
+		
+		Matrix translateFrom = new Matrix(translate);
+		
+		double[][] rotate = {{0, -1, 0}, 
+				{1, 0, 0},{0,0,1}};
+		
+		Matrix rotation = new Matrix(rotate);
+		
+		double[][] arrPoint = {{toRotate.x}, 
+				{toRotate.y},{1}};
+		
+		Matrix matPoint = new Matrix(arrPoint);
+		
+		Matrix temp = translateFrom.multiply(rotation).multiply(translateTo);
+		
+		matPoint= temp.multiply(matPoint);
+		toRotate.posx = matPoint.getValue(0, 0);
+		toRotate.posy = matPoint.getValue(1, 0);
+		toRotate.angle = (toRotate.angle + angle) % 360;
+		Coordinates ret = new Coordinates(toRotate.posx,toRotate.posy);
+		ret.angle= toRotate.angle;
+		return ret;
 	}
 	
 	/**
@@ -245,9 +269,8 @@ public class Coordinates {
 		
 		double newPosX = this.posx + point.getPosx();
 		double newPosY = this.posy + point.getPosy();
-		
-		Coordinates v = new Coordinates(newPosX, newPosY);
 
+		Coordinates v = new Coordinates(newPosX, newPosY);
 		
 		return v;
 	}
@@ -286,7 +309,7 @@ public class Coordinates {
 	}
 	
 	public String toString() {
-		return "Koordinaten: " + this.getPosx() + ", " + this.getPosy();
+		return "Koordinaten: " + this.getX() + ", " + this.getY();
 	}
 	
 	/*********************************************************/
@@ -323,11 +346,11 @@ public class Coordinates {
 	}
 
 	public double getX() {
-		return x;
+		return this.x;
 	}
 
 	public double getY() {
-		return y;
+		return this.y;
 	}
 
 	public static int getFactor() {
