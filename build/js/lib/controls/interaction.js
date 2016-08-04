@@ -172,6 +172,9 @@ function nextLevel() {
 	lockOpen = false;
 	transponder_config = new Array(2);
 	pin[0] = null; pin[1] = null; pin[2] = null; pin[3] = null; pin = new Array(4); pin_pos = 0; 
+	document.getElementById("pinDisplay").innerHTML = "PIN EINGEBEN";
+	document.getElementById("pinDisplayCH").innerHTML = "key lock:";
+	
 	transponder_config[0] = null; transponder_config[1] = null; ch_pos = 0;
 	if ((selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "transponder"))
 	{
