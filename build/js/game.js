@@ -185,7 +185,7 @@ function createScene(callback) {
     // make texture array
     for (var i = 0; i < 6; i++) {
     	sky_array.push( new THREE.MeshBasicMaterial({
-    		map: sky_loader.load( "../avz_model/materials/textures/sky/sky_" + sky_directions[i] + ".jpg" ),
+    		map: sky_loader.load( "/avz_model/materials/textures/sky/sky_" + sky_directions[i] + ".jpg" ),
     		side: THREE.BackSide,
     	}));
     }
