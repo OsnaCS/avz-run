@@ -447,12 +447,14 @@ function recreateRoom() {
 			} );
 			console.log("Recreating everything...");
 			function cont (){pause = false;
-				requestAnimationFrame(loop);
+				// @ CHRIS: this causes a bug and is apparently not needed. trust me. :D
+                //requestAnimationFrame(loop);
 			}
 			// cont();
 			createRoom(cont);
 		}
 	}
+
 }
 
 
