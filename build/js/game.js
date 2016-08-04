@@ -293,6 +293,9 @@ function move(){
                 roboPosX = static_obj[roboternum].msh.position.x;
                 roboPosY = static_obj[roboternum].msh.position.y;
                 roboPosZ = static_obj[roboternum].msh.position.z;
+                roboBox = new GameObject(static_obj[roboternum].msh, null, TYPE_FIRE, "fire");
+                roboBox.mesh.scale.z = 100;
+                modifyOctree(roboBox);
                 robolab = true;
                 break;
             }
