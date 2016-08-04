@@ -14,6 +14,8 @@ var extinguisherParticleSystem;
 var coveredmouth = false;
 var additional_healthloose = 0;
 var heavybreath = false;
+var shown_message = false; //ugh, ich weiß wie unelegant das ist >.<
+var vielfog = false;
 
 // pin pad variables initialisierung
 var pin = new Array(4);
@@ -171,12 +173,13 @@ GameObject = function(mesh, interaction, type, name) {
 
 function nextLevel() {
 	lockOpen = false;
+	robolab = false;
 	transponder_config = new Array(2);
 	pin[0] = null; pin[1] = null; pin[2] = null; pin[3] = null; pin = new Array(4); pin_pos = 0;
 	document.getElementById("pinDisplay").innerHTML = "PIN EINGEBEN";
 	document.getElementById("pinDisplayCH").innerHTML = "key lock:";
-
 	transponder_config[0] = null; transponder_config[1] = null; ch_pos = 0;
+
 	if ((selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "transponder"))
 	{
 		selectedItem.activeTransponder = false;
@@ -186,6 +189,7 @@ function nextLevel() {
     floornumber-=1;
 	pause=true;
     recreateRoom();
+
 }
 
 function delGameObject(mesh) {
@@ -215,6 +219,10 @@ function nix() {
 	//damit ein interactible auch ohne interaction angezeigt werden kann braucht es diese dummy-funktion
 }
 
+function notopen() {
+	showThoughts("Zu...",1500);
+}
+
 function destroy(){
     if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "axt")){
         damageDoorSound();
@@ -242,6 +250,25 @@ function openopened() {
     activeObject = null;
 }
 
+function openaftermessage() {
+	if (!shown_message) {
+		showThoughts("Da war eine Nachricht von Prof. Vornberger auf dem PC, die les ich besser!",4000);
+	} else {
+		doorSound();
+		if(!this.open) {
+			this.mesh.rotateY(Math.PI/2.0);
+		}
+		else {
+			this.mesh.rotateY(-Math.PI/2.0);
+		}
+		this.open = !this.open;
+
+		// mesh is removed
+		scene.remove(outlineMesh);
+		outlineMesh = null;
+		activeObject = null;	
+	}
+}
 
 function open() {
     doorSound();
@@ -404,6 +431,20 @@ function exitPinPad() {
     backToGame();
 
 }
+
+function showMessage() {
+	shown_message = true;
+	$("#message").fadeIn();
+	special_html_input = true;
+    document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
+    document.exitPointerLock();	
+}
+
+function exitMessage() {
+	$("#message").hide();
+	backToGame();
+}
+
 
 // handles input from HTML buttons that are invisible on the pin pad image
 
@@ -615,6 +656,17 @@ function hideThoughts() {
     showInterval = clearInterval();
 }
 
+function wakeUp() {
+    showThoughts("Wo bin ich? Was ist passiert? Ich muss wohl eingeschlafen sein...",3000);
+    $("#startScreen").css("display","inline-block").delay(5000);
+    $("#startScreen").fadeOut(400);
+    $("#startScreen").fadeIn(200).delay(100);
+    $("#startScreen").fadeOut(250)
+    $("#startScreen").fadeIn(400).delay(500);
+    $("#startScreen").fadeOut(1400).delay(200);
+    setTimeout(function(){showThoughts("Oh nein, es brennt! Ich sollte schnell raus!",5000);},9000);
+}
+
 function success() {
     console.log("YEY");
 	pause = true;
@@ -632,8 +684,18 @@ function useMedi(){
 	}
 }
 
-function endRobos() {
-	robolab = false;
+function useSponge(){
+	if ((vielfog) && (coverMouth()))  {
+		if (!nofog) myfog -= 0.008; if (myfog < 0.0001) myfog = 0.0001;
+		showThoughts("Das sollte mir helfen!",5000);
+		coveredmouth = true;
+	}
+}
+
+function startRobos() {
+	robolab = true;
+	roboternum = 0;
+	move();
 }
 
 function coverMouth(){
@@ -657,18 +719,20 @@ function makelessfog() {
 			coveredmouth = false;
 		}
         console.log("Der Nebel lichtet sich");
+		vielfog = false;
 		additional_healthloose = 0;
 		if (heavybreath) { stopHeavyBreathing(); heavybreath = false;}
 }
 
 function makemorefog() {
         console.log("Der Nebel dichtet sich");
+		vielfog = true;
         if (coverMouth()) {
 			showThoughts("Das sollte mir helfen!",5000);
 			coveredmouth = true;
 		}
         else {
-			additional_healthloose = MAX_HEALTH/2000;
+			additional_healthloose = MAX_HEALTH/1500;
 			if (!coveredmouth) if (!nofog) myfog += 0.008;
 			showThoughts("Der Rauch ist zu dicht, ich kann kaum atmen. Vielleicht finde ich etwas, das ich mir vor den Mund halten kann. Besser raus hier.",5000)
 			coveredmouth = false;

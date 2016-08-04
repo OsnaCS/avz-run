@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <floors>
 
-	<floor number="1" characterspawn="(10.5, -5, 5)" ambientlightintens="0.1" ambientlightcolor="0xffbfbf" fogtime="200" startfog="0.002" maxfog="0.012" correctpin="" correcttransponder="43">
+	<floor number="1" characterspawn="(10.2, -5, 5)" ambientlightintens="0.1" ambientlightcolor="0xffbfbf" fogtime="220" startfog="0.002" maxfog="0.012" correcttransponder="43">
 		<room index="0" name="groundlevel" rotation="0.0" x="0.0" y="0.0" />
 	</floor>
 
-	<floor number="2" characterspawn="(0, 0, 4)" ambientlightintens="0.1" ambientlightcolor="0xffbfbf" fogtime="20" startfog="0.002" maxfog="0.02" correctpin="1337" correcttransponder="">
-		<room index="0" name="lectureroom1" rotation="0.0" x="0.0" y="0.0" />
+	
+	<floor number="2" characterspawn="(-7, 4, 4)" ambientlightintens="0.1" ambientlightcolor="0xffbfbf" fogtime="190" startfog="0.002" maxfog="0.015" correctpin="0042">
+		<room index="0" name="robolab" rotation="0.0" x="8.95" y="-6.05" />
+		<room index="1" name="buero_msg" rotation="90.0" x="0.0" y="0.0" />
+		<room index="2" name="buero" rotation="90.0" x="0.0" y="-13.55" />
+		<room index="3" name="buero" rotation="90.0" x="0.0" y="-23.51" />
+		<room index="4" name="lectureroom1" rotation="180" x="31.9" y="-9.42" />
+		<room index="5" name="center" rotation="0" x="10" y="18.5" /> <!--y=-40-->
 	</floor>
-
-	<floor number="3" characterspawn="(6, 0, 0)" ambientlightintens="0.1" ambientlightcolor="0xffbfbf" fogtime="180" startfog="0.002" maxfog="0.015" correctpin="0042" correcttransponder="">
-		<room index="0" name="robolab" rotation="0.0" x="0.0" y="0.0" />
-	</floor>
-
+	
 </floors>

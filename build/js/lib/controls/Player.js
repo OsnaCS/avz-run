@@ -149,6 +149,7 @@ function setActiveSlot(slot)  {
         }
     }
 	useMedi();
+	useSponge();
 }
 
 
