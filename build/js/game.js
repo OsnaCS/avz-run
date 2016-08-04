@@ -250,9 +250,11 @@ function loop() {
             requestAnimationFrame(loop);
 
             if (!nofog) scene.fog.density = myfog;
+
              if(myfog >= 0.009){
                 setTimeout(coughSound, 3000);
             }
+
             player.updateEnergy();
 
             // YOU NEED TO CALL THIS (srycaps)
