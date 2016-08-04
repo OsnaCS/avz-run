@@ -186,6 +186,16 @@ function initPointerLock() {
             mainMenu.style.display = 'block';
         }, false);
 
+        $("#buttonSources").bind('click', function(event) {
+            $("#infoScreen").hide();
+            $("#sources").show();
+        });
+
+        $("#buttonSourcesBack").bind('click', function(event) {
+            $("#infoScreen").show();
+            $("#sources").hide();
+        });
+
 
         button.addEventListener('click', function(event) {
 
