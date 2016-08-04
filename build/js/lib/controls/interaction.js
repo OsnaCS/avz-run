@@ -172,8 +172,10 @@ function nextLevel() {
 	lockOpen = false;
 	transponder_config = new Array(2);
 	pin[0] = null; pin[1] = null; pin[2] = null; pin[3] = null; pin = new Array(4); pin_pos = 0;
+	document.getElementById("pinDisplay").innerHTML = "PIN EINGEBEN";
+	document.getElementById("pinDisplayCH").innerHTML = "key lock:";
 	transponder_config[0] = null; transponder_config[1] = null; ch_pos = 0;
-    document.getElementById("pinDisplay").innerHTML = "PIN EINGEBEN";
+
 	if ((selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "transponder"))
 	{
 		selectedItem.activeTransponder = false;
@@ -610,6 +612,16 @@ function showThoughts(text, duration) {
 function hideThoughts() {
     $(".thoughtBox").fadeOut(FADE_TIME);
     showInterval = clearInterval();
+}
+
+function wakeUp() {
+
+    showThoughts("Wo bin ich? Was ist passiert? Ich muss wohl eingeschlafen sein...");
+    $("#startScreen").css("display","inline-block");
+    $("#startScreen").fadeOut(1000)
+    $("#startScreen").fadeIn(500);
+    $("#startScreen").fadeOut(100);
+
 }
 
 function success() {

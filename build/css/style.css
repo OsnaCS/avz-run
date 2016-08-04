@@ -144,10 +144,17 @@ hr {
 }
 
 #blocker {
-    padding-top: 100px;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    position: absolute;
+}
+
+#startScreen {
+    width: 100%;
+    height: 100%;
+    background-color: #000000;
     display: none;
     position: absolute;
 }
@@ -196,8 +203,6 @@ hr {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     display: none;
-    padding-top: 100px;
-    transform: translateY(-15%);
 }
 
 .gameOver {
