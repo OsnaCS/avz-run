@@ -6,7 +6,7 @@ var footstepsPlaying = false;
 var playFast;
 var extinguisher_Sound, door_Sound, doorLocked_Sound, button_Sound, correct_Sound,
     failed_Sound, success_Sound, pain_Sound, damageDoor_Sound, pickUp_Sound,
-    outOfBreath_Sound, gameOver_Sound, hbreathing_Sound;
+    outOfBreath_Sound, gameOver_Sound, hbreathing_Sound, cough_Sound;
 
 
 
@@ -86,6 +86,7 @@ function createBasicSounds() {
     outOfBreath_Sound = createSound("run-breath", false, 1);
     gameOver_Sound = createSound("gameover", false, 0.8);
     hbreathing_Sound = createSound("breath", true, 0.2);
+    cough_Sound = createSound("cough", true, 0.8);
 }
 
 
