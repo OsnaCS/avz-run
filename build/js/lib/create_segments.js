@@ -373,7 +373,7 @@ var allfloors = [];
 
 				var vector = tospawn[3];
 				rotate = vec2dir([parseFloat(vector.slice(1,vector.indexOf(','))),parseFloat(vector.slice(vector.indexOf(',')+1,vector.indexOf(')')))]);
-				rotate -= segments[INDEX1].rot;
+				rotate += segments[INDEX1].rot;
 
 				var xz = changexzaccordingtorot(segments[INDEX1].orx, segments[INDEX1].ory, segments[INDEX1].rot);
 				spawnx = spawnx + parseInt(segments[INDEX1].transx)+xz[0];
