@@ -13,5 +13,9 @@
 	<floor number="3" characterspawn="(6, 0, 0)" ambientlightintens="0.1" ambientlightcolor="0xffbfbf" fogtime="180" startfog="0.002" maxfog="0.015" correctpin="0042" correcttransponder="">
 		<room index="0" name="robolab" rotation="0.0" x="0.0" y="0.0" />
 	</floor>
+	
+	<floor number="4" characterspawn="(0, 0, 2)" ambientlightintens="0.1" ambientlightcolor="0xffbfbf" fogtime="180" startfog="0.002" maxfog="0.015" correctpin="0042" correcttransponder="">
+		<room index="0" name="lectureroomleer" rotation="0.0" x="0.0" y="0.0" />
+	</floor>	
 	  
 </floors>
