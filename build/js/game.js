@@ -111,7 +111,6 @@ function init(event) {
     				}
 
     			}
-    		}
     	}
     }
 
@@ -123,7 +122,7 @@ stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild(stats.dom);
 
 //Create the Scene
-function createScene(callback) {
+function createScene(complete) {
     blocker = document.getElementById('blocker');
     container = document.getElementById('world');
     startInstructions = document.getElementById('startInstructions');
