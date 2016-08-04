@@ -1,10 +1,10 @@
 var godmode = false; // zum testen, man kann nicht fallen, hat unendlich leben, unendlich sprinten, alle türen sind offen, Nebel kommt langsamer
 
 var muteSounds = false; // if true, no sound will be played
-var performantfire = false; //when true, it makes the fires a bit worse and removes their pointlight
+var performantfire = true //when true, it makes the fires a bit worse and removes their pointlight
 var nosmoothedges = false; //if true, it no edge will be smoothed.
 var useLambertMaterial = false; //Meinungen gehen auseinander ob Lambert oder Phong performanter ist.
-var onlygloballight = false;  //when true, no pointlights (specified in the rooms.xml) will be set.
+var onlygloballight = true;  //when true, no pointlights (specified in the rooms.xml) will be set.
 var nofog = false;
 var triggerstransparent = true;
 
@@ -584,7 +584,7 @@ function controlLoop(controls) {
         velocity.y = 0;
         controls.getObject().position.y = PLAYERHEIGHT + PLAYERHEIGHT * 0.2;
     }
-	
+
     if (controls.getObject().position.y < -500) {
         player.damage(10000);
     }
@@ -603,7 +603,7 @@ function controlLoop(controls) {
 
     if (flashCooldown == 0) {
         scene.remove(flashLight);
-		
+
         if(!nofog) scene.fog.color.set(0x424242);
         clearInterval(flashInterval);
         flashCooldown = -1;

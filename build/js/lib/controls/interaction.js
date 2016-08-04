@@ -171,14 +171,15 @@ GameObject = function(mesh, interaction, type, name) {
 function nextLevel() {
 	lockOpen = false;
 	transponder_config = new Array(2);
-	pin[0] = null; pin[1] = null; pin[2] = null; pin[3] = null; pin = new Array(4); pin_pos = 0; 
+	pin[0] = null; pin[1] = null; pin[2] = null; pin[3] = null; pin = new Array(4); pin_pos = 0;
 	transponder_config[0] = null; transponder_config[1] = null; ch_pos = 0;
+    document.getElementById("pinDisplay").innerHTML = "PIN EINGEBEN";
 	if ((selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "transponder"))
 	{
 		selectedItem.activeTransponder = false;
 		//TODO: ist das wirklich nur für selectedItem, muss ich das also für die anderen noch tun?
 	}
-	
+
     floornumber-=1;
 	pause=true;
     recreateRoom();
@@ -545,7 +546,7 @@ function openTransponderDoor(){
 			var kind = "glastur"
 
 			if (objectFilenameToName(d.filename) == "holztuer") kind = "holztur";
-			
+
 			addObjectViaName(kind, "door", d.x, d.y, d.z, d.skale, d.rot-1, "openopened", d.stretchx);
 			remove_interactible(d);
 			this.delFromScene();
@@ -782,4 +783,3 @@ function extinguisherAnimation(){
 
     setTimeout(deleteExtinguisherParticles, 1000);
 }
-
