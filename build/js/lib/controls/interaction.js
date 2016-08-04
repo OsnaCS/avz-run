@@ -14,6 +14,8 @@ var extinguisherParticleSystem;
 var coveredmouth = false;
 var additional_healthloose = 0;
 var heavybreath = false;
+var shown_message = false; //ugh, ich weiß wie unelegant das ist >.<
+var vielfog = false;
 
 // pin pad variables initialisierung
 var pin = new Array(4);
@@ -247,6 +249,25 @@ function openopened() {
     activeObject = null;
 }
 
+function openaftermessage() {
+	if (!shown_message) {
+		showThoughts("Da war eine Nachricht von Prof. Vornberger auf dem PC, die les ich besser!",4000);
+	} else {
+		doorSound();
+		if(!this.open) {
+			this.mesh.rotateY(Math.PI/2.0);
+		}
+		else {
+			this.mesh.rotateY(-Math.PI/2.0);
+		}
+		this.open = !this.open;
+
+		// mesh is removed
+		scene.remove(outlineMesh);
+		outlineMesh = null;
+		activeObject = null;	
+	}
+}
 
 function open() {
     doorSound();
@@ -409,6 +430,20 @@ function exitPinPad() {
     backToGame();
 
 }
+
+function showMessage() {
+	shown_message = true;
+	$("#message").fadeIn();
+	special_html_input = true;
+    document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
+    document.exitPointerLock();	
+}
+
+function exitMessage() {
+	$("#message").hide();
+	backToGame();
+}
+
 
 // handles input from HTML buttons that are invisible on the pin pad image
 
@@ -648,6 +683,14 @@ function useMedi(){
 	}
 }
 
+function useSponge(){
+	if ((vielfog) && (coverMouth()))  {
+		if (!nofog) myfog -= 0.008; if (myfog < 0.0001) myfog = 0.0001;
+		showThoughts("Das sollte mir helfen!",5000);
+		coveredmouth = true;
+	}
+}
+
 function startRobos() {
 	robolab = true;
 	roboternum = 0;
@@ -675,12 +718,14 @@ function makelessfog() {
 			coveredmouth = false;
 		}
         console.log("Der Nebel lichtet sich");
+		vielfog = false;
 		additional_healthloose = 0;
 		if (heavybreath) { stopHeavyBreathing(); heavybreath = false;}
 }
 
 function makemorefog() {
         console.log("Der Nebel dichtet sich");
+		vielfog = true;
         if (coverMouth()) {
 			showThoughts("Das sollte mir helfen!",5000);
 			coveredmouth = true;

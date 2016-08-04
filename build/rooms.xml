@@ -169,7 +169,7 @@
 		   <door type="norm" index="8" position="(11,-10.95)" normal="(1, 0)" act="notopen"/>
 		   <!-- <door type="glass" index="9" position="(9.73,-13.5)" normal="(0, -1)" act="openable"/>
 		   <door type="glass" index="10" position="(-7.73,-13.5)" normal="(0, -1)" act="openable"/> -->
-		   <door type="norm" index="tostartoffice" position="(-8.95,-7.95 )" normal="(-1, 0)" act="openable" stretch="1.1"/>
+		   <door type="norm" index="tostartoffice" position="(-8.95,-7.95 )" normal="(-1, 0)" act="openaftermessage" stretch="1.1"/>
 		   <door type="norm" index="12" position="(-8.95,-4.1)" normal="(-1, 0)" act="notopen"/>
 		   <door type="norm" index="13" position="(-8.95,0.3)" normal="(-1, 0)" act="notopen"/>
 		   <door type="norm" index="tooffice2" position="(-8.95,5.6)" normal="(-1, 0)" act="openable" stretch="1.1"/>
@@ -206,7 +206,7 @@
 			 <spawn index="7" position="(5.8, 8, 1.5)" object="tafel" normaltowall="(0,-1)" scale="2"/>
 			 <spawn index="8" position="(3, -3.8, 1)" object="computer" normaltowall="(1,0)" scale="1" oninteract=""/>
 			 <spawn index="9" position="(-1, -3.8, 1)" object="computer" normaltowall="(-1,0)" scale="1" oninteract=""/>
-			 <spawn index="10" position="(2, 20, 0)" object="evil_roboter" normaltowall="(0,1)" scale="2.7" oninteract=""/>
+			 <spawn index="10" position="(2, 12, 0)" object="evil_roboter" normaltowall="(0,1)" scale="2.7" oninteract=""/>
 			 <spawn index="11" position="(2.3, 6.4, 0)" object="axt" normaltowall="(-1,0)" scale="2" oninteract="pickUpItem"/>
 			 <spawn index="12" position="(4, -3.8, 0)" object="buerostuhl" normaltowall="(1,0)" scale="1"/>
 			 <spawn index="13" position="(-2.5, -3.8, 0)" object="buerostuhl" normaltowall="(-1,0)" scale="1"/>
@@ -409,7 +409,7 @@
 		  	<spawn index="2" position="(3, -6, 0)" object="tisch" normaltowall="(1,0)" scale="1"/>
 		  	<spawn index="3" position="(6, -1, 0.3)" object="pflanze" normaltowall="(1,0)" scale="3"/>
 		  	<spawn index="4" position="(3, -7, 0)" object="stuhl" normaltowall="(0, -1)" scale="2"/>
-		  	<spawn index="5" position="(3, -6, 1)" object="computer_message" normaltowall="(0, -1)" scale="0.8" oninteract="nix"/>
+		  	<spawn index="5" position="(3, -6, 1)" object="computer_message" normaltowall="(0, -1)" scale="0.8" oninteract="showMessage"/>
 		</spawns>
 		<fires>
 			<fire index="bm1" position="(6, -7.5, 0)" size="(2,2,2)" val="6"/>

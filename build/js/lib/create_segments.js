@@ -572,6 +572,7 @@ function door_in_doors(callback) {
 				case "openable": act = "open"; break;
 				case "notopen": act = "notopen"; break;
 				case "openable_after_ext": act = "open_after_ext"; break;
+				case "openaftermessage": act = "openaftermessage"; break;
 				case "open": act = "openopened"; rotate -= 1; break;
 				case "transponderopenable": act = "openTransponderDoor"; break;
 				case "axtopenable": act = "damageDoor"; break;
