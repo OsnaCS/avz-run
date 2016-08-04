@@ -9,25 +9,28 @@
 		<origin x="0" y="0"/>
 		<size xmin="-2" ymin="-2" xmax="12" ymax="8" />
 		<doors>
-		   <door type="norm" index="1" position="(12,-0.75)" normal="(1,0)" act="codeopenable" stretch="1.05"/>
+		   <!-- <door type="norm" index="1" position="(12,-0.75)" normal="(1,0)" stretch="1.1" act="openable"/> -->
 		</doors>
 		<spawns><!--
 		   <spawn index="1" position="(10, 4, 0.1)" object="axt" normaltowall="(-1,0)" scale="2" oninteract="pickUpItem"/>
-		   <spawn index="2" position="(10, 5, 0)" object="transponder" normaltowall="(1,0)" scale="2" oninteract="pickUpItem"/> -->
-		   <spawn index="2" position="(10, 7, 1)" object="computer" normaltowall="(0,-1)" scale="1" oninteract="enterCH"/>
-		   <spawn index="2" position="(11.8, 0.3, 1.8)" object="pinpad" normaltowall="(0,-1)" scale="1" oninteract="enterPin"/>
+		   <spawn index="2" position="(10, 5, 0)" object="transponder" normaltowall="(1,0)" scale="2" oninteract="pickUpItem"/> 
+		   <spawn index="2" position="(11.8, 0.3, 1.8)" object="pinpad" normaltowall="(0,-1)" scale="1" oninteract="enterPin"/> -->
+		   <spawn index="2" position="(10, 7, 0)" object="tisch" normaltowall="(1,0)" scale="1"/>
+		   <spawn index="2" position="(10, 7, 1)" object="computer" normaltowall="(0,-1)" scale="1"/>
+		 <!--  <spawn index="2" position="(11.8, 0.3, 1.8)" object="pinpad" normaltowall="(0,-1)" scale="1" oninteract="enterPin"/>-->
 		   <spawn index="stuhl" position="(4 to 8 step 1, 1 to 7 step 0.6, 0)" object="pult" normaltowall="(0,1)" scale="1"/>
 		</spawns>
 		<fires>
-		   <fire index="l1" position="(9,0,0)" size="(1,1,2)" val="10" />
+		   <fire index="l1" position="(9,0,0)" size="(3,4,2)" val="10" />
 		</fires>
 		<lights>
  		   <light index="1" kind="pointlight" objectname="deckenlicht" position="(9,3,5)" intensity="0.7" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="14"/>
 		   <light index="2" kind="pointlight" objectname="deckenlicht" position="(1,3,5)" intensity="0.7" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="14"/>
 		</lights>
 		<triggers>
+			<!-- <trigger index="spawnblack" xpos="5" ypos="2" size="2" functionname="wakeUp"/>
 			<trigger index="exit" xpos="12" ypos="0" size="3" functionname="showThoughts" fparam1="Hinter dieser Tür ist die Treppe" fparam2="5000"/>
-			<trigger index="exit2" xpos="13.5" ypos="-1" size="2" functionname="nextLevel"/>
+			<trigger index="exit2" xpos="13.5" ypos="-1" size="2" functionname="nextLevel"/> -->
 		</triggers>
 	</room>
 	
@@ -52,11 +55,12 @@
 
 			<spawn  index="PC-hack" position="(2.5, -8.3, 1.08)" object="computer_hack" normaltowall="(0,-1)" scake="1" oninteract="enterCH"/>
 			<spawn  index="transponder" position="(4.5, -8.8, 1.08)" object="transponder" normaltowall="(0, 1)" scale="1" oninteract="pickUpItem"/>
-			<spawn  index="wc_code" position="(6.58, -15.09, 1.50)" object="wc_code" normaltowall="(-1, 0)" scale="1"/>
+			<!--<spawn  index="wc_code" position="(6.58, -15.09, 1.50)" object="wc_code" normaltowall="(-1, 0)" scale="1"/>-->
 
 			<spawn  index="energy_counter" position="(-7, 0, 3.6)" object="energy_counter" normaltowall="(-1, 0)" scale="1"/>
 
 			<spawn index = "mediklo" position="(7, -11.24, 1.25)" object = "medipack" normaltowall="(0, 1)" scale="1.5" oninteract="pickUpItem"/>
+
         </spawns>
         <fires>
 			<fire index="cip1" position="(-7.92, -15.35, 0)" size="(1,1,1)" val="6"/>
@@ -107,33 +111,28 @@
 		</triggers>
 	</room>
 
-    <!-- positon spieler spawn: (10.5, 4.8, 3) -->
-	<!-- triggerevent cip positon : (-8.5, -11.5, 0) -->
-	<!-- triggerevent bigfire positon coordinaten: (13.25, -6.5, 0) -->
-
-
 	<!-- hier fehlen spawns-->
 	<room name="circle_walled" filename="circle_WALLED.json" smooth="1">
 		<origin x="0" y="0" />
 		<size xmin="-8.80486" xmax="0.00113" ymin="0.05864" ymax="20.05864"/>
 		<doors>
-		    <door type="norm" index="1" position="(11,25.85 )" normal="(1, 0)" act="openable"/>
-		   <door type="norm" index="2" position="(11,20.4)" normal="(1, 0)" act="openable"/>
-		   <door type="norm" index="3" position="(11,14.9)" normal="(1, 0)" act="openable"/>
-		   <door type="norm" index="4" position="(11,10.4)" normal="(1, 0)" act="openable"/>
-		   <door type="norm" index="5" position="(11,4.25)" normal="(1, 0)" act="openable"/>
-		   <door type="norm" index="6" position="(11,-1.15)" normal="(1, 0)" act="openable"/>
-		   <door type="norm" index="7" position="(11,-5.95)" normal="(1, 0)" act="openable"/>
-		   <door type="norm" index="8" position="(11,-10.95)" normal="(1, 0)" act="openable"/>
-		   <door type="glass" index="9" position="(9.73,-13.5)" normal="(0, -1)" act="openable"/>
-		   <door type="glass" index="10" position="(-7.73,-13.5)" normal="(0, -1)" act="openable"/>
-		   <door type="norm" index="11" position="(-8.95,-7.95 )" normal="(-1, 0)" act="openable"/>
-		   <door type="norm" index="12" position="(-8.95,-4.1)" normal="(-1, 0)" act="openable"/>
-		   <door type="norm" index="13" position="(-8.95,0.3)" normal="(-1, 0)" act="openable"/>
-		   <door type="norm" index="14" position="(-8.95,5.6)" normal="(-1, 0)" act="openable"/>
-		   <door type="norm" index="15" position="(-8.95,10.1)" normal="(-1, 0)" act="openable"/>
-		   <door type="norm" index="16" position="(-8.95,15.6)" normal="(-1, 0)" act="openable"/>
-		   <door type="norm" index="17" position="(-8.95,19.57)" normal="(-1, 0)" act="openable"/>
+		   <door type="norm" index="1" position="(11,25.85 )" normal="(1, 0)" act="notopen"/>
+		   <door type="norm" index="2" position="(11,20.4)" normal="(1, 0)" act="notopen"/>
+		   <door type="norm" index="3" position="(11,14.9)" normal="(1, 0)" act="notopen"/>
+		   <door type="norm" index="4" position="(11,10.4)" normal="(1, 0)" act="notopen"/>
+		   <door type="norm" index="tolectureroom" position="(11,4.25)" normal="(1, 0)" act="openable"/>
+		   <door type="norm" index="6" position="(11,-1.15)" normal="(1, 0)" act="notopen"/>
+		   <door type="norm" index="7" position="(11,-5.95)" normal="(1, 0)" act="notopen"/>
+		   <door type="norm" index="8" position="(11,-10.95)" normal="(1, 0)" act="notopen"/>
+		   <!-- <door type="glass" index="9" position="(9.73,-13.5)" normal="(0, -1)" act="openable"/>
+		   <door type="glass" index="10" position="(-7.73,-13.5)" normal="(0, -1)" act="openable"/> -->
+		   <door type="norm" index="tostartoffice" position="(-8.95,-7.95 )" normal="(-1, 0)" act="openable" stretch="1.1"/>
+		   <door type="norm" index="12" position="(-8.95,-4.1)" normal="(-1, 0)" act="notopen"/>
+		   <door type="norm" index="13" position="(-8.95,0.3)" normal="(-1, 0)" act="notopen"/>
+		   <door type="norm" index="tooffice2" position="(-8.95,5.6)" normal="(-1, 0)" act="openable" stretch="1.1"/>
+		   <door type="norm" index="15" position="(-8.95,10.1)" normal="(-1, 0)" act="notopen"/>
+		   <door type="norm" index="tooffice3" position="(-8.95,15.6)" normal="(-1, 0)" act="open" stretch="1.1"/>
+		   <door type="norm" index="17" position="(-8.95,19.57)" normal="(-1, 0)" act="notopen"/>
 		   <door type="norm" index="18" position="(-7.15,23.24)" normal="(0, 1)" act="openable"/>
 		   <door type="glass" index="19" position="(-1.72,23.24)" normal="(0, 1)" act="openable"/>
 		   <door type="norm" index="20" position="(3.15,23.24)" normal="(0, 1)" act="openable"/>
@@ -155,33 +154,33 @@
 		</spawns>
 	</room>
 
-	<!-- hier fehlen spawns-->
+	<!-- DAS HIER IST KOMPLETT FINAL-->
 	<room name="robolab" filename="circle_WALLED.json" smooth="1">
 		<origin x="0" y="0" />
 		<size xmin="-8.80486" xmax="0.00113" ymin="0.05864" ymax="20.05864"/>
 		<doors>
-		    <door type="norm" index="1" position="(11,25.85 )" normal="(1, 0)" act="openable"/>
-		   <door type="norm" index="2" position="(11,20.4)" normal="(1, 0)" act="openable"/>
-		   <door type="norm" index="3" position="(11,14.9)" normal="(1, 0)" act="openable"/>
-		   <door type="norm" index="4" position="(11,10.4)" normal="(1, 0)" act="openable"/>
-		   <door type="norm" index="5" position="(11,4.25)" normal="(1, 0)" act="openable"/>
-		   <door type="norm" index="6" position="(11,-1.15)" normal="(1, 0)" act="openable"/>
-		   <door type="norm" index="7" position="(11,-5.95)" normal="(1, 0)" act="openable"/>
-		   <door type="norm" index="8" position="(11,-10.95)" normal="(1, 0)" act="openable"/>
-		   <door type="glass" index="9" position="(9.73,-13.5)" normal="(0, -1)" act="openable"/>
-		   <door type="glass" index="10" position="(-7.73,-13.5)" normal="(0, -1)" act="openable"/>
-		   <door type="norm" index="11" position="(-8.95,-7.95 )" normal="(-1, 0)" act="openable"/>
-		   <door type="norm" index="12" position="(-8.95,-4.1)" normal="(-1, 0)" act="openable"/>
-		   <door type="norm" index="13" position="(-8.95,0.3)" normal="(-1, 0)" act="openable"/>
-		   <door type="norm" index="14" position="(-8.95,5.6)" normal="(-1, 0)" act="openable"/>
-		   <door type="norm" index="15" position="(-8.95,10.1)" normal="(-1, 0)" act="openable"/>
-		   <door type="norm" index="16" position="(-8.95,15.6)" normal="(-1, 0)" act="openable"/>
-		   <door type="norm" index="17" position="(-8.95,19.57)" normal="(-1, 0)" act="openable"/>
-		   <door type="norm" index="18" position="(-7.15,23.24)" normal="(0, 1)" act="axtopenable"/>
-		   <door type="glass" index="19" position="(-1.72,23.24)" normal="(0, 1)" act="openable"/>
-		   <door type="norm" index="20" position="(3.15,23.24)" normal="(0, 1)" act="openable"/>
-		   <door type="norm" index="21" position="(-3.75,2.85)" normal="(1, 0)" act="codeopenable"/>
-		   <door type="norm" index="22" position="(-3.75, -1.85)" normal="(1, 0)" act="closed"/>
+		   <door type="norm" index="1" position="(11,25.85 )" normal="(1, 0)" act="notopen"/>
+		   <door type="norm" index="2" position="(11,20.4)" normal="(1, 0)" act="notopen"/>
+		   <door type="norm" index="3" position="(11,14.9)" normal="(1, 0)" act="notopen"/>
+		   <door type="norm" index="4" position="(11,10.4)" normal="(1, 0)" act="notopen"/>
+		   <door type="norm" index="tolectureroom" position="(11,4.25)" normal="(1, 0)" act="openable"/>
+		   <door type="norm" index="6" position="(11,-1.15)" normal="(1, 0)" act="notopen"/>
+		   <door type="norm" index="7" position="(11,-5.95)" normal="(1, 0)" act="notopen"/>
+		   <door type="norm" index="8" position="(11,-10.95)" normal="(1, 0)" act="notopen"/>
+		   <!-- <door type="glass" index="9" position="(9.73,-13.5)" normal="(0, -1)" act="openable"/>
+		   <door type="glass" index="10" position="(-7.73,-13.5)" normal="(0, -1)" act="openable"/> -->
+		   <door type="norm" index="tostartoffice" position="(-8.95,-7.95 )" normal="(-1, 0)" act="openable" stretch="1.1"/>
+		   <door type="norm" index="12" position="(-8.95,-4.1)" normal="(-1, 0)" act="notopen"/>
+		   <door type="norm" index="13" position="(-8.95,0.3)" normal="(-1, 0)" act="notopen"/>
+		   <door type="norm" index="tooffice2" position="(-8.95,5.6)" normal="(-1, 0)" act="openable" stretch="1.1"/>
+		   <door type="norm" index="15" position="(-8.95,10.1)" normal="(-1, 0)" act="notopen"/>
+		   <door type="norm" index="tooffice3" position="(-8.95,15.6)" normal="(-1, 0)" act="open" stretch="1.1"/>
+		   <door type="norm" index="17" position="(-8.95,19.57)" normal="(-1, 0)" act="notopen"/>
+		   <door type="norm" index="tooutside" position="(-7.15,23.24)" normal="(0, 1)" act="axtopenable"/>
+		   <door type="glass" index="19" position="(-1.72,23.24)" normal="(0, 1)" act="notopen"/>
+		   <door type="norm" index="20" position="(3.15,23.24)" normal="(0, 1)" act="notopen"/>
+		   <door type="norm" index="torobolab" position="(-3.75,2.85)" normal="(1, 0)" act="codeopenable"/>
+		   <door type="norm" index="22" position="(-3.75, -1.85)" normal="(1, 0)" act="openable"/>
 		</doors>
 		<lights>
 			<light index="1" kind="pointlight" objectname="deckenlicht" position="(-6,12.5,5)" intensity="0.5" color="0xFFFFFF" objectscale="1" normal="(0,1)" visiblewidth="33"/>
@@ -195,6 +194,7 @@
 			<fire index="rl1" position="(7.5, -7, 0)" size="(3,3,3)" val="6"/>
 			<fire index="rl2" position="(1, 14, 0)" size="(3,3,3)" val="6"/>
 			<fire index="rl3" position="(1, -3.8, 0)" size="(3,2.5,2)" val="6"/>
+			<fire index="rl4" position="(9, 26, 0)" size="(3,2.5,2)" val="6"/>
         </fires>
 		<spawns>
 			 <spawn index="1" position="(1.03, 0.3, 0)" object="wand_kaputt" normaltowall="(0,1)" scale="2.38"/>
@@ -206,7 +206,7 @@
 			 <spawn index="7" position="(5.8, 8, 1.5)" object="tafel" normaltowall="(0,-1)" scale="2"/>
 			 <spawn index="8" position="(3, -3.8, 1)" object="computer" normaltowall="(1,0)" scale="1" oninteract=""/>
 			 <spawn index="9" position="(-1, -3.8, 1)" object="computer" normaltowall="(-1,0)" scale="1" oninteract=""/>
-			 <spawn index="10" position="(2, 12, 0)" object="evil_roboter" normaltowall="(0,1)" scale="2.7" oninteract=""/>
+			 <spawn index="10" position="(2, 20, 0)" object="evil_roboter" normaltowall="(0,1)" scale="2.7" oninteract=""/>
 			 <spawn index="11" position="(2.3, 6.4, 0)" object="axt" normaltowall="(-1,0)" scale="2" oninteract="pickUpItem"/>
 			 <spawn index="12" position="(4, -3.8, 0)" object="buerostuhl" normaltowall="(1,0)" scale="1"/>
 			 <spawn index="13" position="(-2.5, -3.8, 0)" object="buerostuhl" normaltowall="(-1,0)" scale="1"/>
@@ -228,15 +228,18 @@
 
 			 <spawn index="3" position="(4.5, 17.2, 0)" object="tisch" normaltowall="(1,0)" scale="1"/>
 			 <spawn index="8" position="(4.5, 17.2, 1)" object="computer" normaltowall="(0,-1)" scale="1" oninteract="robotControll"/>
+
+			 <spawn  index="wc_code" position="(0, 18.04, 2)" object="wc_code" normaltowall="(0, -1)" scale="1.5"/>
 		</spawns>
 		<triggers>
 			<trigger index="rl1" xpos="-2.7" ypos="2.85" size="1" functionname="showThoughts" fparam1="Oh ein gefährlicher Roboter! Ich komme nicht an die Axt ran. Vielleicht kann einer der Computer ihn abschalten" fparam2="8000" />
-			<trigger index="rl2" xpos="-7.15" ypos="26.45" size="4" functionname="endRobos" />
+			<trigger index="rl2" xpos="-2.75" ypos="2.85" size="5" functionname="startRobos" />
 			<trigger index="rl3" xpos="-7.15" ypos="26.45" size="4" functionname="nextLevel" />
 			<trigger index="rl4" xpos="-7.15" ypos="23.24" size="1" functionname="showThoughts" fparam1="Diese Tür ist richtig! Ich muss springen!" fparam2="5000"/>
 		</triggers>
 	</room>
 
+	<!-- hier fehlen spawns-->
 	<room name="circle_with_lecture" filename="circle_WALLED.json" smooth="1">
 		<origin x="0" y="0" />
 		<size xmin="-8.80486" xmax="0.00113" ymin="0.05864" ymax="20.05864"/>
@@ -297,23 +300,23 @@
 		<origin x="-3" y="3" z="2.5"/>
 		<size xmin = "-14" xmax = "8" ymin = "-8" ymax = "14"/>
 		<doors>
-			<door index="1" type="glass"  normal="(0,1)" position="(4.77,14)"/>
-			<door index="2" type="glass"  normal="(1,0)" position="(8,11.77)"/>
-			<door index="3" type="glass"  normal="(1,0)" position="(8,-5.77)"/>
-			<door index="4" type="glass"  normal="(0,-1)" position="(5.77,-8)"/>
-			<door index="5" type="glass"  normal="(0,-1)" position="(-11.77, -8)"/>
-			<door index="6" type="glass"  normal="(-1,0)" position="(-14,-5.77)"/>
-			<door index="7" type="glass"  normal="(-1,0)" position="(-14, 10.77)"/>
-			<door index="8" type="glass"  normal="(0,1)" position="(-11.77, 14)"/>
+			<door index="1" type="glass"  normal="(0,1)" position="(4.77,14)" act="openable"/>
+			<door index="2" type="glass"  normal="(1,0)" position="(8,11.77)" act="notopen"/>
+			<door index="3" type="glass"  normal="(1,0)" position="(8,-5.77)" act="notopen"/>
+			<door index="4" type="glass"  normal="(0,-1)" position="(5.77,-8)" act="notopen"/>
+			<door index="5" type="glass"  normal="(0,-1)" position="(-11.77, -8)" act="notopen"/>
+			<door index="6" type="glass"  normal="(-1,0)" position="(-14,-5.77)" act="notopen"/>
+			<door index="7" type="glass"  normal="(-1,0)" position="(-14, 10.77)" act="notopen"/>
+			<door index="8" type="glass"  normal="(0,1)" position="(-11.77, 14)" act="openable"/>
 		</doors>
 		<lights>
  			<light index="1" kind="pointlight" objectname="deckenlicht" position="(-0.29, -3.3, 5)" normal="(1,0,0)" objectscale="1" intensity="0.7" color="0xFFFFFF" />
 			<light index="2" kind="pointlight" objectname="deckenlicht" position="(-0.29, 4.04, 5)" normal="(1,0,0)" objectscale="1" intensity="0.7" color="0xFFFFFF" />
 		</lights>
 		<fires>
-			<fire index="c1" position="(-3, 9, 0)" size="(1,1,1)" val="6"/>
-			<fire index="c2" position="(3, -1.5, 0)" size="(1,1,1)" val="6"/>
-			<fire index="c3" position="(-5, 2, 0)" size="(1,1,1)" val="6"/>
+			<fire index="c1" position="(-3, 9, 0)" size="(6,4,3)" val="6"/>
+			<fire index="c2" position="(3, -1.5, 0)" size="(6,9,6)" val="6"/>
+			<fire index="c3" position="(-5, 2, 0)" size="(7,6,6)" val="6"/>
 		</fires>
 		<spawns>
 		</spawns>
@@ -373,7 +376,7 @@
 		<origin x="0" y="0"/>
 		<size xmin="-8.94993" xmax="11.00008" ymin="-28.19999" ymax="13.50002"/>
 		<doors>
-		   <door type="norm" index="1" position="(1.88, 0)" normal="(0, 1)" scale="1.25"/>
+		   <!-- <door type="norm" index="1" position="(1.88, 0)" normal="(0, 1)" scale="1.25"/> -->
 		</doors>
 		<lights>
 			<light index="1" kind="pointlight" objectname="deckenlicht" position="(3.5, -4.5, 5)" normal="(0,1,0)" objectscale="1" intensity="0.7" color="0xFFFFFF" />
@@ -387,6 +390,7 @@
 		</spawns>
 		<fires>
 			<fire index="b1" position="(6, -7.5, 0)" size="(2,2,2)" val="6"/>
+			<fire index="b2" position="(5, -5, 0)" size="(3,3,3)" val="3"/>
 		</fires>
 	</room>
 
@@ -395,7 +399,7 @@
 		<origin x="0" y="0"/>
 		<size xmin="-8.94993" xmax="11.00008" ymin="-28.19999" ymax="13.50002"/>
 		<doors>
-		   
+			<!-- <door type="norm" index="1" position="(1.8, 0)" normal="(0, 1)" stretch="1.07" act="openable"/> -->
 		</doors>
 		<lights>
 			<light index="1" kind="pointlight" objectname="deckenlicht" position="(3.5, -4.5, 5)" normal="(0,1,0)" objectscale="1" intensity="0.3" color="0xFFFFFF" />
@@ -405,11 +409,17 @@
 		  	<spawn index="2" position="(3, -6, 0)" object="tisch" normaltowall="(1,0)" scale="1"/>
 		  	<spawn index="3" position="(6, -1, 0.3)" object="pflanze" normaltowall="(1,0)" scale="3"/>
 		  	<spawn index="4" position="(3, -7, 0)" object="stuhl" normaltowall="(0, -1)" scale="2"/>
-		  	<spawn index="5" position="(3, -6, 1)" object="computer_message" normaltowall="(0, -1)" scale="0.8" oninteract="pickUpItem"/>
+		  	<spawn index="5" position="(3, -6, 1)" object="computer_message" normaltowall="(0, -1)" scale="0.8" oninteract="nix"/>
 		</spawns>
 		<fires>
 			<fire index="bm1" position="(6, -7.5, 0)" size="(2,2,2)" val="6"/>
+			<fire index="bm_pflanze" position="(6, -1, 1)" size="(1,1,1)" val="6"/>
+			<fire index="bm2" position="(5, -3, 0)" size="(3,3,3)" val="3"/>
 		</fires>
+		<triggers>
+			<trigger index="spawnblack" xpos="2.4" ypos="-7" size="2" functionname="wakeUp"/>
+			<!-- <trigger index="exit2" xpos="1.8" ypos="1" size="1" functionname="nextLevel"/> -->
+		</triggers>
 	</room>
 
 		<!-- DAS HIER IST KOMPLETT FINAL -->
@@ -434,11 +444,6 @@
 			<fire index="t1" position="(6, -3.5, 0)" size="(2,2,2)" val="6"/>
 		</fires>
 	</room>
-
-
-
-
-
 
 
 	<!-- das hier ist komplett falsch -->

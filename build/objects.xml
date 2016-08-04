@@ -9,7 +9,7 @@
 		<object name="lappen" path="lappen/lappen.json" scale ="1.2" icon="lappen.png"  smooth="1" />
 		<object name="schwamm" path="schwamm/schwamm.json" scale ="1.2" icon="schwamm.png" smooth="1" />
 		<object name="loscher" path="feuerloescher.json" scale="1" icon="feuerloescher.png" smooth="1" />
-		<object path="medipack/medipack.json" name="medipack" scale="2"  smooth="1" icon="medipack.jpg"/>
+		<object path="medipack/medipack.json" name="medipack" scale="2"  smooth="1" icon="medipack.png"/>
 
 		<object name="list" path="list/pfortnerliste.json" scale="1" icon="icon.jpg" smooth="1"/>
 		<object name="roboter" path="roboter.json" scale="1" icon="icon.jpg" smooth="1" />
@@ -56,9 +56,9 @@
 	<door>
 		<object name="klotur" path="tuer_klo.json" scale ="1.35" smooth="1" />
 		<object name="glastur" path="tueren/glastuer.json" scale ="1" smooth="1" />
-		<object name="holztur" path="tueren/holztuer.json" scale ="1" smooth="1" />
-		<object name="halbbrokentur" path="tueren/tuer_halbkaputt.json" scale ="1." smooth="1" />
-		<object name="brokentur" path="tueren/tuer_kaputt.json" scale ="1" smooth="1" />
+		<object name="holztur" path="tueren/holztuer.json" scale ="1.02" smooth="1" />
+		<object name="halbbrokentur" path="tueren/tuer_halbkaputt.json" scale ="1.02" smooth="1" />
+		<object name="brokentur" path="tueren/tuer_kaputt.json" scale ="1" smooth="1.02" />
 	</door>
 
 	<lamp>

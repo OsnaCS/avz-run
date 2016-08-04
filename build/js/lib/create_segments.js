@@ -570,6 +570,7 @@ function door_in_doors(callback) {
 			var act = "";
 			switch(room1door[4]) {
 				case "openable": act = "open"; break;
+				case "notopen": act = "notopen"; break;
 				case "openable_after_ext": act = "open_after_ext"; break;
 				case "open": act = "openopened"; rotate -= 1; break;
 				case "transponderopenable": act = "openTransponderDoor"; break;

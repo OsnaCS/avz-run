@@ -170,12 +170,13 @@ GameObject = function(mesh, interaction, type, name) {
 
 function nextLevel() {
 	lockOpen = false;
+	robolab = false;
 	transponder_config = new Array(2);
 	pin[0] = null; pin[1] = null; pin[2] = null; pin[3] = null; pin = new Array(4); pin_pos = 0;
 	document.getElementById("pinDisplay").innerHTML = "PIN EINGEBEN";
 	document.getElementById("pinDisplayCH").innerHTML = "key lock:";
-
 	transponder_config[0] = null; transponder_config[1] = null; ch_pos = 0;
+
 	if ((selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "transponder"))
 	{
 		selectedItem.activeTransponder = false;
@@ -185,6 +186,7 @@ function nextLevel() {
     floornumber-=1;
 	pause=true;
     recreateRoom();
+
 }
 
 function delGameObject(mesh) {
@@ -212,6 +214,10 @@ function pickUpItem() {
 
 function nix() {
 	//damit ein interactible auch ohne interaction angezeigt werden kann braucht es diese dummy-funktion
+}
+
+function notopen() {
+	showThoughts("Zu...",1500);
 }
 
 function destroy(){
@@ -614,6 +620,17 @@ function hideThoughts() {
     showInterval = clearInterval();
 }
 
+function wakeUp() {
+    showThoughts("Wo bin ich? Was ist passiert? Ich muss wohl eingeschlafen sein...",3000);
+    $("#startScreen").css("display","inline-block").delay(5000);
+    $("#startScreen").fadeOut(400);
+    $("#startScreen").fadeIn(200).delay(100);
+    $("#startScreen").fadeOut(250)
+    $("#startScreen").fadeIn(400).delay(500);
+    $("#startScreen").fadeOut(1400).delay(200);
+    setTimeout(function(){showThoughts("Oh nein, es brennt! Ich sollte schnell raus!",5000);},9000);
+}
+
 function success() {
     console.log("YEY");
 	pause = true;
@@ -631,8 +648,10 @@ function useMedi(){
 	}
 }
 
-function endRobos() {
-	robolab = false;
+function startRobos() {
+	robolab = true;
+	roboternum = 0;
+	move();
 }
 
 function coverMouth(){
@@ -667,7 +686,7 @@ function makemorefog() {
 			coveredmouth = true;
 		}
         else {
-			additional_healthloose = MAX_HEALTH/2000;
+			additional_healthloose = MAX_HEALTH/1500;
 			if (!coveredmouth) if (!nofog) myfog += 0.008;
 			showThoughts("Der Rauch ist zu dicht, ich kann kaum atmen. Vielleicht finde ich etwas, das ich mir vor den Mund halten kann. Besser raus hier.",5000)
 			coveredmouth = false;
