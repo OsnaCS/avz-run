@@ -417,7 +417,7 @@
 		<origin x="0" y="0"/>
 		<size xmin="-8.94993" xmax="11.00008" ymin="-28.19999" ymax="13.50002"/>
 		<doors>
-		   <door type="norm" index="1" position="(1.88, 0)" normal="(0, 1)" scale="1.25"/>
+		   <door type="norm" index="1" position="(1.8, 0)" normal="(0, 1)" stretch="1.07" act="openable"/>
 		</doors>
 		<lights>
 			<light index="1" kind="pointlight" objectname="deckenlicht" position="(3.5, -4.5, 5)" normal="(0,1,0)" objectscale="1" intensity="0.7" color="0xFFFFFF" />
@@ -427,11 +427,17 @@
 		  	<spawn index="2" position="(3, -6, 0)" object="tisch" normaltowall="(1,0)" scale="1"/>
 		  	<spawn index="3" position="(6, -1, 0.3)" object="pflanze" normaltowall="(1,0)" scale="3"/>
 		  	<spawn index="4" position="(3, -7, 0)" object="stuhl" normaltowall="(0, -1)" scale="2"/>
-		  	<spawn index="5" position="(3, -6, 1)" object="computer_message" normaltowall="(0, -1)" scale="0.8" oninteract="pickUpItem"/>
+		  	<spawn index="5" position="(3, -6, 1)" object="computer_message" normaltowall="(0, -1)" scale="0.8" oninteract="nix"/>
 		</spawns>
 		<fires>
 			<fire index="bm1" position="(6, -7.5, 0)" size="(2,2,2)" val="6"/>
+			<fire index="bm_pflanze" position="(6, -1, 1)" size="(1,1,1)" val="6"/>
+			<fire index="bm2" position="(5, -3, 0)" size="(3,3,3)" val="3"/>
 		</fires>
+		<triggers>
+			<trigger index="spawnblack" xpos="2.4" ypos="-7" size="2" functionname="wakeUp"/>
+			<trigger index="exit2" xpos="1.8" ypos="1" size="1" functionname="nextLevel"/>
+		</triggers>
 	</room>
 
 		<!-- DAS HIER IST KOMPLETT FINAL -->

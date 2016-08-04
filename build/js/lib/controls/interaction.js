@@ -185,6 +185,7 @@ function nextLevel() {
     floornumber-=1;
 	pause=true;
     recreateRoom();
+
 }
 
 function delGameObject(mesh) {
@@ -616,12 +617,14 @@ function hideThoughts() {
 
 function wakeUp() {
 
-    showThoughts("Wo bin ich? Was ist passiert? Ich muss wohl eingeschlafen sein...");
-    $("#startScreen").css("display","inline-block");
-    $("#startScreen").fadeOut(1000)
-    $("#startScreen").fadeIn(500);
-    $("#startScreen").fadeOut(100);
-
+    showThoughts("Wo bin ich? Was ist passiert? Ich muss wohl eingeschlafen sein...",3000);
+    $("#startScreen").css("display","inline-block").delay(5000);
+    $("#startScreen").fadeOut(400);
+    $("#startScreen").fadeIn(200).delay(100);
+    $("#startScreen").fadeOut(250)
+    $("#startScreen").fadeIn(400).delay(500);
+    $("#startScreen").fadeOut(1400).delay(200);
+    setTimeout(function(){showThoughts("Oh nein, es brennt! Ich sollte schnell raus!",5000);},9000);
 }
 
 function success() {
