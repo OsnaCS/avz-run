@@ -84,7 +84,7 @@ a:visited {
     color: #FF5252;
     text-decoration: none;
     font-weight: 700;
-    text-shadow: 0px 0px 3px rgba(255, 82, 82, 1);
+    text-shadow: 0px 0px 3px rgba(255, 82, 82, 0.5);
 }
 
 /* Mozilla based browsers */

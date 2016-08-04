@@ -1,0 +1,36 @@
+{
+    "faces":[11,0,1,2,3,0,0,1,2,3,11,4,7,6,5,0,4,5,6,7,11,0,4,5,1,0,0,4,8,1,11,1,5,6,2,0,1,9,10,2,11,2,6,7,3,0,2,11,5,3,11,4,0,3,7,0,4,0,3,5],
+    "vertices":[0.14,-2.51342e-09,-0.0575002,0.14,2.5134e-09,0.0574998,-0.14,2.5134e-09,0.0575,-0.14,-2.51342e-09,-0.0575004,0.140001,0.0710001,-0.0574998,0.139999,0.0710001,0.0575004,-0.14,0.0710001,0.0574998,-0.14,0.0710001,-0.0575],
+    "metadata":{
+        "faces":6,
+        "version":3,
+        "generator":"io_three",
+        "uvs":1,
+        "vertices":8,
+        "type":"Geometry",
+        "materials":1
+    },
+    "uvs":[[0.701457,0.383737,0.82966,0.649082,0.158355,0.625672,0.290051,0.415365,0.803555,0.252101,0.189964,0.252102,0.189963,9.18085e-05,0.803553,9.05023e-05,0.999909,0.527856,0.823722,0.819306,0.152418,0.795896,9.05023e-05,0.508445]],
+    "name":"CubeGeometry",
+    "materials":[{
+        "opacity":1,
+        "depthTest":true,
+        "mapDiffuseRepeat":[1.001,1.001],
+        "mapDiffuse":"medipack.jpg",
+        "mapDiffuseAnisotropy":1,
+        "shading":"phong",
+        "colorDiffuse":[0.64,0.64,0.64],
+        "specularCoef":50,
+        "wireframe":false,
+        "depthWrite":true,
+        "blending":"NormalBlending",
+        "colorEmissive":[0,0,0],
+        "DbgIndex":0,
+        "visible":true,
+        "mapDiffuseWrap":["RepeatWrapping","RepeatWrapping"],
+        "DbgName":"Material",
+        "transparent":false,
+        "DbgColor":15658734,
+        "colorSpecular":[0.5,0.5,0.5]
+    }]
+}
