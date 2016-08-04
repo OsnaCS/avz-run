@@ -153,7 +153,8 @@ function createScene(complete) {
     fogInterval = setInterval(function() {
     	if (!menu && !pause) {
     		player.damage(myfog / MAX_FOG) * (HEALTH_PER_SECOND / 100);
-
+			player.damage(additional_healthloose);
+			
     		if (myfog < MAX_FOG) {
     			myfog += fogIncrement;
     		}
@@ -250,7 +251,7 @@ function loop() {
             requestAnimationFrame(loop);
 
             if (!nofog) scene.fog.density = myfog;
-            player.updateEnergy();
+            player.updateEnergy(); 
 
             // YOU NEED TO CALL THIS (srycaps)
             if (!special_html_input) {
@@ -340,8 +341,9 @@ function createRoom(callback) {
 						}
 						HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at final density you lose this much health			
 						controls.getObject().position.x = parseFloat(thisfloor.spawn.slice(1,thisfloor.spawn.indexOf(',')))*SKALIERUNGSFAKTOR;
-						controls.getObject().position.y = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.indexOf(',')+1,thisfloor.spawn.lastIndexOf(',')))*SKALIERUNGSFAKTOR;
-						controls.getObject().position.z = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.lastIndexOf(',')+1,thisfloor.spawn.indexOf(')')))*SKALIERUNGSFAKTOR;
+						controls.getObject().position.z = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.indexOf(',')+1,thisfloor.spawn.lastIndexOf(',')))*SKALIERUNGSFAKTOR;
+						controls.getObject().position.y = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.lastIndexOf(',')+1,thisfloor.spawn.indexOf(')')))*SKALIERUNGSFAKTOR;
+						firstTime == true;
     					set_fires(lights);
     					function lights () {
     						turn_on_lights(triggers);
@@ -473,7 +475,7 @@ function addTrigger (activated, xPos, zPos, size, action, fname, fparam1, fparam
 
 	var hohe = (size > PLAYERHEIGHT*3) ? size: PLAYERHEIGHT*3;
     var triggerGeom = new THREE.BoxGeometry(size,hohe,size);
-    var mat = new THREE.MeshBasicMaterial({ transparent: false, opacity: 0, depthWrite: false, color:0xFFFFFF});
+    var mat = new THREE.MeshBasicMaterial({ transparent: triggerstransparent, opacity: 0, depthWrite: false, color:0xFFFFFF});
     var triggerMesh = new THREE.Mesh(triggerGeom,mat);
     var trigger = new GameObject(triggerMesh,action,TYPE_TRIGGER);
 
@@ -487,7 +489,6 @@ function addTrigger (activated, xPos, zPos, size, action, fname, fparam1, fparam
 			if (triggers[i].ind === index) {
 				triggers[i].obj = trigger;
 				thisone = triggers[i];
-				alert(thisone.fname);
 			}
 		}
 	}
@@ -525,9 +526,9 @@ function enableTrigger(index) {
 			triggers[i].enabled = true;
 			var functPtr = eval(triggers[i].fname);
 
-			if (triggers[i].fparam1 === "") addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, functPtr, triggers[i].fname, "", "", triggers[i].followup, triggers[i].ind, true)
-				else if (triggers[i].fparam2 === "") addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1), triggers[i].fname, triggers[i].fparam1, "", triggers[i].followup, triggers[i].ind, true)
-					else addTrigger(triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1, triggers[i].fparam2), triggers[i].fname, triggers[i].fparam1, triggers[i].fparam2, triggers[i].followup, triggers[i].ind, true)
+			if (triggers[i].fparam1 === "") addTrigger(true, triggers[i].xpos, triggers[i].zpos, triggers[i].siz, functPtr, triggers[i].fname, "", "", triggers[i].followup, triggers[i].ind, true)
+				else if (triggers[i].fparam2 === "") addTrigger(true, triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1), triggers[i].fname, triggers[i].fparam1, "", triggers[i].followup, triggers[i].ind, true)
+					else addTrigger(true, triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1, triggers[i].fparam2), triggers[i].fname, triggers[i].fparam1, triggers[i].fparam2, triggers[i].followup, triggers[i].ind, true)
 
 			console.log(triggers[i].fname+"-trigger enabled");
 		}
