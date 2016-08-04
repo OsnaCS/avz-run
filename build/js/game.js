@@ -151,7 +151,7 @@ function createScene(complete) {
     	if (!menu && !pause) {
     		player.damage(myfog / MAX_FOG) * (HEALTH_PER_SECOND / 100);
 			player.damage(additional_healthloose);
-			
+
     		if (myfog < MAX_FOG) {
     			myfog += fogIncrement;
     		}
@@ -247,7 +247,10 @@ function loop() {
             requestAnimationFrame(loop);
 
             if (!nofog) scene.fog.density = myfog;
-            player.updateEnergy(); 
+             if(myfog >= 0.009){
+                setTimeout(coughSound, 3000);
+            }
+            player.updateEnergy();
 
             // YOU NEED TO CALL THIS (srycaps)
             if (!special_html_input) {
@@ -306,7 +309,7 @@ function move(){
         var deltaTime = clock.getDelta();
 
         moveObject(static_obj[roboternum].msh , roboPosX, roboPosY, roboPosZ, 0*SKALIERUNGSFAKTOR, 0*SKALIERUNGSFAKTOR, 9*SKALIERUNGSFAKTOR, 1000, deltaTime);
-            
+
     }
 }
 
@@ -318,29 +321,29 @@ function createRoom(callback) {
         createAllSegments(psegments);
         function psegments () {
     		PutSegments(doors);
-						
+
     		function doors () {
     			door_in_doors(objects);
     			function objects() {
-					
+
     				objects_in_spawns(fires);
     				function fires() {
 						if (!nofog) {
 							console.log("Max-Fog auf diesem Level: "+allfloors[floornumber-1].maxfog)
 							MAX_FOG = allfloors[floornumber-1].maxfog; if (godmode) {MAX_FOG = 0.005};
-							myfog = allfloors[floornumber-1].startfog; if (godmode) {myfog = 0.0002}; 
+							myfog = allfloors[floornumber-1].startfog; if (godmode) {myfog = 0.0002};
 							fogTime = allfloors[floornumber-1].fogtime; if (godmode) {fogTime = 1200};  //siehe oben
 
 							fogIncrement= MAX_FOG/(fogTime*1000/10) ;
-							
+
 							scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
 						}
-						HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at final density you lose this much health			
+						HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at final density you lose this much health
 						controls.getObject().position.x = parseFloat(allfloors[floornumber-1].spawn.slice(1,allfloors[floornumber-1].spawn.indexOf(',')))*SKALIERUNGSFAKTOR;
 						controls.getObject().position.z = parseFloat(allfloors[floornumber-1].spawn.slice(allfloors[floornumber-1].spawn.indexOf(',')+1,allfloors[floornumber-1].spawn.lastIndexOf(',')))*SKALIERUNGSFAKTOR;
 						controls.getObject().position.y = parseFloat(allfloors[floornumber-1].spawn.slice(allfloors[floornumber-1].spawn.lastIndexOf(',')+1,allfloors[floornumber-1].spawn.indexOf(')')))*SKALIERUNGSFAKTOR;
 						firstTime == true;
-						
+
     					set_fires(lights);
     					function lights () {
     						turn_on_lights(triggers);
@@ -379,9 +382,9 @@ function createRoom(callback) {
 function resetScene(callback) {
     scene = null;
     scene= new THREE.Scene();
-	
 
-	
+
+
     // var camPos = new THREE.Vector3(0, PLAYERHEIGHT + PLAYERHEIGHT * 0.4, 0);
 	// controls = null;
     // controls = new THREE.PointerLockControls(camera, camPos);
@@ -405,17 +408,17 @@ function resetScene(callback) {
     var skyMesh = new THREE.Mesh(skyGeom,skyMat);
     addtoscene(skyMesh);
 	callback();
-		
+
 }
 
 
 function recreateRoom() {
 	//lösche erst alle segments, doors, objects, fires, lights, triggers. Dann calle createRoom/init
-	
+
     empty_scene(reset);
-	
+
 	function reset() {
-		
+
 		resetScene(octrem);
 		function octrem () {
 			octree = null;
@@ -437,8 +440,8 @@ function recreateRoom() {
 			console.log("Recreating everything...");
 			function cont (){pause = false;
 				requestAnimationFrame(loop);
-			}	
-			// cont();			
+			}
+			// cont();
 			createRoom(cont);
 		}
 	}

@@ -61,3 +61,7 @@ function outOfBreathSound(){
 function gameOverSound(){
     playSound(gameOver_Sound);
 }
+
+function coughSound(){
+    playSound(cough_Sound);
+}
