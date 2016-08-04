@@ -1,10 +1,56 @@
+// Vertex Shader
+var smokeVertexShader = [
+    'attribute float shift;',
+    'uniform float time;',
+    'uniform float size;',
+    'uniform float lifetime;',
+    'uniform float projection;',
+    'varying float progress;',
+    'float cubicOut( float t ) {',
+    'float f = t - 1.0;',
+    'return f * f * f + 1.0;',
+    '}',
+    'void main() {',
+    'progress = fract(time * 2. / lifetime + shift);',
+    'float eased = cubicOut(progress);',
+    'vec3 pos = vec3(position.x, position.y + eased, position.z);',
+    'gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.);',
+    'gl_PointSize = (projection * size) / gl_Position.w;',
+    '}',
+].join('\n');
+
+// Fragment Shader
+var smokeFragmentShader = [
+    'uniform sampler2D texture;',
+    'uniform vec3 fogColor;',
+    'uniform float fogDensity;',
+    'varying float progress;',
+    'void main() {',
+    'vec3 color = vec3( 1. );',
+
+    // fog support
+    'float depth = (gl_FragCoord.z / gl_FragCoord.w)+75.0;',
+    'depth = depth * fogDensity * 3.0;',
+    'gl_FragColor = texture2D( texture, gl_PointCoord ) * vec4( color, .3 * ( 1. - progress ))/depth;',
+    '}',
+].join('\n');
+
+var smokeTexture;
+var NUM_OF_PARTICLE = 28;
+var textureWasLoaded = false;
+
+function loadSmokeTexture(){
+    var smokeTextureLoader = new THREE.TextureLoader();
+    smokeTexture = smokeTextureLoader.load('/build/levels/materials/textures/smoke.png');
+}
+
 function addSmoke(x, y, z) {
-    var textureLoader = new THREE.TextureLoader();
+    if(!textureWasLoaded){
+        loadSmokeTexture();
+        textureWasLoaded = true;
+    }
+
     var smoke,
-        NUM_OF_PARTICLE = 32,
-        vertexShader,
-        fragmentShader,
-        texture,
         uniforms,
         material,
         geometry = new THREE.BufferGeometry(),
@@ -12,44 +58,6 @@ function addSmoke(x, y, z) {
         shift = new Float32Array(NUM_OF_PARTICLE),
         i;
 
-    // Vertex Shader
-    vertexShader = [
-        'attribute float shift;',
-        'uniform float time;',
-        'uniform float size;',
-        'uniform float lifetime;',
-        'uniform float projection;',
-        'varying float progress;',
-        'float cubicOut( float t ) {',
-        'float f = t - 1.0;',
-        'return f * f * f + 1.0;',
-        '}',
-        'void main() {',
-        'progress = fract(time * 2. / lifetime + shift);',
-        'float eased = cubicOut(progress);',
-        'vec3 pos = vec3(position.x, position.y + eased, position.z);',
-        'gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.);',
-        'gl_PointSize = (projection * size) / gl_Position.w;',
-        '}',
-    ].join('\n');
-
-    // Fragment Shader
-    fragmentShader = [
-        'uniform sampler2D texture;',
-        'uniform vec3 fogColor;',
-        'uniform float fogDensity;',
-        'varying float progress;',
-        'void main() {',
-        'vec3 color = vec3( 1. );',
-
-        // fog support
-        'float depth = (gl_FragCoord.z / gl_FragCoord.w)+10.0;',
-        'depth = depth * fogDensity * 3.0;',
-        'gl_FragColor = texture2D( texture, gl_PointCoord ) * vec4( color, .3 * ( 1. - progress ))/depth;',
-        '}',
-    ].join('\n');
-
-    texture = textureLoader.load('/build/levels/materials/textures/smoke.png');
     uniforms = {
         time: {
             type: 'f',
@@ -61,7 +69,7 @@ function addSmoke(x, y, z) {
         },
         texture: {
             type: 't',
-            value: texture
+            value: smokeTexture
         },
         lifetime: {
             type: 'f',
@@ -75,8 +83,8 @@ function addSmoke(x, y, z) {
         fogDensity: {type: "f", value: scene.fog.density},
     };
     material = new THREE.ShaderMaterial({
-        vertexShader: vertexShader,
-        fragmentShader: fragmentShader,
+        vertexShader: smokeVertexShader,
+        fragmentShader: smokeFragmentShader,
         uniforms: uniforms,
         blending: THREE.AdditiveBlending,
         transparent: true,

@@ -8,35 +8,54 @@ var activeObject;
 
 var lockOpen = false; // pin pad boolean
 
-var outlineMesh=null;
+var outlineMesh = null;
 
-// pin pad variables.... may not be stored here?
+var extinguisherParticleSystem;
+var coveredmouth = false;
+var additional_healthloose = 0;
+var heavybreath = false;
+
+// pin pad variables initialisierung
 var pin = new Array(4);
 var transponder_config = new Array(2);
 var pin_pos = 0;
+var ch_pos = 0;
+//correct_pin und correct_transponder werden pro level aus der levels.xml ausgelesen.
 
-var CORRECT_PIN = ['0','0','4','2'];
-var CORRECT_TRANSPONDER = ['4','3'];
+
 var TYPE_INTERACTABLE = 0;
 var TYPE_FIRE = 1;
-var TYPE_EXIT = 2;
 var TYPE_TRIGGER = 3;
 var FADE_TIME = 1200;
 
+var special_html_input = false;
+
 var interObj;
 
+var viewDirection = new THREE.Vector3();
 document.addEventListener( 'click', onMouseClick, false );
+var interIter;
+var interIter2;
 
 function interactionLoop() {
 
     //this gets called once per loop. shoots a ray in viewdirection
-    interactionRayCaster.set(controls.getObject().position, controls.getDirection());
-    octreeInteractions = octree.search( interactionRayCaster.ray.origin, interactionRayCaster.ray.far, true, interactionRayCaster.ray.direction );
+    interactionRayCaster.set(viewDirection.copy(controls.getObject().position), controls.getDirection().normalize());
+    octreeInteractions = octree.search( interactionRayCaster.ray.origin, interactionRayCaster.far, true, interactionRayCaster.ray.direction );
     interactions = interactionRayCaster.intersectOctreeObjects( octreeInteractions);
+
+    //if(interactions.length>0) console.log(getGameObject(interactions[0].object));
+    // console.log(interactions);
+
 
     //if it intersects something which is interactable we call its interaction function
     if(interactions.length>0) {
-        interObj= getGameObject(interactions[0].object);
+        for(interIter = 0; interIter<interactions.length;interIter++) {
+            interObj = getGameObject(interactions[interIter].object)
+            if (interObj instanceof GameObject) break;
+        }
+
+
         if( interObj.type==TYPE_INTERACTABLE) {
 
             if(activeObject!=interObj) {
@@ -58,6 +77,13 @@ function interactionLoop() {
 
 
             }
+        } else {
+            //remove outline mesh if there are no interactive items found
+            activeObject=null;
+            if(outlineMesh!=null) {
+                scene.remove(outlineMesh);
+                outlineMesh=null;
+            }
         }
     } else {
         //remove outline mesh if there are no interactive items found
@@ -69,33 +95,37 @@ function interactionLoop() {
     }
             //reaching the exit
     if (interactions.length>0) {
-        interObj = getGameObject(interactions[0].object);
-        if(interObj.type==TYPE_EXIT){
-        // nextLevel(); TODO: implement somewhere
+        for(interIter2 = 0; interIter2<interactions.length;interIter2++) {
+            interObj = getGameObject(interactions[interIter2].object)
+            if (interObj instanceof GameObject) break;
         }
     }
     //
     if(interactions.length>0) {
-        interObj = getGameObject(interactions[0].object);
-        if(interactions[0].object.type==TYPE_FIRE) {
+
+        for(i = 0; i<interactions.length;i++) {
+            interObj = getGameObject(interactions[i].object)
+            if (interObj instanceof GameObject) break;
+        }
+        if(interObj.type==TYPE_FIRE) {
             //console.log("interact");
             //this might be changed..
             if(activeObject!=interObj) {
-                scene.remove(outlineMesh);
-                outlineMesh=null;
+                //scene.remove(outlineMesh);
+                //outlineMesh=null;
                 activeObject= interObj;
 
 
             } else {
 
                 activeObject= interObj;
-                if(outlineMesh==null) {
+                /*if(outlineMesh==null) {
                     outlineMesh = activeObject.mesh.clone();
                     outlineMesh.material = outlineMaterial;
                     outlineMesh.position.copy(activeObject.mesh.position);
                     outlineMesh.is_ob = true;
                     scene.add(outlineMesh);
-                }
+                }*/
 
 
             }
@@ -133,16 +163,39 @@ GameObject = function(mesh, interaction, type, name) {
         outlineMesh = null;
 
         // prohibit further interaction by removing from terrain
-        for (i = 0; terrain[i] != this && i < terrain.length; i++);
-        if (terrain[i] == this) terrain.splice(i,1);
-
+		console.log("deleted item")
+		delGameObject(this.mesh);
     }
+
+}
+
+function nextLevel() {
+	lockOpen = false;
+	transponder_config = new Array(2);
+	pin[0] = null; pin[1] = null; pin[2] = null; pin[3] = null; pin = new Array(4); pin_pos = 0; 
+	document.getElementById("pinDisplay").innerHTML = "PIN EINGEBEN";
+	document.getElementById("pinDisplayCH").innerHTML = "key lock:";
+	
+	transponder_config[0] = null; transponder_config[1] = null; ch_pos = 0;
+	if ((selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "transponder"))
+	{
+		selectedItem.activeTransponder = false;
+		//TODO: ist das wirklich nur für selectedItem, muss ich das also für die anderen noch tun?
+	}
+	
+    floornumber-=1;
+	pause=true;
+    recreateRoom();
+}
+
+function delGameObject(mesh) {
+    octree.remove(mesh);
 
 }
 
 function getGameObject(mesh){
     for (var i = 0;i<octreeObjects.length;i++) {
-        if( octreeObjects[i].mesh != undefined &&octreeObjects[i].mesh == mesh) return octreeObjects[i];
+        if(octreeObjects[i] != null && octreeObjects[i].mesh != undefined && octreeObjects[i].mesh == mesh) return octreeObjects[i];
     }
     return mesh;
 }
@@ -155,16 +208,16 @@ function onMouseClick() {
 
 function pickUpItem() {
     player.pickUp(this);
-    //pickUpSound();
+    pickUpSound();
 }
 
 function nix() {
-
+	//damit ein interactible auch ohne interaction angezeigt werden kann braucht es diese dummy-funktion
 }
 
 function destroy(){
-    if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
-        //damageDoorSound();
+    if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "axt")){
+        damageDoorSound();
         this.delFromScene();
         console.log('destroyed');
         player.delActItem();
@@ -175,7 +228,7 @@ function destroy(){
 }
 
 function openopened() {
-    doorSound(); //TODO: das klappt nicht, sorry.
+    doorSound();
     if(this.open) {
         this.mesh.rotateY(Math.PI/2.0);
     }
@@ -183,11 +236,15 @@ function openopened() {
         this.mesh.rotateY(-Math.PI/2.0);
     }
     this.open = !this.open;
+
+    scene.remove(outlineMesh);
+    outlineMesh = null;
+    activeObject = null;
 }
 
 
 function open() {
-    doorSound(); //TODO: das klappt nicht, sorry.
+    doorSound();
     if(!this.open) {
         this.mesh.rotateY(Math.PI/2.0);
     }
@@ -195,22 +252,58 @@ function open() {
         this.mesh.rotateY(-Math.PI/2.0);
     }
     this.open = !this.open;
+
+    // mesh is removed
+    scene.remove(outlineMesh);
+    outlineMesh = null;
+    activeObject = null;
+
+}
+
+function open_after_ext() {
+	var notext = false;
+	//welches feuer gelöscht sein muss ist hartgecoded, sorry. //TODO: ändern.
+	for (var i = 0; i < fires.length; i++) {
+		if (fires[i].index == "exit") notext = true;
+	}
+	if (notext) {
+		showThoughts("Aua, ich stehe in Feuer, aua! Da öffne ich doch keine Tür!",5000);
+	} else {
+		doorSound();
+		if(!this.open) {
+			this.mesh.rotateY(Math.PI/2.0);
+		}
+		else {
+			this.mesh.rotateY(-Math.PI/2.0);
+		}
+		this.open = !this.open;
+
+		// mesh is removed
+		scene.remove(outlineMesh);
+		outlineMesh = null;
+		activeObject = null;
+	}
+}
+
+function getSegmentFromIntItem(intItem) {
+	var j = -1;
+	for (i = 0; i < interact_obj.length; i++) {
+		if (interact_obj[i].interIt == intItem) {j = i; break;}
+	}
+	if (j > -1) {
+		var d = interact_obj[j];
+		return d;
+	} else {
+		alert("Something went terribly wrong.")
+	}
 }
 
 function damageDoor() {
-    if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
-		var j = -1;
-		for (i = 0; i < interact_obj.length; i++) {
-			if (interact_obj[i].interIt == this) {j = i; break;}
-		}
-		if (j > -1) {
-			var d = interact_obj[j];
-			addObjectViaName("halbbrokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "destroyDoor");
-			remove_interactible(j);
-			this.delFromScene();
-		} else {
-			alert("Something went terribly wrong.")
-		}
+    if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "axt")){
+		var d = getSegmentFromIntItem(this);
+		addObjectViaName("halbbrokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "destroyDoor", d.stretchx);
+		remove_interactible(d);
+		this.delFromScene();
         damageDoorSound();
     }else{
         showThoughts("Wie könnte ich diese Tür wohl öffnen?",5000);
@@ -218,21 +311,13 @@ function damageDoor() {
 }
 
 function destroyDoor() {
-    if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "axt")){
-		var j = -1;
-		for (i = 0; i < interact_obj.length; i++) {
-			if (interact_obj[i].interIt == this) {j = i; break;}
-		}
-		if (j > -1) {
-			var d = interact_obj[j];
-			addObjectViaName("brokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "");
-			remove_interactible(j);
-			this.delFromScene();
-			player.delActItem();
-			showThoughts("Die Tür ist kaputt, die Axt jetzt leider auch.",3000);
-		} else {
-			alert("Something went terribly wrong.")
-		}
+    if((this.type == TYPE_INTERACTABLE) && (selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "axt")){
+		var d = getSegmentFromIntItem(this);
+		addObjectViaName("brokentur", "door", d.x, d.y, d.z, d.skale, d.rot, "", d.stretchx);
+		remove_interactible(d);
+		this.delFromScene();
+		player.delActItem();
+		showThoughts("Die Tür ist kaputt, die Axt jetzt leider auch.",3000);
         damageDoorSound();
     }else{
         showThoughts("Das Loch ist noch nicht groß genug... wie könnte ich es wohl vergrößern?",5000);
@@ -242,7 +327,7 @@ function destroyDoor() {
 
 function openLockedDoor() {
 	if(lockOpen){
-        //doorSound();
+        doorSound();
 		if(!this.open) {
 	        this.mesh.rotateY(Math.PI/2.0);
 	        this.open = !this.open;
@@ -251,7 +336,9 @@ function openLockedDoor() {
 	        this.mesh.rotateY(-Math.PI/2.0);
 	        this.open = !this.open;
 	    }
-    }
+    } else {
+		showThoughts("Noch zu...")
+	}
 
 }
 
@@ -264,7 +351,7 @@ function dFire(){
 
 // Attach this function to the fire
 function extinguish() {
-	if(this.type == TYPE_FIRE && (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "loscher")){
+	if(this.type == TYPE_FIRE && (selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "feuerloescher")){
         // activeObject must be saved so that the dFire function is not influence
         // be new activeObject selected during the delay
         tempActObj = activeObject;
@@ -273,67 +360,48 @@ function extinguish() {
         extinguisherSound();
 
         setTimeout(dFire, 1000);
-    	console.log('extinguished');
-    	player.delActItem();
+        console.log('extinguished');
+        player.delActItem();
     }
     else{
         console.log('nicht anwendbar');
     }
 }
 
+function pfortnerliste() {
+    showThoughts("Noch austragen und fertig!",5000);
+}
 
 // ***** robo lab pin pad *****
 
 // open pin pad image and its HTML
 function enterPin() {
 
-    pin_pos = 0;
-
-
-    // get object out of focus
-    scene.remove(outlineMesh);
-    outlineMesh = null;
-    activeObject = null;
-
     // pause interaction loop
-    menu = true;
+    special_html_input = true;
 
     // show pin pad and make default pause screen invisible
-    $("#pinPad").css("z-index", 20);
-    $("#blocker").css("z-index", 0);
     $("#pinPad").show();
 
     // exit pointerLock so player can use cursor
     document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
-    console.log(document.exitPointerLock);
     document.exitPointerLock();
-
 }
 
 // return to game from pin pad
 function exitPinPad() {
 
-    // start loop again
-    menu = false;
-
-    // hide pin pad, reset blocker
-    $("#blocker").css("z-index", 20);
-    $("#pinPad").css("z-index", 0);
     $("#pinPad").hide();
-
     // determine if entered code was correct
-    if (CORRECT_PIN[0] == pin[0] && CORRECT_PIN[1] == pin[1] && CORRECT_PIN[2] == pin[2] && CORRECT_PIN[3] == pin[3]) lockOpen = true;
-    else lockOpen = false;
+    if (allfloors[floornumber-1].correctpin[0] == pin[0] && allfloors[floornumber-1].correctpin[1] == pin[1] && allfloors[floornumber-1].correctpin[2] == pin[2] && allfloors[floornumber-1].correctpin[3] == pin[3]) {
+        lockOpen = true;
+        correctSound();
+    } else {
+        lockOpen = false;
+        failedSound();
+    }
 
-    // REPLACE WITH RESPECTIVE SOUND CALLS
-    if (lockOpen) correctSound();
-    else failedSound();
-
-    // reset delta
-    prevTime = performance.now();
-
-    //ask browser to lock the pointer again
-    element.requestPointerLock();
+    backToGame();
 
 }
 
@@ -366,8 +434,6 @@ function pinPad(pinvalue) {
 
             default:
 
-
-
                 if (pin_pos<4) { // unless 4 digits have already been entered
                     pin[pin_pos] = pinvalue; // set current digit to entered number
                     pin_pos++;
@@ -385,17 +451,10 @@ function pinPad(pinvalue) {
 
 function enterCH() {
 
-    if(this.type == TYPE_INTERACTABLE ){ //&& selectedItem.name == "transponder"){ //TODO change
-        pin_pos = 0;
-        // get object out of focus
-        scene.remove(outlineMesh);
-        outlineMesh = null;
-        activeObject = null;
+    if(this.type == TYPE_INTERACTABLE && (selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "transponder")){
 
-        menu = true;
+        special_html_input = true;
 
-        $("#compHack").css("z-index", 20);
-        $("#compHack").css("display","block");
         $("#compHack").show();
 
         document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
@@ -403,8 +462,10 @@ function enterCH() {
 
         document.exitPointerLock();
     } else {
-        console.log(selectedItem.name);
+
+        selectedItem != null  && selectedItem.name != undefined && console.log(selectedItem.name);
         console.log('nicht anwendbar');
+		showThoughts("Hm, da ist ein Programm von der Raumverwaltung geöffnet...")
     }
 
 }
@@ -412,15 +473,10 @@ function enterCH() {
 
 function exitCH() {
 
-    $("#blocker").css("z-index", 20);
-    $("#compHack").css("z-index", 0);
     $("#compHack").hide();
 
-    // Ask the browser to lock the pointer
-    menu = false;
-
     // determine if entered code was correct
-    if (CORRECT_TRANSPONDER[0] == transponder_config[0] && CORRECT_TRANSPONDER[1] == transponder_config[1]){
+    if (allfloors[floornumber-1].correcttransponder[0] == transponder_config[0] && allfloors[floornumber-1].correcttransponder[1] == transponder_config[1]){
         correctSound();
         selectedItem.activeTransponder = true;
     }
@@ -429,11 +485,7 @@ function exitCH() {
         selectedItem.activeTransponder = false;
     }
 
-
-    // reset delta
-    prevTime = performance.now();
-
-    element.requestPointerLock();
+   backToGame();
 }
 
 function compHack(hackButtonValue) {
@@ -448,7 +500,7 @@ function compHack(hackButtonValue) {
 
                 transponder_config[0] = null;
                 transponder_config[1] = null;
-                pin_pos = 0;
+                ch_pos = 0;
                 document.getElementById("pinDisplayCH").innerHTML = "key lock:";
                 break;
 
@@ -459,9 +511,9 @@ function compHack(hackButtonValue) {
 
             default:
 
-                if (pin_pos<2) {
-                    transponder_config[pin_pos] = hackButtonValue;
-                    pin_pos++;
+                if (ch_pos<2) {
+                    transponder_config[ch_pos] = hackButtonValue;
+                    ch_pos++;
                     document.getElementById("pinDisplayCH").innerHTML = "key lock: " + transponder_config.join("");
                 }
                 break;
@@ -469,49 +521,71 @@ function compHack(hackButtonValue) {
         }
 }
 
+function backToGame() {
 
+    // reset delta
+    prevTime = performance.now();
 
+    //ask browser to lock the pointer again
+    var element = document.getElementById('world');
+    element.requestPointerLock();
 
-// Attach this function to the sink
-function coverMouth(){
-    if(this.type == TYPE_INTERACTABLE&& (selectedItem != null) && (objectFilenameToName(selectedItem.name) == "lappen")){
-        startHeavyBreathing();
-        HEALTH_PER_SECOND = HEALTH_PER_SECOND / 2;
-        //addItem((newItemList[31]), playerPos[1], playerPos[2] + 10, playerPos[3], 2, 270, true, pickUpItem);
-        console.log('covered mouth');
-        player.delActItem();
-    }else{
-        console.log('nicht anwendbar');
-    }
+    // activate controls
+    controls.enabled = true;
+    special_html_input = false;
+
+    // remove focus from the object that was just used again
+    scene.remove(outlineMesh);
+    outlineMesh = null;
+    activeObject = null;
 }
 
 
 // Attach this function the door to be opened by a transponder
 function openTransponderDoor(){
-
-    if(selectedItem.activeTransponder){
-
+    if(selectedItem != null && (selectedItem.name != undefined) && selectedItem.activeTransponder){
             doorSound();
-            if(!this.open) {
+			var d = getSegmentFromIntItem(this);
+			var kind = "glastur"
 
-                this.mesh.rotateY(Math.PI/2.0);
-                this.open = !this.open;
-            }
+			if (objectFilenameToName(d.filename) == "holztuer") kind = "holztur";
+			
+			addObjectViaName(kind, "door", d.x, d.y, d.z, d.skale, d.rot-1, "openopened", d.stretchx);
+			remove_interactible(d);
+			this.delFromScene();
+            // if(!this.open) {
+                // this.mesh.rotateY(Math.PI/2.0);
+                // this.open = !this.open;
+            // }
 
-            else {
-                this.mesh.rotateY(-Math.PI/2.0);
-                this.open = !this.open;
-            }
-
+            // else {
+                // this.mesh.rotateY(-Math.PI/2.0);
+                // this.open = !this.open;
+            // }
             // transponder can only be used once
             selectedItem.activeTransponder = false;
             player.delActItem();
 
     } else{
         doorLockedSound();
-        console.log('nicht anwendbar');
-        // play doorLocked-Sound
-        showThoughts("Verschlossen. Vielleicht kann ich die Tür mit einem Transponder öffnen.",5000);
+		if(selectedItem != null && objectFilenameToName(selectedItem.name) == "transponder")
+		{
+			console.log('Kein Transponder mit Code');
+			showThoughts("Hm, dieser Transponder scheint noch nicht für diese Tür eingestellt zu sein...",5000)
+		} else {
+			console.log('kein Tranponder');
+			showThoughts("Verschlossen. Vielleicht kann ich die Tür mit einem Transponder öffnen.",5000);
+		}
+    }
+}
+
+//
+function robotControll(){
+    robolab = !robolab;
+    if(robolab){
+        showThoughts("Ich habe den Roboter wieder angeschaltet",5000);
+    } else{
+        showThoughts("Ich habe den Roboter ausgeschaltet",5000);
     }
 }
 
@@ -541,7 +615,64 @@ function hideThoughts() {
     showInterval = clearInterval();
 }
 
+function success() {
+    console.log("YEY");
+    $("#endScreen").fadeIn(5000);
+    $(".GUI").fadeOut(5000);
+}
 
+function useMedi(){
+    if((selectedItem != null) && (selectedItem.name != undefined) && ((objectFilenameToName(selectedItem.name) == "ziegel") || (objectFilenameToName(selectedItem.name) == "medipack"))){ //das sollte definitiv anders TODO
+		//play some "ugh, healed"-sound?
+		showThoughts("Ahhh, das tut gut!", 5000);
+		player.health = MAX_HEALTH;
+        console.log('fully healed');
+        player.delActItem();
+	}
+}
+
+function endRobos() {
+	robolab = false;
+}
+
+function coverMouth(){
+    if((selectedItem != null) && (selectedItem.name != undefined) && (objectFilenameToName(selectedItem.name) == "schwamm")){
+        startHeavyBreathing();
+		heavybreath = true;
+        additional_healthloose = 0;
+        //addItem((newItemList[31]), playerPos[1], playerPos[2] + 10, playerPos[3], 2, 270, true, pickUpItem);
+        console.log('covered mouth');
+        player.delActItem();
+        return true;
+    }else{
+        return false;
+    }
+}
+
+function makelessfog() {
+		if (!coveredmouth) {
+			if (!nofog) myfog -= 0.008; if (myfog < 0.0001) myfog = 0.0001;
+		} else {
+			coveredmouth = false;
+		}
+        console.log("Der Nebel lichtet sich");
+		additional_healthloose = 0;
+		if (heavybreath) { stopHeavyBreathing(); heavybreath = false;}
+}
+
+function makemorefog() {
+        console.log("Der Nebel dichtet sich");
+        if (coverMouth()) {
+			showThoughts("Das sollte mir helfen!",5000);
+			coveredmouth = true;
+		}
+        else {
+			additional_healthloose = MAX_HEALTH/2000;
+			if (!coveredmouth) if (!nofog) myfog += 0.008;
+			showThoughts("Der Rauch ist zu dicht, ich kann kaum atmen. Vielleicht finde ich etwas, das ich mir vor den Mund halten kann. Besser raus hier.",5000)
+			coveredmouth = false;
+		}
+}
 
 
 function extinguisherAnimation(){
@@ -645,13 +776,14 @@ function extinguisherAnimation(){
         fog: true
     });
 
-    var particleSystem = new THREE.Points(particles, material);
+    extinguisherParticleSystem = new THREE.Points(particles, material);
 
-    scene.add(particleSystem);
+    scene.add(extinguisherParticleSystem);
 
     function deleteExtinguisherParticles(){
-        scene.remove(particleSystem);
+        scene.remove(extinguisherParticleSystem);
     }
 
     setTimeout(deleteExtinguisherParticles, 1000);
 }
+

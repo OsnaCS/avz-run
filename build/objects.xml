@@ -1,54 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects ObjectPath="/avz_model/materials/objects/" IconPath="/avz_model/inventar">
 	<interactible>
-		<object name="axt" path="axt.json" scale="1.2" icon="axt.png"/>
-		<object name="transponder" path="transponder.json" scale="1.2" icon="transponder.png"/>
-		<object name="lappen" path="lappen/lappen.json" scale ="1.2" icon="lappen.png" />
-		<object name="schwamm" path="schwamm/schwamm.json" scale ="1.2" icon="schwamm.png"/>
-		<object name="loscher" path="feuerloescher.json" scale="1" icon="feuerloscher.png"/>
-
-		<object name="roboter" path="roboter.json" scale="1" icon="icon.jpg"/>
-		<object name="klo" path="klo.json" scale="1" icon="icon.jpg"/>
-		<object name="klo_und_tuer" path="klo_und_tuer.json" scale="1" icon="icon.jpg"/>
-		<object name="computer" path="computer/computer.json" scale="1" icon="icon.jpg"/>
-		<object name="computer_message" path="computer/computer_mit_nachricht.json" scale="1" icon="icon.jpg"/>
-		<object name="tisch_pc" path="schreibtisch_und_pc.json" scale="1" icon="icon.jpg" />
-		<object name="becken" path="waschbecken.json" scale="1" icon="icon.jpg"/>
+		<object name="axt" path="axt.json" scale="1.2" icon="axt.png" smooth="1" />
+		<object name="transponder" path="transponder.json" scale="1.2" icon="transponder.png" smooth="1" />
+		<object name="lappen" path="lappen/lappen.json" scale ="1.2" icon="lappen.png"  smooth="1" />
+		<object name="schwamm" path="schwamm/schwamm.json" scale ="1.2" icon="schwamm.png" smooth="1" />
+		<object name="loscher" path="feuerloescher.json" scale="1" icon="feuerloescher.png" smooth="1" />
+		<object path="ziegel/ziegel.json" name="medipack" scale="2"  smooth="1" icon="medipack.png"/>
+		
+		<object name="list" path="list/pfortnerliste.json" scale="1" icon="icon.jpg" smooth="1"/> 
+		<object name="roboter" path="roboter.json" scale="1" icon="icon.jpg" smooth="1" />
+		<object name="evil_roboter" path="evil_roboter.json" scale="1" icon="icon.jpg" smooth="1" />
+		<object name="klo" path="klo.json" scale="1" icon="icon.jpg" smooth="1" />
+		<object name="klo_und_tuer" path="klo_und_tuer.json" scale="1" icon="icon.jpg" smooth="1" />
+		<object name="computer" path="computer/computer.json" scale="1" icon="icon.jpg" smooth="1" />
+		<object name="computer_message" path="computer/computer_mit_nachricht.json" scale="1" icon="icon.jpg" smooth="1" />
+		<object name="computer_hack" path="computer/computer_hack/computer_hack.json" scale="1" icon="icon.jpg" smooth="1" />
+		<object name="tisch_pc" path="schreibtisch_und_pc.json" scale="1" icon="icon.jpg"  smooth="1" />
+		<object name="becken" path="waschbecken.json" scale="1" icon="icon.jpg" smooth="1" />
+		<object path="pinpad.json" name="pinpad" scale="0.2"  smooth="1" icon="icon.jpg" />
 	</interactible>
 	<static>
-		<object path="pflanze.json" name="pflanze" scale="1" />
-		<object path="beamer.json" name="beamer" scale="1" />
-		<object path="tafel.json" name="tafel" scale="1" />
-		<object path="lichtschalter.json" name="switch" scale="1" />
-		<object path="muelleimer.json" name="eimer" scale="1" />
-		<object path="ohp.json" name="ohp" scale="0.5" />
-		<object path="buecherregal/buecherregal.json" name="regal" scale="1" />
-		<object path="ziegel/ziegel.json" name="ziegel" scale="1" />
-		<object path="stuhl.json" name="stuhl" scale="0.6" />
-		<object path="pult/Pult_Endversion.json" name="pult" scale ="1.1"/>
-		<object path="tisch.json" name="tisch" scale="0.9" />
-		<object path="wand_kaputt.json" name="wand_kaputt" scale="1" />
-		<object path="aufzug/aufzug.json" name="aufzug" interaction="0" scale ="1"/>
-		<object path="plakat/Brandschutzplakat.json" name="BSPlakat" scale ="1"/>
-		<object path="plakat/Europawahl.json" name="EPlakat" scale ="1"/>
-		<object path="plakat/Feuerplakat.json" name="FPlakat" scale ="1"/>
-		<object path="plakat/Hasenplakat.json" name="HPlakat" scale ="1"/>
-		<object path="plakat/Infotag.json" name="IPlakat" scale ="1"/>
-		<object path="plakat/Messe.json" name="MPlakat" scale ="1"/>
-		<object path="schutt/schutt.json" name="schutt" scale ="1"/>
-		<object path="schutt2/schutt2.json" name="schutt2" scale ="1"/>
-		<object path="steckdose.json" name="steckdose" scale="1" />
-		<object path="glastuerrahmen.json" name="glastuerrahmen" scale="1" />
+		<object path="pflanze.json" name="pflanze" scale="1"  smooth="1" />
+		<object path="beamer.json" name="beamer" scale="1"  smooth="1" />
+		<object path="tafel.json" name="tafel" scale="1"  smooth="1" />
+		<object path="lichtschalter.json" name="switch" scale="1"  smooth="1" />
+		<object path="muelleimer.json" name="eimer" scale="1"  smooth="1" />
+		<object path="ohp.json" name="ohp" scale="0.5"  smooth="1" />
+		<object path="buecherregal/buecherregal.json" name="regal" scale="1"  smooth="1" />
+		<object path="ziegel/ziegel.json" name="ziegel" scale="1"  smooth="1" />
+		<object path="stuhl.json" name="stuhl" scale="0.6"  smooth="1" />
+		<object path="pult/Pult_Endversion.json" name="pult" scale ="1.1" smooth="1" />
+		<object path="tisch.json" name="tisch" scale="0.9"  smooth="1" />
+		<object path="wand_kaputt.json" name="wand_kaputt" scale="1"  smooth="1" />
+		<object path="aufzug/aufzug.json" name="aufzug" interaction="0" scale ="1" smooth="1" />
+		<object path="plakat/Brandschutzplakat.json" name="BSPlakat" scale ="1" smooth="1" />
+		<object path="plakat/Europawahl.json" name="EPlakat" scale ="1" smooth="1" />
+		<object path="plakat/Feuerplakat.json" name="FPlakat" scale ="1" smooth="1" />
+		<object path="plakat/Hasenplakat.json" name="HPlakat" scale ="1" smooth="1" />
+		<object path="plakat/Infotag.json" name="IPlakat" scale ="1" smooth="1" />
+		<object path="plakat/Messe.json" name="MPlakat" scale ="1" smooth="1" />
+		<object path="schutt/schutt.json" name="schutt" scale ="1" smooth="1" />
+		<object path="schutt2/schutt2.json" name="schutt2" scale ="1" smooth="1" />
+		<object path="steckdose.json" name="steckdose" scale="1"  smooth="1" />
+		<object path="glastuerrahmen.json" name="glastuerrahmen" scale="1"  smooth="1" />
+		<object path="buerostuhl.json" name="buerostuhl" scale="1"  smooth="1" />
+		<object path="wc_code/wc_code.json" name="wc_code" scale="1"  smooth="0" />
+		<object path="energy_counter/energy_counter.json" name="energy_counter" scale="1"  smooth="0" /> 
 	</static>
 	<door>
-		<object name="klotur" path="tuer_klo.json" interaction="2" scale ="1.35"/>
-		<object name="glastur" path="tueren/glastuer.json" interaction="1" scale ="1"/>
-		<object name="holztur" path="tueren/holztuer.json" interaction="1" scale ="1"/>
-		<object name="halbbrokentur" path="tueren/tuer_halbkaputt.json" interaction="0" scale ="1"/>
-		<object name="brokentur" path="tueren/tuer_kaputt.json" interaction="1" scale ="1"/>
+		<object name="klotur" path="tuer_klo.json" scale ="1.35" smooth="1" />
+		<object name="glastur" path="tueren/glastuer.json" scale ="1" smooth="1" />
+		<object name="holztur" path="tueren/holztuer.json" scale ="1" smooth="1" />
+		<object name="halbbrokentur" path="tueren/tuer_halbkaputt.json" scale ="1" smooth="1" />
+		<object name="brokentur" path="tueren/tuer_kaputt.json" scale ="1" smooth="1" />
 	</door>
 	<lamp>
-		<object name="deckenlicht" path="deckenlicht.json" interaction="0" scale ="0.5"/>
-		<object name="kleinlicht" path="deckenlicht_klein.json" interaction="1" scale ="0.5"/>
+		<object name="deckenlicht" path="deckenlicht.json" scale ="0.5" smooth="1" />
+		<object name="kleinlicht" path="deckenlicht_klein.json" scale ="0.5" smooth="1" />
 	</lamp>
 </objects>

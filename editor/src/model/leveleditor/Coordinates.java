@@ -15,7 +15,7 @@ public class Coordinates {
 	private final double x;
 	private final double y;
 	
-	// Position des Punktes 
+	// Position des Punktes
 	private double posx;
 	private double posy;
 	
@@ -24,7 +24,7 @@ public class Coordinates {
 	private int angle;
 	
 	// Faktor, um den skaliert wird
-	private static int factor = 10;
+	private static int factor = 5;
 	
 	/**
 	 * Konstruktor für einen zweidimesionalen Punkt
@@ -49,23 +49,58 @@ public class Coordinates {
 		this.x = toCopy.getX();
 		this.posx = toCopy.getPosx();
 		
-		this.y = toCopy.getPosy();
+		this.y = toCopy.getY();
 		this.posy = toCopy.getPosy();
 		
 		this.angle = toCopy.getAngle();
 	}
-	/**
-	 * Gibt die aktuellen Koordinaten umgerechnet in int und skaliert zurück
-	 * @param factor Faktor, um den skaliert wird
-	 * @return int-Koordinaten
-	 */
-	public Point getScaledIntCoordinates() {
-		// Basis Trafo der Koordinatensysteme
-		int x = (int) ((factor * this.posx) + 0.5);
-		int y = (int) ((factor * this.posy) + 0.5);
-				
-		return new Point(x,y);
+
+	public Coordinates(Coordinates toCopy, int angle){
+		this(toCopy);
+		this.setAngle(angle);
 	}
+
+	public Coordinates(double x, double y, int angle){
+		this(x,y);
+		//System.out.println(x+" "+y);
+		this.setAngle(angle);
+	}
+//	/**
+//	 * Gibt die aktuellen Koordinaten umgerechnet in int und skaliert zurück
+//	 * @param factor Faktor, um den skaliert wird
+//	 * @return int-Koordinaten
+//	 */
+	public Point getScaledIntCoordinates(Coordinates p) {
+		// Basis Trafo der Koordinatensysteme
+		double[][] translateHin = {{1, 0, -p.getPosx()}, 
+				{0, 1, -p.getPosy()},{0,0,1}};
+		
+		Matrix translateTo = new Matrix(translateHin);
+		
+		double[][] translate = {{1, 0, p.getPosx()}, 
+				{0, 1, p.getPosy()},{0,0,1}};
+		
+		Matrix translateFrom = new Matrix(translate);
+		
+		double[][] scale = {{factor, 0, 0}, 
+				{0, factor, 0},{0,0,1}};
+		
+		Matrix scaling = new Matrix(scale);
+		
+		double[][] arrPoint = {{this.posx}, 
+				{this.posy},{1}};
+		
+		Matrix matPoint = new Matrix(arrPoint);
+		
+		matPoint = translateTo.multiply(matPoint);
+		matPoint = scaling.multiply(matPoint);
+		matPoint = translateFrom.multiply(matPoint);
+		
+		
+		Point point = new Point((int)matPoint.getValue(0, 0),(int) matPoint.getValue(1, 0));
+		return point;
+	}
+	
 	
 	/**
 	 * Nimmt einen Punkt mit int-Koordinaten und setzt damit die Position neu
@@ -87,8 +122,8 @@ public class Coordinates {
 	 */
 	public Coordinates getVector() {
 		
-		Coordinates v = new Coordinates(0, 0);
-		
+		Coordinates v = new Coordinates(getPosx(), getPosy());
+
 		v.setPosx(getX());
 		v.setPosy(getY());
 		
@@ -102,18 +137,18 @@ public class Coordinates {
 	 */
 	public void rotation(int angle, Coordinates point){
 		
-		double[][] translate = {{1, 0, -point.getPosx()}, 
+		double[][] translateHin = {{1, 0, -point.getPosx()}, 
 				{0, 1, -point.getPosy()},{0,0,1}};
 		
-		Matrix translateTo = new Matrix(translate);
+		Matrix translateTo = new Matrix(translateHin);
 		
-		translate[0][2] = point.getPosx();
-		translate[1][3] = point.getPosy();
+		double[][] translate = {{1, 0, point.getPosx()}, 
+				{0, 1, point.getPosy()},{0,0,1}};
 		
 		Matrix translateFrom = new Matrix(translate);
 		
-		double[][] rotate = {{Math.cos(angle), -Math.sin(angle), 0}, 
-				{Math.sin(angle), Math.cos(angle), 0},{0,0,1}};
+		double[][] rotate = {{0, -1, 0}, 
+				{1, 0, 0},{0,0,1}};
 		
 		Matrix rotation = new Matrix(rotate);
 		
@@ -122,15 +157,45 @@ public class Coordinates {
 		
 		Matrix matPoint = new Matrix(arrPoint);
 		
-		matPoint = translateTo.multiply(matPoint);
-		matPoint = rotation.multiply(matPoint);
-		matPoint = translateFrom.multiply(matPoint);
+		Matrix temp = translateFrom.multiply(rotation).multiply(translateTo);
 		
+		matPoint= temp.multiply(matPoint);
 		this.posx = matPoint.getValue(0, 0);
 		this.posy = matPoint.getValue(1, 0);
+		this.angle = (this.angle + angle) % 360;
+	}
+	
+public Coordinates rotation(int angle, Coordinates point, Coordinates toRotate){
 		
-		this.angle = this.angle + angle % 360;
+		double[][] translateHin = {{1, 0, -point.getX()}, 
+				{0, 1, -point.getY()},{0,0,1}};
 		
+		Matrix translateTo = new Matrix(translateHin);
+		
+		double[][] translate = {{1, 0, point.getX()}, 
+				{0, 1, point.getY()},{0,0,1}};
+		
+		Matrix translateFrom = new Matrix(translate);
+		
+		double[][] rotate = {{0, -1, 0}, 
+				{1, 0, 0},{0,0,1}};
+		
+		Matrix rotation = new Matrix(rotate);
+		
+		double[][] arrPoint = {{toRotate.x}, 
+				{toRotate.y},{1}};
+		
+		Matrix matPoint = new Matrix(arrPoint);
+		
+		Matrix temp = translateFrom.multiply(rotation).multiply(translateTo);
+		
+		matPoint= temp.multiply(matPoint);
+		toRotate.posx = matPoint.getValue(0, 0);
+		toRotate.posy = matPoint.getValue(1, 0);
+		toRotate.angle = (toRotate.angle + angle) % 360;
+		Coordinates ret = new Coordinates(toRotate.posx,toRotate.posy);
+		ret.angle= toRotate.angle;
+		return ret;
 	}
 	
 	/**
@@ -204,11 +269,8 @@ public class Coordinates {
 		
 		double newPosX = this.posx + point.getPosx();
 		double newPosY = this.posy + point.getPosy();
-		
-		Coordinates v = new Coordinates(0, 0);
-		
-		v.setPosx(newPosX);
-		v.setPosy(newPosY);
+
+		Coordinates v = new Coordinates(newPosX, newPosY);
 		
 		return v;
 	}
@@ -218,13 +280,13 @@ public class Coordinates {
 	 * in Koordinaten bzgl des Int-Koordinatensystem um
 	 * @return umgerechnete Koordinaten
 	 */
-	public Point basisChangeDoubleInt() {
+	public Point basisChangeDoubleInt(Coordinates center) {
 		
 		int width = 800;
 		int heigth = 640;
 		
-		int newX = this.getScaledIntCoordinates().x - (width / 2);
-		int newY = this.getScaledIntCoordinates().y - (heigth / 2);
+		int newX = this.getScaledIntCoordinates(center).x + (width / 2);
+		int newY = this.getScaledIntCoordinates(center).y + (heigth / 2);
 		
 		return new Point(newX, newY);
 	}
@@ -232,18 +294,22 @@ public class Coordinates {
 	/**
 	 * Gibt die Koordinaten, die bzgl des Int-Koordinatensystems gegeben sind,
 	 * in Koordinaten bzgl des Double-Koordinatensystem um
-	 * @param c unzurechnende Koordinaten
+	 * @param p unzurechnungsfähige Koordinaten
 	 * @return umgerechnete Koordinaten
 	 */
-	public static Coordinates basisChangeIntDouble(Point p) {
+	public Coordinates basisChangeIntDouble(Point p) {
 		
 		int width = 800;
 		int heigth = 640;
 		
-		double newX = (p.x / factor) + (width / 2);
-		double newY = (p.y / factor) + (heigth / 2);
+		double newX = (p.x / factor) - (width / 2);
+		double newY = (p.y / factor) - (heigth / 2);
 		
 		return new Coordinates(newX, newY);
+	}
+	
+	public String toString() {
+		return "Koordinaten: " + this.getX() + ", " + this.getY();
 	}
 	
 	/*********************************************************/
@@ -280,11 +346,11 @@ public class Coordinates {
 	}
 
 	public double getX() {
-		return x;
+		return this.x;
 	}
 
 	public double getY() {
-		return y;
+		return this.y;
 	}
 
 	public static int getFactor() {

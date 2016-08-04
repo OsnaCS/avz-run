@@ -1,77 +1,130 @@
 //TODO:
-// -dass der der angegebene Punkt immer die Raummitte ist
-// -dass Door2Door fehlerfrei, trotz aller rotationen klappt
-// -Doors, Statics, fires, lamps, etc. alle  zu ner eigenen art Segment hinzufügen. Dafür mit anderen Gruppen kurzschließen
-// -Dass der nicht immer 2 Türen in nen Doppelt genutzten Türrahmen packt
-// -Dass er all das was ich so manuell eingebe aus der levels.xml liest
+// -dass der der angegebene Punkt immer die Raummitte ist (kompatibilität zu leveleditor?)
+// -dass Door2Door fehlerfrei, trotz aller rotationen klappt (überflüssig durch Leveleditor)
+// -Dass der nicht immer 2 Türen in nen Doppelt genutzten Türrahmen packt (sollte behoben sein.)
 
 
 //consts (change iff you know what you're doing! :P)
+
 var ROOMSXML = "/build/rooms.xml"
 var OBJECTSXML = "/build/objects.xml"
-var LEVELSXML = "/build/levels.xml"
+var LEVELSXML = "/build/exported.xml"
+
 var SKALIERUNGSFAKTOR = 20;
 var HOLZTURBREITE = SKALIERUNGSFAKTOR*0.88;
 var GLASTURBREITE = SKALIERUNGSFAKTOR*1.2;
 var KLOTUERBREITE = SKALIERUNGSFAKTOR*1;
-var DOORSKALIERUNG = 1.1;
-var FIRETEXTUREPATH = '/build/levels/materials/textures/';
-
+var DOORSKALIERUNG = 1.0;
+var FIRETEXTUREPATH = '/build//levels/materials/textures/';
+var MAXTIMEOUT = 10000;
 
 //global vars
 var scene_items = []; //hier stehen SÄTMLICHE Referenzen der Mashes der Räume,Objekte,Feuer,etc, welche aktuell angezeigt (in der scene) sind. Dadurch kann man sich alle nach Bedarf auflisten lassen, verändern & löschen
 var segments = [];    //hier stehen alle Segments drin. Segment = Teil des AVZs mit Infos über position usw.
 var static_obj = [];  //hier stehen alle StaticSegments drin. StaticSegment = Objekte welche Teil der Szene sind (auch mit Infos über position etc) (closed Doors auch!) (KEINE LAMPEN!)
 var interact_obj = [];//hier stehen alle interactibleSegments drin. Das sind alle PickupItems, Türen ungleich closedDoor, und sonstwie interactibles.
-var lamps = [];	//noch sinnlos!  //Hier stehen alle LightSegments drin. Diese bestehen aus dem mesh der Lampe (+position etc) sowie der Lichtquelle als three.light!
+var threelights = []; //Hier stehen alle LightSegments drin. Diese bestehen NUR AUS der Lichtquelle als three.light! (lampe ist in static_obj)
 var fires = [];       //Hier stehen alle Feuer drin.
+var triggers = [];	  //Hier stehen alle Triggers drin.
+var allobjects = [];  listallobjects();  //hierdrin stehen alle MÖGLICHEN objects (..damit man sie nicht mehr aus der xml auslesen kann, asynchronität undso.)
+var allrooms = []; listallrooms(); //same as line above.
+var firstfloor = true;
+var floornumber = 0; //sollte wachsen/sinken von stockwerk zu stockwerk. 
+var allfloors = [];
+
 
 //functions
 
-//this function takes as input the name of a room, and adds to the "segments"-array the object containing its info + mesh (no return value due to asynchrony)
-//the callback-function WAS ORIGINALLY MEANT TO BE nothing, fitdoor or the one loading the info from the levels.xml
-//now, it loads all the other stuff (lights, audios, etc.)
-	function CreateSegment(forwhichroom, callback) {
-		var currseg = {filename:"", doors:[], spawns:[], lights:[], fires:[], xmin:0, ymin:0, xmax:0, ymax:0, orx:0, ory:0, orz: 0, transx:0, transy:0, rot:0, rauch: 0, applied:false};
-		if (typeof callback !== 'function')
-		{
-			currseg.transx = 0;
-			currseg.transy = 0;
-			currseg.rot = 0;
-		}
-		segments.push(currseg);
-		if (typeof callback === 'function') {
-			loadStuff(forwhichroom,segments.length-1, callback); //callback is either fitdoor (which packs a segment door2door to a previous one) OR gets tranx,transy&rot von der levels.xml
-		} else {
-			loadStuff(forwhichroom,segments.length-1);
-		}
+
+	function readLevelsXML(callback) {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (xhttp.readyState == 4 && xhttp.status == 200) {
+				var xmlDoc = xhttp.responseXML;
+				//var pfad = xmlDoc.getElementsByTagName("objects")[0].getAttribute("ObjectPath");
+				
+				var typeItems = xmlDoc.getElementsByTagName("floors")[0].getElementsByTagName("floor");
+				floornumber = typeItems.length;
+				
+				for (var i = 0; i < typeItems.length; i++) {						
+					var thisfloor = {spawn: "(0,0,3)", ambientintens: 0.3, ambientcolor: "0xFFBFBF", maxfog: "0.015", fogtime:"120", startfog:"0.002", correctpin: "", correcttransponder: "", rooms: []};
+					thisfloor.spawn = typeItems[i].getAttribute("characterspawn");
+					thisfloor.ambientintens = typeItems[i].getAttribute("ambientlightintens");
+					thisfloor.ambientcolor = typeItems[i].getAttribute("ambientlightcolor");
+					thisfloor.fogtime = parseFloat(typeItems[i].getAttribute("fogtime"));
+					thisfloor.maxfog = parseFloat(typeItems[i].getAttribute("maxfog"));
+					thisfloor.startfog = parseFloat(typeItems[i].getAttribute("startfog"));
+					
+					thisfloor.correctpin = (typeItems[i].getAttribute("correctpin") !== null) ? typeItems[i].getAttribute("correctpin") : "";
+					thisfloor.correcttransponder = (typeItems[i].getAttribute("correcttransponder") !== null) ? typeItems[i].getAttribute("correcttransponder") : "";
+					
+					var thisrooms = [];
+					for (var j = 0; j < typeItems[i].getElementsByTagName("room").length; j++) {
+						var room = {index: 0, name: "", rotation: 0, x: 0, y: 0};
+						room.index = typeItems[i].getElementsByTagName("room")[j].getAttribute("index");
+						room.name = typeItems[i].getElementsByTagName("room")[j].getAttribute("name");
+						room.rotation = parseFloat(typeItems[i].getElementsByTagName("room")[j].getAttribute("rotation"))/90;
+						room.x = parseFloat(typeItems[i].getElementsByTagName("room")[j].getAttribute("x"));
+						room.y = parseFloat(typeItems[i].getElementsByTagName("room")[j].getAttribute("y"));
+						thisrooms.push(room);
+					}
+					thisfloor.rooms = thisrooms;
+					allfloors.push(thisfloor);
+				}
+				//TODO: jetzt müsste er allfloors eig nach allfloors[i].index number sortieren, sonst kann es zu problemen führen bei falscher RF in den Dateien..
+				callback();
+			}
+		};
+		xhttp.open("GET", LEVELSXML, true);
+		xhttp.send();
 	}
 
+
+
+	function createAllSegments(callback) {
+		console.log("STOCKWERK "+floornumber);
+		
+		var ii = 0;
+				
+		function create()  { //callback ist forloop
+			var room = allfloors[floornumber-1].rooms[ii];
+			if ((room !== undefined) && (room.name !== undefined) && (room.name !== "")) {
+				CreateSegment(room.name, forloop, room.x*SKALIERUNGSFAKTOR, room.y*SKALIERUNGSFAKTOR, room.rotation);
+			}
+		}		
+		
+		forloop();
+
+		function forloop() {
+			if(ii <= allfloors[floornumber-1].rooms.length-1) {
+				create();
+				ii++;
+			} else { 
+				callback();
+			}
+		}
+		
+	}
+	
+
+//this function takes as input the name of a room, and adds to the "segments"-array the object containing its info + mesh 	
 	function CreateSegment(forwhichroom, callback, x, y, rot) {
-		var currseg = {filename:"", doors:[], spawns:[], lights:[], fires:[], xmin:0, ymin:0, xmax:0, ymax:0, orx:0, ory:0, orz: 0, transx:0, transy:0, rot:0, rauch: 0, applied:false};
-		if (typeof callback !== 'function')
-		{
-			currseg.transx = x;
-			currseg.transy = y;
-			currseg.rot = rot;
-		}
+		var currseg = {filename:"", doors:[], spawns:[], lights:[], fires:[], triggers: [], xmin:0, ymin:0, xmax:0, ymax:0, orx:0, ory:0, orz: 0, transx:x, transy:y, rot:rot, rauch: 0, applied:false};
+		currseg.transx = x;
+		currseg.transy = y;
+		currseg.rot = rot;
 		segments.push(currseg);
 		if (typeof callback === 'function') {
-			loadStuff(forwhichroom,segments.length-1, callback); //callback is either fitdoor (which packs a segment door2door to a previous one) OR gets tranx,transy&rot von der levels.xml
+			loadStuff(forwhichroom,segments.length-1, callback); 
 		} else {
 			loadStuff(forwhichroom,segments.length-1);
 		}
-	}
+	}	
+	
 
-//this function will be done as soon as the leveldesign group is done.
-	function getTransRotFromXML(){
-		//gets called as callback from createsegment. (REALLY?)
-		//returns [x,y,rot]
-	}
 
 //loads everything needed from the rooms.xml file (and then calls the followup-functions)
 	function loadStuff(whichroom, segmentindex, callback) {
-
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function() {
 			if (xhttp.readyState == 4 && xhttp.status == 200) {
@@ -84,9 +137,12 @@ var fires = [];       //Hier stehen alle Feuer drin.
 					function fires () {
 						getFires(xhttp,segmentindex,whichroom,coords);
 						function coords() {
-							getCoords(xhttp,segmentindex,whichroom,fileName);
-							function fileName() {
-								getFileName(xhttp,segmentindex,whichroom,callback); //this function calls, when done, the function to create and add the mesh.
+							getCoords(xhttp,segmentindex,whichroom,triggers);
+							function triggers() {
+								getTriggers(xhttp,segmentindex,whichroom,fileName);
+								function fileName() {
+									getFileName(xhttp,segmentindex,whichroom,callback); //this function calls, when done, the function to create and add the mesh.
+								}
 							}
 					// typeof callback === 'function' && callback(); //if there is a callback specified, run it.
 						}
@@ -104,16 +160,17 @@ var fires = [];       //Hier stehen alle Feuer drin.
 		var DoorArr = [];
 		var xmlDoc = xml.responseXML;
 		var curroom = xmlDoc.getElementsByTagName("room");
-		for (i = 0; i <curroom.length; i++) {
+		for (var i = 0; i <curroom.length; i++) {
 			if (curroom[i].getAttribute("name") === whichroom) {
 				var curdoor = curroom[i].getElementsByTagName("door");
-				for (j = 0; j < curdoor.length; j++) {
+				for (var j = 0; j < curdoor.length; j++) {
 					var cudo = [];
 					cudo.push(curdoor[j].getAttribute("index"));
-					cudo.push(curdoor[j].getAttribute("type"));
+					cudo.push((curdoor[j].getAttribute("type") !== null) ? curdoor[j].getAttribute("type") : "norm");
 					cudo.push(curdoor[j].getAttribute("position"));
 					cudo.push(curdoor[j].getAttribute("normal"));
-					cudo.push(curdoor[j].getAttribute("act"));
+					cudo.push((curdoor[j].getAttribute("act") !== null) ? curdoor[j].getAttribute("act") : "open");
+					cudo.push((curdoor[j].getAttribute("stretch") !== null) ? curdoor[j].getAttribute("stretch") : 1);
 					DoorArr.push(cudo);
 				}
 			}
@@ -126,18 +183,60 @@ var fires = [];       //Hier stehen alle Feuer drin.
 		var SpawnArr = [];
 		var xmlDoc = xml.responseXML;
 		var curroom = xmlDoc.getElementsByTagName("room");
-		for (i = 0; i <curroom.length; i++) {
+		for (var i = 0; i <curroom.length; i++) {
 			if (curroom[i].getAttribute("name") === whichroom) {
 				var curdoor = curroom[i].getElementsByTagName("spawn");
-				for (j = 0; j < curdoor.length; j++) {
-					var cudo = [];
-					cudo.push(curdoor[j].getAttribute("index"));
-					cudo.push(curdoor[j].getAttribute("position"));
-					cudo.push(curdoor[j].getAttribute("object"));
-					cudo.push(curdoor[j].getAttribute("normaltowall"));
-					cudo.push(curdoor[j].getAttribute("scale"));
-					if (curdoor[j].getAttribute("oninteract") != "") { cudo.push(curdoor[j].getAttribute("oninteract")); } else {cudo.push(""); }
-					SpawnArr.push(cudo);
+				for (var j = 0; j < curdoor.length; j++) {
+					var first = 0; var second = 0; var third = 0;
+					if (curdoor[j].getAttribute("position").indexOf("to") > 0) {
+						parts = curdoor[j].getAttribute("position").split("(")[1].split(")")[0].split(",");
+						var x = []; var y = []; var z = [];
+						for (var k = 0; k < parts.length; k++) {
+							if (parts[k].indexOf("to") > 0) {
+								first = parseFloat(parts[k].split(" to ")[0]);
+								second = parseFloat(parts[k].split(" to ")[1].split(" step ")[0]);
+								third = parseFloat(parts[k].split(" to ")[1].split(" step ")[1]);
+								for (var l = first; l <= second; l+= third) {
+									switch(k){
+										case 0: x.push(l); break;
+										case 1: y.push(l); break;
+										case 2: z.push(l); break;
+									}
+								}
+							} else {
+								switch(k){
+									case 0: x.push(parts[k]); break;
+									case 1: y.push(parts[k]); break;
+									case 2: z.push(parts[k]); break;
+								}
+							}
+						}
+						var p = 0;
+						for (var m = 0; m < x.length; m++) {
+							for (var n = 0; n < y.length; n++) {
+								for (var o = 0; o < z.length; o++) {
+									var cudo = [];
+									cudo.push(curdoor[j].getAttribute("index")+""+p);
+									cudo.push("("+x[m]+","+y[n]+","+z[o]+")");
+									cudo.push(curdoor[j].getAttribute("object"));
+									cudo.push(curdoor[j].getAttribute("normaltowall"));
+									cudo.push((curdoor[j].getAttribute("scale") !== null) ? curdoor[j].getAttribute("scale") : 1);
+									cudo.push((curdoor[j].getAttribute("oninteract") !== "") ? curdoor[j].getAttribute("oninteract") : "");
+									SpawnArr.push(cudo);
+									p++;
+								}
+							}
+						}
+					} else {
+						var cudo = [];
+						cudo.push(curdoor[j].getAttribute("index"));
+						cudo.push(curdoor[j].getAttribute("position"));
+						cudo.push(curdoor[j].getAttribute("object"));
+						cudo.push(curdoor[j].getAttribute("normaltowall"));
+						cudo.push((curdoor[j].getAttribute("scale") !== null) ? curdoor[j].getAttribute("scale") : 1);
+						cudo.push((curdoor[j].getAttribute("oninteract") !== "") ? curdoor[j].getAttribute("oninteract") : "");
+						SpawnArr.push(cudo);
+					}
 				}
 			}
 		}
@@ -149,20 +248,20 @@ var fires = [];       //Hier stehen alle Feuer drin.
 		var LightArr = [];
 		var xmlDoc = xml.responseXML;
 		var curroom = xmlDoc.getElementsByTagName("room");
-		for (i = 0; i <curroom.length; i++) {
+		for (var i = 0; i <curroom.length; i++) {
 			if (curroom[i].getAttribute("name") === whichroom) {
 				var curdoor = curroom[i].getElementsByTagName("light");
-				for (j = 0; j < curdoor.length; j++) {
+				for (var j = 0; j < curdoor.length; j++) {
 					var cudo = [];
 					cudo.push(curdoor[j].getAttribute("index"));
-					cudo.push(curdoor[j].getAttribute("kind"));
-					cudo.push(curdoor[j].getAttribute("objectname"));
-					cudo.push(curdoor[j].getAttribute("objectscale"));
+					cudo.push((curdoor[j].getAttribute("kind") !== null) ? curdoor[j].getAttribute("kind") : "pointlight");
+					cudo.push((curdoor[j].getAttribute("objectname") !== null) ? curdoor[j].getAttribute("objectname") : "deckenlicht");
+					cudo.push((curdoor[j].getAttribute("objectscale") !== null) ? curdoor[j].getAttribute("objectscale") : 1);
 					cudo.push(curdoor[j].getAttribute("position"));
 					cudo.push(curdoor[j].getAttribute("normal"));
-					cudo.push(curdoor[j].getAttribute("intensity"));
-					cudo.push(curdoor[j].getAttribute("color"));
-					cudo.push(curdoor[j].getAttribute("visiblewidth"));
+					cudo.push((curdoor[j].getAttribute("intensity") !== null) ? curdoor[j].getAttribute("intensity") : 0.1);
+					cudo.push((curdoor[j].getAttribute("color") !== null) ? curdoor[j].getAttribute("color") : 0xFFFFFF);
+					cudo.push((curdoor[j].getAttribute("visiblewidth") !== null) ? curdoor[j].getAttribute("visiblewidth") : 30);
 					LightArr.push(cudo);
 				}
 			}
@@ -175,15 +274,15 @@ var fires = [];       //Hier stehen alle Feuer drin.
 		var FireArr = [];
 		var xmlDoc = xml.responseXML;
 		var curroom = xmlDoc.getElementsByTagName("room");
-		for (i = 0; i <curroom.length; i++) {
+		for (var i = 0; i <curroom.length; i++) {
 			if (curroom[i].getAttribute("name") === whichroom) {
 				var curdoor = curroom[i].getElementsByTagName("fire");
-				for (j = 0; j < curdoor.length; j++) {
+				for (var j = 0; j < curdoor.length; j++) {
 					var cudo = [];
 					cudo.push(curdoor[j].getAttribute("index"));
 					cudo.push(curdoor[j].getAttribute("position"));
 					cudo.push(curdoor[j].getAttribute("size"));
-					cudo.push(curdoor[j].getAttribute("val"));
+					cudo.push((curdoor[j].getAttribute("val") !== null) ? curdoor[j].getAttribute("val") : 20);
 					FireArr.push(cudo);
 				}
 			}
@@ -195,7 +294,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 	function getCoords(xml, segmentindex, whichroom,callback) {
 		var xmlDoc = xml.responseXML;
 		var curroom = xmlDoc.getElementsByTagName("room");
-		for (i = 0; i <curroom.length; i++) {
+		for (var i = 0; i <curroom.length; i++) {
 			if (curroom[i].getAttribute("name") === whichroom) {
 				sizeinfo = curroom[i].getElementsByTagName("size");
 				segments[segmentindex].xmin = sizeinfo[0].getAttribute("xmin");
@@ -211,23 +310,51 @@ var fires = [];       //Hier stehen alle Feuer drin.
 		callback();
 	}
 
+	function getTriggers(xml, segmentindex, whichroom, callback) {
+		var TriggerArr = [];
+		var xmlDoc = xml.responseXML;
+		var curroom = xmlDoc.getElementsByTagName("room");
+		for (var i = 0; i <curroom.length; i++) {
+			if (curroom[i].getAttribute("name") === whichroom) {
+				var curdoor = curroom[i].getElementsByTagName("trigger");
+				for (var j = 0; j < curdoor.length; j++) {
+					var cudo = [];
+					cudo.push(curdoor[j].getAttribute("index"));
+					cudo.push(curdoor[j].getAttribute("xpos"));
+					cudo.push(curdoor[j].getAttribute("ypos"));
+					cudo.push(curdoor[j].getAttribute("size"));
+					cudo.push((curdoor[j].getAttribute("functionname") !== null) ? curdoor[j].getAttribute("functionname") : "showThoughts");
+					cudo.push((curdoor[j].getAttribute("fparam1") !== null) ? curdoor[j].getAttribute("fparam1") : "");
+					cudo.push((curdoor[j].getAttribute("fparam2") !== null) ? curdoor[j].getAttribute("fparam2") : "");
+					cudo.push((curdoor[j].getAttribute("enabledtriggerindex") !== null) ? curdoor[j].getAttribute("enabledtriggerindex") : "");
+					cudo.push((curdoor[j].getAttribute("enabled") !== null) ? curdoor[j].getAttribute("enabled") : "true");
+					TriggerArr.push(cudo);
+				}
+			}
+		}
+		segments[segmentindex].triggers = TriggerArr;
+		callback();
+
+	}
+
 	function getFileName(xml, segmentindex, whichroom,callback) {
 		var xmlDoc = xml.responseXML;
 		var curroom = xmlDoc.getElementsByTagName("room");
-		for (i = 0; i <curroom.length; i++) {
+		for (var i = 0; i <curroom.length; i++) {
 			if (curroom[i].getAttribute("name") === whichroom) {
 				segments[segmentindex].filename = curroom[i].getAttribute("filename");
 				addmesh(curroom[i].getAttribute("filename"), segmentindex);
 			}
 		}
-		callback();
+		if (typeof callback == "function") callback();
 	}
 //"these functions" end.
 
+
 //puts the objects in its spawn-location  //TODO: normaltowall ist nicht die normale zur wand, sondern die normale blender-normale :/
 	function objects_in_spawns(callback) {
-		for (INDEX1 = 0; INDEX1<segments.length; INDEX1++){
-			for (i = 0; i <segments[INDEX1].spawns.length; i++) {
+		for (var INDEX1 = 0; INDEX1<segments.length; INDEX1++){
+			for (var i = 0; i <segments[INDEX1].spawns.length; i++) {
 				tospawn = segments[INDEX1].spawns[i];
 
 				room1pos = [segments[INDEX1].transx, segments[INDEX1].transy];
@@ -240,7 +367,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 				spawny = spawny*SKALIERUNGSFAKTOR*-1;
 				spawnz = spawnz*SKALIERUNGSFAKTOR;
 
-				for (j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
+				for (var j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
 					var tmp = spawnx;
 					spawnx = -spawny;
 					spawny = tmp;
@@ -263,10 +390,10 @@ var fires = [];       //Hier stehen alle Feuer drin.
 
 //puts the fires where they belong
 	function set_fires(callback) {
-		for (INDEX1 = 0; INDEX1<segments.length; INDEX1++){
+		for (var INDEX1 = 0; INDEX1<segments.length; INDEX1++){
 
 			var fire = segments[INDEX1].fires;
-			for (i = 0; i <fire.length; i++) {
+			for (var i = 0; i <fire.length; i++) {
 
 				var spawnx = parseFloat(fire[i][1].slice(1,fire[i][1].indexOf(',')));
 				var spawny = parseFloat(fire[i][1].slice(fire[i][1].indexOf(',')+1,fire[i][1].lastIndexOf(',')));
@@ -280,7 +407,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 				spawny = spawny*SKALIERUNGSFAKTOR*-1;
 				spawnz = spawnz*SKALIERUNGSFAKTOR;
 
-				for (j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
+				for (var j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
 					var tmp = spawnx;
 					spawnx = -spawny;
 					spawny = tmp;
@@ -290,7 +417,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 				spawnx = spawnx + parseInt(segments[INDEX1].transx)+xz[0];
 				spawny = spawny + parseInt(segments[INDEX1].transy)+xz[1];
 
-				createFire(spawnx, spawny, spawnz, sizex, sizez, sizey, (weaksystem)?fire[i][3]*20:fire[i][3]); //ja, ist richtig so mit x,y,z
+				createFire(spawnx, spawny, spawnz, sizex, sizez, sizey, (performantfire)?fire[i][3]*20:fire[i][3], fire[i][0]); //ja, ist richtig so mit x,y,z
 
 			}
 		}
@@ -298,19 +425,19 @@ var fires = [];       //Hier stehen alle Feuer drin.
 		callback();
 	}
 
-	function createFire(x, z, y, sx, sy, sz, s) {
+	function createFire(x, z, y, sx, sy, sz, s, index) {
 		VolumetricFire.texturePath = FIRETEXTUREPATH;
-		var fireseg = {x:x, y:y, z:z, sx:sx*SKALIERUNGSFAKTOR, sy:sy*SKALIERUNGSFAKTOR, sz:sz*SKALIERUNGSFAKTOR, val:s}; //TODO: kann ich auch das mesh des feuers adden?
-		fires.push(fireseg);
-		addFire(x, y, z, sx*SKALIERUNGSFAKTOR, sy*SKALIERUNGSFAKTOR, sz*SKALIERUNGSFAKTOR, s);
+		var fireseg = {x:x, y:y, z:z, sx:sx*SKALIERUNGSFAKTOR, sy:sy*SKALIERUNGSFAKTOR, sz:sz*SKALIERUNGSFAKTOR, val:s*SKALIERUNGSFAKTOR}; //TODO: kann ich auch das mesh des feuers adden?
+		addFire(x, y, z, sx*SKALIERUNGSFAKTOR, sy*SKALIERUNGSFAKTOR, sz*SKALIERUNGSFAKTOR, s*SKALIERUNGSFAKTOR, index);
 	}
 
 //puts the lights where they belong
 	function turn_on_lights(callback) {
-		for (INDEX1 = 0; INDEX1<segments.length; INDEX1++){
+		//index, kind, objectname, objectscale, position, normal, intensity, color, visiblewidth
+		for (var INDEX1 = 0; INDEX1<segments.length; INDEX1++){
 
 			var light = segments[INDEX1].lights;
-			for (i = 0; i <light.length; i++) {
+			for (var i = 0; i <light.length; i++) {
 
 				var spawnx = parseFloat(light[i][4].slice(1,light[i][4].indexOf(',')));
 				var spawny = parseFloat(light[i][4].slice(light[i][4].indexOf(',')+1,light[i][4].lastIndexOf(',')));
@@ -321,7 +448,7 @@ var fires = [];       //Hier stehen alle Feuer drin.
 				spawny = spawny*SKALIERUNGSFAKTOR*-1;
 				spawnz = spawnz*SKALIERUNGSFAKTOR;
 
-				for (j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
+				for (var j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
 					var tmp = spawnx;
 					spawnx = -spawny;
 					spawny = tmp;
@@ -336,33 +463,73 @@ var fires = [];       //Hier stehen alle Feuer drin.
 				rotate = vec2dir([parseFloat(vector.slice(1,vector.indexOf(','))),parseFloat(vector.slice(vector.indexOf(',')+1,vector.indexOf(')')))]);
 				rotate -= segments[INDEX1].rot;
 
-				//TODO: Lampen auch noch zu einem lampen-segment hinzufügen!!
-				addObjectViaName(light[i][2], "lamp", spawnx, spawny, spawnz, light[i][3], rotate, "");
-				addLight(spawnx, spawnz, spawny, light[i][1], light[i][5], light[i][6], light[i][7], light[i][8]);
+				if (light[i][2] !== "") addObjectViaName(light[i][2], "lamp", spawnx, spawny, spawnz, light[i][3], rotate, "");
+				if (light[i][1] !== "") addLight(spawnx, spawnz, spawny, light[i][1], light[i][5], light[i][6], light[i][7], light[i][8]);
 			}
 		}
 		callback();
 	}
 
 	function addLight(x, y, z, kind, normal, intensity, color, visiblewidth){
-
-		var light = new THREE.PointLight( parseInt(color), intensity, visiblewidth*SKALIERUNGSFAKTOR );
-		light.position.set(x, y, z);
-
-		scene.add(light);
+		if (!onlygloballight) {
+			var light = new THREE.PointLight( parseInt(color), intensity, visiblewidth*SKALIERUNGSFAKTOR );
+			light.position.set(x, y, z);
+			threelights.push(light);
+			addtoscene(light);
+		}
 	}
 
-//puts the right kind of door where it fits.
-//TODO: da immer Türrahmen an Türrahmen pappt, packt der immer 2 Türen rein. Da sollte er noch gucken dass er nur falls es ein Flur ist eine Tür rein packt.
-//...da ist tatsächlich flur eine binäre relation, denn der circle_walled ist relativ zum büro Flur, aber relativ zum center Nicht!!!
+	function addtriggers(callback) {
+		// addTrigger(0,-50,partial(showThoughts, "Hello World",5000));
+		// [index,xpos,ypos,functionname,fparam1,fparam2]
+		for (var INDEX1 = 0; INDEX1<segments.length; INDEX1++){
+			for (var i = 0; i <segments[INDEX1].triggers.length; i++) {
 
+				tospawn = segments[INDEX1].triggers[i];
+				room1pos = [segments[INDEX1].transx, segments[INDEX1].transy];
+
+				var spawnx = tospawn[1];
+				var spawny = tospawn[2];
+				var spawnz = 0
+
+				spawnx = spawnx*SKALIERUNGSFAKTOR;
+				spawny = spawny*SKALIERUNGSFAKTOR*-1;
+				spawnz = spawnz*SKALIERUNGSFAKTOR;
+
+				for (var j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
+					var tmp = spawnx;
+					spawnx = -spawny;
+					spawny = tmp;
+				}
+
+				var xz = changexzaccordingtorot(segments[INDEX1].orx, segments[INDEX1].ory, segments[INDEX1].rot);
+				spawnx = spawnx + parseInt(segments[INDEX1].transx)+xz[0];
+				spawny = spawny + parseInt(segments[INDEX1].transy)+xz[1];
+
+				var size = tospawn[3]*SKALIERUNGSFAKTOR;
+				var functPtr = eval(tospawn[4]);
+				var fparam1 = tospawn[5];
+				var fparam2 = tospawn[6];
+				var enabled = tospawn[8] === "true";
+
+				if (fparam1 === "") addTrigger(enabled, spawnx, spawny, size, functPtr, tospawn[4], fparam1, fparam2, tospawn[7], tospawn[0], false)
+					else if (fparam2 === "") addTrigger(enabled, spawnx, spawny, size, partial(functPtr, fparam1), tospawn[4], fparam1, fparam2, tospawn[7], tospawn[0], false)
+						else addTrigger(enabled, spawnx, spawny, size, partial(functPtr, fparam1, fparam2), tospawn[4], fparam1, fparam2, tospawn[7], tospawn[0], false)
+			}
+		}
+		callback();
+
+	}
+
+
+//puts the right kind of door where it fits.
 function door_in_doors(callback) {
-	for (INDEX1 = 0; INDEX1<segments.length; INDEX1++){
-		for (i = 0; i <segments[INDEX1].doors.length; i++) {
+	for (var INDEX1 = 0; INDEX1<segments.length; INDEX1++){
+		for (var i = 0; i <segments[INDEX1].doors.length; i++) {
 			room1door = segments[INDEX1].doors[i];
 			room1pos = [segments[INDEX1].transx, segments[INDEX1].transy];
 
-			if (room1door[1] == "floor") {return;} //floor-türen enthalten schlicht keine tür.
+			if (room1door[1] == "floor") {break;} //floor-türen enthalten schlicht keine tür.
 
 			var vector = room1door[3];
 			rotate = vec2dir([parseFloat(vector.slice(1,vector.indexOf(','))),parseFloat(vector.slice(vector.indexOf(',')+1,vector.indexOf(')')))]);
@@ -371,8 +538,9 @@ function door_in_doors(callback) {
 			if (room1door[1] === "norm") {changex = HOLZTURBREITE;}
 			else if (room1door[1] === "glass") {changex = GLASTURBREITE; }
 			else if (room1door[1] === "klotuer") {changex = KLOTUERBREITE; }
+			changex = changex*(1+0.5*(room1door[5]-1)); //room1door[5] ist der stretch-faktor
 			var changey = 0;
-			for (j = 0; j <parseInt(rotate); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
+			for (var j = 0; j <parseInt(rotate); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
 				var tmp = changex;
 				changex = -changey;
 				changey = tmp;
@@ -384,7 +552,7 @@ function door_in_doors(callback) {
 			door1x = door1x*SKALIERUNGSFAKTOR+changex;
 			door1y = door1y*SKALIERUNGSFAKTOR*-1+changey;
 
-			for (j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
+			for (var j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
 				var tmp = door1x;
 				door1x = -door1y;
 				door1y = tmp;
@@ -394,36 +562,40 @@ function door_in_doors(callback) {
 			door1x = door1x + parseInt(segments[INDEX1].transx)+xz[0];
 			door1y = door1y + parseInt(segments[INDEX1].transy)+xz[1];
 
-			
 			var doorkind ="";
 			switch(room1door[1]){
 				case "norm": doorkind = "holztur"; break;
 				case "glass": doorkind = "glastur"; break;
 				case "klotuer": doorkind = "klotur"; break;
 			}
-			
 
 			var act = "";
 			switch(room1door[4]) {
 				case "openable": act = "open"; break;
+				case "openable_after_ext": act = "open_after_ext"; break;
 				case "open": act = "openopened"; rotate -= 1; break;
 				case "transponderopenable": act = "openTransponderDoor"; break;
 				case "axtopenable": act = "damageDoor"; break;
 				case "codeopenable": act = "openLockedDoor"; break;
 			}
 			if (godmode) {act = "openopened"; rotate -= 1;};
+			
+			for (var j = 0; i < interact_obj.length; i++) {
+				if ((Math.abs(interact_obj[i].x - door1x) > 5) && (Math.abs(interact_obj[i].y - door1y) > 5))
+				{
+					break; //keine tür adden wo schon eine ist.
+				}
+			}
 
-			//TODO: Transponderopenable und codeopenable funktioniert nicht!!
 
-			addObjectViaName(doorkind, "door", door1x, door1y, 0, DOORSKALIERUNG, rotate-segments[INDEX1].rot, act)
-			if (doorkind == "glastur") {addObjectViaName("glastuerrahmen", "static", door1x, door1y, 0, DOORSKALIERUNG, (act==="openopened")?rotate-segments[INDEX1].rot+1:rotate-segments[INDEX1].rot, "")  }
+			addObjectViaName(doorkind, "door", door1x, door1y, 0, DOORSKALIERUNG, rotate-segments[INDEX1].rot, act, room1door[5])
+			if (doorkind == "glastur") {addObjectViaName("glastuerrahmen", "static", door1x, door1y, 0, DOORSKALIERUNG, (act==="openopened")?rotate-segments[INDEX1].rot+1:rotate-segments[INDEX1].rot, "", room1door[5])  }
 		}
 	}
 	callback();
 }
 
 
-	//TODO: diese Funktionen. In synchron. Am besten per globalen Variablen (...dafür checken die Funktionen vorher ob die Variablen != "")
 	function objectFilenameToName(filename){
 		var tName = filename.split("/");
 		tName = tName[tName.length-1].split(".")[0];  //TODO: bei einigen Objekten ist der Name ungleich dem Filenamen! Das hier ist nur die Notlösung!
@@ -431,7 +603,9 @@ function door_in_doors(callback) {
 	}
 
 	function objectNameToFilename(name){
-
+		for (var i = 0; i < allobjects.length; i++) {
+			if (allobjects[i].name === name) return allobjects[i].path
+		}
 	}
 
 	function roomFilenameToName(filename){
@@ -441,7 +615,9 @@ function door_in_doors(callback) {
 	}
 
 	function roomNameToFilename(name){
-
+		for (var i = 0; i < allrooms.length; i++) {
+			if (allrooms[i].name === name) return allrooms[i].filename
+		}
 	}
 
 
@@ -470,34 +646,36 @@ function door_in_doors(callback) {
 
 
 //adds an OBJECT's mesh to the scene (needs to be changed when we stop loading from jsons directly and instead from the pre-loading-thingy.)
-	function addobject(objectpfad, name, posx, posy, posz, scale, rotate, responsefunct) {
+	function addobject(objectpfad, name, posx, posy, posz, scale, rotate, responsefunct, stretchx) {
 		var intItem = null;
 		var tName = objectFilenameToName(objectpfad);  //TODO: der fileLoader sollte auch einfach das argument name von hier nutzen, und intern nochmal ne name->filename mapfunktion haben!
 		mesh = fileLoader.get(tName);
-		mesh.scale.set(SKALIERUNGSFAKTOR*scale,SKALIERUNGSFAKTOR*scale,SKALIERUNGSFAKTOR*scale);
+		mesh.scale.set(SKALIERUNGSFAKTOR*scale*stretchx,SKALIERUNGSFAKTOR*scale,SKALIERUNGSFAKTOR*scale);
 		mesh.position.x = Math.round(posx);
 		mesh.position.z = Math.round(posy); //IN BLENDER SIND Y UND Z ACHSE VERTAUSCHT
 		mesh.position.y = Math.round(posz);
 		mesh.rotation.y = 0.5*Math.PI*(4-rotate);
 
 		if (name === "lamp") {
-			//TODO: adde ein passendes segment für ne Lampe
+			var segment = {filename:objectpfad, name: name, x: posx, y: posy, z: posz, skale: scale, rot: rotate, msh: mesh, stretchx: stretchx};
+			static_obj.push(segment);
 		} else {
 			if ((responsefunct != "") && (responsefunct != null)) {
 				var functPtr = eval(responsefunct);
 				intItem = new GameObject(mesh, functPtr, TYPE_INTERACTABLE, objectpfad);
 				if (intItem == undefined) intItem = null;
-				var segment = {filename:objectpfad, name: name, interIt: intItem, x: posx, y: posy, z: posz, skale: scale, rot: rotate, funct: responsefunct, msh: mesh};
+				var segment = {filename:objectpfad, name: name, interIt: intItem, x: posx, y: posy, z: posz, skale: scale, rot: rotate, funct: responsefunct, msh: mesh, stretchx: stretchx};
 				interact_obj.push(segment);
 			} else {
-				var segment = {filename:objectpfad, name: name, x: posx, y: posy, z: posz, skale: scale, rot: rotate, msh: mesh};
+				var segment = {filename:objectpfad, name: name, x: posx, y: posy, z: posz, skale: scale, rot: rotate, msh: mesh, stretchx: stretchx};
 				static_obj.push(segment);
 			}
 		}
 		addtoscene(mesh, intItem);
 	}
 
-	function addObjectViaName(objectname, objecttype, spawnx, spawny, spawnz, scale, rotate, actionfunction) {
+	function addObjectViaName(objectname, objecttype, spawnx, spawny, spawnz, scale, rotate, actionfunction, stretchx) {
+		if (stretchx === undefined) {stretchx = 1};
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function() {
 			if (xhttp.readyState == 4 && xhttp.status == 200) {
@@ -508,10 +686,10 @@ function door_in_doors(callback) {
 					var randomobject = pfad+typeItems[Math.round(Math.random()*(typeItems.length-1))];
 					addobject(randomobject.getAttribute("path"), randomobject.getAttribute("name"), spawnx, spawny, spawnz, scale, rotate, actionfunction)
 				} else {
-					for (i = 0; i < typeItems.length; i++) {
+					for (var i = 0; i < typeItems.length; i++) {
 						if (typeItems[i].getAttribute("name") === objectname) {
 							pfad += typeItems[i].getAttribute("path");
-							addobject(pfad, objectname, spawnx, spawny, spawnz, scale*typeItems[i].getAttribute("scale"), rotate, actionfunction)
+							addobject(pfad, objectname, spawnx, spawny, spawnz, scale*typeItems[i].getAttribute("scale"), rotate, actionfunction, stretchx)
 						}
 					}
 				}
@@ -546,7 +724,6 @@ function door_in_doors(callback) {
 
 
 			segment.mesh.rotation.y = 0.5*Math.PI*(4-segment.rot);
-
 			segment.mesh.position.x = segment.mesh.position.x + parseInt(segment.transx);
 			segment.mesh.position.z = segment.mesh.position.z + parseInt(segment.transy);  //IN BLENDER SIND Y UND Z ACHSE VERTAUSCHT
 			//segment.mesh.position.y = -(segment.orz*SKALIERUNGSFAKTOR);
@@ -569,49 +746,61 @@ function door_in_doors(callback) {
 
 //löscht erst alle objekte aus der Szene, bevor es dann alle neu hinzufügt.
 	function PutSegments(callback){
-		empty_scene();
-		for (i = 0; i <segments.length; i++) {
+		//empty_scene();
+		for (var i = 0; i <segments.length; i++) {
 			addtoscene(applytransrot(segments[i]),null);
-
 		}
-	callback();
+		if (typeof callback == "function") callback();
 	}
 
 //diese Funktion ist nötig, da in der scene_items SÄTMLICHE meshes der Räume stehen (ihre referenz), welche gerade angezeigt sind. Dadurch kann man sich alle auflisten lassen, verändern & löschen nach Bedarf.
 	function addtoscene(mesh, intItem){
 		scene.add(mesh);
-		if (intItem == null) {
-
-			modifyOctree( mesh, true );
-		} else {
-			modifyOctree( intItem, true );
+		if(!((mesh instanceof THREE.PointLight)||(mesh instanceof THREE.AmbientLight))) {
+			if (intItem == null) {
+				modifyOctree( mesh, true );
+			} else {
+				modifyOctree( intItem, true );
+			}
 		}
-
 		scene_items.push(mesh);
 	}
 
 
 //zum thema alle objekte aus der scene löschen.
-	function empty_scene(){
+	function empty_scene(callback){
+	// for( var i = scene.children.length - 1; i >= 0; i--) {
+		// obj = scene.children[i];
+		// scene.remove(obj);
+	// }
 	  if(scene_items.length > 0 ) {
-		scene_items.forEach(function(v,i) {  //TODO: anpassen auf neue struktur.
-		   v.parent.remove(v);
-		});
-		scene_items = null;
-		scene_items = [];
-		static_obj = null;
-		static_obj = [];
-		interact_obj = null;
-		interact_obj = [];
+		scene_items = null; scene_items = [];
+		static_obj = null; static_obj = [];
+		interact_obj = null; interact_obj = [];
+		segments = null; segments = [];
+		threelights = null; threelights = [];
+		fires = null; fires = [];
+		trigger = null; triggers = [];
+		
+		//feuer-stuff
+		fire_list = null; fire_list = [];
+		pointlight_list = null; pointlight_list = [];
+		smoke_list = null; smoke_list = [];
+		fire_mesh_list = null; fire_mesh_list = [];
+		fire_collision_box_list = null; fire_collision_box_list = [];
+		fire_count = 0;
+		smoke_and_light_count = 0;		
 	  }
+	  callback();
 	}
 
-	function remove_interactible(segmentIndex){
+	function remove_interactible(which){
+		segmentIndex = interact_obj.indexOf(which);
 		mesh = interact_obj[segmentIndex].msh;
-		intObj = interact_obj[segmentIndex].interIt;
-		interact_obj.splice(segmentIndex);
+		//intObj = interact_obj[segmentIndex].interIt;
+		interact_obj.splice(segmentIndex,1);
 		i2 = scene_items.indexOf(mesh);
-		scene_items.splice(i2);
+		scene_items.splice(i2,1);
 		//scene.remove(mesh); braucht nicht, da das von interactible-this.delFromScene() gemacht wird.
 	}
 
@@ -620,7 +809,7 @@ function door_in_doors(callback) {
 
 
 
-//buggy functions which may not even be needed
+//buggy functions which ARE NOT USED IN THIS GAME
 
 
 //diese Funktion klatscht einen Raum an einen anderen, wobei man angibt welche tür (index innerhalb des segments) welchen raums (index der segments), an welche tür welchen raum geklatscht wird.
@@ -649,7 +838,7 @@ function door_in_doors(callback) {
 		door1x = door1x*SKALIERUNGSFAKTOR;
 		door1y = door1y*SKALIERUNGSFAKTOR*-1;
 
-		for (j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
+		for (var j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
 			var tmp = door1x;
 			door1x = -door1y;
 			door1y = tmp;
@@ -662,7 +851,7 @@ function door_in_doors(callback) {
 		//remove me
 		document.getElementById('posx').value = door1x;
 		document.getElementById('posy').value = door1y;
-		for (j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
+		for (var j = 0; j <parseInt(segments[INDEX1].rot); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
 			var tmp = door1x;
 			door1x = -door1y;
 			door1y = tmp;
@@ -735,7 +924,7 @@ function door_in_doors(callback) {
 		door2x = door2x*SKALIERUNGSFAKTOR*-1;
 		door2y = door2y*SKALIERUNGSFAKTOR*-1;
 
-		for (j = 0; j <parseInt(rotation); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
+		for (var j = 0; j <parseInt(rotation); j++) { //rotieren, pro 90° gilt: y <- x & x <- -y
 			var tmp = door2x;
 			door2x = -door2y;
 			door2y = tmp;

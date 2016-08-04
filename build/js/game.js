@@ -28,7 +28,7 @@ var fileLoader =null;
 // Load file-pathes from XML in list
 // callback function complete
 function loadFiles(){
-    makeArrayFromXML(completedXmlLoad, newItemList);
+	makeArrayFromXML(completedXmlLoad, newItemList);
 }
 
 // if XML-Parsing done
@@ -41,36 +41,30 @@ function completedXmlLoad(){
 
 }
 function completedFileLoad () {
-    init();
+	init();
 }
 
-var scene,
-    camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,
-    renderer, container, controls, audioLoader, startInstructions, buttonStart,
-    instructions, blocker, button;
+var scene, camera, fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH, buttonInfoBack, buttonSettingsBack,
+    renderer, container, controls, audioLoader, startInstructions, buttonStart, infoScreen, buttonStart, buttonInfo, buttonSettings,
+    mainMenu, instructions, blocker, button;
+
+
+var MAX_FOG, myfog, fogTime, fogIncrement, fogInterval, HEALTH_PER_SECOND;
 
 var menu = true;
 var pause = false;
 
-//variable used for increasing fog  //TODO: wie schnell der fog kommt sollte raum/level-abhängig sein
-var MAX_FOG = 0.015; if (godmode) {MAY_FOG = 0.005};
-var myfog=0.002;
-var fogTime=60; if (godmode) {fogTime = 1200};
-var fogIncrement= MAX_FOG/(fogTime*1000/10) ;
-var fogInterval;
-var HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at final density you lose this much health
+//variables used for increasing fog are now to find after the creation of the scene
 
-
+var player;
 var octree;
 var octreeObjects = [];
-    //loads all Objects before creating
+var clock;
 
-
-
+//loads all Objects before creating
 function init(event) {
 
-
-	CreateSegment("groundlevel",scene);
+    clock = new THREE.Clock();
 
     octree = new THREE.Octree( {
         // uncomment below to see the octree (may kill the fps)
@@ -80,7 +74,7 @@ function init(event) {
         // this may decrease performance as it forces a matrix update
         undeferred: false,
         // set the max depth of tree
-        depthMax: Infinity,
+        depthMax: 20,
         // max number of objects before nodes split or merge
         objectsThreshold: 8,
         // percent between 0 and 1 that nodes will overlap each other
@@ -88,32 +82,39 @@ function init(event) {
         overlapPct: 0.15
     } );
 
-    // set up the scene, the camera and the renderer
-    function scene (){
-        createScene(audio);
 
-        function audio (){
-        // init audio support
-            createAudio(room);
+// set up the scene, the camera and the renderer
 
-            function room() {
+	createScene(audio);
 
-                createRoom(controls);
-                function controls() {
+	function audio (){
+    // init audio support
+        createAudio(room);
+
+        function room() {
+
+                createRoom(controlls);
+                function controlls() {
+
 
                     // add the objects and lights - replace those functions as you please
                     initControls(startLoop);
 
                     function startLoop () {
+
+
                         // renderer.render(scene, camera);
     					// start a loop that will update the objects' positions
     					// and render the scene on each frame
+
     					loop();
-                    }
-                }
-            }
-        }
-    }
+    				}
+
+    			}
+    		}
+    	}
+
+
 }
 
 // Stats
@@ -126,8 +127,14 @@ function createScene(callback) {
     blocker = document.getElementById('blocker');
     container = document.getElementById('world');
     startInstructions = document.getElementById('startInstructions');
-
+    mainMenu = document.getElementById('mainMenu');
+    infoScreen = document.getElementById('infoScreen');
     buttonStart = document.getElementById('buttonStart');
+    buttonInfo = document.getElementById('buttonInfo');
+    buttonInfoBack = document.getElementById('buttonInfoBack');
+	buttonSettings = document.getElementById('buttonSettings');
+	buttonSettingsBack = document.getElementById('buttonSettingsBack');
+	settingswindow = document.getElementById('settingswindow');
     instructions = document.getElementById('instructions');
     button = document.getElementById('button');
     button2 = document.getElementById('button2');
@@ -141,16 +148,15 @@ function createScene(callback) {
     scene = new THREE.Scene();
     //console.log(scene);
 
-    scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
-
     fogInterval = setInterval(function() {
-        if (!menu && !pause) {
-            player.damage(myfog / MAX_FOG) * (HEALTH_PER_SECOND / 100);
-
-            if (myfog < MAX_FOG) {
-                myfog += fogIncrement;
-            }
-        }
+    	if (!menu && !pause) {
+    		player.damage(myfog / MAX_FOG) * (HEALTH_PER_SECOND / 100);
+			player.damage(additional_healthloose);
+			
+    		if (myfog < MAX_FOG) {
+    			myfog += fogIncrement;
+    		}
+    	}
     }, 10);
 
     // Create the camera
@@ -159,11 +165,11 @@ function createScene(callback) {
     nearPlane = 1;
     farPlane = 10000;
     camera = new THREE.PerspectiveCamera(
-        fieldOfView,
-        aspectRatio,
-        nearPlane,
-        farPlane
-    );
+    	fieldOfView,
+    	aspectRatio,
+    	nearPlane,
+    	farPlane
+    	);
 
     // Set the position of the camera, PLAYERHEIGHT is defined in firstPerson.js
     var camPos = new THREE.Vector3(0, PLAYERHEIGHT + PLAYERHEIGHT * 0.4, 0);
@@ -175,17 +181,18 @@ function createScene(callback) {
     var sky_directions  = ["right", "left", "top", "bottom", "back", "front"];
     var sky_array = [];
 
+    sky_loader = new THREE.TextureLoader();
     // make texture array
     for (var i = 0; i < 6; i++) {
-        sky_array.push( new THREE.MeshBasicMaterial({
-            map: THREE.ImageUtils.loadTexture( "../avz_model/materials/textures/sky/sky_" + sky_directions[i] + ".jpg" ),
-            side: THREE.BackSide,
-        }));
+    	sky_array.push( new THREE.MeshBasicMaterial({
+    		map: sky_loader.load( "../avz_model/materials/textures/sky/sky_" + sky_directions[i] + ".jpg" ),
+    		side: THREE.BackSide,
+    	}));
     }
-
     var skyGeom = new THREE.BoxGeometry(2000,2000,2000);
     var skyMat = new THREE.MeshFaceMaterial( sky_array );
     var skyMesh = new THREE.Mesh(skyGeom,skyMat);
+
     scene.add(skyMesh);
 
     // Create the renderer
@@ -216,40 +223,51 @@ function createScene(callback) {
     // we have to update the camera and the renderer size
     window.addEventListener('resize', handleWindowResize, false);
 
-    scene.fog = new THREE.FogExp2(0x424242, 0.005);
-    callback();
+    if (!nofog) scene.fog = new THREE.FogExp2(0x424242, 0.005);
+    complete();
 }
 
 
 function loop() {
-    //console.log(octreeObjects);
 
     if (!menu && !pause) {
-        if (player.health <= 0) {
-            gameOverSound();
-            gameOver();
-        } else {
+    	if (player.health <= 0) {
+    		gameOverSound();
+    		gameOver();
+    	} else {
+
+            // determines stepwidth
+            time = performance.now();
+            delta = (time - prevTime) / 1000;
 
             stats.begin();
+
+            //setTimeout( function() {
+            //     requestAnimationFrame( loop );
+            // }, 1000 / 10 );
             requestAnimationFrame(loop);
-            scene.fog.density = myfog;
+
+            if (!nofog) scene.fog.density = myfog;
+            player.updateEnergy(); 
 
             // YOU NEED TO CALL THIS (srycaps)
-            controlLoop(controls);
-            interactionLoop();
+            if (!special_html_input) {
+            	controlLoop(controls);
+            	interactionLoop();
+            }
+
+            move();
 
             renderer.render(scene, camera);
             octree.update();
             stats.end();
         }
     }
-    // } else {
-    //     requestAnimationFrame(loop);
-    // }
-};
+}
 
 
-function handleWindowResize() {
+
+    function handleWindowResize() {
     // update height and width of the renderer and the camera
     HEIGHT = window.innerHeight;
     WIDTH = window.innerWidth;
@@ -259,191 +277,279 @@ function handleWindowResize() {
 }
 
 
-var hemisphereLight, shadowLight;
+var roboternum = 0;
+var robolab = false;
+var roboPosX;
+var roboPosY;
+var roboPosZ;
 
-
-// TEST ENVIRONMENT
-
-function createLights() {
-
-    // // A hemisphere light is a gradient colored light;
-    // // the first parameter is the sky color, the second parameter is the ground color,
-    // // the third parameter is the intensity of the light
-    // hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, .9)
-
-    // // A directional light shines from a specific direction.
-    // // It acts like the sun, that means that all the rays produced are parallel.
-    // shadowLight = new THREE.DirectionalLight(0xffffff, .9);
-
-    // // Set the direction of the light
-    // shadowLight.position.set(50, 50, 50);
-
-    // // Allow shadow casting
-    // shadowLight.castShadow = true;
-
-    // // define the visible area of the projected shadow
-    // shadowLight.shadow.camera.left = -400;
-    // shadowLight.shadow.camera.right = 400;
-    // shadowLight.shadow.camera.top = 400;
-    // shadowLight.shadow.camera.bottom = -400;
-    // shadowLight.shadow.camera.near = 1;
-    // shadowLight.shadow.camera.far = 1000;
-
-    // // define the resolution of the shadow; the higher the better,
-    // // but also the more expensive and less performant
-    // shadowLight.shadow.mapSize.width = 2048;
-    // shadowLight.shadow.mapSize.height = 2048;
-
-    // // to activate the lights, just add them to the scene
-    // scene.add(hemisphereLight);
-    // scene.add(shadowLight);
-
-}
-
-
-function createRoom(callback) {
-
-	PutSegments(doors);
-    function doors () {
-	    door_in_doors(objects);
-        function objects() {
-	        objects_in_spawns(fires);
-            function fires() {
-                set_fires(lights);
-                function lights () {
-
-                    for (var i = 0;i<terrain.length;i++) {
-                        terrain[i].mesh == undefined ?  modifyOctree( terrain[i], true ) : modifyOctree( terrain[i].mesh, true );
-
-
-                    }
-	                turn_on_lights(callback);
-                }
+function move(){
+    if(roboternum == 0){
+        for (i = 0; i < static_obj.length; i++) {
+            if(static_obj[i].name == "evil_roboter"){
+                roboternum = i;
+                roboPosX = static_obj[roboternum].msh.position.x;
+                roboPosY = static_obj[roboternum].msh.position.y;
+                roboPosZ = static_obj[roboternum].msh.position.z;
+                robolab = true;
+                break;
             }
+
         }
+
+        if(!robolab){
+            roboternum = 1;
+        }
+
+    }
+
+    if(robolab){
+        var deltaTime = clock.getDelta();
+
+        moveObject(static_obj[roboternum].msh , roboPosX, roboPosY, roboPosZ, 0*SKALIERUNGSFAKTOR, 0*SKALIERUNGSFAKTOR, 9*SKALIERUNGSFAKTOR, 1000, deltaTime);
+            
     }
 }
+
+function createRoom(callback) {
+	$("#loadingBlocker2").show();
+	$(".gui").hide();
+	if (firstfloor) { readLevelsXML(csegments); firstfloor = false; } else csegments();
+	function csegments() {
+        createAllSegments(psegments);
+        function psegments () {
+    		PutSegments(doors);
+						
+    		function doors () {
+    			door_in_doors(objects);
+    			function objects() {
+					
+    				objects_in_spawns(fires);
+    				function fires() {
+						if (!nofog) {
+							console.log("Max-Fog auf diesem Level: "+allfloors[floornumber-1].maxfog)
+							MAX_FOG = allfloors[floornumber-1].maxfog; if (godmode) {MAX_FOG = 0.005};
+							myfog = allfloors[floornumber-1].startfog; if (godmode) {myfog = 0.0002}; 
+							fogTime = allfloors[floornumber-1].fogtime; if (godmode) {fogTime = 1200};  //siehe oben
+
+							fogIncrement= MAX_FOG/(fogTime*1000/10) ;
+							
+							scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
+						}
+						HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at final density you lose this much health			
+						controls.getObject().position.x = parseFloat(allfloors[floornumber-1].spawn.slice(1,allfloors[floornumber-1].spawn.indexOf(',')))*SKALIERUNGSFAKTOR;
+						controls.getObject().position.z = parseFloat(allfloors[floornumber-1].spawn.slice(allfloors[floornumber-1].spawn.indexOf(',')+1,allfloors[floornumber-1].spawn.lastIndexOf(',')))*SKALIERUNGSFAKTOR;
+						controls.getObject().position.y = parseFloat(allfloors[floornumber-1].spawn.slice(allfloors[floornumber-1].spawn.lastIndexOf(',')+1,allfloors[floornumber-1].spawn.indexOf(')')))*SKALIERUNGSFAKTOR;
+						firstTime == true;
+						
+    					set_fires(lights);
+    					function lights () {
+    						turn_on_lights(triggers);
+    						var gesamtlicht = 0;
+							var tmplight;
+    						if (allfloors[floornumber-1].ambientintens > 0) {
+                                tmplight = new THREE.AmbientLight(parseInt(allfloors[floornumber-1].ambientcolor),parseInt(allfloors[floornumber-1].ambientintens))
+    							addtoscene(tmplight); threelights.push(tmplight);
+    							gesamtlicht += parseInt(allfloors[floornumber-1].ambientintens);
+    						}
+    						if (godmode) {
+								tmplight = new THREE.AmbientLight(0xFFFFFF,(1-gesamtlicht));
+    							addtoscene(tmplight); threelights.push(tmplight);
+    							gesamtlicht += (1-gesamtlicht);
+    						}
+    						if (gesamtlicht < 0.3 && onlygloballight) {
+								tmplight = new THREE.AmbientLight(0xFFBFBF,(0.3-gesamtlicht));
+    							addtoscene(tmplight); threelights.push(tmplight);
+    						}
+    						function triggers () {
+    							addtriggers(levelSettings);
+                                function levelSettings () {
+									$("#loadingBlocker2").hide();
+									$(".gui").show();
+                                    callback();
+                                }
+    						}
+                        }
+    				}
+    			}
+    		}
+        }
+	}
+}
+
+function resetScene(callback) {
+    scene = null;
+    scene= new THREE.Scene();
+	
+
+	
+    // var camPos = new THREE.Vector3(0, PLAYERHEIGHT + PLAYERHEIGHT * 0.4, 0);
+	// controls = null;
+    // controls = new THREE.PointerLockControls(camera, camPos);
+    // scene.add(controls.getObject());
+
+    // sky box
+    // files are named by directions
+    var sky_directions  = ["right", "left", "top", "bottom", "back", "front"];
+    var sky_array = [];
+
+    sky_loader = new THREE.TextureLoader();
+    // make texture array
+    for (var i = 0; i < 6; i++) {
+        sky_array.push( new THREE.MeshBasicMaterial({
+            map: sky_loader.load( "../avz_model/materials/textures/sky/sky_" + sky_directions[i] + ".jpg" ),
+            side: THREE.BackSide,
+        }));
+    }
+    var skyGeom = new THREE.BoxGeometry(2000,2000,2000);
+    var skyMat = new THREE.MeshFaceMaterial( sky_array );
+    var skyMesh = new THREE.Mesh(skyGeom,skyMat);
+    addtoscene(skyMesh);
+	callback();
+		
+}
+
+
+function recreateRoom() {
+	//lösche erst alle segments, doors, objects, fires, lights, triggers. Dann calle createRoom/init
+	
+    empty_scene(reset);
+	
+	function reset() {
+		
+		resetScene(octrem);
+		function octrem () {
+			octree = null;
+			octree = new THREE.Octree( {
+				// uncomment below to see the octree (may kill the fps)
+				//scene: scene,
+				// when undeferred = true, objects are inserted immediately
+				// instead of being deferred until next octree.update() call
+				// this may decrease performance as it forces a matrix update
+				undeferred: false,
+				// set the max depth of tree
+				depthMax: 20,
+				// max number of objects before nodes split or merge
+				objectsThreshold: 8,
+				// percent between 0 and 1 that nodes will overlap each other
+				// helps insert objects that lie over more than one node
+				overlapPct: 0.15
+			} );
+			console.log("Recreating everything...");
+			function cont (){pause = false;
+				requestAnimationFrame(loop);
+			}	
+			// cont();			
+			createRoom(cont);
+		}
+	}
+}
+
 
 
 //debug-stuff, deleteme
 function ShowSegments() {
-	var text = "";
-	for (i = 0; i <segments.length; i++) {
-		text += printmost(segments[i])+"<br>";  //JSON.stringify(segments[i])
-	}
-	alert(text);
+    var text = "";
+    for (i = 0; i <segments.length; i++) {
+        text += printmost(segments[i])+"<br>";  //JSON.stringify(segments[i])
+    }
+    alert(text);
 }
 function printmost(obj) {
-	var output = '';
-	for (var property in obj) {
-	  if (property != 'mesh')
-		{ output += property + ': ' + obj[property]+'; '; }
-	}
-	return output;
-}
-//debugstuffdeleteme ende
-
-function createItems(callback){
-
-
-     // // addItem(pathItem.concat(itemList[0]), 0, 5, 10, 2, true, pickUpItem);
-
-	 // // addItem(file, xPos, yPos, zPos, scale, interact_type, intfunction, name)
-	 // // TYPE_INTERACTABLE; TYPE_TRIGGER; TYPE_FIRE; TYPE_EXIT;
-	 // // intfunction = damage_door, destroy_door, pickUpItem, destroy, open, openLockedDoor, extinguish
-
-	 // //wände/terrain/statics, interactibles(auch feuer und türen), triggerevents(auch feuer), licher (auch feuer),
-
-      // addItem((newItemList[0]), -50, 10, 10, 10, true, pickUpItem, newItemList[0]);
-      // addItem((newItemList[1]), 20, 5, 10, 1, true, destroy, newItemList[1]);
-      // addItem((newItemList[2]), 0, 5, 20, 3, true, pickUpItem, newItemList[2]);
-      // addItem((newItemList[12]), 0, 5, -10, 3, true, pickUpItem, newItemList[12]);
-   // // addItem(pathItem.concat(newItemList[4]), 30, 5, -30, 1, false, 0, itemList[4]);
-  // //  addItem(pathItem.concat(newItemList[5]), 30, 5, -30, 1, true, openLockedDoor, itemList[5]);
-   // // addItem(pathItem.concat(newItemList[6]), 30, 5, -100, 1, true, pickUpItem, itemList[6]);
-
-     // for(var i =0; i< newItemList.length; i++){
-        // console.log(newItemList[i]);
-     // }
-
-
-    // callback();
-
+    var output = '';
+    for (var property in obj) {
+      if (property != 'mesh')
+        { output += property + ': ' + obj[property]+'; '; }
+    }
+    return output;
 }
 //debugstuffdeleteme ende
 
 
-// Add Object with given Path to given coordinates
-function addItemLogic(mesh, interact_type, intfunction, file){
-
-	// alert("Ich habe eine Daseinsberechtigung");
-
-    // if(interact_type){
-        // var intItem = new GameObject(mesh, intfunction, TYPE_INTERACTABLE, file);
-        // terrain.push(intItem);
-    // } else {
-        // terrain.push(mesh);
-    // }
-
-
-    // scene.add(mesh);
-
-}
 
 //adds a trigger at given position, performs action when walking over it and consumes it
 // ***** TO FADE IN THOUGHTS: look up partial, showThoughts, hideThoughts in interact! ******
+function addTrigger (activated, xPos, zPos, size, action, fname, fparam1, fparam2, enabledtrigger, index, nonewentry) {
 
-function addTrigger (xPos, zPos, action) {
-    var triggerGeom = new THREE.BoxGeometry(30,30,30);
-    var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, color:0xFFFFFF});
+	var hohe = (size > PLAYERHEIGHT*3) ? size: PLAYERHEIGHT*3;
+    var triggerGeom = new THREE.BoxGeometry(size,hohe,size);
+    var mat = new THREE.MeshBasicMaterial({ transparent: triggerstransparent, opacity: 0, depthWrite: false, color:0xFFFFFF});
     var triggerMesh = new THREE.Mesh(triggerGeom,mat);
     var trigger = new GameObject(triggerMesh,action,TYPE_TRIGGER);
 
 
-    trigger.mesh.position.x = xPos;
-    trigger.mesh.position.z = zPos;
-    trigger.mesh.position.y = 0;
-    scene.add(trigger.mesh);
-    modifyOctree(trigger,true);
+	var thisone;
+	if (!nonewentry) {
+		thisone = {ind: index, obj: trigger, xpos: xPos, zpos: zPos, siz: size, fname: fname, fparam1: fparam1, fparam2: fparam2, followup: enabledtrigger, enabled: activated};
+		triggers.push(thisone);
+	} else {
+		for (var i = 0; i < triggers.length; i++) {
+			if (triggers[i].ind === index) {
+				triggers[i].obj = trigger;
+				thisone = triggers[i];
+			}
+		}
+	}
 
+	if (activated) {
+		trigger.mesh.position.x = thisone.xpos;
+		trigger.mesh.position.z = thisone.zpos;
+		trigger.mesh.position.y = 0;
+		addtoscene(trigger.mesh);
+		modifyOctree(trigger,true);
+	}
 }
 
-function removeTrigger(trigger) {
+
+function disableTrigger(trigger) {
+	for (var i = 0; i < triggers.length; i++) {
+		if (triggers[i].obj === trigger) {
+			triggers[i].enabled = false;
+			console.log(triggers[i].fname+"-trigger disabled");
+			for (var j = 0; j < triggers.length; j++) {
+				if (triggers[j].ind === triggers[i].followup) {
+					enableTrigger(triggers[j].ind);
+					break;
+				}
+			}
+		}
+	}
     scene.remove(trigger.mesh);
-    for (var i =0;i < terrain.length;i++) {
-        if(terrain[i]==trigger) {
-            terrain.splice(i,1);
-        }
-
-    }
+    octree.remove(trigger.mesh);
 }
+
+function enableTrigger(index) {
+	for (var i = 0; i < triggers.length; i++) {
+		if (triggers[i].ind === index) {
+			triggers[i].enabled = true;
+			var functPtr = eval(triggers[i].fname);
+
+			if (triggers[i].fparam1 === "") addTrigger(true, triggers[i].xpos, triggers[i].zpos, triggers[i].siz, functPtr, triggers[i].fname, "", "", triggers[i].followup, triggers[i].ind, true)
+				else if (triggers[i].fparam2 === "") addTrigger(true, triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1), triggers[i].fname, triggers[i].fparam1, "", triggers[i].followup, triggers[i].ind, true)
+					else addTrigger(true, triggers[i].xpos, triggers[i].zpos, triggers[i].siz, partial(functPtr, triggers[i].fparam1, triggers[i].fparam2), triggers[i].fname, triggers[i].fparam1, triggers[i].fparam2, triggers[i].followup, triggers[i].ind, true)
+
+			console.log(triggers[i].fname+"-trigger enabled");
+		}
+	}
+}
+
+
 
 
 
 function modifyOctree( mesh , useFaces) {
-
-
-
-        // create new object
-
-
-
-        // give new object a random position, rotation, and scale
-
         if (mesh.mesh==undefined) {
-            octree.add( mesh, { useFaces: useFaces } );
+        	octree.add( mesh, { useFaces: useFaces } );
         } else {
-            octree.add( mesh.mesh, { useFaces: useFaces } );
+        	octree.add( mesh.mesh, { useFaces: useFaces } );
         }
 
         // add new object to octree and scene
         // NOTE: octree object insertion is deferred until after the next render cycle
 
-
         // scene.add( mesh );
 
         // store object
-
         octreeObjects.push( mesh );
 
         /*
@@ -463,7 +569,4 @@ function modifyOctree( mesh , useFaces) {
         octree.toConsole();
 
         */
-
-
-
 }

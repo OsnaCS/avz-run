@@ -3,15 +3,20 @@ package model.leveleditor;
 import model.drawables.DrawableObject;
 
 import model.drawables.Line;
+import model.Matrix;
 import model.drawables.*;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
+import org.omg.CORBA.portable.Delegate;
 
 
 
 
+/*
+ * Created by Tom Krümmel
+ */
 
 public class Way extends DrawableObject {
 	
@@ -28,22 +33,72 @@ public class Way extends DrawableObject {
 		this.normal = normal;
 		this.father = father;
 	}
-	
+	public Way(Way way, Room father){
+		this.type = way.getType();
+		this.pos = new Coordinates(way.getPos());
+		this.normal = new Coordinates(way.getNormal());
+		this.father = father;
+	}
+
+	public void updatePosition(){
+
+		Coordinates newPos = new Coordinates(father.getCenter());
+
+		newPos = newPos.addCoordinats(pos.getVector());
+
+		this.pos.setPos(newPos);
+	}
+
+	public Coordinates getActualPosition(){
+		double updatedX = father.getCenter().getPosx() + pos.getX();
+		double updatedY = father.getCenter().getPosy() + pos.getY();
+		int angle = father.getCenter().getAngle();
+		Coordinates updatedCoordinates = new Coordinates(updatedX, updatedY, angle);
+		for(int i =0; i<angle ; i+=90 ){
+			updatedCoordinates.rotation(90, father.getCenter());
+		}
+		return updatedCoordinates;
+	}
+
 	/*
 	 * compares distances of two ways, if they are smaller as 10 Pixels returns therefore true
 	 * and signals ability to connect
 	 */
 	public boolean compareDistance(Way other){
+
+		//updatePosition();
+		//other.updatePosition();
+
 		
 		//caclculates absolute value of the distances between x and y coordinate of the two ways
-		double distX = Math.abs(pos.getPosx() - other.pos.getPosx());
-		double distY = Math.abs(pos.getPosy() - other.pos.getPosy());
-		
+		double distX = Math.abs(this.pos.getScaledIntCoordinates(this.getFather().getCenter()).x - other.pos.getScaledIntCoordinates(other.getFather().getCenter()).x);
+		double distY = Math.abs(this.pos.getScaledIntCoordinates(this.getFather().getCenter()).y - other.pos.getScaledIntCoordinates(other.getFather().getCenter()).y);
+//		System.out.println("Distanz:" + distX + "," + distY);
+//		System.out.println("this x:"  +this.getFather().getCenter().getPosx()+ " other:" + (other.getFather().getCenter().getPosx()));
+		if(distX < maxDistance && distY < maxDistance) {
+
+		//	System.out.println("Normals: (" + this.normal.getVector().getX() + "," + this.normal.getVector().getY() + ") ("+
+		//			other.normal.getInvert().getVector().getX()+","+other.normal.getInvert().getVector().getY()+")");
+
+			if (other.getNormal().getInvert().getVector().getX()==this.normal.getVector().getX()
+					|| other.getNormal().getInvert().getVector().getY()==this.normal.getVector().getY())
+			{
+			//	System.out.println("Distanz:" + distX + "," + distY);
+			}
+
+		}
+
+
 		//compares both distances with the allowed distance to create a circle
-		//which if it is small enough signals ability to connect
-		if(distX < maxDistance && distY < maxDistance)
-		return true;
-		
+		//which if it is small enough signals ability to connect and has orthogonal normals
+		//and is of the same type
+		if(distX < maxDistance && distY < maxDistance
+				&& (other.getNormal().getInvert().getVector().getX()==this.normal.getVector().getX()
+						|| other.getNormal().getInvert().getVector().getY()==this.normal.getVector().getY()))
+			//	&& other.getType().equals(this.type)) {
+			{
+			return true;
+		}
 		//else returns false
 		return false;
 	}
@@ -53,22 +108,16 @@ public class Way extends DrawableObject {
 	 */
 	public void calcNormal(double rotation){
 		
-		//in case of switching to the sides, the absolute value of normals stays the same
-		//just x and y value change
-		if(rotation == Math.PI/2 || rotation == Math.PI * 1.5){
-			double tmp;
-			tmp = normal.getPosx();
-			normal.setPosx(normal.getPosy());
-			normal.setPosy(tmp);
+		if(normal.getPosx()==0){
+			normal.setPosx(normal.getPosy()*-1);
+			normal.setPosy(0.0);
 		}
+		else{
+			normal.setPosy(normal.getPosx());
+			normal.setPosx(0.0);
+		}
+
 		
-		//switching to horizontal lines switches algebraic sign of normal
-		if(rotation == Math.PI || rotation == Math.PI * 2){
-			double tmp;
-			tmp = - normal.getPosx();
-			normal.setPosx(- normal.getPosy());
-			normal.setPosy(tmp);
-		}
 	}
 	
 	
@@ -76,21 +125,30 @@ public class Way extends DrawableObject {
 	 * creates a usable Position of Way for drawing
 	 */
 	public Point fittingPos(){
-		//gets the Positions of way and the center of father
-		Point nowPos = pos.getScaledIntCoordinates();
-		Point papaPos = father.getCenter().getScaledIntCoordinates();
+//		//gets the Positions of way and the center of father
+		Point nowPos = pos.getScaledIntCoordinates(father.getCenter());
+//		int x = nowPos.x * 2;
+//		int y = nowPos.y * 2;
+//		double[][] translate = {{1, 0, x}, 
+//				{0, 1, y},{0,0,1}};
+//		Matrix workaround = new Matrix(translate);
+//		nowPos = workaround.multiply(nowPos);
 		
-		//merges both to get the position in coordinate system relative
-		//to the father's center
-		int x = nowPos.x + papaPos.x;
-		int y = nowPos.y + papaPos.y;
-		
-		//creates Point out of it
-		Point fitPos = new Point(x,y);
-		
-		//returns point
-		return fitPos;
-	
+		//nowPos =new Point(nowPos.x, nowPos.y);
+//		int papaPosX = (int) (father.getCenter().getPosx() +0.5);
+//		int papaPosY = (int) (father.getCenter().getPosy() +0.5);
+//		Point papaPos = new Point(papaPosX, papaPosY);
+//		
+//		//merges both to get the position in coordinate system relative
+//		//to the father's center
+//		int x = nowPos.x + papaPos.x;
+//		int y = nowPos.y + papaPos.y;
+//		
+//		//creates Point out of it
+//		Point fitPos = new Point(x,y);
+//		
+//		//returns point
+		return nowPos;
 	}
 	
 	@Override
@@ -99,11 +157,13 @@ public class Way extends DrawableObject {
 	 */
 	public void paint(Graphics g){
 		
+		
 		//updates normals
-		this.calcNormal(father.getCenter().getAngle());
+		//this.calcNormal(father.getCenter().getAngle());
 		
 		//gets the position of the way at the moment
 		Point a = this.fittingPos();
+		
 		
 		//dummy
 		Point b = new Point (0, 0);
@@ -120,23 +180,23 @@ public class Way extends DrawableObject {
 			b.x = x;
 			b.y = a.y;
 		}else if(normal.getPosy() > 0){
-			int y = a.x + maxDistance;
+			int y = a.y + maxDistance;
 			b.x = a.x;
 			b.y = y;
 		}else{
-			int y = a.x - maxDistance;
+			int y = a.y - maxDistance;
 			b.x = a.x;
 			b.y = y;
 		}
-
+		
 		Color c = Color.BLACK;
 		// decides by type of door its color
-		if (type == "glas") {
+		if (type.equals("glass")) {
 			//Cyan for glassdoor
-			c = Color.CYAN;
-		} else if (type == "corridor") {
+			c = Color.BLUE;
+		} else if (type.equals("floor")) {
 			//Yellow for corridor
-			c = Color.YELLOW;
+			c = Color.MAGENTA;
 		} else {
 			//selects green for wooden door
 			c = Color.GREEN;
@@ -194,8 +254,12 @@ public class Way extends DrawableObject {
 		this.maxDistance = maxDistance;
 	}
 	
-
 	
+
+	public String toString(){
+		return getType() + " Pos:" + getPos().getPosx() + "/" + getPos().getPosy() + " Normal: " + getNormal().getPosx() +
+				"/" + getNormal().getPosy() + " " + getFather().getName();
+	}
 	
 	
 }

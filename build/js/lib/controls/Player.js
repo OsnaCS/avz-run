@@ -2,7 +2,7 @@ var INV_SIZE = 3; // maximum number of objects in inventory
 var inventory; // array that stores references to inventory items
 var inv_pos; // array has constant length -> to save how many spots have been filled
 var item_count;
-var MAX_HEALTH = 20000; if (godmode) {MAX_HEALTH = 1000000};
+var MAX_HEALTH = 30000; if (godmode) {MAX_HEALTH = 1000000};
 var activeSlot = -1;
 var selectedItem;
 var critical_health = false;
@@ -33,6 +33,11 @@ Player = function() {
             item_count++;
 
             // delete object representation from scene
+            if(game_obj.mesh==undefined){
+                octree.remove(game_obj);
+            } else {
+                octree.remove(game_obj.mesh);
+            }
             game_obj.delFromScene();
 
         } else {
@@ -74,6 +79,33 @@ Player = function() {
         }
     }
 
+    this.updateEnergy = function() {
+
+        // player can get exhausted/regenerate energy
+        if (!menu) {
+            if (running && (moveForward || moveLeft || moveBackward || moveRight)) {
+                energy -= delta * 30;
+                if (energy <= 0) {
+                    adjustPlaybackRate(footsteps, 1, true);
+                    outOfBreathSound();
+                    regenerate = true;
+                    speed_factor = 1;
+                    running = false;
+                    $(".energy").css("box-shadow", " 0px 0px 20px 3px rgba(255, 82, 82, 0.6)");
+                }
+            } else {
+                energy += delta * 10;
+                if (energy >= STAMINA) {
+                    energy = STAMINA;
+                    if (regenerate) {
+                        regenerate = false;
+                        $(".energy").css("box-shadow", "none");
+                    }
+                }
+            }
+            $(".energy-bar").css("width", '' + energy + '%');
+        }
+    }
 
 }
 
@@ -116,16 +148,18 @@ function setActiveSlot(slot)  {
                 break;
         }
     }
-
+	useMedi();
 }
 
 
 function addIcon(item,slot) {
-    var tName = item.name.split("/");
-    tName = tName[tName.length-1];
-    tName = tName.split(".")[0];
+	var tName = "";
+	for (var i = 0; i < allobjects.length; i++) {
+		if (allobjects[i].pfad == item.name) {tName = allobjects[i].icon; break;}
+	}
     console.log(tName);
-    $("#slot"+(slot+1)).append("<img id='"+tName+"' src='/build/icons/"+tName+".png'/>" );
+
+    $("#slot"+(slot+1)).append("<img id='"+tName+"' src='/build/icons/"+tName+"'/>" );
 }
 
 function removeIcon(slot) {

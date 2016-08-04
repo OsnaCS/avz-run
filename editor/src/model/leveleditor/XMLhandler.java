@@ -138,7 +138,7 @@ public class XMLhandler {
 		Room room = new Room(name, xmin, ymin, xmax, ymax, new Point(0, 0), waylist);
 
 		// Add all Doors to waylist of current Room
-		for (int i = 0; i < length - 1; i++) {
+		for (int i = 0; i < length; i++) {
 			// Saves Door
 			Node doorTemp = doors.item(i);
 			String type = doorTemp.getAttributes().getNamedItem("type").getNodeValue();
@@ -157,6 +157,7 @@ public class XMLhandler {
 			//Add Way to current Room
 			waylist.add(way);
 		}
+		System.out.println(room.getCenter().getX());
 		return room;
 
 	}
@@ -171,9 +172,7 @@ public class XMLhandler {
 		
 		//Initialize XML-Reading
 		Document doc=null;
-		DocumentBuilderFactory fac;
 		DocumentBuilder build;
-		fac = DocumentBuilderFactory.newInstance();
 		build = null;
 		try {
 			build = factory.newDocumentBuilder();
@@ -198,6 +197,7 @@ public class XMLhandler {
 		Level level =new Level();
 		
 		// Create Waylist for every Room
+		@SuppressWarnings("unchecked")
 		LinkedList<Way>[] list = new LinkedList[nodelist.getLength()];
 		
 		// create Fatherrooms for the way
@@ -279,7 +279,8 @@ public class XMLhandler {
 				level.addWay(way);
 			}
 		}
-		this.toXML(level);
+		// for testing
+		//this.toXML(level);
 		return level;
 	}
 
@@ -321,7 +322,7 @@ public class XMLhandler {
 		rootElement.appendChild(fires);
 
 		//List with all Rooms
-		// TODO: The name is not a good KEY, serveral rooms could have same name;
+		
 		LinkedList<Room> roomlist = level.getRooms();
 		// Hashmap
 		HashMap<Room,Integer> map = new HashMap<Room,Integer>();
@@ -340,11 +341,11 @@ public class XMLhandler {
 			room.setAttributeNode(roomName);
 
 			Attr x = doc.createAttribute("x");
-			x.setValue(new Double(currentRoom.getCenter().getPosx()).toString());
+			x.setValue(new Double(currentRoom.getCenter().getX()).toString());
 			room.setAttributeNode(x);
 
 			Attr y = doc.createAttribute("y");
-			y.setValue(new Double(currentRoom.getCenter().getPosy()).toString());
+			y.setValue(new Double(currentRoom.getCenter().getY()).toString());
 			room.setAttributeNode(y);
 
 			Attr rota = doc.createAttribute("rotation");
@@ -378,11 +379,11 @@ public class XMLhandler {
 			door.setAttributeNode(type);
 
 			Attr x = doc.createAttribute("x");
-			x.setValue(new Double(currentWay.getPos().getPosx()).toString());
+			x.setValue(new Double(currentWay.getPos().getX()).toString());
 			door.setAttributeNode(x);
 
 			Attr y = doc.createAttribute("y");
-			y.setValue(new Double(currentWay.getPos().getPosy()).toString());
+			y.setValue(new Double(currentWay.getPos().getY()).toString());
 			door.setAttributeNode(y);
 
 			Attr normx = doc.createAttribute("normx");
@@ -406,7 +407,7 @@ public class XMLhandler {
 		try {
 			transformer = transformerFactory.newTransformer();
 		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
+		
 			e.printStackTrace();
 		}
 		// Makes the XML Output beautiful
@@ -424,7 +425,7 @@ public class XMLhandler {
 			e.printStackTrace();
 		}
 
-		System.out.println(writer.toString());
+		//System.out.println(writer.toString());
 		return writer.toString();
 
 	}
@@ -437,15 +438,21 @@ public class XMLhandler {
 	 */
 	public File writeXML(Level level, String filename) {
 		File f = new File(filename);
+		if(!f.exists()) {
+		    try {
+				f.createNewFile();
+			} catch (IOException e) {
+
+				e.printStackTrace();
+			}
+		} 
 		try (PrintWriter writer = new PrintWriter(f)) {
 			writer.println(toXML(level));
 
 		} catch (IOException e) {
 			
-
-			e.printStackTrace();
-		} finally {
 			System.err.println("Error Saving XML-File");
+			e.printStackTrace();
 		}
 
 		return f;
