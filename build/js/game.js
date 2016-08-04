@@ -315,7 +315,7 @@ function move(){
         var deltaTime = clock.getDelta();
 
         moveObject(static_obj[roboternum].msh , roboPosX, roboPosY, roboPosZ, 0*SKALIERUNGSFAKTOR, 0*SKALIERUNGSFAKTOR, 9*SKALIERUNGSFAKTOR, 1000, deltaTime);
-            
+
     }
 }
 
@@ -358,7 +358,7 @@ function createRoom(callback) {
 
                                     fogIncrement= MAX_FOG/(fogTime*1000/10) ;
                                     HEALTH_PER_SECOND = 10; if (godmode) {HEALTH_PER_SECOND = 0};// if fog is at final density you lose this much health
-                                    scene.fog = new THREE.FogExp2(0x424242, 0.00002 + myfog);
+                                    scene.fog = new THREE.FogExp2(0x424242, 0.0002 + myfog);
 
                                     controls.getObject().position.x = parseFloat(thisfloor.spawn.slice(1,thisfloor.spawn.indexOf(',')))*SKALIERUNGSFAKTOR;
                                     controls.getObject().position.y = parseFloat(thisfloor.spawn.slice(thisfloor.spawn.indexOf(',')+1,thisfloor.spawn.lastIndexOf(',')))*SKALIERUNGSFAKTOR;
