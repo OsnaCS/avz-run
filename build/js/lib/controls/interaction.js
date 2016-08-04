@@ -617,6 +617,7 @@ function hideThoughts() {
 
 function success() {
     console.log("YEY");
+	pause = true;
     $("#endScreen").fadeIn(5000);
     $(".GUI").fadeOut(5000);
 }

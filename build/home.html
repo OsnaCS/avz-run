@@ -23,69 +23,95 @@
             </div>
         </div>
     </div>
-	
-	<!-- Load next Level -->
+    <!-- Load next Level -->
     <div id="loadingBlocker2">
         <div class="instructionsContent">
             <div class="loadtext"> Lädt nächstes Level...</div>
             <div class="loading">
-                </div>
             </div>
         </div>
     </div>
-<!-- Startscreen -->
-<div id="startInstructions">
-    <div class="instructionsContent" id="mainMenu">
-        <h1>AVZ-Run</h1>
-        <h2>Kannst du entkommen?</h2>
-        <hr>
-        <h3>Namen eingeben:</h3>
-        <input id="nickname" type="text" class="form-control" placeholder="Nickname" onkeyup="if (this.value === 'Oliver') {alert('Activated God-Mode'); godmode = true; recreateRoom(); }">
-        <hr>
-        <button id="buttonStart" class="btn" style="width: 270px; padding: 20px">Spielen</button>
-        <br>
-        <button id="buttonSettings" class="btn" style="width: 270px; margin-top: 25px;">Einstellungen</button>
-        <br>
-        <button id="buttonInfo" class="btn" style="width: 270px; margin-top: 25px;">Credits</button>
     </div>
-    <div class="instructionsContent" id="infoScreen" style="display:none">
-        <h1>Information</h1>
-        <hr>
-        <div style="margin: 30px;">
-            <p>
-                Das Projekt wurde im Rahmen des 3-wöchigen Computergrafik Praktikums 2016 an der Universität Osnabrück
-                durchgeführt.
-            </p>
-            <p>
-                Im Spiel "AVZ Run" ist der Spieler im brennenden AVZ gefangen und muss versuchen, diesem Inferno zu
-                entkommen. Der Spieler kontrolliert den In-Game-Charakter und muss sich gegen Hindernisse, Rätsel
-                und Fallen behaupten, um ganz nach unten und aus dem AVZ zu gelangen.
-            </p>
-            <p>
-                Der Quellcode ist auf GitHub zu finden:
-                <a href="https://github.com/OsnaCS/avz-run">OsnaCS/avz-run</a>
-            </p>
+    <!-- Startscreen -->
+    <div id="startInstructions">
+        <div class="instructionsContent" id="mainMenu">
+            <h1>AVZ-Run</h1>
+            <h2>Kannst du entkommen?</h2>
+            <hr>
+            <h3>Namen eingeben:</h3>
+            <input id="nickname" type="text" class="form-control" placeholder="Nickname" onkeyup="if (this.value === 'Oliver') {alert('Activated God-Mode'); godmode = true; recreateRoom(); }">
+            <hr>
+            <button id="buttonStart" class="btn" style="width: 270px; padding: 20px">Spielen</button>
+            <br>
+            <button id="buttonSettings" class="btn" style="width: 270px; margin-top: 30px;">Einstellungen</button>
+            <br>
+            <button id="buttonInfo" class="btn" style="width: 270px; margin-top: 30px;">Credits</button>
         </div>
-        <hr>
-        <button id="buttonInfoBack" class="btn" style="width: 270px">Zurück</button>
+        <div class="instructionsContent" id="infoScreen" style="display:none">
+            <h1>Credits</h1>
+            <hr>
+            <div style="margin: 30px;">
+                <p>
+                    Das Projekt wurde im Rahmen des 3-wöchigen Computergrafik Praktikums 2016 an der Universität Osnabrück durchgeführt.
+                </p>
+                <p>
+                    Im Spiel "AVZ Run" ist der Spieler im brennenden AVZ gefangen und muss versuchen, diesem Inferno zu entkommen. Der Spieler kontrolliert den In-Game-Charakter und muss sich gegen Hindernisse, Rätsel und Fallen behaupten, um ganz nach unten und aus dem AVZ zu gelangen.
+                </p>
+                <p>
+                    Der Quellcode ist auf GitHub zu finden:
+                    <a href="https://github.com/OsnaCS/avz-run">OsnaCS/avz-run</a>
+                </p>
+                <p>
+                    <button id="buttonSources" class="btn" style="width: 270px;margin-top:5px;">Quellen</button>
+                </p>
+            </div>
+            <hr>
+            <button id="buttonInfoBack" class="btn" style="width: 270px">Zurück</button>
+        </div>
+        <div class="instructionsContent" id="sources" style="display:none;">
+            <h1>Quellen</h1>
+            <hr>
+            <p><strong><h3>Sounds:</h3></strong></p>
+            <p>
+                <a href="http://www.freesound.org/" target="_blank">www.freesound.org</a>
+                <br>
+                <a href="http://www.salamisound.de/" target="_blank">www.salamisound.de</a>
+                <br>
+                <a href="http://www.freesfx.co.uk/" target="_blank">www.freesfx.co.uk</a>
+            </p>
+            <hr>
+            <p><strong><h3>Feuer und Rauch:</h3></strong></p>
+            <p>
+            ThreeJS Extension by
+                <a href="http://yomotsu.net" target="_blank">yomotsu.net</a>
+            </p>
+            <hr>
+            <button id="buttonSourcesBack" class="btn" style="width: 270px">Zurück</button>
+        </div>
+        <div class="InstructionsContent" id="settingswindow" style="display:none">
+            <h1 style="text-align: center">Einstellungen</h1>
+            <hr>
+            <div style="margin: 30px;">
+                <h4>Allgemein</h4>
+                <input type="checkbox" id="mutesounds" name="mutesounds" value="true" onclick="mutesounds = this.checked; recreateRoom(); ">Keine Sounds
+                <br>
+                <br>
+                <h4>Performance</h4>
+                <input type="checkbox" id="performantfire" name="performantfire" value="true" onclick="performantfire = this.checked; recreateRoom();">Performanteres Feuer
+                <br>
+                <input type="checkbox" id="nosmoothing" name="nosmoothing" value="true" onclick="nosmoothedges = this.checked; recreateRoom();">Kein Smoothing
+                <br>
+                <input type="checkbox" id="uselambert" name="uselambert" value="true" onclick="useLambertMaterial = this.checked; recreateRoom();">Lambert-Shading nutzen
+                <br>
+                <input type="checkbox" id="useambient" name="useambient" value="true" onclick="onlygloballight = this.checked; recreateRoom();">Deckenlichter durch ambientes Licht ersetzen
+                <br>
+            </div>
+            <hr>
+            <div style="text-align: center">
+                <button id="buttonSettingsBack" class="btn" style="width: 270px">Zurück</button>
+            </div>
+        </div>
     </div>
-	<div class="InstructionsContent" id="settingswindow" style="display:none">
-        <h1 style="text-align: center">Einstellungen</h1>
-        <hr>
-        <div style="margin: 30px;">
-			<h4>Allgemein</h4>
-			<input type="checkbox" id="mutesounds" name="mutesounds" value="true" onclick="mutesounds = this.checked; recreateRoom(); ">Keine Sounds<br><br>
-			<h4>Performance</h4>
-			<input type="checkbox" id="performantfire" name="performantfire" value="true" onclick="performantfire = this.checked; recreateRoom();">Performanteres Feuer<br>
-			<input type="checkbox" id="nosmoothing" name="nosmoothing" value="true" onclick="nosmoothedges = this.checked; recreateRoom();">Kein Smoothing<br>
-			<input type="checkbox" id="uselambert" name="uselambert" value="true" onclick="useLambertMaterial = this.checked; recreateRoom();">Lambert-Shading nutzen<br>
-			<input type="checkbox" id="useambient" name="useambient" value="true" onclick="onlygloballight = this.checked; recreateRoom();">Deckenlichter durch ambientes Licht ersetzen<br>
-		</div>
-        <hr>
-        <div  style="text-align: center"><button id="buttonSettingsBack" class="btn" style="width: 270px">Zurück</button></div>
-    </div>
-</div>
-
     <!-- Pause Screen -->
     <div id="blocker">
         <div class="instructionsContent">
@@ -193,6 +219,7 @@
     <script src="/build/js/lib/move_object.js"></script>
     <!-- game muss am besten zuletzt -->
     <script src="/build/js/game.js"></script>
+
 </body>
 
 </html>

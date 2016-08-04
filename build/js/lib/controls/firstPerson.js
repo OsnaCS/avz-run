@@ -184,6 +184,16 @@ function initPointerLock() {
             mainMenu.style.display = 'block';
         }, false);
 
+        $("#buttonSources").bind('click', function(event) {
+            $("#infoScreen").hide();
+            $("#sources").show();
+        });
+
+        $("#buttonSourcesBack").bind('click', function(event) {
+            $("#infoScreen").show();
+            $("#sources").hide();
+        });
+
 
         button.addEventListener('click', function(event) {
 
@@ -582,7 +592,7 @@ function controlLoop(controls) {
         velocity.y = 0;
         controls.getObject().position.y = PLAYERHEIGHT + PLAYERHEIGHT * 0.2;
     }
-	
+
     if (controls.getObject().position.y < -500) {
         player.damage(10000);
     }
@@ -601,7 +611,7 @@ function controlLoop(controls) {
 
     if (flashCooldown == 0) {
         scene.remove(flashLight);
-		
+
         if(!nofog) scene.fog.color.set(0x424242);
         clearInterval(flashInterval);
         flashCooldown = -1;
