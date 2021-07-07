@@ -608,7 +608,7 @@ function openTransponderDoor(){
 
     } else{
         doorLockedSound();
-		if(selectedItem != null && objectFilenameToName(selectedItem.name) == "transponder")
+		if(selectedItem != null && (selectedItem.name != undefined) &&  objectFilenameToName(selectedItem.name) == "transponder")
 		{
 			console.log('Kein Transponder mit Code');
 			showThoughts("Hm, dieser Transponder scheint noch nicht für diese Tür eingestellt zu sein...",5000)
